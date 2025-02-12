@@ -1,0 +1,81 @@
+---
+title: "Multiple regression"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
+## Two continuous predictors
+
+```{r}
+data_height <- read_csv("data/plantHeightSingleSpp.csv") %>%
+  mutate(
+    log_height = log(height),
+    hemisphere = as.character(hemisphere))
+```
+
+Fit model with two predictors:
+
+```{r}
+fit <- lm(log_height ~ rain.wettestmonth + altitude, data=data_height)
+
+parameters(fit)
+report(fit)
+check_model(fit)
+
+```
+
+Fit model with two predictors
+
+```{r}
+fit <- lm(log_height ~ rain.wettestmonth + temperature, data=data_height)
+
+parameters(fit)
+report(fit)
+check_model(fit)
+```
+
+Interaction
+
+```{r}
+
+fit <- lm(log_height ~ rain.wettestmonth * hemisphere, data=data_height)
+
+fitted <- estimate_prediction(fit)
+
+report(fit)
+```
+
+## One categorical, one continuous variable (ANCOVA) - Urchins
+
+```{r}
+
+# read in data: 
+urch <- read_csv("data/Urchins.csv") %>%
+  mutate(
+    Quadrat = as.factor(Quadrat)
+  )
+```
+
+```{r}
+fit <- lm(BareRock ~ Treatment*Day, data = urch)
+
+check_model(fit)
+
+# neeeds a log transofrm
+urch <- urch %>% mutate(logBareRock=log(BareRock+1))
+
+fit_log <- lm(logBareRock ~ Treatment*Day, data = urch)
+
+check_model(fit_log)
+
+parameters(fit_log)
+```
+
+## 

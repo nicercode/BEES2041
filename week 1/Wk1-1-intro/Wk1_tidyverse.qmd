@@ -1,0 +1,224 @@
+---
+title: "Intro to data manipulation with the tidyverse"
+format: html
+editor: visual
+---
+
+The purpose of this material is to give you some examples for working with the tidyverse.
+
+For these exercises we're going to use an inbuilt dataset `starwars`, which contains traits of characters appearing in the starwars films.
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/450px-Star_wars2.svg.png)
+
+# Setting up
+
+## Packages
+
+Load relevant package
+
+```{r}
+library(tidyverse)
+```
+
+## Loading data
+
+We'll use two versions of the starwars data, included within dplyr as an example dataset
+
+```{r}
+# Each character appears once
+data <- dplyr::starwars
+
+```
+
+# Working with tidyverse
+
+Your first challenge is to get more familiar with the tidyverse functions for manipulating data tables.
+
+Review the examples in the dplyr guide here: <https://dplyr.tidyverse.org/articles/dplyr.html>
+
+Then adapt the code there to answer the following.
+
+### Use `filter` to extract all rows with human characters
+
+```{r}
+
+```
+
+How many rows in the resulting dataset?
+
+```{r}
+
+```
+
+### Use `filter` to extract all rows with human characters over 1.8m tall
+
+```{r}
+
+```
+
+How many rows in the resulting dataset?
+
+```{r}
+
+```
+
+### Use the `arrange` function to sort the data by `species`
+
+```{r}
+
+```
+
+What character appears at the top of the new dataset?
+
+```{r}
+
+```
+
+### Use the `select` function to choose columns
+
+Include variable name, homeworld, species
+
+```{r}
+
+
+```
+
+### Use the `mutate` function to create a variable of mass in g (currently in kg)
+
+```{r}
+
+```
+
+# The pipe
+
+The pipe enables you to chain different commands together. If you have a series of operations to calculate the average height and mass for each species by sex.
+
+Without the pipe, you need to save the output for each step
+
+```{r}
+a1 <- group_by(data, species, sex)
+a2 <- select(a1, height, mass)
+a3 <- summarise(a2,
+  height = mean(height, na.rm = TRUE),
+  mass = mean(mass, na.rm = TRUE)
+)
+a3
+```
+
+But with the pipe, you can take the output of one step and pipe it in as input to the next step. E.g. the code above becomes
+
+```{r}
+data %>%
+  group_by(species, sex) %>%
+  select(height, mass) %>%
+  summarise(
+    height = mean(height, na.rm = TRUE),
+    mass = mean(mass, na.rm = TRUE)
+  )
+```
+
+what is the average height of Clawdite females (in cm)?
+
+```{r}
+
+```
+
+### Use your code from above with the pipe to create a new dataset that
+
+\- extracts all rows with human characters over 1.8m tall \
+- includes columns name, homeworld, mass, height\
+- converts mass to g and height in m
+
+```{r}
+
+```
+
+What is the height of the character at the top of this new dataset?
+
+```{r}
+
+```
+
+# Other miscellaneous tips for effective analysis
+
+## Variable names
+
+Complicated variable names are hard to work with. Especially those with spaces or special characters, like (=,+& etc.
+
+If you do have a dataset with complicated naes, you can use tick marks to make working with it easier. E.g., imagine I have a variable "strange variable (yrs)", you could use this in code like this
+
+```{r}
+data %>%
+  select(site, `strange varible (yrs)`)
+
+```
+
+Personally, I clean variable names to make them more R friendly.
+
+E.g. using the rename function
+
+```{r}
+data %>%
+  rename(better_variavle = `strange varible (yrs)`)
+
+```
+
+OR, you can use the `clean_names` function from the package `janitor` to do a general tidyup of all names
+
+```{r}
+data <- data %>% janitor::clean_names()
+```
+
+## Check distributions
+
+It's always a good idea to check the distributions of key variables, to identity potential errors.
+
+### Categorical variables
+
+For categorical variables, you can look a table of values
+
+```{r}
+
+data$homeworld %>% table()
+
+```
+
+or plot it
+
+```{r}
+data %>% 
+  ggplot(aes(homeworld)) + geom_bar()
+```
+
+### Numeric values
+
+For numerical values, you can look at the range
+
+```{r}
+range(data$height, na.rm = TRUE)
+
+range(data$birth_year, na.rm = TRUE)
+```
+
+and/or plot a histogram to look at the distribution
+
+```{r}
+data %>% 
+  ggplot(aes(x=height) ) + 
+  geom_histogram()
+
+```
+
+### Summaries of whole dataset
+
+The package `skimr` has a great function `skim` for quickly summarising the structure of an entire datatset
+
+```{r}
+skimr::skim(data)
+```
+
+another one is from the package `report`
+
+```{r}
+report::report(data)
+```

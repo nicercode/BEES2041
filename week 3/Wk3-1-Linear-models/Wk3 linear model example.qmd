@@ -1,0 +1,258 @@
+---
+title: "Intro to Linear mdoels with Easystats"
+format: html
+editor: visual
+---
+
+The purpose of this material is to give you an example of fitting a liner model in R and working with the output.
+
+# Setting up
+
+## Packages
+
+We've been using the tidyverse
+
+```{r}
+library(tidyverse)
+```
+
+Now we're also going to install another family of packages called `easystats`
+
+```{r}
+install.packages("easystats")
+
+library(easystats)
+```
+
+## Loading data
+
+We'll use the starwars data, as we did in week 1.
+
+```{r}
+# Each character appears once
+data <- dplyr::starwars %>% 
+  filter (mass < 500) # remove jaba the hut, extreme oulier
+```
+
+# Fitting linear models
+
+Let's fit a model between character mass and height.
+
+First, always plot the data and ask yourself, is a linear relationship reasonable?
+
+```{r}
+data %>%
+  ggplot(aes(mass, height)) +
+  geom_point()
+```
+
+Are taller characters heavier? It seems so. But is this due to chance sampling and how strong is the relationship? Let's fit a linear model to investigate some more.
+
+```{r}
+fit.mass <- lm(mass~height, data = data)
+```
+
+The object `fit.mass` can now be queried in various ways, such as
+
+```{r}
+coef(fit.mass)
+summary(fit.mass)
+```
+
+While all the infomrationw we need is there, I don't find the output above particularly easy for beginners.
+
+## Better outputs with `easystats` family of packages
+
+Getting the right stuff out of the natural R output has always been a battle. We were therefore excited to see the `easystats` family of packages appear on the R package landscape. Like the tidyverse, `easystats` is actually multiple packages:
+
+![](https://easystats.github.io/easystats/reference/figures/logo_wall.png){width="458"}
+
+You can install and load them individually, or you can load them all with
+
+```{r}
+library(easystats)
+```
+
+So let's use this to explore our linear regression.
+
+## What are the coefficients of my model
+
+A linear model has the form
+
+$$
+y = a + bX.
+$$
+
+Here `a` is the intercept, and `b` is the slope.
+
+We can extract the slope and intercept using the `paramaters` function:
+
+```{r}
+parameters(fit.mass)
+```
+
+Note, we get an estimate of each parameter (coefficient), it's Standard Error (SE), Confidence Interval, t-statistic and p-value. Also, they don't have the names `a` and `b`, but that's what they are.
+
+## Partitioning of variance, F and p
+
+As you will have heard in the lectures, a regression involves a partitioning of variance between the model and residuals. To see how big each part is, we can run
+
+```{r}
+anova(fit.mass)
+```
+
+What does this mean? The `report_performance` function helps us navigate the output:
+
+```{r}
+report_performance(fit.mass)
+```
+
+As with t-tests, a p-value is given and quantifies how likely you are to observe the observed F statistic *by chance in a population where the null hypothesis is true*.
+
+We can get an all around report using the `report` function:
+
+```{r}
+report(fit.mass)
+```
+
+## Predicting values for the fitted line
+
+We can make predictions from the model using the `estimate_prediction` function:
+
+```{r}
+data_fitted <- estimate_prediction(fit.mass)  
+
+data_fitted
+```
+
+By default, we get the prediction for every value of x in the original data. So this output has the same number of rows as the original.
+
+```{r}
+nrow(data)
+nrow(data_fitted)
+```
+
+We can also predict at other values of x, e.g. the mass of a character that is 200cm tall is given by
+
+```{r}
+estimate_prediction(fit.mass, data = tibble(height = 200))  
+```
+
+## Residuals
+
+The predicted output of the model includes columns called `Predicted` and `Residuals` . The predicted $Y$ (often called $\hat{Y}$) is just the estimate
+
+$$
+\hat{Y} = a +bX.
+$$
+
+The Residuals are given by the difference between predicted $Y$ and the observed $Y$ (often called $Y_{obs}$):
+
+$R = \hat{Y} - Y_{obs}.$
+
+# Calculating it all manually (just for learning purposes)
+
+R and `easystats` calculate all the variances and so forth for you. But we could calculate them manually if we wanted. The code below does everything manually, for demonstration and learning purposes.
+
+**NB: This code below is just to demonstrate what's happening behind the scenes. I don't suggest you do this every time, that's what the packages are for!**
+
+```{r}
+x <- data$height
+y <- data$mass
+
+# fit model
+fit <- lm(y~x)
+
+# Extract coefficients
+a <- coef(fit)[1]
+b <- coef(fit)[2]
+
+# Fitted values of Y
+y_hat <- a + b * x
+
+# Residuals
+residuals <- y - y_hat
+
+# calculate residual sum of squares (sum of the squared difference of each actual score from the predicted score)
+sum(residuals^2)
+
+# calculate regression sum of squares (the square of the difference of each predicted value from the overall mean)
+sum((y_hat - mean(y))^2)
+
+# caluclate r2
+1- sum(residuals^2) / sum((y-mean(y))^2)
+
+# Number of data points, degress of feredom
+n <- nrow(data)
+df1 <- 1
+df2 <- n-2
+
+# Caluclate mean squares of regression and residuals
+MS_regression <- sum((y_hat - mean(y))^2) / df1
+MS_resid <-  sum(residuals^2) / df2
+
+# F statistic
+F_ratio <- MS_regression / MS_resid
+
+# probability of seeing this by chance if null hypoth is true
+pval <- 
+  pf(F_ratio, df1, df2, lower.tail = FALSE)
+```
+
+The values above should be the same as what's returned in the following two lines:
+
+```{r}
+estimate_prediction(fit)  
+anova(fit)
+```
+
+# Visualising the relationship
+
+There's two ways to visualise. We can either use `easystats` inbuilt `plot` function to directly plot the predicted values
+
+```{r}
+
+data_fitted <- estimate_prediction(fit.mass) 
+
+plot(data_fitted)
+```
+
+This is still a gpplot object, so you can still do things like add labels and themes
+
+```{r}
+plot(data_fitted) +
+  labs(x = "Height (m)", y= "Mass (kg)", 
+       title = "height-mass allometry among starwars characters") +
+  theme_minimal()
+```
+
+Or you can create the plot layers yourself:
+
+```{r}
+data %>%
+  ggplot(aes(height, mass)) +
+  # add points
+  geom_point() +
+  # add line
+  geom_line(data = data_fitted, aes(y = Predicted))
+```
+
+or if we want to add in uncertainty
+
+```{r}
+data %>%
+  ggplot(aes(height, mass)) +
+  geom_point() +
+  # add ribbon for confidence interval
+  geom_ribbon(data = data_fitted, aes(y = Predicted, ymin = CI_low, ymax = CI_high), alpha = 0.2) +
+  # add predcited line
+  geom_line(data = data_fitted, aes(y = Predicted))
+```
+
+# Testing model assumptions
+
+We'll check this out more in a later lab, but for completeness in our demo of eaystats, we can also evaluate the model's assumptions (you can ignore for now).
+
+```{r}
+check_model(fit.mass)
+```

@@ -1,0 +1,186 @@
+---
+title: "Staligmite growth rates"
+format: html
+editor: visual
+---
+
+# Overview
+
+Stalagmites are "a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings" (<https://en.wikipedia.org/wiki/Stalagmite>).
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Labeled_speleothems.jpg/780px-Labeled_speleothems.jpg){fig-align="center"}
+
+Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses Stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
+
+This exercise builds off two papers published by Andy and his team
+
+-   Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. https://doi. org/10.1029/2020RG000722 (see file `data/staligmites/refs/Baker et al 2021 Reviews of Geophysics.pdf`
+
+-   Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `data/staligmites/refs/Baker et al 2015.pdf`)
+
+# Aims
+
+Andy asked us to cross check his results by re-anlaysing the data. Your goal is reproduce some key figures from the paper 2021 paper.
+
+# Assembling the data
+
+```{r}
+library(tidyverse)
+```
+
+## Loading data
+
+The data is available at https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639
+
+We've downloaded this into the folder at `data/staligmites/Laminated stalagmite Dataset.csv`
+
+Load this into R use the `read_csv` function
+
+```{r}
+
+```
+
+## Data structure
+
+Check the structure of the dataset, including the names of the columns. The dataset gives records of lamina thickness through time for a series of different stalagmites.
+
+The variables provided are
+
+-   `entity_id` : The ID of the satalgmite sampled.
+
+-   `seq_id` : The ID of the sequence taken through the sample
+
+-   `lamina thickness (mm)` : The thickness of each layer. Which provides an indicator of growth rate.
+
+-   `lam_age (BP, 0=1950AD)` : Years Before Present (=1950), corresponding to the age of the layer.
+
+## Data manipulation
+
+This dataset has some difficult variable names. Perhaps rename to something more R friendly? The function `clean_names()` from the package `janitor` may be useful here. You might need to install the package first.
+
+```{r}
+
+```
+
+## Check distributions
+
+Do the properties of each variable seem reasonable?
+
+```{r}
+
+```
+
+Did you notice any errors in the dataset? There is one really weird value. What is it?
+
+```{r}
+
+```
+
+You check whit Andy and he confirms an error in the data entry for this point. Can you remove it?
+
+The `filter` function could be useful
+
+```{r}
+
+```
+
+# Making plots
+
+Now let's go ahead and make some plots. We're going to try and recreate figures similar to Figure 3, 5, 10 in Baker et al 2021. Don't worry about getting them exact, just close.
+
+### Figure 5
+
+Have a go at creating this plot.
+
+```{r}
+
+```
+
+### Figure 3
+
+Have a go at creating this plot. I suggest trying for a single panel before making a bunch of panels.
+
+Start with single sample. use the `filter` command to subset your data before plotting it.
+
+```{r}
+
+```
+
+Now try making a panel of plots. Note the section in the intro on facetting will be helpful for multi panel plots.
+
+```{r}
+
+```
+
+### **Figure 10**
+
+Have a go at creating this plot. It's similar to the one above, but there's data for select values of seq_id
+
+```{r}
+
+```
+
+### Figure 2
+
+Finally, can you plot a map of sample locations as in figure 2?
+
+The data with locations is in `data/staligmites/Tables.xlsx` . It's an excel file. We can read it in using the following code:
+
+```{r}
+
+data_sites <- readxl::read_xlsx("data/staligmites/Tables.xlsx") %>% 
+  janitor::clean_names()
+
+```
+
+Are all variables correct type?
+
+```{r}
+data_sites <- data_sites %>%
+  mutate(lat = as.numeric(lat),
+         long = as.numeric(long))
+
+```
+
+First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add code with points
+
+```{r}
+
+# create data for world coordinates using
+# map_data() function
+world_coordinates <- map_data("world")
+
+# create world map using ggplot() function
+ggplot(data_sites, aes(long, lat)) +
+  
+  # geom_map() function takes world coordinates
+  # as input to plot world map
+  geom_map(data = world_coordinates, map = world_coordinates,
+           aes(long, lat, map_id = region)) +
+  geom_point(col = "red") +
+  geom_text(col = "red", aes(label = site_name), nudge_y = 2) +
+  coord_quickmap() +
+  theme_classic()
+
+```
+
+Second, we can use the package leaflet to create an interactive plot. The code is a little different
+
+```{r, keep}
+library(leaflet)
+
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(
+    lng = data_sites$long,
+    lat = data_sites$lat,
+    label =
+      paste(
+        data_sites$entity_id_1000_sisal_entity_id,
+        data_sites$site_name
+      )
+  )	%>%
+  addScaleBar()
+
+
+```

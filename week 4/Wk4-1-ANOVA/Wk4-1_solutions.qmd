@@ -1,0 +1,168 @@
+---
+title: "Wk4-1_prac"
+author: "Soleille Milelr"
+format: html
+editor: visual
+---
+
+Load packages
+
+```{r}
+#load tidyverse
+library(tidyverse)
+```
+
+## Turtle hatching times vs. temperature
+
+**Q1:**
+
+```{r}
+# read in data 
+dat <- read_csv("data/TurtleTemps.csv")
+
+# Sum of squares (variance within groups)
+# mean for 15C
+mean(dat$t_15C)
+#sum of squares for 15C
+sum((dat$t_15C - mean(dat$t_15C))^2)
+
+# mean for 20C 
+mean(dat$t_20C)
+#sum of squares for 20C
+sum((dat$t_20C - mean(dat$t_20C))^2)
+
+# residual sum of squares (variance between groups) 
+mns <- c(58.4,44.6, 49.2, 20.1)
+sum((mns - mean(mns))^2)
+```
+
+**Q2:**
+
+```{r}
+# pivot_longer()
+dat1 <- dat %>% 
+  pivot_longer(cols = c(t_15C,t_20C,t_25C,t_30C), names_to = "Temp", values_to = "days")
+
+fit <- lm(days~Temp, data = dat1)
+
+# perform anova 
+anova(fit)
+
+```
+
+**Q3:**
+
+```{r}
+# frequency histogram of the residuals
+hist(dat.av$residuals)
+
+# scatter plot of residuals vs. expected values 
+plot(dat.av)
+
+```
+
+**Q4:**
+
+```{r}
+# find the p-value
+pf(15.98, 3, 36, lower.tail = FALSE)
+```
+
+**Q5:**
+
+```{r}
+# ggplot to visualize 
+ggplot(data = dat1, aes(Temp, days)) +
+  geom_boxplot()
+
+# critical value
+qtukey(0.95, 4, 36)
+
+# Differences between temperature values 
+# create object with the four means
+means <- c(58.4,44.6,49.2,20.1)
+
+# create object with the standard error of our anova
+SEanova <- sqrt(167.45/10)
+
+# calculate table of mean differences
+dist(means)/SEanova
+
+```
+
+html code
+
+\<pre style="margin-top: 0px; max-width: 95%; white-space: pre-wrap; border-width: 1px; border-color: rgb(204, 204, 204); border-style: solid; display: block; background-color: rgb(248, 248, 248); padding: 0.5em;"\>turt_anova \<- aov(response_variable \~ predictor_variable, data = your_data_frame)\</pre\>
+
+## Potato variants on nematode abundance
+
+Read in data
+
+```{r}
+pot <- read_csv("data/Potato.csv")
+
+str(pot)
+```
+
+**Q9:**
+
+```{r}
+sum((pot$Control - mean(pot$Control))^2)
+mean(pot$V1)
+sum((pot$V1 - mean(pot$V1))^2)
+sum((pot$V2 - mean(pot$V2))^2)
+mean(pot$V3)
+sum((pot$V3 - mean(pot$V3))^2)
+mean(pot$V4)
+sum((pot$V4 - mean(pot$V4))^2)
+```
+
+**Q10:** find the residual sum of squares (variance between groups)
+
+```{r}
+mns <- c(86.93,81.07,104.47,80.13,52.93)
+sum((mns - mean(mns))^2)
+```
+
+Plot to visualize the pattern
+
+**Q11:**
+
+```{r}
+# You'll have to use pivot_longer() to turn your wide-format data frame into a long-format data frame
+potat <- pot %>% pivot_longer(c("Control", "V1","V2","V3","V4")) %>% rename(variant=name, eggs.p.day = value)
+
+
+ggplot(data = potat, aes(variant, eggs.p.day)) + geom_boxplot()
+```
+
+Now run an anova to see if there is a significant difference between the potato crop variations in terms of nematode abundance.
+
+**Q12:**
+
+```{r}
+av <- lm(eggs.p.day ~ variant, data = potat)
+anova(av)
+
+```
+
+Double check that the assumptions are valid on your anova using hist() and plot()
+
+**Q14:**
+
+```{r}
+hist(av$residuals)
+plot(av)
+```
+
+**Q15:**
+
+```{r}
+qtukey(0.95, 5, 70) # critical value 
+
+mns # means of each temp group 
+av.se <- sqrt(122/15)
+dist(mns) / av.se
+```
+
+We now need to see if our statistical model is valid by checking the assumption of homogeneity of variance (namely that the residuals are homogeneous, i.e., approximately equal), and normally distributed (even distribution of data around the mean, no wonky outliers).

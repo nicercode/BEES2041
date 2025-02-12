@@ -1,0 +1,32 @@
+source,variable,description
+Underwater photos,Coral,Total % cover of corals in the pixel
+,,
+,suffix ‘_p’ , the value extracted from the exact single pixel the observation lies on
+,suffix ‘_s’ ," the mean value calculated from a group of neighbourhood pixels (a spectrally homogenous segment, e.g. coral patch, sand patch)"
+,suffix ‘_savg’ , the ‘sum average’ glcm texture metric for the corresponding band
+,suffix ‘_maxent’ , the ‘maximum entropy’ glcm texture metric for the corresponding band
+,,
+Topography,slope_x,"slope of sea floor in degrees, derived from depth neighbourhood"
+Topography,depth_x,water depth in meters * 100 (storing decimal values as integer for storage efficiency)
+,,
+Satellite,b1-b6,equals the first 6 bands of the Sentinel-2 satellite sensor (https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/resolutions/spectral)
+Satellite,rb_x,ratio of red:blue light
+Satellite,gb_x,ratio of green:blue light
+Satellite,rg_x,ratio of red:green light
+Satellite,red_x,Amount of red light
+Satellite,rrb1_x,other spectral attributes
+Satellite,rrb2_x,other spectral attributes
+Satellite,rrb3_x,other spectral attributes
+,,
+Wave model,bed90_x,90th percentile bed velocity (wave param model)
+Wave model,hs95_x,95th percentile significant wave height (wave param model)
+Wave model,rootT90_x, 90th percentile of wave period (wave param model)
+Wave model,tp90_x,90th percentile of peak wave period (wave param model)
+Wave model,wsl90_x,90th percentile of peak wave period (wave param model)
+,,
+Underwater photos,pa_branch,presence of branching coral (true/false)
+Underwater photos,pa_massive,presence of massive coral (true/false)
+Underwater photos,pa_plate,presence of plate coral (true/false)
+Underwater photos,pa_soft,presence of soft coral (true/false)
+Underwater photos,dom_num,???
+Underwater photos,class_num,"substrate: 11 (sandy), 12 (rubbly), 13 (rocky) or 15 (coral dominated)"
