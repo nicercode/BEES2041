@@ -1,0 +1,156 @@
+---
+title: "Pelican classifcation"
+format: html
+editor: visual
+---
+
+## 
+
+https://towardsdatascience.com/data-science-tutorials-training-a-random-forest-in-r-a883cc1bacd1
+
+# Random forests with ranger
+
+```{r}
+#install.packages("ranger")
+
+library(tidyverse)
+library(ranger)
+
+source("R/confusion.R")
+
+```
+
+## RFs with ranger
+
+Training testing example
+
+```{r}
+ranger(Species ~ ., data = iris)
+
+train.idx <- sample(nrow(iris), 2/3 * nrow(iris))
+iris.train <- iris[train.idx, ]
+iris.test <- iris[-train.idx, ]
+
+fit_iris <- ranger(Species ~ ., data = iris.train)
+
+evaluate_model(fit_iris , iris.train, iris.test, y = "Species")
+```
+
+## With pelicans
+
+Load data
+
+```{r}
+
+peli_labelled_raw <- read_csv("data/trainingData.csv")
+
+peli_labelled <- 
+  peli_labelled_raw %>% 
+  mutate(
+    is_pelican = ifelse(Class==2, "pelican", "background") %>% as.factor()) %>%
+  select(is_pelican, everything()) %>% 
+  select(-Class)
+
+```
+
+Make training and testing
+
+```{r}
+
+npoints <- nrow(peli_labelled)
+train_ids <- sample(npoints, 0.75 * npoints)
+
+peli_labelled_train <- peli_labelled %>% slice(train_ids)
+peli_labelled_test <-  peli_labelled %>% slice(-train_ids)
+```
+
+Single covariates
+
+```{r}
+fit_rf1 <- ranger(is_pelican ~ b1, data = peli_labelled_train)
+
+evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
+```
+
+3 covariate - RGB
+
+```{r}
+fit_rf3 <- ranger(is_pelican ~ b1 + b2 + b3, data = peli_labelled_train)
+
+evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
+```
+
+RF all covars
+
+```{r}
+fit_rf1 <- ranger(is_pelican ~ ., data = peli_labelled_train)
+
+evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
+
+```
+
+Variable importance
+
+```{r}
+fit_rf <- ranger(is_pelican ~ ., data = peli_labelled_train, importance = "permutation")
+
+importance(fit_rf)
+```
+
+Reduced model (top 5 covariates)
+
+```{r}
+
+top_vars <- importance(fit_rf) %>% sort(decreasing = T) %>% head(5) %>% names() 
+
+fit_rf_top <- 
+  ranger(is_pelican ~ ., 
+         data = peli_labelled_train %>% select(is_pelican, any_of(top_vars))
+         )
+
+evaluate_model(fit_rf_top, peli_labelled_train, peli_labelled_test)
+```
+
+# Extension
+
+Is many trees (the randome forest) better than single decision tree?
+
+```{r}
+fit_rf_single <- ranger(is_pelican ~ ., data = peli_labelled_train,   num.trees =1)
+
+evaluate_model(fit_rf_single, peli_labelled_train, peli_labelled_test)
+
+```
+
+Is RF better than regression (regression only works with binary outcome)
+
+```{r}
+
+fit_glm <- glm(is_pelican ~ ., data = peli_labelled_train, family = binomial)
+
+evaluate_model(fit_glm, peli_labelled_train, peli_labelled_test)
+
+```
+
+# Now you can use the model on a big dataset
+
+```{r}
+
+# fit final model, with 100 trees rather default of 500 (faster with fewer trees, and 100 seems like enough here)
+fit_rf1 <- ranger(is_pelican ~ ., data = peli_labelled_train, num.trees = 100)
+
+# load mosaic to predict onto
+data_mosaic <- readRDS("x_setup/predict/RasterWithPredictorsPelicans-0000011776-0000011776.rds") 
+
+# make predictions
+data_pred <- 
+  data_mosaic %>%
+  mutate(is_pelican = predict(fit_rf1, data = data_mosaic)$predictions)
+
+# Plot direct to file "output.png", works better than plotting to screen for big datastes 
+png("output.png", height= 40, width=40, units = "cm", res=600)
+ggplot(data_pred, aes(x,y)) +
+  geom_tile(aes(fill=is_pelican))
+dev.off()
+
+```

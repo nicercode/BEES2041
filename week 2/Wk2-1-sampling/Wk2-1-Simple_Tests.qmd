@@ -1,0 +1,237 @@
+---
+title: "Introduction to Data Analysis"
+format: html
+editor: visual
+---
+
+# Questions 1 - 5: Population Statistics
+
+We will begin by calculating some basis statistics about our population.
+
+```{r -- load libraries}
+
+
+### what libraries might you need? add them here so they're ready for you when required! ###
+
+
+```
+
+### Loading your data
+
+First, you need to load in the .csv file and assign it to a new data frame object, like we did in week 1.
+
+```{r}
+
+Population <- read_csv("data/????")
+
+```
+
+### 1) Population Mean
+
+Find this using the inbuilt R function `mean()`
+
+```{r}
+# The $ sign tells R to use the variable size from the data frame Population.
+
+mean(Population$size)
+
+```
+
+### 2) Population Variance
+
+```{r}
+# The built in var() function gives you the variance of a sample (with a slightly different formula), so we need to write a different line of code to get the population variance. By doing this, hopefully you will see population variance as a measure of how much individual data points differ on average from the population mean.
+
+pop_var <- mean((Population$size - mean(Population$size))^2)
+
+# the value you calculated has been assigned to a new object (pop_var), simply enter:
+
+pop_var
+
+# NOTE: it is better coding practice to use the object that holds the value of the variance (pop_var) rather than typing in the actual number. You don't have to worry about rounding off errors, and if you imported another data set with different values, you then reuse the code.
+```
+
+### 3) Standard deviation
+
+This is simply the square root of the population variance, using the inbuilt `sqrt()` function
+
+```{r}
+
+sqrt(pop_var)
+
+```
+
+### 4) Population Sampling
+
+```{r}
+
+Sample5 <- sample_n(Population, 5)
+
+
+
+
+
+
+
+```
+
+Now calculate the mean, variance and standard deviation for the smaller sample datasets using the `mean()` `var()` and `sd()` functions
+
+```{r}
+
+
+
+
+
+
+
+```
+
+### 5) Now you can complete Question 5 in the Moodle Quiz.
+
+# Questions 6-7: Confidence Intervals
+
+### 6) Calculate the 95% confidence intervals for each of the four samples you took from your population in Question 1.
+
+```{r}
+
+x <- Sample5$size
+
+n <- length(x)
+
+t_05 <- qt(0.975, df = n-1)
+
+
+
+mean(x) - t_05 * sd(x/sqrt(n))
+
+mean(x) + t_05 * sd(x/sqrt(n))
+
+```
+
+\
+Now modify the code above to get the confidence intervals for your 10, 20 and 50 value samples
+
+```{r}
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+### 7) You can now complete Question 7 in the Moodle Quiz.
+
+# Questions 8 - 10: One sample t-test
+
+### 8) Complete in the Moodle quiz
+
+### 9)
+
+```{r}
+
+
+
+
+
+
+
+
+```
+
+### 10) Complete in the Moodle Quiz
+
+# Questions 11 - 14: Independent samples t-test (corn data)
+
+### 11) Complete in the Moodle Quiz
+
+### 12)
+
+```{r}
+
+
+
+
+
+
+
+
+```
+
+### 13)
+
+```{r}
+
+
+
+
+
+
+
+
+```
+
+### 14) Complete in the Moodle Quiz
+
+# Questions 15 - 21: One & Two sample t-tests (soil data)
+
+### 15)
+
+```{r}
+
+
+
+
+
+
+
+```
+
+### 16) Complete in the Moodle Quiz
+
+### 17)
+
+```{r}
+
+
+
+
+
+
+
+```
+
+### 18)
+
+```{r}
+
+
+
+
+
+
+
+```
+
+### 19 & 20) Complete in the Moodle Quiz
+
+### 21)
+
+```{r}
+
+
+
+
+
+
+
+```
+
+# And you're done! Great job!

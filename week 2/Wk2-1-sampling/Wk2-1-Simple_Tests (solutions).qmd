@@ -1,0 +1,302 @@
+---
+title: "Introduction to Data Analysis"
+format: html
+editor: visual
+---
+
+# Questions 1 - 5: Population Statistics
+
+We will begin by calculating some basis statistics about our population.
+
+```{r -- load libraries}
+
+library(tidyverse)
+```
+
+### Loading your data
+
+First, you need to load in the .csv file and assign it to a new data frame object, like we did in week 1.
+
+```{r}
+
+Population <- read_csv("data/Population.csv")
+
+```
+
+### 1) Population Mean
+
+Find this using the inbuilt R function `mean()`
+
+mean(Population\$size)
+
+```{r}
+# The $ sign tells R to use the variable size from the data frame Population.
+
+mean(Population$size)
+
+```
+
+### 2) Population Variance
+
+```{r}
+# The built in var() function gives you the variance of a sample (with a slightly different formula), so we need to write a different line of code to get the population variance. By doing this, hopefully you will see population variance as a measure of how much individual data points differ on average from the population mean.
+
+pop_var <- mean((Population$size - mean(Population$size))^2)
+
+# the value you calculated has been assigned to a new object (pop_var), simply enter:
+
+pop_var
+
+# NOTE: it is better coding practice to use the object that holds the value of the variance (pop_var) rather than typing in the actual number. You don't have to worry about rounding off errors, and if you imported another data set with different values, you then reuse the code.
+```
+
+### 3) Standard deviation
+
+This is simply the square root of the population variance, using the inbuilt `sqrt()` function
+
+```{r}
+
+sqrt(pop_var)
+
+```
+
+### 4) Population Sampling
+
+```{r}
+
+Sample5 <- sample_n(Population, 5)
+
+```
+
+Now calculate the mean, variance and standard deviation for the smaller sample datasets using the `mean()` `var()` and `sd()` functions
+
+```{r}
+
+mean(Sample5$size)
+
+pop_var5 <- mean((Sample5$size - mean(Sample5$size))^2)
+
+pop_var5
+
+sqrt(pop_var5)
+
+```
+
+### 5) Now you can complete Question 5 in the Moodle Quiz.
+
+# Questions 6-7: Confidence Intervals
+
+### 6) Calculate the 95% confidence intervals for each of the four samples you took from your population in Question 1.
+
+```{r}
+
+x <- Sample5$size
+
+# for a vector, such as x, length gives the number of elements in the vector
+# length(Sample5) gives the number of columns in the table - you have to specify a single column of data if you want to use "length"
+# As alternative is nrow(Sample5), which indicates the number of rows of data in a table
+
+n <- length(x)
+
+t_05 <- qt(0.975, df = n-1)
+
+mean(x) - t_05 * sd(x/sqrt(n))
+
+mean(x) + t_05 * sd(x/sqrt(n))
+
+```
+
+\
+Now modify the code above to get the confidence intervals for your 10, 20 and 50 value samples
+
+```{r}
+
+Sample10 <- sample_n(Population, 10)
+
+x_10 <- Sample10$size
+
+n_10 <- length(x_10)
+
+t_10 <- qt(0.975, df = n_10-1)
+
+mean(x_10) - t_10 * sd(x_10/sqrt(n_10))
+
+mean(x_10) + t_10 * sd(x_10/sqrt(n_10))
+
+
+Sample20 <- sample_n(Population, 20)
+
+x_20 <- Sample20$size
+
+n_20 <- length(x_20)
+
+t_20 <- qt(0.975, df = n_20-1)
+
+mean(x_20) - t_20 * sd(x_20/sqrt(n_20))
+
+mean(x_20) + t_20 * sd(x_20/sqrt(n_20))
+
+
+Sample50 <- sample_n(Population, 50)
+
+x_50 <- Sample50$size
+
+n_50 <- length(x_50)
+
+t_50 <- qt(0.975, df = n_50-1)
+
+mean(x_50) - t_50 * sd(x_50/sqrt(n_50))
+
+mean(x_50) + t_50 * sd(x_50/sqrt(n_50))
+
+
+
+
+
+
+
+```
+
+### 7) You can now complete Question 7 in the Moodle Quiz.
+
+# Questions 8 - 10: One sample t-test
+
+### 8) Complete in the Moodle quiz
+
+### 9)
+
+```{r}
+
+pH <- c(7.9, 7.1, 7.0, 7.2, 7.8, 8.1, 8.0, 7.7, 7.9, 7.5)
+
+my.t <- (mean(pH) - 7.5)/(sd(pH)/sqrt(length(pH)))
+
+my.t
+
+pt(my.t, df = 9, lower.tail = FALSE)*2
+
+t.test(pH, alternative = "two.sided", mu = 7.5) 
+```
+
+### 10) Complete in the Moodle Quiz
+
+# Questions 11 - 14: Independent samples t-test (corn data)
+
+### 11) Complete in the Moodle Quiz
+
+### 12)
+
+```{r}
+
+Corn <- read_csv("data/Corn.csv")
+
+# check column names
+names(Corn)
+
+```
+
+### 13)
+
+```{r}
+
+ggplot(Corn, aes(Treatment, Mass)) + geom_boxplot()
+
+# t.test syntax:
+# for 2-sample t-tests, the order is `continuous_variable~grouping_variable`
+# there are three different options for the argument `alternative`: "two-sided" (if the question is whether the treatments are "different"), "greater" and "less"
+# to see all the allowed argument values, run `?t.test`
+
+t.test(Mass~Treatment, data = Corn, alternative = "two.sided", var.equal = TRUE)
+
+
+```
+
+### 14) Complete in the Moodle Quiz
+
+# Questions 15 - 21: One & Two sample t-tests (soil data)
+
+### 15)
+
+```{r}
+
+data_lead <- read_csv("data/Lead.csv")
+
+x_lead <- data_lead$lead_concentration
+
+n_lead <- length(x_lead)
+
+t_lead <- qt(0.975, df = n_lead-1)
+
+mean(x_lead) - t_lead * sd(x_lead/sqrt(n_lead))
+
+mean(x_lead) + t_lead * sd(x_lead/sqrt(n_lead))
+
+
+
+```
+
+### 16) Complete in the Moodle Quiz
+
+```{r}
+# Question asks if sample is `greater` than a benchmark, so `alternative = "greater"`
+# This is a 1-sample t-test, where you're comparing a sample to a benchmark. The benchmark value is indicated as `mu = 300`
+
+t.test(x_lead, alternative = "greater", mu = 300)
+
+# Confidence intervals are only relevant for a two-sided t-test. 
+# For CI to be calculated, you need to run 
+
+t.test(x_lead, alternative = "two.sided", mu = 300)
+```
+
+### 17)
+
+```{r}
+data <- read_csv("data/ph.csv")
+
+t.test(ph~site, data = data, alternative = "two.sided", var.equal = TRUE)
+```
+
+### 18)
+
+```{r}
+x <- read_csv("data/Water_quality.csv")
+
+# First question - is sample difference than 670
+
+t.test(
+  x$glyphosphate_concentration, # column with values
+  alternative = "two.sided",    # options "two.sided", "greater", "less"
+  mu = 670                      # for 1-sample t-test, indicate comparison benchmark
+  )
+
+# Second question - does sample exceed 95% value for concern (1200) 
+
+t.test(
+  x$glyphosphate_concentration,
+  alternative = "greater",
+  mu = 1200
+  )
+```
+
+### 19 & 20) Complete in the Moodle Quiz
+
+### 21)
+
+```{r}
+kangaroos_data <- read_csv("data/Kangaroos.csv")
+
+# Make sure you know which the relevant data columns are!
+# View(kangaroos_data)
+
+ggplot(kangaroos_data, aes(soil_salinity, kangaroos)) + 
+  geom_boxplot()
+
+
+t.test(kangaroos~soil_salinity,        # continuous variabl~grouping variable
+       data = kangaroos_data,          # data
+       alternative = "two.sided",      # options "two.sided", "greater", "less"
+       var.equal = TRUE)               # include for a 2-sample t-test only
+```
+
+# And you're done! Great job!
