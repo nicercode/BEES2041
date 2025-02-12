@@ -9,11 +9,15 @@ editor_options:
   chunk_output_type: console
 ---
 
-The purpose of this material is to give you some examples for working with the tidyverse.
+The purpose of this quiz is to get some hands-on experience with data manipulation an R package `dplyr`. Recall from last prac an R package is a set of related functions that help you get a specific job done. 
 
-For these exercises we're going to use an inbuilt dataset `starwars`, which contains traits of characters appearing in the starwars films.
+**Meet the penguins!**
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Star_wars2.svg/450px-Star_wars2.svg.png)
+![The Palmer Archipelago penguins. Artwork by @allison_horst.](lter_penguins.png)
+
+> We will be working with the`palmerpenguins` data, which contains size measurements for three penguin species observed on three islands in the Palmer Archipelago, Antarctica.
+
+`palmerpenguins` itself is an R package so we will also need to load that into R. 
 
 # Setting up
 
@@ -22,7 +26,8 @@ For these exercises we're going to use an inbuilt dataset `starwars`, which cont
 Load relevant package
 
 ```{r}
-library(tidyverse)
+library(dplyr) # install.packages("dplyr")
+library(palmerpenguins) # install.packages("palmerpenguins")
 ```
 
 ## Loading data

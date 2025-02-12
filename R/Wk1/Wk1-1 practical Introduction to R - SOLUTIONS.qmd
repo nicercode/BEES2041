@@ -11,8 +11,6 @@ knitr::opts_chunk$set(echo = FALSE)
 library(moodlequiz)
 ```
 
-# R Basics
-
 Learning to code in R is like learning to speaking a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive! 
 
 ## Code vs Comments

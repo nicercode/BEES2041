@@ -1,5 +1,5 @@
 ---
-title: Week 1 - working with R
+title: "Week 1 - working with R"
 output: 
   moodlequiz::moodlequiz:
     replicates: 1
@@ -15,8 +15,6 @@ knitr::opts_chunk$set(echo = FALSE)
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 ```
-
-# R Basics
 
 Learning to code in R is like learning to speaking a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive! 
 
@@ -48,7 +46,7 @@ R `r cloze("reads the comment and does nothing", c("translates comments into Pyt
 
 There are 3 handy operators that you will come across often. First, is the "help operator" represented by `?`. This is useful when you are stuck, you can use it to bring up a help file to learn more about something. As an example, run the next bit of code. 
 
-<div id="r-editor-2568">
+<div id="r-editor-2567">
 ?`+`
 </div>
 
@@ -59,7 +57,7 @@ The `r cloze("help file for 'Arithmetic Operators'", c("latest updates in this v
 The next useful operator is. the "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
 
 
-<div id="r-editor-2567">
+<div id="r-editor-2568">
 my_lucky_number <- 13 # Insert the value 13 into the object my_lucky_number
 my_lucky_number
 </div>
@@ -118,7 +116,7 @@ There are 4 common data types in R:
 
 **Try:** use the functions `class()`, `typeof()`, `str()` to figure out what type of data you are working with below
 
-<div id="r-editor-2570">
+<div id="r-editor-2571">
 cats <- c("calico", "tabby", "black") # Character 
 water_ml <- c(200.34, 190.57, 195.83, 197.32) # Numeric - double
 number_of_houses <- c(5L, 1L, 6L, 8L, 10L)
@@ -136,7 +134,7 @@ Some far we have been working with **vectors**. They are the simplest object in.
 
 **Data frame** is data stored in a table. Think of these like a single spreadsheet, grid of rows and columns. Usually variables (the attributes you are interested in) are arranged as columns and observations for each entity you are collecting data for are arranged as rows. Take a look at the data frame `mtcars` and the help file for `mtcars`. 
 
-<div id="r-editor-2571">
+<div id="r-editor-2572">
 mtcars
 </div>
 
@@ -153,7 +151,7 @@ Another common and object data type is **list**. Lists are objects which can con
 
 We create lists using the `list()` function. Here I am creating a list and giving each **element** of my list a name (`car_data`, `cat_types`, `did_i_go_for_a_walk`). Notice I am using the `=` here to store objects into element. 
 
-<div id="r-editor-2572">
+<div id="r-editor-2573">
 cats <- c("calico", "tabby", "black") 
 went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
 
@@ -168,7 +166,7 @@ Like a variable in a dataframe, you can access a particular **element** using th
 
 ## Visualising your data
 
-Now that you have the basics under your belt, let's try looking at our data using plots! We will be using functions from an R package called `ggplot2`. R packages contain functions that are not shipped in the base version of R. There are MANY R packages out there, this is the beauty of R. Over time, you will find tools or R packages you like you use and add to your data science tool belt.
+Now that you have the basics under your belt, let's try looking at our data using plots! We will be using functions from an R package called `ggplot2`. R packages are shareable tools and contain functions and data that are not shipped in the base version of R. There are MANY R packages out there, this is the beauty of R. Over time, you will find tools or R packages you like you use and add to your data science tool belt.
 
 To make use `ggplot2` we need to first "load" its library into R using the `library()` function. 
 
@@ -182,7 +180,7 @@ Let's walk through the code first:
   - `y = wt` tells the function that we want to place `wt` on the y axis 
   - `group = cyl` tells the function that we want to treat `cyl` as a grouping variable. This means we want to compare between cars with different number of cylinders (4, 6, 8)
 
-<div id="r-editor-2573">
+<div id="r-editor-2574">
 library(ggplot2)
 
 ggplot(data = mtcars, aes(x = cyl, y = wt, group = cyl)) +  # Specify the data, the x-variable and the y-variable
@@ -195,7 +193,7 @@ Cars with more cylinders `r cloze("tend to", c("are always", "tend to"))` weigh 
 
 How does mileage `mpg` vary between different transmissions `am`? What would the `ggplot` code look like? 
 
-<div id="r-editor-2574">
+<div id="r-editor-2575">
 library(ggplot2)
 
 ggplot(data = mtcars, aes(x = `r cloze("am", colnames(mtcars))`, y = `r cloze("am", colnames(mtcars))`, group = `r cloze("am", colnames(mtcars))`)) +  # Specify the data, the x-variable and the y-variable
