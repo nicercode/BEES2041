@@ -1,0 +1,130 @@
+---
+title: Wk1_first_prac
+output: 
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: "Week 1 -  working with R"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+```
+
+# R Basics
+
+Learning to code in R is like learning to speaking a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive! 
+
+## Code vs Comments
+
+Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line with spit out or "return" a solution. 
+
+<div id="r-editor-2565">
+6 + 3 
+100 * 5
+(8651 - 734) / (4 * 9)
+</div>
+
+Much like a calculator, R uses **operators** like +, -, *, / to do maths. The brackets ( ) are used to group together some calculations and set the order of operations. 
+
+As we write code in this course, its often useful to add **comments** throughout our code to give it some context. Comments help organise your thoughts and serve as a reminder to you and your collaborators of what is happening in your code script. Here I've added some comments to the code above. Run the following code, what do you notice when the comments are run?
+
+<div id="r-editor-2566">
+6 + 3 # Addition
+
+100 * 5 # Subtraction
+
+(8651 - 734) / (4 * 9) # Some complicated math
+</div>
+
+R `r cloze("reads the comment and does nothing", c("translates comments into Python code", "reads the comment and does nothing", "is confused by the comment and complains"))`.
+
+## Useful operators
+
+There are 3 handy operators that you will come across often. First, is the "help operator" represented by \`?\`. This is useful when you are stuck, you can use it to bring up a help file to learn more about something. As an example, run the next bit of code. 
+
+<div id="r-editor-2568">
+?`+`
+</div>
+
+What information gets pulled up by calling \`?+\`
+
+The `r cloze("help file for 'Arithmetic Operators'", c("latest updates in this version of R", "help file for 'Arithmetic Operators'", "secret cheatsheet to this course"))`.
+
+The next useful operator is. the "assignment" operator \`<-\`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
+
+
+<div id="r-editor-2567">
+my_lucky_number <- 13 # Insert the value 13 into the object my_lucky_number
+my_lucky_number
+</div>
+
+Some folks like to use \`=\` instead of \`<-\` to assign things in R, this is a matter of personal preference - but its good practice to choose style and be consistent throughout. See for yourself! Change the \`<-\` to a \`=\` in the code above and input a different lucky number. Did it work? 
+
+When creating objects in R, there are few general rules naming things. Object names:
+
+1\) should only contain letters, numbers, and only dot or underscore characters e.g. \`river-data-2005\`
+
+2\) should **not** start with a number (e.g. \`3obj\`), a dot followed by a number (e.g. \`.3obj\`), or an underscore (e.g. \`_obj\`)
+
+3\) should **not** be a reserved keyword in R (e.g. \`for\`, \`in\`, \`repeat\`, \`while\`, etc.) (for more reserved keywords see \`?reserved\`).
+
+**Try:** Try creating some objects, storing either a single number or even words!
+
+## Functions
+
+Another common feature you will use in R are **"functions"**. These are in-built code that performs a specific task.
+For example, \`c()\` is function used to combine multiple values into one object and \`mean()\` is a function that calculates the average of a series of numbers. 
+
+<div id="r-editor-2569">
+x <- c(1,2,3,4,5)
+
+mean(x)
+</div>
+
+Functions have **"arguments"**, these are **inputs** to a function that is needed to perform it's task. Think of these as the various settings of a coffee machine. Take a look at the help file for the function \`mean()\`. 
+
+Ignoring the \`...\`, what are the other arguments of the \`mean()\` function? `r cloze("x, trim, na.rm", c("x, y, z", "temperature, grind, pressure", "x, trim, na.rm"))`.
+
+Notice how trim is set to 0 and \`na.rm\` is set to FALSE. These are what we call **default values**. We can change these to adjust the behaviour of a function. Take this next example, I've added a NA in a series of numbers. NA represents a missing value. Try taking a mean of x
+
+<div id="r-editor-2570">
+x <- c(1,2,3,4,5, NA, 7, 8, 9) # Add a missing value
+
+mean(x, na.rm = FALSE)
+</div>
+
+R didn't like that right? Try adjusting the value for the \`na.rm\` argument so you can take a mean of a series of number where a missing value is present.
+
+## Data types and structures in R 
+
+R has its unique way of classifying data. Data structures are fundamental to working with data in R as they are the objects you will dealing with them regularly.
+
+There are 4 common data types in R: 
+
+- character   \`c("calico", "tabby", "black")\` 
+- numeric      
+    - double, numbers containing decimals, default for all numbers in R \`c(200.34, 190.57, 195.83, 197.32)\`      
+    - integer, whole numbers    \`c(5L, 1L, 6L, 8L, 10L)\`
+- logical     \`c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)\`
+- complex     \`c(1+4i, 2+7i)\`
+
+We can use functions \`class()\`, \`typeof()\`, \`str()\` to figure out what type of data you are working with.
+
+<div id="r-editor-2570">
+cats <- c("calico", "tabby", "black") # Character 
+water_ml <- c(200.34, 190.57, 195.83, 197.32) # Numeric - double
+number_of_houses <- c(5L, 1L, 6L, 8L, 10L)
+went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
+space_numbers <- c(1+4i, 2+7i, 3+8i)
+
+class(cats)
+typeof(number_of_houses)
+str(went_for_a_walk)
+</div>
+
