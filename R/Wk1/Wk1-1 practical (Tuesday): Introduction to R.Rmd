@@ -46,17 +46,17 @@ R `r cloze("reads the comment and does nothing", c("translates comments into Pyt
 
 ## Useful operators
 
-There are 3 handy operators that you will come across often. First, is the "help operator" represented by \`?\`. This is useful when you are stuck, you can use it to bring up a help file to learn more about something. As an example, run the next bit of code. 
+There are 3 handy operators that you will come across often. First, is the "help operator" represented by `?`. This is useful when you are stuck, you can use it to bring up a help file to learn more about something. As an example, run the next bit of code. 
 
 <div id="r-editor-2568">
 ?`+`
 </div>
 
-What information gets pulled up by calling \`?+\`
+What information gets pulled up by calling `?+`
 
 The `r cloze("help file for 'Arithmetic Operators'", c("latest updates in this version of R", "help file for 'Arithmetic Operators'", "secret cheatsheet to this course"))`.
 
-The next useful operator is. the "assignment" operator \`<-\`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
+The next useful operator is. the "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
 
 
 <div id="r-editor-2567">
@@ -64,22 +64,22 @@ my_lucky_number <- 13 # Insert the value 13 into the object my_lucky_number
 my_lucky_number
 </div>
 
-Some folks like to use \`=\` instead of \`<-\` to assign things in R, this is a matter of personal preference - but its good practice to choose style and be consistent throughout. See for yourself! Change the \`<-\` to a \`=\` in the code above and input a different lucky number. Did it work? 
+Some folks like to use `=` instead of `<-` to assign things in R, this is a matter of personal preference - but its good practice to choose style and be consistent throughout. See for yourself! Change the `<-` to a `=` in the code above and input a different lucky number. Did it work? 
 
 When creating objects in R, there are few general rules naming things. Object names:
 
-1\) should only contain letters, numbers, and only dot or underscore characters e.g. \`river-data-2005\`
+1\) should only contain letters, numbers, and only dot or underscore characters e.g. `river-data-2005`
 
-2\) should **not** start with a number (e.g. \`3obj\`), a dot followed by a number (e.g. \`.3obj\`), or an underscore (e.g. \`_obj\`)
+2\) should **not** start with a number (e.g. `3obj`), a dot followed by a number (e.g. `.3obj`), or an underscore (e.g. `_obj`)
 
-3\) should **not** be a reserved keyword in R (e.g. \`for\`, \`in\`, \`repeat\`, \`while\`, etc.) (for more reserved keywords see \`?reserved\`).
+3\) should **not** be a reserved keyword in R (e.g. `for`, `in`, `repeat`, `while`, etc.) (for more reserved keywords see `?reserved`).
 
 **Try:** Try creating some objects, storing either a single number or even words!
 
 ## Functions
 
 Another common feature you will use in R are **"functions"**. These are in-built code that performs a specific task.
-For example, \`c()\` is function used to combine multiple values into one object and \`mean()\` is a function that calculates the average of a series of numbers. 
+For example, `c()` is function used to **combine multiple values** into one object and `mean()` is a function that calculates the average of a series of numbers. 
 
 <div id="r-editor-2569">
 x <- c(1,2,3,4,5)
@@ -87,11 +87,13 @@ x <- c(1,2,3,4,5)
 mean(x)
 </div>
 
-Functions have **"arguments"**, these are **inputs** to a function that is needed to perform it's task. Think of these as the various settings of a coffee machine. Take a look at the help file for the function \`mean()\`. 
+**Try:** Join another set of numbers to x and compute the mean
 
-Ignoring the \`...\`, what are the other arguments of the \`mean()\` function? `r cloze("x, trim, na.rm", c("x, y, z", "temperature, grind, pressure", "x, trim, na.rm"))`.
+Functions have **"arguments"**, these are **inputs** to a function that is needed to perform it's task. Think of these as the various settings of a coffee machine. Take a look at the help file for the function `mean()`. 
 
-Notice how trim is set to 0 and \`na.rm\` is set to FALSE. These are what we call **default values**. We can change these to adjust the behaviour of a function. Take this next example, I've added a NA in a series of numbers. NA represents a missing value. Try taking a mean of x
+Ignoring the `...`, what are the other arguments of the `mean()` function? `r cloze("x, trim, na.rm", c("x, y, z", "temperature, grind, pressure", "x, trim, na.rm"))`.
+
+Notice how trim is set to 0 and `na.rm` is set to FALSE. These are what we call **default values**. We can change these to adjust the behaviour of a function. Take this next example, I've added a NA in a series of numbers. NA represents a missing value. Try taking a mean of x
 
 <div id="r-editor-2570">
 x <- c(1,2,3,4,5, NA, 7, 8, 9) # Add a missing value
@@ -99,22 +101,22 @@ x <- c(1,2,3,4,5, NA, 7, 8, 9) # Add a missing value
 mean(x, na.rm = FALSE)
 </div>
 
-R didn't like that right? Try adjusting the value for the \`na.rm\` argument so you can take a mean of a series of number where a missing value is present.
+R didn't like that right? Try adjusting the value for the `na.rm` argument so you can take a mean of a series of number where a missing value is present.
 
-## Data types and structures in R 
+## Data types in R 
 
-R has its unique way of classifying data. Data structures are fundamental to working with data in R as they are the objects you will dealing with them regularly.
+R has its unique way of classifying data. Data types are fundamental to working with data in R as they are the entities you will be dealing with regularly.
 
 There are 4 common data types in R: 
 
-- character   \`c("calico", "tabby", "black")\` 
+- character   `"calico"`
 - numeric      
-    - double, numbers containing decimals, default for all numbers in R \`c(200.34, 190.57, 195.83, 197.32)\`      
-    - integer, whole numbers    \`c(5L, 1L, 6L, 8L, 10L)\`
-- logical     \`c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)\`
-- complex     \`c(1+4i, 2+7i)\`
+    - double - numbers containing decimals `197.32` (default for all numbers in R)      
+    - integer - whole numbers  `5L` (the `L` tells R explicitly that 5 is a whole number)
+- logical     `TRUE FALSE`
+- complex     `1+4i 2+7i`
 
-We can use functions \`class()\`, \`typeof()\`, \`str()\` to figure out what type of data you are working with.
+**Try:** use the functions `class()`, `typeof()`, `str()` to figure out what type of data you are working with below
 
 <div id="r-editor-2570">
 cats <- c("calico", "tabby", "black") # Character 
@@ -128,3 +130,23 @@ typeof(number_of_houses)
 str(went_for_a_walk)
 </div>
 
+## Object types in R
+
+Some far we have been working with **vectors**. They are the simplest object in. `cats`, `water_ml`, `went_for_a_walk` are one dimension and contains series of data. 
+
+**Data frame** is data stored in a table. Think of these like a single spreadsheet, grid of rows and columns. Usually variables (the attributes you are interested in) are arranged as columns and observations for each entity you are collecting data for are arranged as rows. Take a look at the data frame `mtcars` and the help file for `mtcars`. 
+
+<div id="r-editor-2571">
+mtcars
+</div>
+
+What type of variable is `cyl`?
+What type of variable is `wt`? 
+How many variables are there in `mtcars`?
+How many obsevations are there in `mtcars`?
+
+**Try:** The `dim()` function to answer the last two questions efficiently
+
+
+
+list
