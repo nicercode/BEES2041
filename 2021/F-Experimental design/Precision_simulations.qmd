@@ -1,0 +1,88 @@
+---
+title: "Precision_simulations"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(lme4)
+library(easystats)
+```
+
+Crab pilot study
+
+```{r}
+Crabs <- read_csv("Crabs.csv")
+```
+
+```{r}
+ggplot(Crabs, aes(count)) + geom_histogram()
+```
+
+```{r}
+Precision_by_method <- Crabs %>%
+  group_by(transect_length) %>%
+  summarise(mean = mean(count), se = sd(count)/sqrt(n()), precision = se/mean)
+```
+
+Sample
+
+```{r}
+Sample5 <- Crabs %>%
+  filter(transect_length == 5) %>%
+  sample_n(5) %>%
+  mutate(replicates = 5)
+
+Sample10 <- Crabs %>%
+  filter(transect_length == 5) %>%
+  sample_n(10) %>%
+  mutate(replicates = 10)
+
+Sample20 <- Crabs %>%
+  filter(transect_length == 5) %>%
+  sample_n(20) %>%
+  mutate(replicates = 20)
+
+Sample50 <- Crabs %>%
+  filter(transect_length == 5) %>%
+  sample_n(50) %>%
+  mutate(replicates = 50)
+
+Samples <- bind_rows(Sample5, Sample10, Sample20, Sample50)
+
+```
+
+```{r}
+Samples_summary <- Samples %>%
+  group_by(replicates) %>%
+  summarise(mean = mean(count), se = sd(count/sqrt(replicates)), precision = se/mean)
+```
+
+```{r}
+ggplot(Samples_summary, aes(replicates, precision)) + geom_point()
+```
+
+```{r}
+Estuaries <- read_csv("Estuaries.csv")
+
+```
+
+```{r}
+ggplot(Estuaries, aes(Modification,Total, fill = Estuary)) + geom_boxplot()
+```
+
+```{r}
+mixed_model <- lmer(Total ~ Modification + (1 | Estuary), data = Estuaries, REML = T)
+```
+
+```{r}
+check_model(mixed_model)
+report(mixed_model)
+```
+
+```{r}
+mixed_model_1<- lmer(Total ~ Modification + (1 | Estuary), data = Estuaries, REML = F)
+mixed_model_0 <- lmer(Total ~ (1 | Estuary), data = Estuaries, REML = F)
+anova(mixed_model_1, mixed_model_0)
+```
