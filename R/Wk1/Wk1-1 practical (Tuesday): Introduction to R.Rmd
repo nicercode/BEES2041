@@ -140,13 +140,76 @@ Some far we have been working with **vectors**. They are the simplest object in.
 mtcars
 </div>
 
-What type of variable is `cyl`?
-What type of variable is `wt`? 
-How many variables are there in `mtcars`?
-How many obsevations are there in `mtcars`?
+**What data type is `cyl`?** `r cloze("numeric but technically an integer", c("numeric", "numeric but technically an integer", "number of cyclinders"))`
+**What data type is `wt`?** `r cloze("numeric but technically a double", c("numeric", "numeric but technically a double", "weight in 1000 lbs"))`
+**How many variables are there in `mtcars`?** `r cloze("11", c("11", "12", "32"))`
+**How many obsevations are there in `mtcars`?** `r cloze("32", c("11", "32", "33"))`
 
 **Try:** The `dim()` function to answer the last two questions efficiently
 
+**You can select a variable within your data frame using the `$` operator. Give it a go!**
+
+Another common and object data type is **list**. Lists are objects which can contain a mix of elements, which makes them very flexible.
+
+We create lists using the `list()` function. Here I am creating a list and giving each **element** of my list a name (`car_data`, `cat_types`, `did_i_go_for_a_walk`). Notice I am using the `=` here to store objects into element. 
+
+<div id="r-editor-2572">
+cats <- c("calico", "tabby", "black") 
+went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
+
+useful_info <- list(car_data = mtcars, # first element
+                    cat_types = cats, # second element
+                    did_i_go_for_a_walk = went_for_a_walk) # third element
+</div>
+
+Like a variable in a dataframe, you can access a particular **element** using the `$` operator. Give it a go!
+
+**What happens when you don't provide a name to an element?** `r cloze("The element is unnamed and R gives it a number", c("The element disappears", "R throws an error", "The element is unnamed and R gives it a number"))`
+
+## Visualising your data
+
+Now that you have the basics under your belt, let's try looking at our data using plots! We will be using functions from an R package called `ggplot2`. R packages contain functions that are not shipped in the base version of R. There are MANY R packages out there, this is the beauty of R. Over time, you will find tools or R packages you like you use and add to your data science tool belt.
+
+To make use `ggplot2` we need to first "load" its library into R using the `library()` function. 
+
+Here we are creating a boxplot of number of cylinders by weight of the car. We want to know if cars whether the weight of a car varies with the number cyclinder it has. 
+
+Let's walk through the code first: 
+
+- `ggplot(data = mtcars)` tells `ggplot`, that we are working with the mtcars data frame
+- `aes()` is short **aesthetics**, within this function is where we tell `ggplot` what variables we want to work with.
+  - `x = cyl` tells the function that we want to place `cyl` on the x axis 
+  - `y = wt` tells the function that we want to place `wt` on the y axis 
+  - `group = cyl` tells the function that we want to treat `cyl` as a grouping variable. This means we want to compare between cars with different number of cylinders (4, 6, 8)
+
+<div id="r-editor-2573">
+library(ggplot2)
+
+ggplot(data = mtcars, aes(x = cyl, y = wt, group = cyl)) +  # Specify the data, the x-variable and the y-variable
+  geom_boxplot() # create boxplot
+</div>
+
+Now take a look at the plot, what pattern do you see? 
+
+Cars with more cylinders `r cloze("tend to", c("are always", "tend to"))` weigh `r cloze("more", c("more", "less"))` than cars with fewer cylinders.
+
+How does mileage `mpg` vary between different transmissions `am`? What would the `ggplot` code look like? 
+
+```{r}
+library(ggplot2)
+
+ggplot(data = mtcars, aes(x = `r cloze("am", colnames(mtcars))`, y = `r cloze("am", colnames(mtcars))`, group = `r cloze("am", colnames(mtcars))`)) +  # Specify the data, the x-variable and the y-variable
+  geom_boxplot() # create boxplot
+```
+
+Change the code above and see for yourself! 
+
+```{r}
+library(ggplot2)
+
+ggplot(data = mtcars, aes(x = am, y = mpg, group = am)) +  # Specify the data, the x-variable and the y-variable
+  geom_boxplot() # create boxplot
+```
 
 
-list
+`r cloze("Manual", c("Automatic", "Manual"))` cars `r cloze("tend to", c("are always", "tend to"))` have `r cloze("higher", c("higher", "lower"))` mileage. 
