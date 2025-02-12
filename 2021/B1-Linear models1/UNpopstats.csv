@@ -1,0 +1,417 @@
+Country,InfMort,LifeExp,Illiteracy,Under15,Gender
+Afghanistan,151,45,53.8,43,male
+Albania,30,69.9,,30,male
+Algeria,44,67.5,28.9,37,male
+American Samoa,11,68,,41,male
+Andorra,6,,,16,male
+Angola,125,44.9,,48,male
+Antigua and Barbuda,17,,,,male
+Argentina,22,69.6,3.6,28,male
+Armenia,26,67.2,0.3,25,male
+Aruba,,,,23,male
+Australia,6,75.5,,21,male
+Austria,6,73.7,,17,male
+Azerbaijan,36,65.5,0.3,29,male
+Bahamas,15,70.5,5.1,31,male
+Bahrain,16,71.1,10.9,30,male
+Bangladesh,79,58.1,51.2,36,male
+Barbados,12,73.7,2,21,male
+Belarus,23,62.2,0.4,19,male
+Belgium,7,73.8,,17,male
+Belize,29,73.4,,40,male
+Benin,88,51.7,55.2,46,male
+Bermuda,4,71.1,,20,male
+Bhutan,63,59.5,43.8,43,male
+Bolivia,66,59.8,10.2,40,male
+Bosnia and Herzegovina,15,70.5,,19,male
+Botswana,58,46.2,30,42,male
+Brazil,42,63.1,16.6,29,male
+Brunei Darussalam,10,73.4,6.9,33,male
+Bulgaria,17,67.6,1.3,17,male
+Burkina Faso,99,43.6,71.3,47,male
+Burundi,119,41,47.8,47,male
+Cambodia,103,51.5,,41,male
+Cameroon,74,53.4,22.8,44,male
+Canada,6,76.1,,19,male
+Cape Verde,56,65.5,19.3,40,male
+Central African Rep.,98,42.9,46.4,43,male
+Chad,112,45.7,37.9,46,male
+Chile,13,72.3,4.9,29,male
+China h,41,67.9,10.1,25,male
+"China, Hong Kong SAR",6,75.8,4.1,18,male
+Colombia,30,67.3,9.5,33,male
+Comoros,76,57.4,37.5,43,male
+Congo,90,48.3,17.3,46,male
+Cook Islands,21,67,,,male
+Costa Rica,12,74.3,5.3,33,male
+Côte d'Ivoire,87,46.1,51.3,44,male
+Croatia,10,68.8,1,17,male
+Cuba,9,74.2,4.4,22,male
+Cyprus,8,75.5,1.8,24,male
+Czech Rep.,6,70.3,,17,male
+Dem. Rep. of the Congo,90,49.2,13.4,48,male
+Denmark,7,73,,18,male
+Djibouti,106,48.7,39.7,41,male
+Dominica,16,,,38,male
+Dominican Republic,34,68.9,17.9,34,male
+East Timor,135,46.6,,40,male
+Ecuador,46,67.3,7.9,34,male
+Egypt,51,64.7,36.5,36,male
+El Salvador,32,66.5,20.8,36,male
+Equatorial Guinea,108,48.4,10.7,43,male
+Eritrea,91,49.3,,44,male
+Estonia,19,63,0.2,18,male
+Ethiopia,115,42.4,60.1,46,male
+Fiji,20,70.6,6.5,32,male
+Finland,6,72.9,,18,male
+France,6,74.2,,19,male
+French Guiana,22,,,33,male
+French Polynesia,11,69.3,,34,male
+Gabon,87,51.1,26.3,40,male
+Gambia,122,45.4,62.3,40,male
+Georgia,19,68.5,0.3,22,male
+Germany,5,73.9,,16,male
+Ghana,66,58.3,25.4,44,male
+Greece,8,75.6,1.9,15,male
+Grenada,14,,,,male
+Guadaloupe,9,73.6,,24,male
+Guam,10,72.9,1.4,33,male
+Guatemala,10,61.4,27.1,44,male
+Guinea,124,46,50.1,44,male
+Guinea-Bissau,130,43.5,52.5,43,male
+Guyana,58,61.1,1.4,30,male
+Haiti,68,51.4,53.4,41,male
+Honduras,35,67.5,29.8,42,male
+Hungary,10,66.8,0.6,17,male
+Iceland,5,76.8,,23,male
+India,72,62.3,34.5,34,male
+Indonesia,48,63.3,10.3,31,male
+Iran (Islamic Rep. of),35,68.5,21.2,37,male
+Iraq,95,60.9,29.3,42,male
+Ireland,7,73.9,,22,male
+Israel,8,75.7,2.7,28,male
+Italy,7,75,1.3,14,male
+Jamaica,22,72.9,19.6,31,male
+Japan,4,76.8,,15,male
+Jordan,26,68.9,9.5,42,male
+Kazakhstan,35,62.8,0.3,28,male
+Kenya,66,51.1,14.4,44,male
+Kiribati,,58,,,male
+"Korea, Dem. People's Rep",22,68.9,,28,male
+"Korea, Republic of",10,68.8,1.2,22,male
+Kuwait,12,74.1,17.7,35,male
+Kyrgyzstan,40,63.3,0.3,35,male
+Lao People's Dem. Rep.,93,52,30.6,44,male
+Latvia,18,62.4,0.3,18,male
+Lebanon,29,68.1,9.5,33,male
+Lesotho,93,54.7,30,40,male
+Liberia,116,46.1,38.4,44,male
+Libyan Arab Jamahiriya,28,68.3,12.7,38,male
+Liechtenstein,18,66.1,,20,male
+Lithuania,21,64.3,0.5,20,male
+Luxembourg,7,73.3,,18,male
+Macau,10,75.1,4.4,24,male
+Madagascar,82,56,,44,male
+Malawi,138,38.9,28.4,47,male
+Malaysia,11,69.9,10.6,34,male
+Maldives,50,65.7,4.7,43,male
+Mali,118,52,60.1,46,male
+Malta,8,74.9,10.1,21,male
+Marshall Islands,30,59.1,,49,male
+Martinique,7,75.5,4.1,23,male
+Mauritania,92,51.9,51.4,44,male
+Mauritius,15,67.9,13.7,26,male
+Mexico,31,69.5,8.2,34,male
+"Micronesia, Fed. States of",20,64.4,,44,male
+Monaco,,,,,male
+Mongolia,51,64.4,11.4,36,male
+Morocco,51,64.8,42.4,33,male
+Mozambique,114,43.9,45.5,45,male
+Myanmar,79,58.5,11.8,29,male
+Namibia,65,51.8,19.9,42,male
+Nepal,83,57.6,46.5,41,male
+Netherlands,6,75,,18,male
+Netherlands Antilles,14,72.5,4,25,male
+New Caledonia,11,69.2,,30,male
+New Zealand,7,74.1,,23,male
+Nicaragua,43,65.8,37.2,43,male
+Niger,115,46.9,79.5,48,male
+Nigeria,81,48.7,33.9,43,male
+Northern Mariana Islands,,,,,male
+Norway,5,75.2,,20,male
+Occpd. Palestinian Ter.,24,69.3,,52,male
+Oman,25,68.9,25.4,45,male
+Pakistan,74,62.9,46.4,42,male
+Palau,28,65,,,male
+Panama,21,71.8,8.8,32,male
+Papua New Guinea,61,57.2,19,39,male
+Paraguay,39,67.5,6.6,40,male
+Peru,45,65.9,6.6,34,male
+Philippines,35,66.5,5.6,37,male
+Poland,15,68.2,0.3,20,male
+Portugal,9,71.8,7,17,male
+Puerto Rico,12,69.4,7.3,24,male
+Qatar,17,70,21,26,male
+Republic of Moldova,17,63.5,0.8,24,male
+Reunion,9,70.9,17.5,28,male
+Romania,23,66.2,1.2,18,male
+Russian Federation,18,60.6,0.4,19,male
+Rwanda,124,39.4,31.3,46,male
+Saint Kitts and Nevis,24,67.4,,31,male
+Saint Lucia,18,68,,37,male
+Saint Vincent/Grenadines,22,,,37,male
+Samoa,23,69.3,,39,male
+San Marino,11,73.2,,15,male
+Sao Tome and Principe,51,,,47,male
+Saudi Arabia,23,69.9,20.4,41,male
+Senegal,63,50.5,57.2,45,male
+Seychelles,7,65.3,,39,male
+Sierra Leone,170,35.8,54.6,44,male
+Singapore,5,74.9,4.5,22,male
+Slovakia,11,69.1,,20,male
+Slovenia,7,70.6,0.4,16,male
+Solomon Islands,23,69.6,,43,male
+Somalia,122,45.4,,48,male
+South Africa,59,51.5,15.9,35,male
+Spain,7,74.5,1.8,15,male
+Sri Lanka,18,70.9,6.3,27,male
+Sudan,71,53.6,36.6,40,male
+Suriname,29,67.5,4.9,31,male
+Swaziland,65,57.9,22.5,43,male
+Sweden,5,76.3,,18,male
+Switzerland,6,75.4,,18,male
+Syrian Arab Republic,33,66.7,14.6,42,male
+Tajikistan,57,64.2,0.7,41,male
+Thailand,29,65.8,3.7,26,male
+The FYR of Macedonia,23,70.9,,23,male
+Togo,84,47.6,33.5,46,male
+Tonga,6,67,,38,male
+Trinidad and Tobago,15,71.5,1.5,26,male
+Tunisia,30,68.4,24.1,31,male
+Turkey,45,66.5,8.3,29,male
+Turkmenistan,55,61.9,0.2,38,male
+Uganda,107,38.9,26.3,50,male
+Ukraine,19,63.8,,18,male
+United Arab Emirates,16,73.9,26.8,29,male
+United Kingdom,7,74.5,,19,male
+United Rep. of Tanzania,81,46.8,19.9,46,male
+United States of America,7,73.4,,22,male
+U.S. Virgin Islands,12,,,29,male
+Uruguay,18,70.4,3.2,25,male
+Uzbekistan,44,64.3,0.2,38,male
+Vanuatu,39,65.5,,42,male
+Venezuela,21,70,8,35,male
+Viet Nam,38,64.9,5.3,34,male
+Western Sahara,64,59.8,,38,male
+Yemen,80,57.4,37.9,48,male
+Yugoslavia,18,70.2,,16,male
+Zambia,82,39.5,18,47,male
+Zimbabwe,69,43.6,6.5,42,male
+Afghanistan,151,46,84,43,female
+Albania,30,75.9,,30,female
+Algeria,44,70.3,54.6,37,female
+American Samoa,11,73,,41,female
+Andorra,6,,,16,female
+Angola,125,48.1,,48,female
+Antigua and Barbuda,17,,,,female
+Argentina,22,76.8,3.7,28,female
+Armenia,26,73.6,0.5,25,female
+Aruba,,,,23,female
+Australia,6,81.1,,21,female
+Austria,6,80.2,,17,female
+Azerbaijan,36,74.1,0.5,29,female
+Bahamas,15,77.1,3.8,31,female
+Bahrain,16,75.3,20.6,30,female
+Bangladesh,79,58.2,73.9,36,female
+Barbados,12,78.7,3.2,21,female
+Belarus,23,73.9,1.9,19,female
+Belgium,7,80.6,,17,female
+Belize,29,76.1,,40,female
+Benin,88,55.2,80.9,46,female
+Bermuda,4,77.8,,20,female
+Bhutan,63,62,71.9,43,female
+Bolivia,66,63.2,24.9,40,female
+Bosnia and Herzegovina,15,75.9,,19,female
+Botswana,58,48.4,25,42,female
+Brazil,42,71,17.1,29,female
+Brunei Darussalam,10,78.1,15.4,33,female
+Bulgaria,17,74.7,2.7,17,female
+Burkina Faso,99,45.2,90.1,47,female
+Burundi,119,43.8,66.9,47,female
+Cambodia,103,55,,41,female
+Cameroon,74,56,38.5,44,female
+Canada,6,81.8,,19,female
+Cape Verde,56,71.3,39.4,40,female
+Central African Rep.,98,46.9,72.9,43,female
+Chad,112,48.7,65.3,46,female
+Chile,13,78.3,5.4,29,female
+China h,41,72,27.3,25,female
+"China, Hong Kong SAR",6,81.4,12.7,18,female
+Colombia,30,74.3,9.8,33,female
+Comoros,76,60.2,52.4,43,female
+Congo,90,50.8,33.3,46,female
+Cook Islands,21,73,,,female
+Costa Rica,12,78.9,5.2,33,female
+Côte d'Ivoire,87,47.3,69.5,44,female
+Croatia,10,76.5,4.1,17,female
+Cuba,9,78,4.4,22,female
+Cyprus,8,80,7.5,24,female
+Czech Rep.,6,77.4,,17,female
+Dem. Rep. of the Congo,90,52.3,32.3,48,female
+Denmark,7,78.3,,18,female
+Djibouti,106,52,67.3,41,female
+Dominica,16,,,38,female
+Dominican Republic,34,73.1,18.6,34,female
+East Timor,135,48.4,,40,female
+Ecuador,46,72.5,12.1,34,female
+Egypt,51,67.9,61.6,36,female
+El Salvador,32,72.5,27,36,female
+Equatorial Guinea,108,51.6,32.9,43,female
+Eritrea,91,52.4,,44,female
+Estonia,19,74.5,0.2,18,female
+Ethiopia,115,44.3,73.6,46,female
+Fiji,20,74.9,11.5,32,female
+Finland,6,80.6,,18,female
+France,6,82,,19,female
+French Guiana,22,,,33,female
+French Polynesia,11,74.6,,34,female
+Gabon,87,53.8,46.7,40,female
+Gambia,122,48.6,75.7,40,female
+Georgia,19,76.8,0.6,22,female
+Germany,5,80.2,,16,female
+Ghana,66,61.8,46.6,44,female
+Greece,8,80.6,5.7,15,female
+Grenada,14,,,,female
+Guadaloupe,9,80.9,,24,female
+Guam,10,77.4,1.2,33,female
+Guatemala,10,67.4,42.5,44,female
+Guinea,124,47,78.1,44,female
+Guinea-Bissau,130,46.4,83.8,43,female
+Guyana,58,67.9,2.9,30,female
+Haiti,68,56.2,58.6,41,female
+Honduras,35,72.3,31,42,female
+Hungary,10,74.9,0.9,17,female
+Iceland,5,81.3,,23,female
+India,72,62.9,62.4,34,female
+Indonesia,48,67,22.2,31,female
+Iran (Islamic Rep. of),35,70,37,37,female
+Iraq,95,63.9,55,42,female
+Ireland,7,79.2,,22,female
+Israel,8,79.7,7.1,28,female
+Italy,7,81.2,2.3,14,female
+Jamaica,22,76.8,11.1,31,female
+Japan,4,82.9,,15,female
+Jordan,26,71.5,19.9,42,female
+Kazakhstan,35,72.4,0.5,28,female
+Kenya,66,53,30.9,44,female
+Kiribati,,63,,,female
+"Korea, Dem. People's Rep",22,75.1,,28,female
+"Korea, Republic of",10,76,5,22,female
+Kuwait,12,78.2,24.1,35,female
+Kyrgyzstan,40,71.9,0.5,35,female
+Lao People's Dem. Rep.,93,54.5,55.6,44,female
+Latvia,18,74.4,0.7,18,female
+Lebanon,29,71.7,23.1,33,female
+Lesotho,93,57.3,8.2,40,female
+Liberia,116,48.5,71.7,44,female
+Libyan Arab Jamahiriya,28,72.2,40.2,38,female
+Liechtenstein,18,72.9,,20,female
+Lithuania,21,75.6,1.1,20,female
+Luxembourg,7,79.9,,18,female
+Macau,10,80.1,11.9,24,female
+Madagascar,82,59,,44,female
+Malawi,138,39.6,58.7,47,female
+Malaysia,11,74.3,20.6,34,female
+Maldives,50,63.3,4.8,43,female
+Mali,118,54.6,76,46,female
+Malta,8,79.3,8.9,21,female
+Marshall Islands,30,63,,49,female
+Martinique,7,82,3,23,female
+Mauritania,92,55.1,73.3,44,female
+Mauritius,15,75.1,21.9,26,female
+Mexico,31,75.5,12.8,34,female
+"Micronesia, Fed. States of",20,68.8,,44,female
+Monaco,,,,,female
+Mongolia,51,67.3,22.8,36,female
+Morocco,51,68.5,69.5,33,female
+Mozambique,114,46.6,77.2,45,female
+Myanmar,79,61.8,22.3,29,female
+Namibia,65,53,22.3,42,female
+Nepal,83,57.1,81.4,41,female
+Netherlands,6,80.7,,18,female
+Netherlands Antilles,14,78.4,4,25,female
+New Caledonia,11,76.3,,30,female
+New Zealand,7,79.7,,23,female
+Nicaragua,43,70.6,37.3,43,female
+Niger,115,50.1,93.4,48,female
+Nigeria,81,51.5,52.7,43,female
+Northern Mariana Islands,,,,,female
+Norway,5,81.1,,20,female
+Occpd. Palestinian Ter.,24,73.3,,52,female
+Oman,25,73.3,49.4,45,female
+Pakistan,74,65.1,76.3,42,female
+Palau,28,69,,,female
+Panama,21,76.4,10.1,32,female
+Papua New Guinea,61,58.7,37.3,39,female
+Paraguay,39,72,9.7,40,female
+Peru,45,70.9,17.4,34,female
+Philippines,35,70.2,6.2,37,female
+Poland,15,76.9,0.4,20,female
+Portugal,9,78.8,12.8,17,female
+Puerto Rico,12,78.5,7.2,24,female
+Qatar,17,75.4,20.1,26,female
+Republic of Moldova,17,75.4,3.2,24,female
+Reunion,9,79.8,13.1,28,female
+Romania,23,73.9,3.7,18,female
+Russian Federation,18,72.8,1.5,19,female
+Rwanda,124,41.7,47.6,46,female
+Saint Kitts and Nevis,24,70.4,,31,female
+Saint Lucia,18,74.8,,37,female
+Saint Vincent/Grenadines,22,,,37,female
+Samoa,23,73.6,,39,female
+San Marino,11,79.1,,15,female
+Sao Tome and Principe,51,,,47,female
+Saudi Arabia,23,73.4,40.6,41,female
+Senegal,63,54.2,77,45,female
+Seychelles,7,74.1,,39,female
+Sierra Leone,170,3.7,81.8,44,female
+Singapore,5,79.3,13.9,22,female
+Slovakia,11,76.7,,20,female
+Slovenia,7,78.2,0.5,16,female
+Solomon Islands,23,73.9,,43,female
+Somalia,122,48.6,,48,female
+South Africa,59,58.1,17.6,35,female
+Spain,7,81.5,4.2,15,female
+Sri Lanka,18,75.4,13.2,27,female
+Sudan,71,56.4,61.8,40,female
+Suriname,29,72.7,9,31,female
+Swaziland,65,62.5,25.3,43,female
+Sweden,5,80.8,,18,female
+Switzerland,6,81.1,,18,female
+Syrian Arab Republic,33,71.2,46,42,female
+Tajikistan,57,70.2,2,41,female
+Thailand,29,72,8,26,female
+The FYR of Macedonia,23,75.3,,23,female
+Togo,84,50.1,64.6,46,female
+Tonga,6,71,,38,female
+Trinidad and Tobago,15,76.2,3.4,26,female
+Tunisia,30,70.7,47,31,female
+Turkey,45,71.7,27.9,29,female
+Turkmenistan,55,68.9,0.4,38,female
+Uganda,107,40.4,49.6,50,female
+Ukraine,19,73.7,,18,female
+United Arab Emirates,16,76.5,25,29,female
+United Kingdom,7,79.8,,19,female
+United Rep. of Tanzania,81,49.1,41.1,46,female
+United States of America,7,80.1,,22,female
+U.S. Virgin Islands,12,,,29,female
+Uruguay,18,78,2.4,25,female
+Uzbekistan,44,70.7,0.4,38,female
+Vanuatu,39,69.5,,42,female
+Venezuela,21,75.7,9.2,35,female
+Viet Nam,38,69.6,12.3,34,female
+Western Sahara,64,63.1,,38,female
+Yemen,80,58.4,81.7,48,female
+Yugoslavia,18,75.5,,16,female
+Zambia,82,40.6,34.9,47,female
+Zimbabwe,69,44.7,13.9,42,female
