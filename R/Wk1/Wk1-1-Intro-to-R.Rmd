@@ -1,10 +1,10 @@
 ---
-title: "Week 1 - working with R"
+title: "Week 1-1 Intro to R"
 output: 
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
-  category: "Week 1-1 working with R"
+  category: "Week 1-1 Intro to R"
 editor_options: 
   chunk_output_type: console
 ---
@@ -18,7 +18,9 @@ library(moodlequiz)
 
 Learning to code in R is like learning to speaking a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive! 
 
-## Code vs Comments
+## Code vs. Comments
+
+**Code vs. Comments**
 
 Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line with spit out or "return" a solution. 
 
@@ -28,7 +30,7 @@ Think of the code you will write in this course as instructions. Each time you t
 (8651 - 734) / (4 * 9)
 </div>
 
-Much like a calculator, R uses **operators** like +, -, *, / to do maths. The brackets ( ) are used to group together some calculations and set the order of operations. 
+Much like a calculator, R uses **operators** like `+`, `-`, `*`, `/` to do maths. The brackets `( )` are used to group together some calculations and set the order of operations. 
 
 As we write code in this course, its often useful to add **comments** throughout our code to give it some context. Comments help organise your thoughts and serve as a reminder to you and your collaborators of what is happening in your code script. Here I've added some comments to the code above. Run the following code, what do you notice when the comments are run?
 
@@ -40,44 +42,54 @@ As we write code in this course, its often useful to add **comments** throughout
 (8651 - 734) / (4 * 9) # Some complicated math
 </div>
 
+**Question:**
+
 R `r cloze("reads the comment and does nothing", c("translates comments into Python code", "reads the comment and does nothing", "is confused by the comment and complains"))`.
 
 ## Useful operators
 
-There are 3 handy operators that you will come across often. First, is the "help operator" represented by `?`. This is useful when you are stuck, you can use it to bring up a help file to learn more about something. As an example, run the next bit of code. 
+**Useful operators**
 
-<div id="r-editor-2567">
-?`+`
-</div>
+There are 3 handy operators that you will come across often. 
 
-What information gets pulled up by calling `?+`
+First, is the "help operator" represented by `?`. For example, if I want to look up more info about operators in R I can use: 
 
-The `r cloze("help file for 'Arithmetic Operators'", c("latest updates in this version of R", "help file for 'Arithmetic Operators'", "secret cheatsheet to this course"))`.
+```{r}
+`?+`
+```
+
+This is useful to help you get unstuck. Note that using `?` in this browser won't work! You can only bring up a help file in RStudio which you will learn about next. 
+
+<br>
 
 The next useful operator is. the "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
-
 
 <div id="r-editor-2568">
 my_lucky_number <- 13 # Insert the value 13 into the object my_lucky_number
 my_lucky_number
 </div>
 
-Some folks like to use `=` instead of `<-` to assign things in R, this is a matter of personal preference - but its good practice to choose style and be consistent throughout. See for yourself! Change the `<-` to a `=` in the code above and input a different lucky number. Did it work? 
+> Some folks like to use `=` instead of `<-` to assign things in R, this is a matter of personal preference - but its good practice to choose style and be consistent throughout. 
+
+**Try:** See for yourself! Change the `<-` to a `=` in the code above and input a different lucky number. Did it work? 
 
 When creating objects in R, there are few general rules naming things. Object names:
 
-1\) should only contain letters, numbers, and only dot or underscore characters e.g. `river-data-2005`
+1. should only contain letters, numbers, and only dot or underscore characters e.g. `river-data-2005`
 
-2\) should **not** start with a number (e.g. `3obj`), a dot followed by a number (e.g. `.3obj`), or an underscore (e.g. `_obj`)
+2. should **not** start with a number (e.g. `3obj`), a dot followed by a number (e.g. `.3obj`), or an underscore (e.g. `_obj`)
 
-3\) should **not** be a reserved keyword in R (e.g. `for`, `in`, `repeat`, `while`, etc.) (for more reserved keywords see `?reserved`).
+3. should **not** be a reserved keyword in R (e.g. `for`, `in`, `repeat`, `while`, etc.) (for more reserved keywords see `?reserved`).
 
-**Try:** Try creating some objects, storing either a single number or even words!
+**Try:** creating some objects, storing either a single number or even words!
 
 ## Functions
 
 Another common feature you will use in R are **"functions"**. These are in-built code that performs a specific task.
-For example, `c()` is function used to **combine multiple values** into one object and `mean()` is a function that calculates the average of a series of numbers. 
+For example: 
+
+- `c()` is function used to **combine multiple values** into one object 
+- `mean()` is a function that calculates the average of a series of numbers. 
 
 <div id="r-editor-2569">
 x <- c(1,2,3,4,5)
