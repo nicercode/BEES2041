@@ -58,7 +58,7 @@ R `r cloze("reads the comment and does nothing", c("translates comments into Pyt
 
 The "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
 
-<div id="r-editor-2566"><pre>
+<div id="r-editor-2564"><pre>
 # Insert the value 13 into the object my_lucky_number
 my_lucky_number <- 13 
 
