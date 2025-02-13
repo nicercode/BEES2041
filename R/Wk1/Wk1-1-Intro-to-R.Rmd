@@ -22,58 +22,48 @@ Learning to code in R is like learning to speaking a new language. Here we will 
 
 ![R then and now, Artwork by @allison_horst](R-then-and-now.png){width=600}
 
-## Code vs. Comments
+## Code and Comments
 
-**Code vs. Comments**
+### Code and Comments
 
 Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line with spit out or "return" a solution. 
 
 <div id="r-editor-2565">
 6 + 3 
-100 * 5
-(8651 - 734) / (4 * 9)
 </div>
 
 Much like a calculator, R uses **operators** like `+`, `-`, `*`, `/` to do maths. The brackets `( )` are used to group together some calculations and set the order of operations. 
 
-As we write code in this course, its often useful to add **comments** throughout our code to give it some context. Comments help organise your thoughts and serve as a reminder to you and your collaborators of what is happening in your code script. Here I've added some comments to the code above. Run the following code, what do you notice when the comments are run?
+As we write code in this course, its often useful to add **comments** throughout our code to give it some context. R treats any text that follows a `#` and on the same line as a comment. Comments help organise your thoughts and serve as a reminder to you and your collaborators of what is happening in your code script. Here I've added some comments to the code above. Run the following code, what do you notice when the comments are run?
 
 <div id="r-editor-2566"><pre>
-6 + 3 # Addition
+# Addition
+6 + 3 
 
-100 * 5 # Subtraction
+# Subtraction
+100 * 5 
 
-(8651 - 734) / (4 * 9) # Some complicated math
+# Some complicated math
+(8651 - 734) / (4 * 9) 
 </pre>
 </div>
 
-**Question:**
+**Question:** What does R do when you run code that contains comments?
 
 R `r cloze("reads the comment and does nothing", c("translates comments into Python code", "reads the comment and does nothing", "is confused by the comment and complains"))`.
 
-## Useful operators
+## Assignment operator
 
-**Useful operators**
+### Assignment operator
 
-There are 3 handy operators that you will come across often. 
-
-First, is the "help operator" represented by `?`. For example, if I want to look up more info about operators in R I can use: 
-
-```{r}
-?`+`
-```
-
-This is useful to help you get unstuck. 
-
-> Note that using `?` in this browser won't work! You can only bring up a help file in RStudio which you will learn about next. 
-
-<p>
-
-The next useful operator is. the "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
+The "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
 
 <div id="r-editor-2568"><pre>
-my_lucky_number <- 13 # Insert the value 13 into the object my_lucky_number
-my_lucky_number
+# Insert the value 13 into the object my_lucky_number
+my_lucky_number <- 13 
+
+# Ask R what is stored in `my_lucky_number`
+my_lucky_number 
 </pre>
 </div>
 
@@ -85,7 +75,7 @@ my_lucky_number
 
 When creating objects in R, there are few general rules naming things. Object names:
 
-1. should only contain letters, numbers, and only dot or underscore characters e.g. `river-data-2005`
+1. should only contain letters, numbers, and only dot or underscore characters e.g. `river_data_2005`
 
 2. should **not** start with a number (e.g. `3obj`), a dot followed by a number (e.g. `.3obj`), or an underscore (e.g. `_obj`)
 
@@ -93,9 +83,14 @@ When creating objects in R, there are few general rules naming things. Object na
 
 **Try:** creating some objects, storing either a single number or even words!
 
+<div id="r-editor-2588"><pre>
+
+</pre>
+</div>
+
 ## Functions
 
-**Functions**
+### Functions
 
 Another common feature you will use in R are **"functions"**. These are in-built code that performs a specific task.
 For example: 
@@ -104,8 +99,10 @@ For example:
 - `mean()` is a function that calculates the average of a series of numbers. 
 
 <div id="r-editor-2569"><pre>
+# Put some numbers in `x`
 x <- c(1,2,3,4,5)
 
+# Calculate the mean of what is stored in `x`
 mean(x)
 </pre>
 </div>
@@ -114,13 +111,16 @@ mean(x)
 
 <br>
 
+
 Functions have **"arguments"**, these are **inputs** to a function that is needed to perform it's task. Think of these as the various settings of a coffee machine. As an example, the `mean()` function has an argument called `na.rm` for removing missing values. By default, the value is always set to false `na.rm = FALSE` but we can change the defaults to adjust the behaviour of a function.
 
 Take this next example, I've added a NA in a series of numbers. NA represents a missing value. Try taking a mean of x now
 
 <div id="r-editor-2570"><pre>
-x <- c(1,2,3,4,5, NA, 7, 8, 9) # Add a missing value
+# Add a missing value (`NA`) in `x`
+x <- c(1, 2, 3, 4, 5, NA, 7, 8, 9) 
 
+# Calculate the mean of what is stored in `x`
 mean(x, na.rm = FALSE)
 </pre>
 </div>
@@ -131,7 +131,7 @@ mean(x, na.rm = FALSE)
 
 ## Data types in R 
 
-**Data types in R**
+### Data types in R
 
 R has its unique way of classifying data. Data types are fundamental when working in R as they are common entities you will be dealing with regularly.
 
@@ -147,29 +147,51 @@ There are 4 common data types in R:
 **Try:** use the functions `class()`, `typeof()`, `str()` to figure out what type of data you are working with below
 
 <div id="r-editor-2571"><pre>
+# Put some types of cats in `cats`
 cats <- c("calico", "tabby", "black") # Character 
-water_ml <- c(200.34, 190.57, 195.83, 197.32) # Numeric - double
-number_of_houses <- c(5L, 1L, 6L, 8L, 10L) # Numeric - integer
-went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE) # Logical
-space_numbers <- c(1+4i, 2+7i, 3+8i) # Complex numbers
 
 class(cats)
+</pre>
+</div>
+
+<div id="r-editor-2571"><pre>
+# Put some water volumes in `water_ml`
+water_ml <- c(200.34, 190.57, 195.83, 197.32) # Numeric - double
+
+typeof(water_ml)
+</pre>
+</div>
+
+<div id="r-editor-2571"><pre>
+# Put house counts in `number_of_houses`
+number_of_houses <- c(5L, 1L, 6L, 8L, 10L) # Numeric - integer
+
 typeof(number_of_houses)
+</pre>
+</div>
+
+<div id="r-editor-2571"><pre>
+# Put walk tracker data in `went_for_a_walk`
+went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE) # Logical
+
 str(went_for_a_walk)
 </pre>
 </div>
 
-## Object types in R
 
-**Object types in R**
+**Try:** Put several complex numbers into `space_numbers` and check its structure using `str()`
 
-Some far we have been working with **vectors**. They are the simplest object in R, `cats`, `water_ml`, `went_for_a_walk` as you seen above are all one dimensional and contains series of data. 
+## Object types in R 1
+
+### Object types in R
+
+Some far we have been working with **vectors**. They are the simplest object in R, `cats`, `water_ml`, `went_for_a_walk` as you seen above are all one dimensional and contains bits of data. 
 
 <br>
 
 **Data frame** is data stored in a table. Think of these like a single spreadsheet, a grid of rows and columns. Usually variables (the attributes you are interested in) are arranged as columns and observations for each entity you are collecting data for are arranged as rows. 
 
-> Take a look at the data frame `mtcars`, in rows, we have a number of different cars models and in the columns we have several variables listed below: 
+> Take a look at the data frame `mtcars` In rows, are different cars models and in the columns are a number of variables about each car. Their definitions are listed below: 
 
 - `mpg`	Miles/(US) gallon
 - `cyl`	Number of cylinders
@@ -187,6 +209,8 @@ Some far we have been working with **vectors**. They are the simplest object in 
 mtcars
 </div>
 
+**Try:** use the `names()` function to look at the variables in `mtcars`
+
 **Questions:**
 
 - What data type is `cyl`? `r cloze("numeric but technically an integer", c("numeric", "numeric but technically an integer", "number of cyclinders"))`
@@ -198,7 +222,7 @@ mtcars
 
 > You can select a variable within your data frame using the `$` operator. Give it a go!
 
-<br>
+## Object types in R 2
 
 Another common and object data type is a **list**. Lists are objects which can contain a mix of elements, which makes them very flexible.
 
@@ -208,9 +232,8 @@ We create lists using the `list()` function. Here I am creating a list and givin
 cats <- c("calico", "tabby", "black") 
 went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
 
-useful_info <- list(car_data = mtcars, # first element
-                    cat_types = cats, # second element
-                    did_i_go_for_a_walk = went_for_a_walk) # third element
+useful_info <- list(cat_types = cats, # first element
+                    did_i_go_for_a_walk = went_for_a_walk) # second element
 </pre>
 </div>
 
@@ -222,7 +245,7 @@ What happens when you don't provide a name to an element? `r cloze("The element 
 
 ## Visualising your data 1
 
-**Visualising your data**
+### Visualising your data
 
 Now that you have the basics under your belt, let's try looking at our data using plots! We will be using functions from an R package called `ggplot2`. R packages are shareable tools and contain functions and data that are not shipped in the base version of R. There are _MANY_ R packages out there, this is the beauty of R. Over time, you will find the right R packages for you and add them to your data science tool belt.
 
@@ -230,10 +253,11 @@ To make use `ggplot2` we need to first install it so we can use it in the browse
 
 > Note that `webr::install()` is strictly used for this browser and won't apply when in working on your own computers. Use `install.packages()` on your computer instead
 
-<div id="r-editor-2574">
-webr::install(\"ggplot2\") # Installation might take a little while
-\n
+<div id="r-editor-2574"><pre>
+webr::install("ggplot2") # Installation might take a few seconds
+
 library(ggplot2)
+</pre>
 </div>
 
 
@@ -242,7 +266,6 @@ Once installed, we can load ggplot2 into R using the `library()` function.
 **Try:** Let's create a boxplot of number of cylinders by weight of the car. We want to know if the weight of cars varies with the number cylinder it has. 
 
 <div id="r-editor-2575"><pre>
-# install.packages("ggplot2") 
 library(ggplot2) # Load ggplot2 for use
 
 ggplot(data = mtcars, aes(x = cyl, y = wt, group = cyl)) +  # Point to data and the x-variable and the y-variables
@@ -269,13 +292,19 @@ Cars with more cylinders `r cloze("tend to", c("are always", "tend to"))` weigh 
 **Question:** How does mileage `mpg` vary between different transmissions `am`? What would the `ggplot` code look like? 
 
 ```r
-library(ggplot2)
-
-ggplot(data = mtcars, aes(x = `r cloze("am", colnames(mtcars))`, y = `r cloze("mpg", colnames(mtcars))`, group = `r cloze("am", colnames(mtcars))`)) +  # Specify the data, the x-variable and the y-variable
-  geom_boxplot() # create boxplot
+# Specify the data, the x-variable and the y-variable
+ggplot(data = mtcars, aes(x = `r cloze("am", colnames(mtcars))`, y = `r cloze("mpg", colnames(mtcars))`, group = `r cloze("am", colnames(mtcars))`)) +  
+  geom_boxplot() # Create boxplot
 ```
 
 **Try:** Change the code above and see for yourself! 
+
+<div id="r-editor-2595"><pre>
+
+
+</pre>
+</div>
+
 
 **Question:**
 `r cloze("Manual", c("Automatic", "Manual"))` cars `r cloze("tend to", c("are always", "tend to"))` have `r cloze("higher", c("higher", "lower"))` mileage. 
