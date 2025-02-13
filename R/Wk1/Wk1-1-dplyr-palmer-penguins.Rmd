@@ -1,0 +1,262 @@
+---
+title: "Week 1-2 dplyr"
+output: 
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: "Week 1-2 dplyr"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+```
+
+<h3>Data manipulations with Penguins!</h3>
+
+The purpose of this section is to get some hands-on experience with data manipulation an R package **`dplyr`**. You will learn about what **pipes** are in R and some key **data manipulation verbs**!
+
+Recall from the previous page that an R package is a set of related functions and data that can be loaded into R to help you get a specific job done. 
+
+**Meet the penguins!**
+
+![The Palmer Archipelago penguins. Artwork by @allison_horst.](lter_penguins.png)
+
+> We will be working with the`palmerpenguins` data, which contains size measurements for three penguin species observed on three islands in the Palmer Archipelago, Antarctica.
+
+The `penguins` dataset is from the `palmerpenguins` the R package so we will also need to install and load that into R. 
+
+
+## Setting up
+
+<h3>Setting up</h3>
+
+Let's go ahead and install these two packages for the browser
+
+> Note if you refresh the browser or check any answers as you are doing the challenges, you will need to install and load `dplyr` and `palmerpengins` again. 
+
+```{r}
+webr::install(c("dplyr","palmerpenguins"))
+
+library(dplyr) 
+library(palmerpenguins) 
+```
+
+## Take a look at the data {type=essay}
+
+<h3>Take a look at the data</h3>
+
+```{r}
+penguins
+```
+
+**Question:** What do you notice that's different with how `mtcars` and `penguins` are presented in R? 
+
+Write a few sentences on what functions you used to determine the main difference between the two datasets.
+
+## But first, have you met the pipe?
+
+Before diving into data wrangling, I want to introduce to you a very *special* operator, the pipe! `%>%`. Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go. 
+
+Let's talk through an example. I want to know how many unique `islands` there are in the `penguins` dataset. Typically, I would use: 
+
+- the `unique()` function which gives me the distinct values in a variable
+- the `length()` function which counts the number of elements in a vector
+
+The code would look like this: 
+
+```{r}
+# Recall `$` allows you to select a variable from a data frame
+length(unique(penguins$island))
+```
+
+
+All of the `dplyr` functions take a data frame (or tibble) as the first argument. Rather than forcing the user to either save intermediate objects or nest functions, dplyr provides the %>% operator from magrittr. x %>% f(y) turns into f(x, y) so the result from one step is then “piped” into the next step. You can use the pipe to rewrite multiple operations that you can read left-to-right, top-to-bottom (reading the pipe operator as “then”).
+
+## Working with `dplyr`
+
+<h3>Working with `dplyr`</h3>
+
+Your first challenge is to explore and try out some of dplyr functions for manipulating data tables.
+
+> Review the examples in the dplyr guide here: <https://dplyr.tidyverse.org/articles/dplyr.html>
+
+Then adapt their code there to answer the following.
+
+<h4>Extracting rows</h4>
+
+*Try:* Use the function `filter()` to extract all penguins from `Dream` island
+
+```{r}
+filter(penguins, island == "Dream")
+```
+
+**Question:** How many penguins were sampled in Dream Island? `r cloze(124, c(8, 124, 3250))`
+
+**Try:** Use the function `filter()`to extract all penguins that have body masses greater than 4000g 
+
+```{r}
+filter(penguins, body_mass_g > 4000)
+```
+
+**Question:** How many penguins were heavier than 4kg? `r cloze(172, c(101, 127, 172))`
+
+**Try:** Use the `arrange()` function to sort the data by `island`
+
+```{r}
+arrange(penguins, island)
+arrange(penguins, body_mass_g)
+```
+
+**Question:** What would the code look like if you wanted to sort the data by were heavier than 4kg? `r cloze(172, c(101, 127, 172))`
+
+### Use the `select` function to choose columns
+
+Include variable name, homeworld, species
+
+```{r}
+
+
+```
+
+### Use the `mutate` function to create a variable of mass in g (currently in kg)
+
+```{r}
+
+```
+
+The pipe enables you to chain different commands together. If you have a series of operations to calculate the average height and mass for each species by sex.
+
+Without the pipe, you need to save the output for each step
+
+```{r}
+a1 <- group_by(data, species, sex)
+a2 <- select(a1, height, mass)
+a3 <- summarise(a2,
+  height = mean(height, na.rm = TRUE),
+  mass = mean(mass, na.rm = TRUE)
+)
+a3
+```
+
+But with the pipe, you can take the output of one step and pipe it in as input to the next step. E.g. the code above becomes
+
+```{r}
+data %>%
+  group_by(species, sex) %>%
+  select(height, mass) %>%
+  summarise(
+    height = mean(height, na.rm = TRUE),
+    mass = mean(mass, na.rm = TRUE)
+  )
+```
+
+what is the average height of Clawdite females (in cm)?
+
+```{r}
+
+```
+
+### Use your code from above with the pipe to create a new dataset that
+
+\- extracts all rows with human characters over 1.8m tall\
+- includes columns name, homeworld, mass, height\
+- converts mass to g and height in m
+
+```{r}
+
+```
+
+What is the height of the character at the top of this new dataset?
+
+```{r}
+
+```
+
+# Other miscellaneous tips for effective analysis
+
+## Variable names
+
+Complicated variable names are hard to work with. Especially those with spaces or special characters, like (=,+& etc.
+
+If you do have a dataset with complicated naes, you can use tick marks to make working with it easier. E.g., imagine I have a variable "strange variable (yrs)", you could use this in code like this
+
+```{r}
+data %>%
+  select(site, `strange varible (yrs)`)
+
+```
+
+Personally, I clean variable names to make them more R friendly.
+
+E.g. using the rename function
+
+```{r}
+data %>%
+  rename(better_variavle = `strange varible (yrs)`)
+
+```
+
+OR, you can use the `clean_names` function from the package `janitor` to do a general tidyup of all names
+
+```{r}
+data <- data %>% janitor::clean_names()
+```
+
+## Check distributions
+
+It's always a good idea to check the distributions of key variables, to identity potential errors.
+
+### Categorical variables
+
+For categorical variables, you can look a table of values
+
+```{r}
+
+data$homeworld %>% table()
+
+```
+
+or plot it
+
+```{r}
+data %>% 
+  ggplot(aes(homeworld)) + geom_bar()
+```
+
+### Numeric values
+
+For numerical values, you can look at the range
+
+```{r}
+range(data$height, na.rm = TRUE)
+
+range(data$birth_year, na.rm = TRUE)
+```
+
+and/or plot a histogram to look at the distribution
+ 
+```{r}
+data %>% 
+  ggplot(aes(x=height) ) + 
+  geom_histogram()
+
+```
+
+### Summaries of whole dataset
+
+The package `skimr` has a great function `skim` for quickly summarising the structure of an entire datatset
+
+```{r}
+skimr::skim(data)
+```
+
+another one is from the package `report`
+
+```{r}
+report::report(data)
+```
