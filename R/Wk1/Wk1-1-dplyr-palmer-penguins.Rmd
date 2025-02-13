@@ -96,6 +96,8 @@ Then adapt the code from the guide to answer the following.
 
 <h4>Extracting rows</h4>
 
+<!-- TODO: Talk about conditions and operators, &, | and , and <, >, <=, => -->
+
 *Try:* Use the pipe and function `filter()` to extract all penguins from `Dream` island
 
 ```{r}
@@ -123,20 +125,42 @@ penguins |>
 
 **Question:** What would the code look like if you wanted to sort the data by were heavier than 4kg? `r cloze(172, c(101, 127, 172))`
 
-### Use the `select` function to choose columns
+<h4>Keep or dropping columns</h4>
 
-Include variable name, homeworld, species
+<!-- TODO: Talk about select is a great way to move your columns around
+Talk about :, starts_with, ends_with, contains-->
 
-```{r}
+### Use the `select` function to choose columns i.e. variables
 
-
-```
-
-### Use the `mutate` function to create a variable of mass in g (currently in kg)
+Include `species`, `island`, `year`, `flipper_length_mm`
 
 ```{r}
-
+penguins |> 
+  select(species, island, year, flipper_length_mm)
 ```
+
+<h4>Create and modify columns</h4>
+
+### Use the `mutate` function to create a variable this is the logarithim base 10 of `body_mass_g` (`log10()`, might come in handy!)
+
+```{r}
+penguins |> 
+  mutate(log_10_mass = log10(body_mass_g))
+```
+
+<h4>Compute summary statistics by group</h4>
+
+We often want summarise certain variables for particular groups in our data. For example, the average tree canopy cover from different study sites or median house prices of different states. These are classic examples of the `split-apply-combine` paradigm.
+
+```{r}
+penguins |> 
+  group_by(island) |> 
+  summarise(mean_body_mass = mean(body_mass_g, na.rm = TRUE))
+```
+
+
+
+<h4>Using pipes with dplyr verbs</h4>
 
 The pipe enables you to chain different commands together. If you have a series of operations to calculate the average height and mass for each species by sex.
 
@@ -170,10 +194,10 @@ what is the average height of Clawdite females (in cm)?
 
 ```
 
-### Use your code from above with the pipe to create a new dataset that
+**Question:** Use your code from above with the pipe to create a new dataset that
 
-\- extracts all rows with human characters over 1.8m tall\
-- includes columns name, homeworld, mass, height\
+- extracts all observations with human characters over 1.8m tall
+- includes columns name, homeworld, mass, height
 - converts mass to g and height in m
 
 ```{r}
