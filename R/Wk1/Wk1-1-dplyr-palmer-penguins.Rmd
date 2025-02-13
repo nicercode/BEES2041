@@ -60,7 +60,7 @@ Write a few sentences on what functions you used to determine the main differenc
 
 ## But first, have you met the pipe?
 
-Before diving into data wrangling, I want to introduce to you a very *special* operator, the pipe! `%>%`. Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go. 
+Before diving into data wrangling, I want to introduce to you a very *special* operator, the pipe! `|>`. The pipe looks like a funnel on its side right? The pipe takes the code on the left side of the `|>` and passes it on to the code on the right side.  
 
 Let's talk through an example. I want to know how many unique `islands` there are in the `penguins` dataset. Typically, I would use: 
 
@@ -71,11 +71,18 @@ The code would look like this:
 
 ```{r}
 # Recall `$` allows you to select a variable from a data frame
-length(unique(penguins$island))
+length(unique(penguins$island)) 
 ```
 
+This is not very nice looking code, you have to read from inside out which is not very intuitive. There is where pipes come in. Here you can read from top to bottom, left to right. You can see the order of steps! 
 
-All of the `dplyr` functions take a data frame (or tibble) as the first argument. Rather than forcing the user to either save intermediate objects or nest functions, dplyr provides the %>% operator from magrittr. x %>% f(y) turns into f(x, y) so the result from one step is then “piped” into the next step. You can use the pipe to rewrite multiple operations that you can read left-to-right, top-to-bottom (reading the pipe operator as “then”).
+```{r}
+penguins |>  # Take the dataset
+  unique() |>  # Tell me the distinct values
+  length() # Tell me how long the vector is
+```
+
+> Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go. 
 
 ## Working with `dplyr`
 
