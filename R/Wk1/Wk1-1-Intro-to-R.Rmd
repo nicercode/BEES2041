@@ -24,7 +24,7 @@ Learning to code in R is like learning to speaking a new language. Here we will 
 
 ## Code and Comments
 
-### Code and Comments
+<h3>Code and Comments</h3>
 
 Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line with spit out or "return" a solution. 
 
@@ -54,7 +54,7 @@ R `r cloze("reads the comment and does nothing", c("translates comments into Pyt
 
 ## Assignment operator
 
-### Assignment operator
+<h3>Assignment operator</h3>
 
 The "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
 
@@ -90,7 +90,7 @@ When creating objects in R, there are few general rules naming things. Object na
 
 ## Functions
 
-### Functions
+<h3>Functions</h3>
 
 Another common feature you will use in R are **"functions"**. These are in-built code that performs a specific task.
 For example: 
@@ -131,7 +131,7 @@ mean(x, na.rm = FALSE)
 
 ## Data types in R 
 
-### Data types in R
+<h3>Data types in R</h3>
 
 R has its unique way of classifying data. Data types are fundamental when working in R as they are common entities you will be dealing with regularly.
 
@@ -183,7 +183,7 @@ str(went_for_a_walk)
 
 ## Object types in R 1
 
-### Object types in R
+<h3>Object types in R</h3>
 
 Some far we have been working with **vectors**. They are the simplest object in R, `cats`, `water_ml`, `went_for_a_walk` as you seen above are all one dimensional and contains bits of data. 
 
@@ -245,7 +245,7 @@ What happens when you don't provide a name to an element? `r cloze("The element 
 
 ## Visualising your data 1
 
-### Visualising your data
+<h3>Visualising your data</h3>
 
 Now that you have the basics under your belt, let's try looking at our data using plots! We will be using functions from an R package called `ggplot2`. R packages are shareable tools and contain functions and data that are not shipped in the base version of R. There are _MANY_ R packages out there, this is the beauty of R. Over time, you will find the right R packages for you and add them to your data science tool belt.
 
