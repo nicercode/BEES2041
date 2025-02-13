@@ -58,7 +58,7 @@ R `r cloze("reads the comment and does nothing", c("translates comments into Pyt
 
 The "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side). 
 
-<div id="r-editor-2568"><pre>
+<div id="r-editor-2566"><pre>
 # Insert the value 13 into the object my_lucky_number
 my_lucky_number <- 13 
 
@@ -98,7 +98,7 @@ For example:
 - `c()` is function used to **combine multiple values** into one object 
 - `mean()` is a function that calculates the average of a series of numbers. 
 
-<div id="r-editor-2569"><pre>
+<div id="r-editor-2567"><pre>
 # Put some numbers in `x`
 x <- c(1,2,3,4,5)
 
@@ -116,7 +116,7 @@ Functions have **"arguments"**, these are **inputs** to a function that is neede
 
 Take this next example, I've added a NA in a series of numbers. NA represents a missing value. Try taking a mean of x now
 
-<div id="r-editor-2570"><pre>
+<div id="r-editor-2568"><pre>
 # Add a missing value (`NA`) in `x`
 x <- c(1, 2, 3, 4, 5, NA, 7, 8, 9) 
 
@@ -146,7 +146,7 @@ There are 4 common data types in R:
 
 **Try:** use the functions `class()`, `typeof()`, `str()` to figure out what type of data you are working with below
 
-<div id="r-editor-2571"><pre>
+<div id="r-editor-2569"><pre>
 # Put some types of cats in `cats`
 cats <- c("calico", "tabby", "black") # Character 
 
@@ -154,7 +154,7 @@ class(cats)
 </pre>
 </div>
 
-<div id="r-editor-2571"><pre>
+<div id="r-editor-2570"><pre>
 # Put some water volumes in `water_ml`
 water_ml <- c(200.34, 190.57, 195.83, 197.32) # Numeric - double
 
@@ -170,7 +170,7 @@ typeof(number_of_houses)
 </pre>
 </div>
 
-<div id="r-editor-2571"><pre>
+<div id="r-editor-2572"><pre>
 # Put walk tracker data in `went_for_a_walk`
 went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE) # Logical
 
@@ -205,7 +205,7 @@ Some far we have been working with **vectors**. They are the simplest object in 
 -	`gear`	Number of forward gears
 -	`carb`	Number of carburetors
 
-<div id="r-editor-2572">
+<div id="r-editor-2573">
 mtcars
 </div>
 
@@ -228,7 +228,7 @@ Another common and object data type is a **list**. Lists are objects which can c
 
 We create lists using the `list()` function. Here I am creating a list and giving each **element** of my list a name (`car_data`, `cat_types`, `did_i_go_for_a_walk`). Notice I am using the `=` here to store objects into element. 
 
-<div id="r-editor-2573"><pre>
+<div id="r-editor-2574"><pre>
 cats <- c("calico", "tabby", "black") 
 went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
 
@@ -253,7 +253,7 @@ To make use `ggplot2` we need to first install it so we can use it in the browse
 
 > Note that `webr::install()` is strictly used for this browser and won't apply when in working on your own computers. Use `install.packages()` on your computer instead
 
-<div id="r-editor-2574"><pre>
+<div id="r-editor-2575"><pre>
 webr::install("ggplot2") # Installation might take a few seconds
 
 library(ggplot2)
@@ -265,7 +265,7 @@ Once installed, we can load ggplot2 into R using the `library()` function.
 
 **Try:** Let's create a boxplot of number of cylinders by weight of the car. We want to know if the weight of cars varies with the number cylinder it has. 
 
-<div id="r-editor-2575"><pre>
+<div id="r-editor-2576"><pre>
 library(ggplot2) # Load ggplot2 for use
 
 ggplot(data = mtcars, aes(x = cyl, y = wt, group = cyl)) +  # Point to data and the x-variable and the y-variables
@@ -299,7 +299,7 @@ ggplot(data = mtcars, aes(x = `r cloze("am", colnames(mtcars))`, y = `r cloze("m
 
 **Try:** Change the code above and see for yourself! 
 
-<div id="r-editor-2595"><pre>
+<div id="r-editor-2577"><pre>
 
 
 </pre>
