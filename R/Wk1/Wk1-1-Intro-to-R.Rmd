@@ -147,7 +147,7 @@ There are 4 common data types in R:
 **Try:** use the functions `class()`, `typeof()`, `str()` to figure out what type of data you are working with below
 
 <div id="r-editor-2571"><pre>
-cats <- c(\"calico\", \"tabby\", \"black\") # Character 
+cats <- c("calico", "tabby", "black") # Character 
 water_ml <- c(200.34, 190.57, 195.83, 197.32) # Numeric - double
 number_of_houses <- c(5L, 1L, 6L, 8L, 10L) # Numeric - integer
 went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE) # Logical
