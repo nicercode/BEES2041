@@ -82,7 +82,7 @@ penguins |>  # Take the dataset
   length() # Tell me how long the vector is
 ```
 
-> Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go. 
+> Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go.
 
 ## Working with `dplyr`
 
@@ -92,14 +92,15 @@ Your first challenge is to explore and try out some of dplyr functions for manip
 
 > Review the examples in the dplyr guide here: <https://dplyr.tidyverse.org/articles/dplyr.html>
 
-Then adapt their code there to answer the following.
+Then adapt the code from the guide to answer the following.
 
 <h4>Extracting rows</h4>
 
-*Try:* Use the function `filter()` to extract all penguins from `Dream` island
+*Try:* Use the pipe and function `filter()` to extract all penguins from `Dream` island
 
 ```{r}
-filter(penguins, island == "Dream")
+penguins |> 
+  filter(island == "Dream")
 ```
 
 **Question:** How many penguins were sampled in Dream Island? `r cloze(124, c(8, 124, 3250))`
@@ -107,7 +108,8 @@ filter(penguins, island == "Dream")
 **Try:** Use the function `filter()`to extract all penguins that have body masses greater than 4000g 
 
 ```{r}
-filter(penguins, body_mass_g > 4000)
+penguins |> 
+  filter(body_mass_g > 4000)
 ```
 
 **Question:** How many penguins were heavier than 4kg? `r cloze(172, c(101, 127, 172))`
@@ -115,8 +117,8 @@ filter(penguins, body_mass_g > 4000)
 **Try:** Use the `arrange()` function to sort the data by `island`
 
 ```{r}
-arrange(penguins, island)
-arrange(penguins, body_mass_g)
+penguins |> 
+  arrange(island)
 ```
 
 **Question:** What would the code look like if you wanted to sort the data by were heavier than 4kg? `r cloze(172, c(101, 127, 172))`
