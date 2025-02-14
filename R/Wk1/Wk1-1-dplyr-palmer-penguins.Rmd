@@ -190,7 +190,7 @@ penguins |>
 </pre>
 </div>
 
-Its also a handy way to rearrange the order of your columns. It is a matter of preference data is nicer to navigate when we can see the grouping structure first like this: 
+Its also a handy way to rearrange the order of your columns. It is a matter of preference, data is nicer to navigate when we can see the grouping structure first like this: 
 
 <div id="r-editor-122"><pre>
 penguins |> 
@@ -200,7 +200,7 @@ penguins |>
 
 <h4>Create and modify columns</h4>
 
-A common task with data analysis is making new variables. For example, a collaborator shared some temperature data from North America (ºF) and Europe (ºF) and you need a way to standardise these  so it can all go into the same analysis. This is where `mutate()` will be useful.
+A common task with data analysis is making new variables. For example, a collaborator shared some temperature data from North America (ºF) and Europe (ºC) and you need a way to standardise these  so it can all go into the same analysis. This is where `mutate()` will be useful.
 
 > Here, we are taking the log to the base of 10 of `body_mass_g` so we can very heavy penguins and very light penguins can be viewed on a similar scale. 
 
