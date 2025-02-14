@@ -38,20 +38,22 @@ Let's go ahead and install these two packages for the browser
 
 > Note if you refresh the browser or check any answers as you are doing the challenges, you will need to install and load `dplyr` and `palmerpengins` again. 
 
-```{r}
+<div id="r-editor-110"><pre>
 install.packages(c("dplyr","palmerpenguins"))
 
 library(dplyr) 
 library(palmerpenguins) 
-```
+</pre>
+</div>
 
 ## Take a look at the data 
 
 <h3>Take a look at the data</h3>
 
-```{r}
+<div id="r-editor-111"><pre>
 penguins
-```
+</pre>
+</div>
 
 > Notice anything different in how R is presenting the `pengiuns` data compared to `mtcars`?
 
@@ -66,18 +68,20 @@ Let's talk through an example. I'd like to know how many unique `islands` there 
 
 The code would look like this: 
 
-```{r}
+<div id="r-editor-112"><pre>
 # Recall `$` allows you to select a variable from a data frame
 length(unique(penguins$island)) 
-```
+</pre>
+</div>
 
 This is not very nice looking code, you have to read from inside out which is not very intuitive. There is where pipes come in handy. 
 
-```{r}
+<div id="r-editor-113"><pre>
 penguins |>  # Take the dataset
   unique() |>  # Tell me the distinct values
   length() # Tell me how long the vector is
-```
+</pre>
+</div>
 
 Here you can read from top to bottom, left to right. You can see the order of steps! 
 
@@ -95,10 +99,11 @@ The `filter()` function allows you to take subsets of a data frame. You have to 
 
 Take this example, the code below gives me data for only `penguins` from the `Dream` Island.
 
-```{r}
+<div id="r-editor-114"><pre>
 penguins |> 
   filter(island == "Dream")
-```
+</pre>
+</div>
  
 Let's walk through the code: 
 
@@ -111,22 +116,23 @@ Try these examples and see if you can understand the conditional statements
 
 > Give me the penguins **ONLY** from Dream island from the year 2008
 
-```{r}
-
+<div id="r-editor-115"><pre>
 penguins |> 
   filter(island == "Dream" & year == 2008)
 
 # The above can also be written using commas instead
 penguins |> 
   filter(island == "Dream", year == 2008)
-```
+</pre>
+</div>
 
 > Give me all the penguins from Dream island *OR* from Torgersen island 
 
-```{r}
+<div id="r-editor-116"><pre>
 penguins |> 
   filter(island == "Dream" | island == "Torgersen")
-```
+</pre>
+</div>
 
 What if we want to filter on some numeric variable? This is where **relational operators** like `>` and `<` come in play. These are useful for selecting **ranges** in your data. 
 
@@ -134,17 +140,19 @@ What if we want to filter on some numeric variable? This is where **relational o
 
 > Give me all the penguins where their bill size is **GREATER** than 16 AND **LESS** than 20
 
-```{r}
+<div id="r-editor-117"><pre>
 penguins |> 
   filter(bill_depth_mm > 16 & bill_depth_mm < 20) 
-```
+</pre>
+</div>
 
 > Give me all the penguins where their flipper length is **GREATER OR EQUAL TO** than 210 AND **LESS OR EQUAL TO** than 230
 
-```{r}
+<div id="r-editor-118"><pre>
 penguins |> 
   filter(flipper_length_mm >= 210 & flipper_length_mm <= 230)
-```
+</pre>
+</div>
 
 <h4>Keep or dropping columns</h4>
 
@@ -152,36 +160,37 @@ Large datasets with many columns can be tricky to view in R so at times, it may 
 
 The `select()` allows you to rapidly zoom in on the stack of data you are interested. 
 
-<!-- TODO: Talk about select is a great way to move your columns around
-Talk about :, starts_with, ends_with, contains-->
-
 Here, we are only keeping the columns `species`, `island`, `year` and `flipper_length_mm`
 
-```{r}
+<div id="r-editor-119"><pre>
 penguins |> 
   select(species, island, year, flipper_length_mm)
-```
+</pre>
+</div>
 
 You can use the colon operator `:` that is useful for selecting consecutive stacks of data. Here we are keeping columns from `species` **through to** `bill_depth_mm`
 
-```{r}
+<div id="r-editor-120"><pre>
 penguins |> 
   select(species:bill_depth_mm)
-```
+</pre>
+</div>
 
 You can use other `dplyr` verbs such as `starts_with()`, `ends_with()`, `contains()` into make your selection more efficient and specific
 
-```{r}
+<div id="r-editor-121"><pre>
 penguins |> 
   select(species, ends_with("_mm"))
-```
+</pre>
+</div>
 
 Its also a handy way to rearrange the order of your columns. It is a matter of preference data is nicer to navigate when we can see the grouping structure first like this: 
 
-```{r}
+<div id="r-editor-122"><pre>
 penguins |> 
   select(species, island, sex, year, where(is.numeric))
-```
+</pre>
+</div>
 
 <h4>Create and modify columns</h4>
 
@@ -189,12 +198,13 @@ A common task with data analysis is making new variables. For example, a collabo
 
 > Here, we are taking the log to the base of 10 of `body_mass_g` so we can very heavy penguins and very light penguins can be viewed on a similar scale. 
 
-```{r}
+<div id="r-editor-123"><pre>
 peguins_log10mass <- penguins |> 
   mutate(log_10_mass = log10(body_mass_g)) 
 
 peguins_log10mass
-```
+</pre>
+</div>
 
 **Note** that we are **assigning** the updated data frame into an object `peguins_log10mass`, if you skip this step, your new variable won't be saved!
 
@@ -204,26 +214,29 @@ Sorting your data is a quick way to get a sense of data. The `dplyr` function fo
 
 > Here, we are sorting the species and island, by default, `dplyr` sorts the dataset alphabetically
 
-```{r}
+<div id="r-editor-124"><pre>
 penguins |> 
   arrange(species, island)
-```
+</pre>
+</div
 
 You can arrange your data by multiple variables too 
 
 > Here, we are sorting the species and island and body_mass_g by default, `dplyr` sorts the numeric variables in an increasing order
 
-```{r}
+<div id="r-editor-125"><pre>
 penguins |> 
   arrange(species, island, body_mass_g)
-```
+</pre>
+</div
 
 You can use `desc()` if you want to sort a numeric variable in decreasing order too! 
 
-```{r}
+<div id="r-editor-126"><pre>
 penguins |> 
   arrange(species, island, desc(body_mass_g))
-```
+</pre>
+</div
 
 <h4>Compute group summaries</h4>
 
@@ -235,11 +248,12 @@ In `dplyr`, the `group_by()` and `summarise()` functions are powerful tools for 
 
 Let's say I want to know how `body_mass_g` of penguins varied by `sex`, `year`, `island`. We can achieve this with 3 lines of code! We've set `mean(body_mass_g, na.rm = TRUE)` as some penguins didn't have body mass data. 
 
-```{r}
+<div id="r-editor-127"><pre>
 penguins |> 
   group_by(sex, year) |>  # tell dplyr what groups I am interested in
   summarise(mean_body_mass = mean(body_mass_g, na.rm = TRUE)) # Calculate the average body mass and store that info in `mean_body_mass`
-```
+</pre>
+</div
 
 <h4>Using pipes with dplyr verbs</h4>
 
@@ -254,7 +268,7 @@ Consider this example, let's say we want data for:
 
 But with the pipe, you can take the output of one step and pipe it in as input to the next step. E.g. the code above becomes
 
-```{r}
+<div id="r-editor-128"><pre>
 penguins |> 
   filter(sex == "female",  # Filter for the target pengins we want
          species == "Gentoo",
@@ -262,11 +276,12 @@ penguins |>
   mutate(mass_corrected_flipper_length_mm = flipper_length_mm / body_mass_g, # Create some new variables for analysis
          mass_corrected_bill_length_mm = bill_length_mm / body_mass_g) |> 
   select(starts_with("mass_corrected"), year) # Keep only the variables we need for our statistical model
-```
+</pre>
+</div
 
 Without the pipe, you would need to save the output for each step which createsintermediary objects in your environment that will won't need and the code is a bit harder to read as you need to track what object is going into each step
 
-```{r}
+<div id="r-editor-129"><pre>
 # Filter for the target pengins we want
 target_sample <- filter(penguins, 
                         sex == "female",
@@ -282,7 +297,8 @@ target_sample_mass_corrected <- mutate(target_sample,
 # Keep only the variables we need for our statistical model
 target_sample_mass_corrected_analysis_ready <- 
   select(target_sample_mass_corrected, starts_with("mass_corrected"), year)
-```
+</pre>
+</div
 
 # Data hygiene
 
@@ -302,7 +318,7 @@ The `janitor` R package has a really useful function `clean_names()` that can tr
 
 > Notice I am using the `names()` functions to grab all the column names of the `penguins_raw` dataset
 
-```{r}
+<div id="r-editor-130"><pre>
 install.packages(janitor)
 
 library(janitor)
@@ -310,7 +326,8 @@ library(janitor)
 names(penguins_raw)
 
 clean_names(penguins_raw) # HUZZAH! 
-```
+</pre>
+</div
 
 ## Getting familiar with your data
 
@@ -322,17 +339,18 @@ Before launching into any data cleaning or analysis, its good practice to get fa
 
 For categorical variables, you can take a look at the table of counts of each value using `group_by` and `count()`
 
-```{r}
+<div id="r-editor-131"><pre>
 penguins |> 
   group_by(species) |> 
   count()
-```
+</pre>
+</div
 
 <h4>Numeric variables</h4>
 
 For numeric variables, creating a quick histogram allows you to get a sense of the distribution of values. You can use `ggplot2` but here we are using the basic `hist()` function as its for quick viewing purposes. 
  
-```{r}
+<div id="r-editor-132"><pre>
 penguins$flipper_length_mm |> hist()
 
 # `ggplot2` alternative (need to install ggplot2 for the browser first though)
@@ -342,18 +360,25 @@ penguins$flipper_length_mm |> hist()
 # penguins |> 
 #   ggplot(aes(x = flipper_length_mm)) + 
 #   geom_histogram()
-```
+</pre>
+</div
 
 <h3>Summaries of whole dataset</h3>
 
 Finally, you can use the `summary()` function to get a quick overview of the range values and any missing data for every variable in your dataset all at once
 
-```{r}
+<div id="r-editor-133"><pre>
 summary(penguins)
-```
+</pre>
+</div
 
 The `skim()` function from the package  `skimr` creates mini data summary report along with histograms for you to get a sense of your data.
 
-```{r}
-skimr::skim(penguins)
-```
+<div id="r-editor-134"><pre>
+install.packages("skimr")
+
+library(skimr)
+
+skim(penguins)
+</pre>
+</div
