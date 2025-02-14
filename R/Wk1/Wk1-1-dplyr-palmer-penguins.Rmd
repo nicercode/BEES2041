@@ -225,7 +225,6 @@ penguins |>
   arrange(species, island, desc(body_mass_g))
 ```
 
-
 <h4>Compute group summaries</h4>
 
 When working with data, we often want know certain summaries about groups in our data. For example, we may need to report on the average tree canopy cover for each study sites or median house prices of different states. These are classic examples of the **split-apply-combine** paradigm. We want to split our data by group, apply a type of calculation on each of these subgroups and then bring these seperate parts together again. 
@@ -285,111 +284,76 @@ target_sample_mass_corrected_analysis_ready <-
   select(target_sample_mass_corrected, starts_with("mass_corrected"), year)
 ```
 
-
-
-
-what is the average height of Clawdite females (in cm)?
-
-```{r}
-
-```
-
-**Question:** Use your code from above with the pipe to create a new dataset that
-
-- extracts all observations with human characters over 1.8m tall
-- includes columns name, homeworld, mass, height
-- converts mass to g and height in m
-
-```{r}
-
-```
-
-What is the height of the character at the top of this new dataset?
-
-```{r}
-
-```
-
-# Other miscellaneous tips for effective analysis
+# Data hygiene
 
 ## Variable names
 
-Complicated variable names are hard to work with. Especially those with spaces or special characters, like (=,+& etc.
+<h3>Variable names</h3>
 
-If you do have a dataset with complicated naes, you can use tick marks to make working with it easier. E.g., imagine I have a variable "strange variable (yrs)", you could use this in code like this
+Its often easier to collect data in a spreadsheet that is human-readable e.g. column names that look like this `Date`, `Species`, `Island` `Body Mass (g)`, however these are actually very difficult for machines, like R, to read. 
 
-```{r}
-data %>%
-  select(site, `strange varible (yrs)`)
+Machine readable names have some of the following attributes: 
 
-```
+- all in lower case, this makes coding easier!
+- do not contain spaces or special characters
+- words are separated by underscores `_` or hypthens `-`
 
-Personally, I clean variable names to make them more R friendly.
+The `janitor` R package has a really useful function `clean_names()` that can translate human-readable column names to machine-friendly ones. Let's take it for spin on the `penguins_raw` dataset which is the original, pre-processed version of the `penguins`. 
 
-E.g. using the rename function
-
-```{r}
-data %>%
-  rename(better_variavle = `strange varible (yrs)`)
-
-```
-
-OR, you can use the `clean_names` function from the package `janitor` to do a general tidyup of all names
+> Notice I am using the `names()` functions to grab all the column names of the `penguins_raw` dataset
 
 ```{r}
-data <- data %>% janitor::clean_names()
+install.packages(janitor)
+
+library(janitor)
+
+names(penguins_raw)
+
+clean_names(penguins_raw) # HUZZAH! 
 ```
 
-## Check distributions
+## Getting familiar with your data
 
-It's always a good idea to check the distributions of key variables, to identity potential errors.
+<h3>Getting familiar with your data</h3>
 
-### Categorical variables
+Before launching into any data cleaning or analysis, its good practice to get familiar with your data. Looking at the simple plots and tabulating variables if interest are some of the ways to check your data for any data entry errors or issues. 
 
-For categorical variables, you can look a table of values
+<h4>Categorical variables</h4>
+
+For categorical variables, you can take a look at the table of counts of each value using `group_by` and `count()`
 
 ```{r}
-
-data$homeworld %>% table()
-
+penguins |> 
+  group_by(species) |> 
+  count()
 ```
 
-or plot it
+<h4>Numeric variables</h4>
 
-```{r}
-data %>% 
-  ggplot(aes(homeworld)) + geom_bar()
-```
-
-### Numeric values
-
-For numerical values, you can look at the range
-
-```{r}
-range(data$height, na.rm = TRUE)
-
-range(data$birth_year, na.rm = TRUE)
-```
-
-and/or plot a histogram to look at the distribution
+For numeric variables, creating a quick histogram allows you to get a sense of the distribution of values. You can use `ggplot2` but here we are using the basic `hist()` function as its for quick viewing purposes. 
  
 ```{r}
-data %>% 
-  ggplot(aes(x=height) ) + 
-  geom_histogram()
+penguins$flipper_length_mm |> hist()
 
+# `ggplot2` alternative (need to install ggplot2 for the browser first though)
+#
+# library(ggplot2)
+# 
+# penguins |> 
+#   ggplot(aes(x = flipper_length_mm)) + 
+#   geom_histogram()
 ```
 
-### Summaries of whole dataset
+<h3>Summaries of whole dataset</h3>
 
-The package `skimr` has a great function `skim` for quickly summarising the structure of an entire datatset
+Finally, you can use the `summary()` function to get a quick overview of the range values and any missing data for every variable in your dataset all at once
 
 ```{r}
-skimr::skim(data)
+summary(penguins)
 ```
 
-another one is from the package `report`
+The `skim()` function from the package  `skimr` creates mini data summary report along with histograms for you to get a sense of your data.
 
 ```{r}
-report::report(data)
+skimr::skim(penguins)
 ```
