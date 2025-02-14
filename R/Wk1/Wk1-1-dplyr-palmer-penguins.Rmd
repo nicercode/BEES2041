@@ -202,7 +202,7 @@ penguins |>
 
 A common task with data analysis is making new variables. For example, a collaborator shared some temperature data from North America (ºF) and Europe (ºC) and you need a way to standardise these  so it can all go into the same analysis. This is where `mutate()` will be useful.
 
-> Here, we are taking the log to the base of 10 of `body_mass_g` so we can very heavy penguins and very light penguins can be viewed on a similar scale. 
+> Here, we are taking the log to the base of 10 of `body_mass_g` so very heavy penguins and very light penguins can be viewed on a similar scale. 
 
 <div id="r-editor-123"><pre>
 penguins_log10mass <- penguins |> 
