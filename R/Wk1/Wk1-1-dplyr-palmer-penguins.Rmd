@@ -43,6 +43,8 @@ install.packages(c("dplyr","palmerpenguins", "janitor", "skimr"))
 
 library(dplyr) 
 library(palmerpenguins) 
+library(janitor)
+library(skimr)
 </pre>
 </div>
 
