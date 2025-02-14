@@ -224,7 +224,7 @@ Sorting your data is a quick way to get a sense of data. The `dplyr` function fo
 penguins |> 
   arrange(species, island)
 </pre>
-</div
+</div>
 
 You can arrange your data by multiple variables too 
 
@@ -234,7 +234,7 @@ You can arrange your data by multiple variables too
 penguins |> 
   arrange(species, island, body_mass_g)
 </pre>
-</div
+</div>
 
 You can use `desc()` if you want to sort a numeric variable in decreasing order too! 
 
@@ -257,7 +257,7 @@ Let's say I want to know how `body_mass_g` of penguins varied by `sex`, `year`, 
 
 <div id="r-editor-127"><pre>
 penguins |> 
-  group_by(sex, year) |>  # tell dplyr what groups I am interested in
+  group_by(sex, year, island) |>  # tell dplyr what groups I am interested in
   summarise(mean_body_mass = mean(body_mass_g, na.rm = TRUE)) # Calculate the average body mass and store that info in `mean_body_mass`
 </pre>
 </div
