@@ -45,7 +45,7 @@ library(dplyr)
 library(palmerpenguins) 
 ```
 
-## Take a look at the data {type=essay}
+## Take a look at the data 
 
 <h3>Take a look at the data</h3>
 
@@ -53,9 +53,7 @@ library(palmerpenguins)
 penguins
 ```
 
-**Question:** What do you notice that's different with how `mtcars` and `penguins` are presented in R? 
-
-Write a few sentences on what functions you used to determine the main difference between the two datasets.
+> Notice anything different in how R is presenting the `pengiuns` data compared to `mtcars`?
 
 ## But first, have you met the pipe?
 
@@ -89,7 +87,7 @@ Here you can read from top to bottom, left to right. You can see the order of st
 
 <h3>Working with `dplyr`</h3>
 
-> Learn more from [the dplyr guide](https://dplyr.tidyverse.org/articles/dplyr.html) is really comprehensive! 
+> Learn more from [the dplyr guide](https://dplyr.tidyverse.org/articles/dplyr.html), its really comprehensive! 
 
 <h4>Extracting rows</h4>
 
@@ -111,8 +109,10 @@ We can create more specific conditions using **logical operators** `&`, `|`, `!`
 
 Try these examples and see if you can understand the conditional statements
 
+> Give me the penguins **ONLY** from Dream island from the year 2008
+
 ```{r}
-# Give me the penguins ONLY from Dream island from the year 2008
+
 penguins |> 
   filter(island == "Dream" & year == 2008)
 
@@ -121,43 +121,30 @@ penguins |>
   filter(island == "Dream", year == 2008)
 ```
 
+> Give me all the penguins from Dream island *OR* from Torgersen island 
+
 ```{r}
-# Give me all the penguins from Dream island OR from Torgersen island 
 penguins |> 
   filter(island == "Dream" | island == "Torgersen")
 ```
 
-What if we want to filter on some numeric variable? This is where **relational operators** like `>` and `<` come in. These are useful for selecting ranges in your data.
+What if we want to filter on some numeric variable? This is where **relational operators** like `>` and `<` come in play. These are useful for selecting **ranges** in your data. 
 
+**Tip:** Pipe your filtered data into `summary()` to check if your code worked or not! 
 
-```{r}
-penguins$bill_depth_mm |> hist()
-
-penguins |> 
-  filter(bill_depth_mm > 16 & bill_depth_mm > 20)
-```
-
-
-<!-- TODO: Talk about conditions and operators, &, | and , and <, >, <=, => -->
-**Question:** How many penguins were sampled in Dream Island? `r cloze(124, c(8, 124, 3250))`
-
-**Try:** Use the function `filter()`to extract all penguins that have body masses greater than 4000g 
+> Give me all the penguins where their bill size is **GREATER** than 16 AND **LESS** than 20
 
 ```{r}
 penguins |> 
-  filter(body_mass_g > 4000)
+  filter(bill_depth_mm > 16 & bill_depth_mm < 20) 
 ```
 
-**Question:** How many penguins were heavier than 4kg? `r cloze(172, c(101, 127, 172))`
-
-**Try:** Use the `arrange()` function to sort the data by `island`
+> Give me all the penguins where their flipper length is **GREATER OR EQUAL TO** than 210 AND **LESS OR EQUAL TO** than 230
 
 ```{r}
 penguins |> 
-  arrange(island)
+  filter(flipper_length_mm >= 210 & flipper_length_mm <= 230)
 ```
-
-**Question:** What would the code look like if you wanted to sort the data by were heavier than 4kg? `r cloze(172, c(101, 127, 172))`
 
 <h4>Keep or dropping columns</h4>
 
@@ -181,6 +168,16 @@ penguins |>
 penguins |> 
   mutate(log_10_mass = log10(body_mass_g))
 ```
+
+<h4>Sorting by columns</h4>
+
+**Try:** Use the `arrange()` function to sort the data by `island`
+
+```{r}
+penguins |> 
+  arrange(island)
+```
+
 
 <h4>Compute group summaries</h4>
 
@@ -208,7 +205,6 @@ Consider this example, let's say we want data for:
 - that are larger than body masses greater or equal to 3500g
 - mass-corrected flipper and bill length (dividing flipper and bill length by mass)
 - the final dataset should only contain the mass-corrected flipper and bill length and year
-
 
 But with the pipe, you can take the output of one step and pipe it in as input to the next step. E.g. the code above becomes
 
@@ -241,6 +237,9 @@ target_sample_mass_corrected <- mutate(target_sample,
 target_sample_mass_corrected_analysis_ready <- 
   select(target_sample_mass_corrected, starts_with("mass_corrected"), year)
 ```
+
+
+
 
 what is the average height of Clawdite females (in cm)?
 
