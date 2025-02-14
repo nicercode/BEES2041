@@ -148,16 +148,39 @@ penguins |>
 
 <h4>Keep or dropping columns</h4>
 
+Large datasets with many columns can be tricky to view in R so at times, it may be useful to discard columns that are not relevant for a particular task.
+
+The `select()` allows you to rapidly zoom in on the stack of data you are interested. 
+
 <!-- TODO: Talk about select is a great way to move your columns around
 Talk about :, starts_with, ends_with, contains-->
 
-**Try**: Use the `select()` function to choose columns i.e. variables
-
-Include `species`, `island`, `year`, `flipper_length_mm`
+Here, we are only keeping the columns `species`, `island`, `year` and `flipper_length_mm`
 
 ```{r}
 penguins |> 
   select(species, island, year, flipper_length_mm)
+```
+
+You can use the colon operator `:` that is useful for selecting consecutive stacks of data. Here we are keeping columns from `species` **through to** `bill_depth_mm`
+
+```{r}
+penguins |> 
+  select(species:bill_depth_mm)
+```
+
+You can use other `dplyr` verbs such as `starts_with()`, `ends_with()`, `contains()` into make your selection more efficient and specific
+
+```{r}
+penguins |> 
+  select(species, ends_with("_mm"))
+```
+
+Its also a handy way to rearrange the order of your columns. It is a matter of preference data is nicer to navigate when we can see the grouping structure first like this: 
+
+```{r}
+penguins |> 
+  select(species, island, sex, year, where(is.numeric))
 ```
 
 <h4>Create and modify columns</h4>
@@ -177,7 +200,6 @@ penguins |>
 penguins |> 
   arrange(island)
 ```
-
 
 <h4>Compute group summaries</h4>
 
