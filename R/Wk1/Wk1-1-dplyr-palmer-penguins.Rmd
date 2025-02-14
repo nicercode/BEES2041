@@ -130,7 +130,7 @@ penguins |>
 <!-- TODO: Talk about select is a great way to move your columns around
 Talk about :, starts_with, ends_with, contains-->
 
-### Use the `select` function to choose columns i.e. variables
+**Try**: Use the `select()` function to choose columns i.e. variables
 
 Include `species`, `island`, `year`, `flipper_length_mm`
 
@@ -148,26 +148,55 @@ penguins |>
   mutate(log_10_mass = log10(body_mass_g))
 ```
 
-<h4>Compute summary statistics by group</h4>
+<h4>Compute group summaries</h4>
 
-We often want summarise certain variables for particular groups in our data. For example, the average tree canopy cover from different study sites or median house prices of different states. These are classic examples of the `split-apply-combine` paradigm.
+When working with data, we often want know certain summaries about groups in our data. For example, we may need to report on the average tree canopy cover for each study sites or median house prices of different states. These are classic examples of the **split-apply-combine** paradigm. We want to split our data by group, apply a type of calculation on each of these subgroups and then bring these seperate parts together again. 
+
+![Schematic showing splitting og data by group, applying some sort of operation, then combining the results together](split-apply-combine.png){width=70%}
+
+In `dplyr`, the `group_by()` and `summarise()` functions are powerful tools for us to obtain group-level insights. 
+
+Let's say I want to know how `body_mass_g` of penguins varied by `sex`, `year`, `island`. We can achieve this with 3 lines of code! We've set `mean(body_mass_g, na.rm = TRUE)` as some penguins didn't have body mass data. 
 
 ```{r}
 penguins |> 
-  group_by(island) |> 
-  summarise(mean_body_mass = mean(body_mass_g, na.rm = TRUE))
+  group_by(sex, year) |>  # tell dplyr what groups I am interested in
+  summarise(mean_body_mass = mean(body_mass_g, na.rm = TRUE)) # Calculate the average body mass and store that info in `mean_body_mass`
 ```
-
-
 
 <h4>Using pipes with dplyr verbs</h4>
 
-The pipe enables you to chain different commands together. If you have a series of operations to calculate the average height and mass for each species by sex.
+> Notice how I used the pipe twice in the code above? This is the power of the pipe + `dplyr` combo as it allows you   to chain multiple steps together to get a data wrangling job done!
 
-Without the pipe, you need to save the output for each step
+Consider this example, let's say we want data for:
+
+- female Gentoo penguins 
+- that are larger than body masses greater or equal to 3500g
+- mass-corrected flipper and bill length (dividing flipper and bill length by mass)
+- the final dataset should only contain the mass-corrected flipper and bill length and year
+
+
+But with the pipe, you can take the output of one step and pipe it in as input to the next step. E.g. the code above becomes
 
 ```{r}
-a1 <- group_by(data, species, sex)
+penguins |> 
+  filter(sex == "female", 
+         species == "Gentoo",
+         body_mass_g > 3500) |> 
+  mutate(mass_corrected_flipper_length_mm = flipper_length_mm / body_mass_g,
+         mass_corrected_bill_length_mm = bill_length_mm / body_mass_g) |> 
+  select(starts_with("mass_corrected"), year)
+```
+
+Without the pipe, you would need to save the output for each step which clogs up a lot of intermediary objects in your environment and the code is a bit harder to read. 
+
+```{r}
+target_sample <- filter(penguins, 
+                        sex == "female",
+                        species == "Gentoo",
+                        body_mass_g > 3500)
+
+
 a2 <- select(a1, height, mass)
 a3 <- summarise(a2,
   height = mean(height, na.rm = TRUE),
@@ -176,17 +205,7 @@ a3 <- summarise(a2,
 a3
 ```
 
-But with the pipe, you can take the output of one step and pipe it in as input to the next step. E.g. the code above becomes
 
-```{r}
-data %>%
-  group_by(species, sex) %>%
-  select(height, mass) %>%
-  summarise(
-    height = mean(height, na.rm = TRUE),
-    mass = mean(mass, na.rm = TRUE)
-  )
-```
 
 what is the average height of Clawdite females (in cm)?
 
