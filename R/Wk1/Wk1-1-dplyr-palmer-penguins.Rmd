@@ -185,21 +185,46 @@ penguins |>
 
 <h4>Create and modify columns</h4>
 
-### Use the `mutate` function to create a variable this is the logarithim base 10 of `body_mass_g` (`log10()`, might come in handy!)
+A common task with data analysis is making new variables. For example, a collaborator shared some temperature data from North America (ºF) and Europe (ºF) and you need a way to standardise these  so it can all go into the same analysis. This is where `mutate()` will be useful.
+
+> Here, we are taking the log to the base of 10 of `body_mass_g` so we can very heavy penguins and very light penguins can be viewed on a similar scale. 
 
 ```{r}
-penguins |> 
-  mutate(log_10_mass = log10(body_mass_g))
+peguins_log10mass <- penguins |> 
+  mutate(log_10_mass = log10(body_mass_g)) 
+
+peguins_log10mass
 ```
+
+**Note** that we are **assigning** the updated data frame into an object `peguins_log10mass`, if you skip this step, your new variable won't be saved!
 
 <h4>Sorting by columns</h4>
 
-**Try:** Use the `arrange()` function to sort the data by `island`
+Sorting your data is a quick way to get a sense of data. The `dplyr` function for this is `arrange()`. 
+
+> Here, we are sorting the species and island, by default, `dplyr` sorts the dataset alphabetically
 
 ```{r}
 penguins |> 
-  arrange(island)
+  arrange(species, island)
 ```
+
+You can arrange your data by multiple variables too 
+
+> Here, we are sorting the species and island and body_mass_g by default, `dplyr` sorts the numeric variables in an increasing order
+
+```{r}
+penguins |> 
+  arrange(species, island, body_mass_g)
+```
+
+You can use `desc()` if you want to sort a numeric variable in decreasing order too! 
+
+```{r}
+penguins |> 
+  arrange(species, island, desc(body_mass_g))
+```
+
 
 <h4>Compute group summaries</h4>
 
