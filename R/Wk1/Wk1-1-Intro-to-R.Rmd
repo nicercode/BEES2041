@@ -236,6 +236,8 @@ went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
 
 useful_info <- list(cat_types = cats, # first element
                     did_i_go_for_a_walk = went_for_a_walk) # second element
+
+useful_info
 </pre>
 </div>
 
@@ -251,12 +253,10 @@ What happens when you don't provide a name to an element? `r cloze("The element 
 
 Now that you have the basics under your belt, let's try looking at our data using plots! We will be using functions from an R package called `ggplot2`. R packages are shareable tools and contain functions and data that are not shipped in the base version of R. There are _MANY_ R packages out there, this is the beauty of R. Over time, you will find the right R packages for you and add them to your data science tool belt.
 
-To make use `ggplot2` we need to first install it so we can use it in the browser
-
-> Note that `webr::install()` is strictly used for this browser and won't apply when in working on your own computers. Use `install.packages()` on your computer instead
+To make use `ggplot2` we need to first install it so we can use it in R
 
 <div id="r-editor-2575"><pre>
-webr::install("ggplot2") # Installation might take a few seconds
+install.packages("ggplot2") # Installation might take a few seconds
 
 library(ggplot2)
 </pre>
