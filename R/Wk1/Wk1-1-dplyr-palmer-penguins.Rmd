@@ -30,7 +30,6 @@ Recall from the previous page that an R package is a set of related functions an
 
 The `penguins` dataset is from the `palmerpenguins` the R package so we will also need to install and load that into R. 
 
-
 ## Setting up
 
 <h3>Setting up</h3>
@@ -40,7 +39,7 @@ Let's go ahead and install these two packages for the browser
 > Note if you refresh the browser or check any answers as you are doing the challenges, you will need to install and load `dplyr` and `palmerpengins` again. 
 
 ```{r}
-webr::install(c("dplyr","palmerpenguins"))
+install.packages(c("dplyr","palmerpenguins"))
 
 library(dplyr) 
 library(palmerpenguins) 
@@ -60,9 +59,9 @@ Write a few sentences on what functions you used to determine the main differenc
 
 ## But first, have you met the pipe?
 
-Before diving into data wrangling, I want to introduce to you a very *special* operator, the pipe! `|>`. The pipe looks like a funnel on its side right? The pipe takes the code on the left side of the `|>` and passes it on to the code on the right side.  
+Before diving into data wrangling, I want to introduce to you a very *special* operator, the pipe! **`|>`**. The pipe looks like a funnel on its side right? The pipe takes the code from the left side of it and passes it on to the code on the right side.  
 
-Let's talk through an example. I want to know how many unique `islands` there are in the `penguins` dataset. Typically, I would use: 
+Let's talk through an example. I'd like to know how many unique `islands` there are in the `penguins` dataset. Typically, I would use: 
 
 - the `unique()` function which gives me the distinct values in a variable
 - the `length()` function which counts the number of elements in a vector
@@ -74,7 +73,7 @@ The code would look like this:
 length(unique(penguins$island)) 
 ```
 
-This is not very nice looking code, you have to read from inside out which is not very intuitive. There is where pipes come in. Here you can read from top to bottom, left to right. You can see the order of steps! 
+This is not very nice looking code, you have to read from inside out which is not very intuitive. There is where pipes come in handy. 
 
 ```{r}
 penguins |>  # Take the dataset
@@ -82,29 +81,64 @@ penguins |>  # Take the dataset
   length() # Tell me how long the vector is
 ```
 
-> Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go.
+Here you can read from top to bottom, left to right. You can see the order of steps! 
+
+> Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go which you will see more of below
 
 ## Working with `dplyr`
 
 <h3>Working with `dplyr`</h3>
 
-Your first challenge is to explore and try out some of dplyr functions for manipulating data tables.
-
-> Review the examples in the dplyr guide here: <https://dplyr.tidyverse.org/articles/dplyr.html>
-
-Then adapt the code from the guide to answer the following.
+> Learn more from [the dplyr guide](https://dplyr.tidyverse.org/articles/dplyr.html) is really comprehensive! 
 
 <h4>Extracting rows</h4>
 
-<!-- TODO: Talk about conditions and operators, &, | and , and <, >, <=, => -->
+The `filter()` function allows you to take subsets of a data frame. You have to specify the **condition** for which rows to keep. 
 
-*Try:* Use the pipe and function `filter()` to extract all penguins from `Dream` island
+Take this example, the code below gives me data for only `penguins` from the `Dream` Island.
 
 ```{r}
 penguins |> 
   filter(island == "Dream")
 ```
+ 
+Let's walk through the code: 
 
+1. The`penguins` dataset is piped to the `filter()` function. 
+2. Within the `filter()` function is where we specify our condition. I've used the **equal-to operator** represented by `==` here to tell R, I only want rows from the variable `island` where it's value matches the word "Dream"
+
+We can create more specific conditions using **logical operators** `&`, `|`, `!` 
+
+Try these examples and see if you can understand the conditional statements
+
+```{r}
+# Give me the penguins ONLY from Dream island from the year 2008
+penguins |> 
+  filter(island == "Dream" & year == 2008)
+
+# The above can also be written using commas instead
+penguins |> 
+  filter(island == "Dream", year == 2008)
+```
+
+```{r}
+# Give me all the penguins from Dream island OR from Torgersen island 
+penguins |> 
+  filter(island == "Dream" | island == "Torgersen")
+```
+
+What if we want to filter on some numeric variable? This is where **relational operators** like `>` and `<` come in. These are useful for selecting ranges in your data.
+
+
+```{r}
+penguins$bill_depth_mm |> hist()
+
+penguins |> 
+  filter(bill_depth_mm > 16 & bill_depth_mm > 20)
+```
+
+
+<!-- TODO: Talk about conditions and operators, &, | and , and <, >, <=, => -->
 **Question:** How many penguins were sampled in Dream Island? `r cloze(124, c(8, 124, 3250))`
 
 **Try:** Use the function `filter()`to extract all penguins that have body masses greater than 4000g 
@@ -180,32 +214,33 @@ But with the pipe, you can take the output of one step and pipe it in as input t
 
 ```{r}
 penguins |> 
-  filter(sex == "female", 
+  filter(sex == "female",  # Filter for the target pengins we want
          species == "Gentoo",
          body_mass_g > 3500) |> 
-  mutate(mass_corrected_flipper_length_mm = flipper_length_mm / body_mass_g,
+  mutate(mass_corrected_flipper_length_mm = flipper_length_mm / body_mass_g, # Create some new variables for analysis
          mass_corrected_bill_length_mm = bill_length_mm / body_mass_g) |> 
-  select(starts_with("mass_corrected"), year)
+  select(starts_with("mass_corrected"), year) # Keep only the variables we need for our statistical model
 ```
 
-Without the pipe, you would need to save the output for each step which clogs up a lot of intermediary objects in your environment and the code is a bit harder to read. 
+Without the pipe, you would need to save the output for each step which createsintermediary objects in your environment that will won't need and the code is a bit harder to read as you need to track what object is going into each step
 
 ```{r}
+# Filter for the target pengins we want
 target_sample <- filter(penguins, 
                         sex == "female",
                         species == "Gentoo",
                         body_mass_g > 3500)
 
 
-a2 <- select(a1, height, mass)
-a3 <- summarise(a2,
-  height = mean(height, na.rm = TRUE),
-  mass = mean(mass, na.rm = TRUE)
-)
-a3
+# Create some new variables for analysis
+target_sample_mass_corrected <- mutate(target_sample, 
+                                       mass_corrected_flipper_length_mm = flipper_length_mm / body_mass_g, 
+                                       mass_corrected_bill_length_mm = bill_length_mm / body_mass_g)
+
+# Keep only the variables we need for our statistical model
+target_sample_mass_corrected_analysis_ready <- 
+  select(target_sample_mass_corrected, starts_with("mass_corrected"), year)
 ```
-
-
 
 what is the average height of Clawdite females (in cm)?
 
