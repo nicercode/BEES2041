@@ -34,21 +34,19 @@ The `penguins` dataset is from the `palmerpenguins` the R package so we will als
 
 <h3>Setting up</h3>
 
-Let's go ahead and install these two packages for the browser
+Let's go ahead and install these two packages for the browser and two other supplementary packages called `janitor` and `skimr` which we will use a little later
 
 > Note if you refresh the browser or check any answers as you are doing the challenges, you will need to install and load `dplyr` and `palmerpengins` again. 
 
 <div id="r-editor-110"><pre>
-install.packages(c("dplyr","palmerpenguins"))
+install.packages(c("dplyr","palmerpenguins", "janitor", "skimr"))
 
 library(dplyr) 
 library(palmerpenguins) 
 </pre>
 </div>
 
-## Take a look at the data 
-
-<h3>Take a look at the data</h3>
+Let's take a look at the data!
 
 <div id="r-editor-111"><pre>
 penguins
@@ -58,6 +56,8 @@ penguins
 > Notice anything different in how R is presenting the `pengiuns` data compared to `mtcars`?
 
 ## But first, have you met the pipe?
+
+<h3>But first, have you met the pipe?</h3>
 
 Before diving into data wrangling, I want to introduce to you a very *special* operator, the pipe! **`|>`**. The pipe looks like a funnel on its side right? The pipe takes the code from the left side of it and passes it on to the code on the right side.  
 
@@ -160,7 +160,7 @@ Large datasets with many columns can be tricky to view in R so at times, it may 
 
 The `select()` allows you to rapidly zoom in on the stack of data you are interested. 
 
-Here, we are only keeping the columns `species`, `island`, `year` and `flipper_length_mm`
+> Here, we are only keeping the columns `species`, `island`, `year` and `flipper_length_mm`
 
 <div id="r-editor-119"><pre>
 penguins |> 
@@ -168,7 +168,9 @@ penguins |>
 </pre>
 </div>
 
-You can use the colon operator `:` that is useful for selecting consecutive stacks of data. Here we are keeping columns from `species` **through to** `bill_depth_mm`
+You can use the colon operator `:` that is useful for selecting consecutive stacks of data.
+
+> Here we are keeping columns from `species` **through to** `bill_depth_mm`
 
 <div id="r-editor-120"><pre>
 penguins |> 
@@ -177,6 +179,8 @@ penguins |>
 </div>
 
 You can use other `dplyr` verbs such as `starts_with()`, `ends_with()`, `contains()` into make your selection more efficient and specific
+
+> Here, we are select columns that end with `_mm` 
 
 <div id="r-editor-121"><pre>
 penguins |> 
@@ -199,10 +203,10 @@ A common task with data analysis is making new variables. For example, a collabo
 > Here, we are taking the log to the base of 10 of `body_mass_g` so we can very heavy penguins and very light penguins can be viewed on a similar scale. 
 
 <div id="r-editor-123"><pre>
-peguins_log10mass <- penguins |> 
+penguins_log10mass <- penguins |> 
   mutate(log_10_mass = log10(body_mass_g)) 
 
-peguins_log10mass
+penguins_log10mass
 </pre>
 </div>
 
@@ -236,13 +240,14 @@ You can use `desc()` if you want to sort a numeric variable in decreasing order 
 penguins |> 
   arrange(species, island, desc(body_mass_g))
 </pre>
-</div
+</div>
 
-<h4>Compute group summaries</h4>
+<h3>Compute group summaries</h3>
 
 When working with data, we often want know certain summaries about groups in our data. For example, we may need to report on the average tree canopy cover for each study sites or median house prices of different states. These are classic examples of the **split-apply-combine** paradigm. We want to split our data by group, apply a type of calculation on each of these subgroups and then bring these seperate parts together again. 
 
-![Schematic showing splitting og data by group, applying some sort of operation, then combining the results together](split-apply-combine.png){width=70%}
+![Schematic showing splitting og data by group, applying some sort of operation, then combining the results together](split-apply-combine.png){width=80% align='center'}
+<br>
 
 In `dplyr`, the `group_by()` and `summarise()` functions are powerful tools for us to obtain group-level insights. 
 
@@ -255,7 +260,7 @@ penguins |>
 </pre>
 </div
 
-<h4>Using pipes with dplyr verbs</h4>
+<h3>Using pipes with dplyr verbs</h3>
 
 > Notice how I used the pipe twice in the code above? This is the power of the pipe + `dplyr` combo as it allows you   to chain multiple steps together to get a data wrangling job done!
 
@@ -277,7 +282,7 @@ penguins |>
          mass_corrected_bill_length_mm = bill_length_mm / body_mass_g) |> 
   select(starts_with("mass_corrected"), year) # Keep only the variables we need for our statistical model
 </pre>
-</div
+</div>
 
 Without the pipe, you would need to save the output for each step which createsintermediary objects in your environment that will won't need and the code is a bit harder to read as you need to track what object is going into each step
 
@@ -298,11 +303,11 @@ target_sample_mass_corrected <- mutate(target_sample,
 target_sample_mass_corrected_analysis_ready <- 
   select(target_sample_mass_corrected, starts_with("mass_corrected"), year)
 </pre>
-</div
+</div>
 
-# Data hygiene
+## Data hygiene
 
-## Variable names
+<h2>Data hygiene</h2>
 
 <h3>Variable names</h3>
 
@@ -319,17 +324,11 @@ The `janitor` R package has a really useful function `clean_names()` that can tr
 > Notice I am using the `names()` functions to grab all the column names of the `penguins_raw` dataset
 
 <div id="r-editor-130"><pre>
-install.packages(janitor)
-
-library(janitor)
-
 names(penguins_raw)
 
 clean_names(penguins_raw) # HUZZAH! 
 </pre>
-</div
-
-## Getting familiar with your data
+</div>
 
 <h3>Getting familiar with your data</h3>
 
@@ -344,7 +343,7 @@ penguins |>
   group_by(species) |> 
   count()
 </pre>
-</div
+</div>
 
 <h4>Numeric variables</h4>
 
@@ -361,7 +360,7 @@ penguins$flipper_length_mm |> hist()
 #   ggplot(aes(x = flipper_length_mm)) + 
 #   geom_histogram()
 </pre>
-</div
+</div>
 
 <h3>Summaries of whole dataset</h3>
 
@@ -370,15 +369,11 @@ Finally, you can use the `summary()` function to get a quick overview of the ran
 <div id="r-editor-133"><pre>
 summary(penguins)
 </pre>
-</div
+</div>
 
 The `skim()` function from the package  `skimr` creates mini data summary report along with histograms for you to get a sense of your data.
 
 <div id="r-editor-134"><pre>
-install.packages("skimr")
-
-library(skimr)
-
 skim(penguins)
 </pre>
-</div
+</div>
