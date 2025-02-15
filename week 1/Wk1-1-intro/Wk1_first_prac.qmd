@@ -15,9 +15,7 @@ library(readr)
 library(ggplot2)
 ```
 
-## Working with your own data
-
-> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please run the code in this file on Rstudio and answer the questions in Moodle as you go.
+> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
 
 ## Stalagmite data
 
@@ -34,13 +32,15 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 stalagmite_data <- read_csv("data/Laminated stalagmite Dataset.csv")
 ```
 
-```{r}
-stalagmite_data |> janitor::clean_names()
-```
-
 > You may find it helpful to use the function `clean_names()` from the `janitor` R package first before delving in. You may need to install this package first. Remember to use `library(janitor)` to load this package into R, put this code in the first R chunk!
 
-Using the functions you've learned so far in this prac, try answer the following questions: 
+```{r}
+stalagmite_data_nice_names <- stalagmite_data |> janitor::clean_names()
+
+stalagmite_data_nice_names
+```
+
+Using the functions you've learned so far in this prac, try answer the following questions:
 
 **Questions:**
 
@@ -50,25 +50,25 @@ Using the functions you've learned so far in this prac, try answer the following
 
 ```
 
-**What type of variable is lamina thickness?**
+**What type of variable is `lamina_thickness_mm`?**
 
 ```{r}
 
 ```
 
-**What type of variable is `lam_age (BP, 0=1950AD)`?**
+**What type of variable is `lam_age_bp_0_1950ad`?**
 
 ```{r}
 
 ```
 
-**What is a more suitable variable type for `lam_age (BP, 0=1950AD)`?**
+**What is a more suitable variable type for `lam_age_bp_0_1950ad`?**
 
 ```{r}
 
 ```
 
-**Write some code to change the variable type of `lam_age (BP, 0=1950AD)`?**
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`?**
 
 ```{r}
 
@@ -82,9 +82,9 @@ Using the functions you've learned so far in this prac, try answer the following
 
 ## Sydney Beaches
 
-Next, we'll do a data visualisation to better understand some patterns in our data. For this section, we'll be using the data frame `sydneybeaches.csv`
+Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming. 
 
-We want to try answer the question **which beach is the cleanest in Sydney?** (hint: the site with the least bacteria)
+> We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 
 First, read in the data.
 
@@ -92,15 +92,17 @@ First, read in the data.
 
 ```
 
+**Questions:**
+
 **Check the structure to make sure the variable types were assigned correctly.**
 
 ```{r}
 
 ```
 
-<!-- TODO multichoice -->
+**Which of these variables were assigned correctly? (choose in Moodle all that apply)**
 
-**Which of these variables were assigned correctly? (choose all that apply)**
+<!-- TODO: R multichoice cloze question -->
 
 -   `Region`
 
@@ -136,3 +138,4 @@ ggplot(your_data, aes(x_axis, y_axis)) +
 
 **Which Sydney beach is the cleanest?**
 
+<!-- TODO: R cloze question -->
