@@ -1,6 +1,5 @@
 ---
 title: "Week 1 First Practical"
-author: Fonti Kar
 output: 
   moodlequiz::moodlequiz:
     replicates: 1
@@ -30,7 +29,9 @@ library(janitor)
 syd_beaches <- c("Clovelly Beach", "Coogee Beach", "Gordons Bay East", "Little Bay Beach","Malabar Beach", "Maroubra Beach","South Maroubra Beach","South Maroubra Rockpool", "Bondi Beach","Bronte Beach", "Tamarama Beach")
 ```
 
-# Week 1 First Practical
+<h1>First practical</h1>
+
+> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
 
 <h2>Set up R packages</h2>
 
@@ -43,14 +44,13 @@ library(ggplot2)
 # library(janitor)
 ```
 
-> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
-
 <h2>Stalagmite data</h2>
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width="100%"}
 
-Stalagmites are mineral formations that grow in caves, preserving environmental records in their layered structure. Paleoclimatologists from the [Climate Change Research Centre](https://www.unsw.edu.au/research/ccrc) collected this data. The thickness of each lamina reflects past climate conditions—thicker layers often indicate wetter periods, while thinner ones suggest drier times. By analysing lamina thickness and age, scientists can reconstruct past climate patterns, track seasonal variations, and identify historical environmental events.\
-\
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
+
+Stalagmites are mineral formations that grow in caves, preserving environmental records in their layered structure. Paleoclimatologists from the [Climate Change Research Centre](https://www.unsw.edu.au/research/ccrc) collected this data. The thickness of each lamina reflects past climate conditions—thicker layers often indicate wetter periods, while thinner ones suggest drier times. By analysing lamina thickness and age, scientists can reconstruct past climate patterns, track seasonal variations, and identify historical environmental events.
+
 This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
 
 -   `entity_id`: Identifier for the stalagmite sample.
@@ -61,6 +61,7 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 ```{r}
 stalagmite_data <- read_csv("data/Laminated stalagmite Dataset.csv")
 ```
+
 
 > You may find it helpful to use the function `clean_names()` from the `janitor` R package first before delving in. You may need to install this package first. Remember to use `library(janitor)` to load this package into R, put this code in the first R chunk!
 
@@ -140,9 +141,10 @@ skim(stalagmite_data_nice_names_corrected_age)
 
 ```
 
+
 <h2>Sydney Beaches</h2>
 
-![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+![Image credit: Amazing Aerial](coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
 
 > We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 
@@ -241,4 +243,6 @@ ggplot(syd_beach_data_corrected_entero_with_transformation, aes(x = site, y = lo
 **...and finally, where would you recommend Sydney-siders to go swimming?**
 
 From looking at our plots, `r cloze("Gordons Bay East", c(syd_beaches))` and `r cloze("South Maroubra Beach", c(syd_beaches))` `r cloze("tend to", c("tend to", "almost always"))` have `r cloze("lower", c("lower", "higher"))` levels of Enterococci levels, however we would need further analysis to be sure.
+
+
 
