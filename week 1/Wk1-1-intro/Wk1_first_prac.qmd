@@ -66,17 +66,15 @@ Using the functions you've learned so far in this prac, try answer the following
 
 **What is a more suitable variable type for `lam_age_bp_0_1950ad`?**
 
-```{r}
 
-```
 
-**Write some code to change the variable type of `lam_age_bp_0_1950ad`?**
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`?** (Try: `?as.integer()` , you may need to install/load the package `dplyr`)
 
 ```{r}
 
 ```
 
-**Write some code to display a quick summary of this dataset**
+**Write some code to display a quick summary of this dataset** (Feel free to use additional packages! You may need to install and load them first)
 
 ```{r}
 
@@ -124,7 +122,13 @@ It looks like `Enterococci_cfu_per_100ml` was assigned incorrectly.
 
 Use this newly formatted data to visualise the amount of bacteria found at each `Site.`
 
-To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` with your choice of variables relevant to your question
+To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` with your choice of variables relevant to your question. Using the `dplyr` package here is advised. You may need to:
+
+-   Exclude a potential outlier or not ;) - try both!
+
+-   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(nterococci_cfu_per_100ml + 1`) - try both!
+
+-   Try `geom_boxplot()` and `geom_violin()` with `geom_point()`
 
 ```{r}
 ggplot(your_data, aes(x = x_variable, y = y_variable)) +
@@ -134,4 +138,9 @@ ggplot(your_data, aes(x = x_variable, y = y_variable)) +
 
 **Questions:**
 
-**Which Sydney beach is the cleanest?**
+**Why did we need to transform the data?**
+
+**What does the shape of the violin plot tells us about the data?**
+
+**...and finally, which Sydney beach would you go swimming?**
+
