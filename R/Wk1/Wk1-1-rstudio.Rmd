@@ -15,6 +15,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+![](r-learners.png){width=70%}
+
 ## Getting Started in RStudio
 
 R Studio is an integrated development environment (IDE) that allows you to write and run code and visualise data all in one place.
@@ -67,29 +69,35 @@ A `.Rproj` file will keep all your ducks in a row, all your data and code script
 **Try**: To illustrate this, type the following code into the R console pane
 
 ```{r, eval=FALSE}
+# Get your current location also know as 'working directory'
 getwd()
 ```
 
-The `getwd()` function, tells you the 'address' or **file path** that you are currently in. Everyone will have different output because we all created the `BEES2041` folder in a unique location on our computers that makes sense to us. What is *critical* is the latest part `Wk-1-intro`. We are **ALL** working in the project folder `Wk-1-intro`! 
+The `getwd()` function, tells you the 'address' or **file path** that you are currently in. Everyone will have different output because we all created the `BEES2041` folder in a unique location on our computers that makes sense to us. What is *critical* is the latest part `Wk-1-intro`. We are **ALL** working in the project folder `Wk-1-intro`! This minor little detail will make loading our own data into R a smooth process.
 
 ![](my-wd.png){width=80%}
 
-### Hello, meet Quarto
+### Hello, meet Quarto docs
 
 > Let's go ahead and click on `Wk_1_first_prac.qmd`
 
-Quarto notebooks (*.qmd) are files that include:
+Clicking this file will open the the editor pane in the top right corner. This is where we will start writing our own R code for the rest of this prac.
 
-plain text where you can write down the number of the questions, add explanations that will describe to you what any bits of code are doing
-R code. These are put into the notebook file as “chunks” and are easily distinguished from your text explanations
-the output of any any code that you run (analyses, graphics etc.)
-There is obviously lots more to learn about how R works, but we can get started straight away and learn that as we go.
+![Opening `Wk_1_first_prac.qmd`](open-qmd.png)
 
-5. Within Rstudio, open the Quarto notebook `Wk_1_first_prac.qmd`
+<br>
 
-### Where am I? A primer on file paths
+`Wk_1_first_prac.qmd` is a **Quarto document** and its where you can write and format regular text alongside **code chunks** and any pretty figures/tables you produce into one beautiful, seamless page.
 
-```{r}
+The **code chunks** are the grey boxes with the header `{r}` at top left corner. This is where you will write R code. 
 
-```
+> Notice how the font is different in **code chunks**. 
+
+**Try**: There are several ways to run code in a Quarto doc, its a matter of preference. You end up using a combination of these methods:
+
+1. You can run **all code** within each of these chunks but clicking the **green play** on the top right hand corner
+2. You can place your mouse cursor on a particular line and click on the **"Run"** button. This allows you to have more targeted control on what line of code to run.
+3. OR you can use the keyboard shortcut **CMD/Ctrl + Enter**
+
+
 
