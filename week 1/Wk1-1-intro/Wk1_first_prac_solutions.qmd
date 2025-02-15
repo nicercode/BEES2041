@@ -1,353 +1,143 @@
 ---
-title: "Week 1: R refresher course"
+title: "Week 1 First Practical"
+author: Put your name here
 format: html 
 editor: visual
 ---
 
-## Setting Up
+# Week 1 First Practical
 
-Installing and loading packages:
-
-R packages are a collection of functions, compiled code, and sample data that are created for specific purposes in R.
-
-To access a package, you must first install it on your computer. A well known package for cleaning and organizing data is `tidyverse`. Lets try installing that into our Rstudio workspace.
-
-**NOTE:** Packages only need to be installed **once** so once a package is installed on your computer, do not run this line of code again. If `tidyverse` is already installed on your computer, skip this line.
+## Set up R packages
 
 ```{r}
-install.packages("tidyverse") #install package
+# install.packages(c("readr", "ggplot2"))
+library(readr)
+library(ggplot2)
 ```
 
-After installation, you have to load the package to be able to use it. You can do this with the `library()` function.
+> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
+
+## Stalagmite data
+
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width="100%"}
+
+Stalagmites are mineral formations that grow in caves, preserving environmental records in their layered structure. Paleoclimatologists from the [Climate Change Research Centre](https://www.unsw.edu.au/research/ccrc) collected this data. The thickness of each lamina reflects past climate conditions—thicker layers often indicate wetter periods, while thinner ones suggest drier times. By analysing lamina thickness and age, scientists can reconstruct past climate patterns, track seasonal variations, and identify historical environmental events.\
+\
+This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
+
+-   `entity_id`: Identifier for the stalagmite sample.
+-   `seq_id`: Sequence identifier (likely referring to sample grouping).
+-   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
+-   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
 ```{r}
-library(tidyverse) # load package
-library(tidyverse) # load package
-
+stalagmite_data <- read_csv("data/Laminated stalagmite Dataset.csv")
 ```
 
-Noe you try installing the packages: `report`, `modelbased`, and `performance`
+> You may find it helpful to use the function `clean_names()` from the `janitor` R package first before delving in. You may need to install this package first. Remember to use `library(janitor)` to load this package into R, put this code in the first R chunk!
 
 ```{r}
-library(report)
-library(modelbased)
-library(performance)
+stalagmite_data_nice_names <- stalagmite_data |> janitor::clean_names()
+
+stalagmite_data_nice_names
 ```
 
-If you're still having trouble understanding installing and loading packages watch [this video](https://youtu.be/e8B9YU_M5FM)
+Using the functions you've learned so far in this prac, try answer the following questions:
 
-## Objects and Variables and Functions, Oh My!
+**Questions:**
 
-There may be some vocabulary you're not familiar with if you're new to coding. We'll go through some of the basic vocab that you need to get started.
-
-Function: A block of code that performs a specific task. For example, `library()` is a function that we use to load packages.
-
-Argument: An input that a function needs to perform it's task. Many argument inputs are already embedded into a function as a default that can be changed as needed. For example, `verbose = FALSE` is a default argument embedded into the `library()` package. If you wanted to view the output messages of running the function library(), you can add this into the parentheses.
+**How many rows and columns are in `stalagmite_data`?**
 
 ```{r}
-library(tidyverse, verbose = TRUE)
-```
-
-Object/Variable (The words can be used interchangeably but for clarity I will refer to these as objects): A memory location used to store information/values. Many things can be saved in objects: numbers, lists, tables, and data frames along with various other types of data.
-
-Click [here](https://www.tutorialspoint.com/r/r_data_types.htm) for more information on data types in R.
-
-### Creating an object:
-
-You can use `<-` or `=` to create an object
-
-```{r}
-obj <- "Hello World"
-```
-
-You can think of the little arrow putting the string "Hello World" into
-
-Now, our string "Hello world" is saved in an object and can be called upon by referencing `obj`
-
-```{r}
-obj
-```
-
-Many things can be stored as an object in R, however there are some general assignment rules you must follow for the object name to be valid:
-
-1\) Should only contain letters, numbers, and only dot or underscore characters
-
-2\) Should **not** start with a number (e.g. `3obj`), a dot followed by a number (e.g. `.3obj`), or an underscore (e.g. `_obj`)
-
-3\) Should **not** be a reserved keyword in R (e.g. `for`, `in`, `repeat`, `while`, etc.) (for more reserved keywords see [here](datamentor.io/r-programming/reserved-words/))
-
-### Basic Object types:
-
-There are multiple types of variables in R all of which can be saved into an object. Below are the most commonly used data types.
-
-**Character** (chr) : Strings of letters/numbers within quotation marks can be stored as a character object.
-
-```{r}
-sun <- "Sunny"  # create object
-sun  # view object
-class(sun) # what type of object is this? 
-
-# multiple strings can be saved into the same object
-weather <- c("Sun", "Rain", "Partly Cloudy") # create object
-weather #view object 
-class(weather) # what type of object is this? 
-```
-
-**Numeric** (num) : Any numeric value with or without a decimal becomes a numeric data type (e.g. `1.2`, `4`, `34.7`, `54`, etc.) T
-
-```{r}
-age <- 21.3 # create object
-age  # view object
-class(age) # what type of object is this? 
-
-# again, multiple numbers can be saved into one object
-ages <- c(21.3, 43.2, 54.5)
-ages # view object
-class(ages) # what type of object is this? 
-```
-
-**Integer** (int) : Also a number, but no decimal places (e.g. `1`, `2`, `3`, `4`).
-
-When creating an integer object, R will automatically assign it as numeric, so you need to specify that you want it saved as an integer with `as.integer()`
-
-```{r}
-age <- 2  # creating object
-# note: since I already had an object saved named "age" this one will overwrite the old object and the old information will no longer be saved in the object "age"
-class(age) # check data type
-# notice how it automatically assumed this was numeric
-
-age <- as.integer(2) # changing the type to integer
-class(age) # check data type 
-```
-
-When working with data, often you will also see **Factor** variable types. We will get to these shortly.
-
-For more information on data types in R, refer to this tutorial or [watch this video](https://youtu.be/VtUVQWl0aRA).
-
-## Working with built-in data
-
-We'll start by loading in a data set built in to R
-
-Iris is a well known data set, built into R. This data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 150 flowers from each of 3 species of iris.
-
-```{r}
-dat <- as_tibble(iris) #load data set
-# Tibbles are a tidier way to view and edit data frames. 
-
-dat # view data frame to make sure it loaded in correctly 
-```
-
-### Exploring your data
-
-It is important to understand your data before starting any analysis. Incorrect assignment of variable types can mess up analysis so you need to check that each variable was assigned the correct data type by R.
-
-A good way to do this is by looking at the **structure** of your data set with **View()** and **str()**
-
-```{r}
-View(dat)
-
-str(dat)
-```
-
-We can see here that our data is in the tibble data frame format. Our data has 5 variables, 4 of which are numeric (or double). This is correct as they contain decimals. Our last variable is a factor variable.
-
-Factor variables are a special case of character variables where there is a limited number of unique strings. For example, if you were to do a study on the traits of three different species of iris, **species** would be your factor variable.
-
-Since there are **three** different types of iris, this would be a factor variable with **three** levels.
-
-When creating a variable by itself, R will think it is a character variable. However, when reading it in as part of a data set it often can identify the variable as a factor.
-
-```{r}
-dat # view data set 
-class(dat$Species) # what type of variable is species? 
-# or 
-str(dat) # view structure of data set
-# here you can see the variable species is a factor with 3 levels
-```
-
-Sometimes, R will incorrectly assign variable types to your data.
-
-You can correct it using these base R functions:
-
--   `as.character()`
-
--   `as.numeric()`
-
--   `as.integer()`
-
--   `as.factor()`
-
-For example, lets say R read in Species as a character variable
-
-```{r}
-#| echo: false
-dat$Species <- as.character(dat$Species) # changing variable type to chr 
-```
-
-The way you would assign your variable as a factor would be with the `as.factor()` function
-
-```{r}
-dat$Species <- as.factor(dat$Species) # changing variable type to factor
-```
-
-### Visualizing your data
-
-A good way to better understand your data is by creating figures that show general patterns and trends.
-
-For this we will use the package `ggplot2`
-
-ggplot2 is a well known and versatile visualization package including in the tidyverse. We'll go into how this works in the next practical.
-
-For now, here's some code to visualise the Iris data to better understand general trends:
-
-```{r}
-#ggplot is already loaded as part of the tidyverse 
-
-ggplot(data = dat, aes(x = Species, y = Sepal.Length, color = Species)) +
-  geom_boxplot() # create boxplot
 
 ```
 
-Which species have the longest sepals?
-
-Answer: Virginica
-
-You can also look at patterns of other traits by switching out your y-axis for the trait you're interested in. Let's try it!
-
-Can you figure out which species have the widest petals?
+**What type of variable is `lamina_thickness_mm`?**
 
 ```{r}
-ggplot(data = dat, aes(x = Species, y = Petal.Width, color = Species)) +
-  geom_boxplot() # create boxplot
-```
-
-Answer: Virginica
-
-Does the same species have the longest petals?
-
-```{r}
-ggplot(data = dat, aes(x = Species, y = Petal.Length, color = Species)) +
-  geom_boxplot() # create boxplot
-```
-
-Answer: Yes!
-
-## Working with your own data:
-
-*Note: The quiz questions on Moodle are the same as the ones in this quarto file. Please run the code in this file on Rstudio and answer the questions in Moodle as you go.*
-
-Until now, we've been working with data that is built into R. Now, we are going to try to explore our own data. Since R doesn't automatically have access to data that you have created, we will have to read it into our work space as an object. We can do this with `read_csv()`.
-
-```{r}
-dat <- read_csv("data/Laminated stalagmite Dataset.csv") # read in data 
-# note: I'm writing over the iris dataset 
-```
-
-Look at the structure of the data set
-
-```{r}
-str(dat)
-```
-
-How many rows and columns are there?
-
-\[ answer \] Rows: 40,279; Columns: 7
-
-What type of variable is lamina thickness?
-
-\[ answer \] Numeric
-
-Is this the correct variable type?
-
-\[ answer \] Yes
-
-What type of variable is lam_age?
-
-\[ answer \] Numeric
-
-This is not the correct variable type for this analysis.
-
-What should the correct variable type be?
-
-\[ answer \] Integer
-
-How would you change it to the correct variable type?
-
-```{r}
-dat$`lam_age (BP, 0=1950AD)` <- as.integer(dat$`lam_age (BP, 0=1950AD)`)
-```
-
-entity_id and seq_id are both identifiers that have a limited number of unique strings. This means they should be coded as factors in the data set, but since they are numbers, they have been assigned the `num` variable type.
-
-Change both variables to factors.
-
-```{r}
-dat$entity_id <- as.factor(dat$entity_id)
-dat$seq_id <- as.factor(dat$seq_id)
 
 ```
 
-Double check that your variables are all correct now using the structure function.
+**What type of variable is `lam_age_bp_0_1950ad`?**
 
 ```{r}
-str(dat)
+
 ```
 
-## Visualizing your data
-
-Next, we'll do a quick visualization to better understand some patterns in our data.
-
-For this section, we'll be using the data frame "sydneybeaches.csv" that is in your working directory to answer our main question, which beach is the cleanest in Sydney? (hint: the site with the least bacteria)
-
-First, read in the data and assign it to the object "dat1".
+**What is a more suitable variable type for `lam_age_bp_0_1950ad`?**
 
 ```{r}
-dat1 <- read_csv("data/sydneybeaches.csv")
+
 ```
 
-Check the structure to make sure the variable types were assigned correctly.
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`?**
 
 ```{r}
-str(dat1)
+
 ```
 
-Which of these variables were assigned correctly? (choose all that apply)
-
--   Region
-
--   Council
-
--   **Latitude**
-
--   Site
-
-For our question we are interested in the variables Site and Enterococci_cfu_per_100ml
-
-It looks like both of these have been assigned incorrectly.
-
-Change Site to a factor variable and Enterococci_cfu_per_100ml to an integer variable.
+**Write some code to display a quick summary of this dataset**
 
 ```{r}
-dat1$Site <- as.factor(dat1$Site)
-dat1$Enterococci_cfu_per_100ml <- as.integer(dat1$Enterococci_cfu_per_100ml)
-str(dat1)
+
 ```
 
-Use this format to visualize the amount of Enterococci bacteria found at each Site. (hint: replace your_data, x_axis, and y_axis)
+## Sydney Beaches
+
+![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+
+> We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
+
+First, read in the data.
 
 ```{r}
-ggplot(dat1, aes(Site, Enterococci_cfu_per_100ml)) +
+
+```
+
+**Questions:**
+
+**Check the structure to make sure the variable types were assigned correctly.**
+
+```{r}
+
+```
+
+**Which of these variables were assigned correctly? (choose in Moodle all that apply)**
+
+<!-- TODO: R multichoice cloze question -->
+
+-   `Region`
+
+-   `Council`
+
+-   `Latitude`
+
+-   `Site`
+
+We are primarily interested in the variables `Site` and `Enterococci_cfu_per_100ml`
+
+It looks like `Enterococci_cfu_per_100ml` was assigned incorrectly.
+
+**Change `Enterococci_cfu_per_100ml` to an integer variable.**
+
+```{r}
+
+```
+
+Use this newly formatted data to visualise the amount of bacteria found at each `Site.`
+
+<!-- TODO: R cloze question -->
+
+To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` with your choice of variables relevant to your question
+
+```{r}
+ggplot(your_data, aes(x = x_variable, y = y_variable)) +
          geom_boxplot() +
          theme(axis.text.x = element_text(angle = 90, size = 7))
-
 ```
 
-Which beach seems to have the least bacteria?
+**Questions:**
 
--   **South Maroubra Beach**
+**Which Sydney beach is the cleanest?**
 
--   Malabar Beach
-
--   Coogee Beach
-
--   Tamarama Beach
+<!-- TODO: R cloze question -->
