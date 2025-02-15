@@ -104,6 +104,8 @@ First, read in the data.
 
 **Which of these variables were assigned correctly? (choose in Moodle all that apply)**
 
+<!-- TODO: R multichoice cloze question -->
+
 -   `Region`
 
 -   `Council`
@@ -124,6 +126,8 @@ It looks like `Enterococci_cfu_per_100ml` was assigned incorrectly.
 
 Use this newly formatted data to visualise the amount of bacteria found at each `Site.`
 
+<!-- TODO: R cloze question -->
+
 To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` with your choice of variables relevant to your question
 
 ```{r}
@@ -135,3 +139,5 @@ ggplot(your_data, aes(x = x_variable, y = y_variable)) +
 **Questions:**
 
 **Which Sydney beach is the cleanest?**
+
+<!-- TODO: R cloze question -->
