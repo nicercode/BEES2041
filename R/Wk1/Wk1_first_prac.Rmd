@@ -29,7 +29,11 @@ syd_beach_data <- read_csv(here("R/Wk1/data/sydneybeaches.csv")) |> clean_names(
 syd_beaches <- c("Clovelly Beach", "Coogee Beach", "Gordons Bay East", "Little Bay Beach","Malabar Beach", "Maroubra Beach","South Maroubra Beach","South Maroubra Rockpool", "Bondi Beach","Bronte Beach", "Tamarama Beach")
 ```
 
-<h1>First practical</h1>
+<h1>Take your skills for a spin!</h1>
+
+> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
+
+<h2>Set up R packages</h2>
 
 ```{r, eval=FALSE}
 # install.packages(c("readr", "ggplot2", "dplyr", "skimr", "janitor"))
@@ -37,9 +41,6 @@ library(readr)
 library(ggplot2)
 ```
 
-> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
-
-<h2>Set up R packages</h2>
 
 # Stalagmite data
 
