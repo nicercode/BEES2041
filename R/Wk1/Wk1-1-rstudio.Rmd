@@ -122,4 +122,45 @@ You can click on the "Install" and that should take care of the error.
 
 > Let's try uncommenting that line by deleting the `#`, then go ahead and run that line of code to install `readr` and `ggplot2`. Once you're done, comment out this line by putting a `#` at the start of the line once you are done, otherwise you will be installing those packages again every you run that chunk!
 
-**Importantly** you only need to install packages **ONCE** 
+**Importantly** you only need to install packages **ONCE**. This is different to **loading** packages into R using the `library()` function. You do this once for each Quarto doc right at the start of the document.
+
+### Loading data into R
+
+Now that we have all the packages we need for this prac installed and loaded (yay!), let's get into some data!! 
+
+The data you need for this prac lives in the `data/` folder that you can see in the **"Files" tab** in the bottom-left pane. There are 2 datasets in the folder: 
+
+- `Laminated stalagmite Dataset.csv` 
+- `sydneybeaches.csv`
+
+You can tell these are "comma-seperated values" by the file type `.csv`.
+
+We are going to use the function `read_csv` to load the `Laminated stalagmite Dataset.csv` into R.
+
+```{r}
+staglamite_data <- read_csv("data/Laminated stalagmite Dataset.csv")
+```
+
+Let's walk through the code:
+
+- Within the `read_csv()` function is where we supply the 'address' or file path to `Laminated stalagmite Dataset.csv`. The file lives inside the `data/` folder so its path is `"data/Laminated stalagmite Dataset.csv"`
+- We are using the `<-` operator to store this dataset into an object
+- The object that holds the dataset is `staglamite_data`
+
+> Its crucial to assign the output of `read_csv()` into an object, otherwise R won't hold it in memory for you to use
+
+**Notice:** In the "Environment" tab, we can now see `staglamite_data` that we just created!
+
+![Your first data object in R](data-in-env.png)
+
+<br> 
+
+Clicking on `staglamite_data` in the "Environment" tab will give you a nice preview of the data. Alternatively, you can type and run the code for R to print the data into the "Console" pane.
+
+```{r}
+staglamite_data
+```
+
+> Note that `read_csv()` will always return your data as a tibble data structure
+
+Now you are all set you proceed with the prac!

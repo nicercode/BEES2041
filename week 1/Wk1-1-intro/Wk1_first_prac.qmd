@@ -26,7 +26,9 @@ Until now, we've been working with data that is built into R. Now, we are going 
 Up until now
 
 ```{r}
-dat <- read_csv("data/Laminated stalagmite Dataset.csv") # read in data 
+staglamite_data <- read_csv("data/Laminated stalagmite Dataset.csv")
+
+staglamite_data
 ```
 
 (note: We used the same name for my data as the iris dataset. so this new data will replace the iris with the staalgmite data. It's ok to do this, so long as you mean to. People often name data table with a similar name like `dat` or `data`)
