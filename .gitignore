@@ -61,3 +61,5 @@ renv/
 renv*
 .Rprofile
 
+# Images
+images/
