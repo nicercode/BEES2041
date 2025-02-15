@@ -52,7 +52,7 @@ Using the functions you've learned so far in this prac, try answer the following
 **How many rows and columns are in `stalagmite_data`?**
 
 ```{r}
-dim(stalagmite_data_nice_names)
+dim(stalagmite_data_nice_names) # or look in Environment Pane
 ```
 
 **What type of variable is `lamina_thickness_mm`?**
@@ -121,19 +121,7 @@ syd_beach_data <- read_csv("data/sydneybeaches.csv") |> clean_names()
 str(syd_beach_data)
 ```
 
-**Which of these variables were assigned correctly? (choose in Moodle all that apply)**
-
--   `Region`
-
--   `Council`
-
--   `Latitude`
-
--   `Site`
-
-We are primarily interested in the variables `Site` and `Enterococci_cfu_per_100ml`
-
-It looks like `Enterococci_cfu_per_100ml` was assigned incorrectly.
+**Which of these variables were their data type assigned incorrectly?**
 
 **Change `Enterococci_cfu_per_100ml` to an integer variable.**
 

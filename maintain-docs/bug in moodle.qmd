@@ -1,0 +1,38 @@
+---
+title: "Untitled"
+format: html
+---
+
+**Questions:**
+
+**Why did we need to transform the data?**
+
+## Why did we need to transform the data? {type=essay}
+
+## What does the shape of the violin plot tells us about the data? {type=essay}
+
+## ...and finally, where would you recommend Sydney-siders to go swimming?
+
+From looking at our plots, `r cloze("Gordon's Bay (East)"c(unique(sydneybeaches$Site)))` and `r cloze("South Maroubra Beach", c(unique(sydneybeaches$Site)))` `r cloze("tend to", c("tend to", "almost always"))` have `r cloze("lower", c("lower", "higher"))` levels of Enterococci levels, however we would need further analysis to be sure.
+
+
+<!-- and `r cloze("South Maroubra Beach", c("Clovelly Beach", "Coogee Beach", "Gordons Bay (East)", "Little Bay Beach","Malabar Beach", Maroubra Beach","South Maroubra Beach","South Maroubra Rockpool", "Bondi Beach","Bronte Beach", "Tamarama Beach")` `r cloze("tend to", c("tend to", "almost always"))` have `r cloze("lower", c("lower", "higher"))` levels of Enterococci levels, however we would need further analysis to be sure. -->
+
+c("Clovelly Beach", "Coogee Beach", "Gordons Bay (East)", "Little Bay Beach","Malabar Beach", "Maroubra Beach","South Maroubra Beach","South Maroubra Rockpool", "Bondi Beach","Bronte Beach", "Tamarama Beach")
+
+
+# Breaks
+
+<!-- Doesn't like ' and () -->
+
+From looking at our plots, `r cloze("Gordons Bay (East)", unique(syd_beach_data$site)` 
+
+From looking at our plots, `r cloze("Gordon\'s Bay (East)", c("Clovelly Beach", "Coogee Beach", "Gordons Bay (East)"))` 
+
+
+From looking at our plots, `r cloze("Gordon's Bay (East)", c("Clovelly Beach", "Coogee Beach", "Gordons Bay (East)"))` 
+
+# Works
+
+
+From looking at our plots, `r cloze("Gordons Bay (East)", c("Clovelly Beach", "Coogee Beach", "Gordons Bay (East)"))` 

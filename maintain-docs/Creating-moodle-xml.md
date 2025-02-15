@@ -13,15 +13,18 @@ output: html_document
 #   chunk_output_type: console
 ---
 
+TIP: Search and replace header hashes at the deepest level first, otherwise you will add html tags smaller headers
+
+### H3 Headers
+
+- `### ` (NOTE: the followingspace) find and replace with <h3> and then manually add `</h3>` 
+- Use "Find All" on `<h3>` which will highlight all cases and paste `</h3>` at the end of the heading
+
 
 ## H2 Headers
 
 `moodlequiz` uses ## to separate questions, so if you want to retain that level of header, duplicate your h2 header and add <h2> tags accordingly e.g. `<h2>Getting Started in RStudio</h2>`
 
-### H3 Headers
-
-- `### ` find and replace with <h3> and then manually add `</h3>`
-- Use "Find All" on `<h3>` which will highlight all cases and paste `</h3>` at the end of the heading
 
 ## Creating webr divs
 
