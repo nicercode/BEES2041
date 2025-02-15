@@ -166,4 +166,4 @@ stalagmite_data
 
 > Note that `read_csv()` will always return your data as a tibble data structure
 
-Now you are all set you proceed with the prac!
+Now you are all set you proceed with the section!
