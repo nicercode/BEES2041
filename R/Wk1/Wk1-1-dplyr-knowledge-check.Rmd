@@ -1,0 +1,72 @@
+---
+title: "Week 1-1 dplyr-knowledge-check"
+output: 
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: "Week 1-1 dplyr"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(moodlequiz)
+library(dplyr)
+library(palmerpenguins)
+```
+
+## Knowledge check: Take a look at the data {type=essay}
+
+<h3>Knowledge check</h3>
+
+**Question:** What do you notice that's different with how `mtcars` and `penguins` are presented in R? 
+
+Write a few sentences on what is different in the object structure and what functions you used to determine the main difference between the two datasets.
+
+## Knowledge check: Data manipulation with dplyr
+
+**Try:** Use the function `filter()`to extract all penguins that have body masses greater than 4000g 
+
+<div id="r-editor-135"><pre>
+penguins
+</pre>
+</div>
+
+**Question:** How many penguins were heavier than 4kg? `r cloze("172", c("101", "127", "172"))`
+
+**Question:** What would the code look like if you wanted to sort the data by species, increasing bill length and decreasing body mass? 
+
+```r
+pengiuns |> 
+  arrange(`r cloze("species", c(colnames(penguins)))`, `r cloze("bill_length_mm", c(colnames(penguins)))`, `r cloze("desc(body_mass_g)", c( "desc(bill_length_mm)", "desc(bill_depth_mm)","desc(body_mass_g)"))`)
+```
+**Question:** How many penguins were recorded on Dream Island? `r cloze("124", c("8", "124", "3250"))`
+
+**Try**: Create a dataset where we only have the columns: species, island and integer variables
+
+<div id="r-editor-136"><pre>
+penguins
+</pre>
+</div>
+
+**Try**: Can you give me the median bill_depth_mm for all species of penguins by sex? Watch out for missing values!
+
+<div id="r-editor-137"><pre>
+penguins
+</pre>
+</div>
+
+**Try**: Using a series of pipes `|>`, create a dataset that: 
+
+- only contains female penguins in 2007
+- where their are body masses > 4000
+- create a new ratio variable between bill depth and bill length
+- retain only species, island and your ratio variable
+
+<div id="r-editor-138"><pre>
+penguins
+</pre>
+</div>
+
