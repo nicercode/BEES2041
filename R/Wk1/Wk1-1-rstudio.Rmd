@@ -99,5 +99,27 @@ The **code chunks** are the grey boxes with the header `{r}` at top left corner.
 2. You can place your mouse cursor on a particular line and click on the **"Run"** button. This allows you to have more targeted control on what line of code to run.
 3. OR you can use the keyboard shortcut **CMD/Ctrl + Enter**
 
+### Errors in R
 
+When you ran the code in the first chunk, you'll notice R was not happy. 
 
+![R complains in red](first-error.png)
+Getting errors in R are a common experience and they're totally harmless. The error messages usually gives you some clues as to what R is complaining about.
+
+> Here, R is tell us we don't have the R packages `readr` and `ggplot2` installed
+
+#### Installing packages
+
+Let's go ahead and install these on your computer. 
+
+Usually RStudio is clever enough to figure this out and will prompt you at the top of your Quarto doc like this:
+
+![Helpful prompt from Quarto](install-me.png)
+
+You can click on the "Install" and that should take care of the error.
+
+**Try:** Alternatively, you can use the `install.packages()` function. We've given you the code as a **comment** in the chunk. Recall, that comments in R in are preceded with a `#` and R will ignore these lines. 
+
+> Let's try uncommenting that line by deleting the `#`, then go ahead and run that line of code to install `readr` and `ggplot2`. Once you're done, comment out this line by putting a `#` at the start of the line once you are done, otherwise you will be installing those packages again every you run that chunk!
+
+**Importantly** you only need to install packages **ONCE** 

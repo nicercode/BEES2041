@@ -56,3 +56,8 @@ rsconnect/
 # Don't track previous year's content
 *-2024/
 
+# Ignore renv
+renv/
+renv*
+.Rprofile
+
