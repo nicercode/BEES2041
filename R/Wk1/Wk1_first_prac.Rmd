@@ -10,7 +10,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo=TRUE)
 
 # For maintaining
 library(moodlequiz)
@@ -23,7 +23,7 @@ library(dplyr)
 library(skimr)
 library(janitor)
 
-# syd_beach_data <- read_csv(here("R/Wk1/data/sydneybeaches.csv")) |> clean_names()
+syd_beach_data <- read_csv(here("R/Wk1/data/sydneybeaches.csv")) |> clean_names()
 
 # Used in final question for readable code 
 syd_beaches <- c("Clovelly Beach", "Coogee Beach", "Gordons Bay East", "Little Bay Beach","Malabar Beach", "Maroubra Beach","South Maroubra Beach","South Maroubra Rockpool", "Bondi Beach","Bronte Beach", "Tamarama Beach")
@@ -31,23 +31,23 @@ syd_beaches <- c("Clovelly Beach", "Coogee Beach", "Gordons Bay East", "Little B
 
 <h1>First practical</h1>
 
+```{r, eval=FALSE}
+# install.packages(c("readr", "ggplot2", "dplyr", "skimr", "janitor"))
+library(readr)
+library(ggplot2)
+```
+
 > Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
 
 <h2>Set up R packages</h2>
 
-```{r}
-# install.packages(c("readr", "ggplot2", "dplyr", "skimr", "janitor"))
-library(readr)
-library(ggplot2)
-# library(dplyr)
-# library(skimr)
-# library(janitor)
-```
+# Stalagmite data
 
 <h2>Stalagmite data</h2>
 
-
 ![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
+
+<br>
 
 Stalagmites are mineral formations that grow in caves, preserving environmental records in their layered structure. Paleoclimatologists from the [Climate Change Research Centre](https://www.unsw.edu.au/research/ccrc) collected this data. The thickness of each lamina reflects past climate conditions—thicker layers often indicate wetter periods, while thinner ones suggest drier times. By analysing lamina thickness and age, scientists can reconstruct past climate patterns, track seasonal variations, and identify historical environmental events.
 
@@ -58,18 +58,7 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 -   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
 -   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
-```{r}
-stalagmite_data <- read_csv("data/Laminated stalagmite Dataset.csv")
-```
-
-
 > You may find it helpful to use the function `clean_names()` from the `janitor` R package first before delving in. You may need to install this package first. Remember to use `library(janitor)` to load this package into R, put this code in the first R chunk!
-
-```{r}
-stalagmite_data_nice_names <- stalagmite_data |> janitor::clean_names()
-
-stalagmite_data_nice_names
-```
 
 Using the functions you've learned so far in this prac, try answer the following questions:
 
@@ -79,88 +68,43 @@ Using the functions you've learned so far in this prac, try answer the following
 
 **How many rows and columns are in `stalagmite_data`?** Rows = `r cloze(40279)`, columns = `r cloze(4)`
 
-There are `r`` rows and `r` columns
-
-```{r}
-dim(stalagmite_data_nice_names)
-```
-
 ##  What type of variable is `lamina_thickness_mm`?
 
 **What type of variable is `lamina_thickness_mm`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
-
-
-```{r}
-str(stalagmite_data_nice_names)
-```
 
 ## What type of variable is `lam_age_bp_0_1950ad`
 
 **What type of variable is `lam_age_bp_0_1950ad`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
 
-```{r}
-str(stalagmite_data_nice_names)
-```
-
 ## What is a more suitable variable type for `lam_age_bp_0_1950ad`?
 
 **What is a more suitable variable type for `lam_age_bp_0_1950ad`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
-
-Integer because the values are whole numbers
 
 ## Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `?as.integer()` , you may need to install/load the package `dplyr`** )
 
 **Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `?as.integer()` , you may need to install/load the package `dplyr`** )
 
-```{r}
-# Without dplyr
-# Make a copy of the dataset 
-stalagmite_data_nice_names_corrected_age <- stalagmite_data_nice_names
-# Change variable type
-stalagmite_data_nice_names_corrected_age$lam_age_bp_0_1950ad <- as.integer(stalagmite_data_nice_names_corrected_age$lam_age_bp_0_1950ad)
-
-# dplyr
-# install.packages(dplyr)
-library(dplyr)
-stalagmite_data_nice_names_corrected_age <- stalagmite_data_nice_names |> 
-  mutate(lam_age_bp_0_1950ad = as.integer(lam_age_bp_0_1950ad))
-
-stalagmite_data_nice_names_corrected_age
-```
-
 ## Write some code to display a quick summary of this dataset (Feel free to use additional packages! You may need to install and load them first)
 
 **Write some code to display a quick summary of this dataset (Feel free to use additional packages! You may need to install and load them first)**
 
-```{r}
-summary(stalagmite_data_nice_names_corrected_age)
-
-# install.packages(skimr)
-library(skimr)
-skim(stalagmite_data_nice_names_corrected_age)
-
-```
-
+# Sydney Beaches
 
 <h2>Sydney Beaches</h2>
+  
+![Image credit: Amazing Aerial](coogee-beach.jpeg){width="100%"}
+  
+<br>
 
-![Image credit: Amazing Aerial](coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
 
 > We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 
 First, read in the data.
 
-```{r}
-syd_beach_data <- read_csv("data/sydneybeaches.csv") |> clean_names()
-```
-
 **Questions:**
 
 **Check the structure to make sure the variable types were assigned correctly.**
-
-```{r}
-str(syd_beach_data)
-```
 
 ## Which of these variables were assigned incorrectly? 
 
@@ -168,21 +112,7 @@ str(syd_beach_data)
 
 **Change `Enterococci_cfu_per_100ml` to an integer variable.**
 
-```{r}
-# Without dplyr
-# Make a copy of the dataset 
-syd_beach_data_corrected_entero <- syd_beach_data
-# Change variable type
-syd_beach_data_corrected_entero$enterococci_cfu_per_100ml <- as.integer(syd_beach_data_corrected_entero$enterococci_cfu_per_100ml)
-
-# dplyr
-# install.packages(dplyr)
-library(dplyr)
-syd_beach_data_corrected_entero <- syd_beach_data |> 
-  mutate(enterococci_cfu_per_100ml = as.integer(enterococci_cfu_per_100ml))
-
-syd_beach_data_corrected_entero
-```
+## Primer to plot 
 
 Use this newly formatted data to visualise the amount of bacteria found at each `Site.`
 
@@ -193,42 +123,6 @@ To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` 
 -   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(nterococci_cfu_per_100ml + 1`) - try both!
 
 -   Try `geom_boxplot()` and `geom_violin()` with `geom_point()`
-
-```{r}
-# Transform Enterococci_cfu_per_100ml
-# Sqrt
-syd_beach_data_corrected_entero_with_transformation <- 
-  syd_beach_data_corrected_entero |> 
-  mutate(sqrt_enterococci_cfu_per_100ml = sqrt(enterococci_cfu_per_100ml),
-         log10plus1_enterococci_cfu_per_100ml = log10(enterococci_cfu_per_100ml + 1))
-
-# Create a useful plot
-## Box plot 
-# Sqrt
-ggplot(syd_beach_data_corrected_entero_with_transformation, aes(x = site, y = sqrt_enterococci_cfu_per_100ml)) +
-  geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90, size = 7)) # Align the axes labels nicely
-
-# Log 10 transformation
-ggplot(syd_beach_data_corrected_entero_with_transformation, aes(x = site, y = log10plus1_enterococci_cfu_per_100ml)) +
-  geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90, size = 7)) # Align the axes labels nicely
-
-## Violin plots
-# Sqrt
-ggplot(syd_beach_data_corrected_entero_with_transformation, aes(x = site, y = sqrt_enterococci_cfu_per_100ml)) +
-  geom_violin() +
-  geom_point() +
-  theme(axis.text.x = element_text(angle = 90, size = 7)) # Align the axes labels nicely
-
-# Log 10 transformation
-ggplot(syd_beach_data_corrected_entero_with_transformation, aes(x = site, y = log10plus1_enterococci_cfu_per_100ml)) +
-  geom_violin() +
-  geom_point() + 
-  theme(axis.text.x = element_text(angle = 90, size = 7)) # Align the axes labels nicely
-```
-
-**Questions:**
 
 ## Why did we need to transform the data? {type=essay}
 
