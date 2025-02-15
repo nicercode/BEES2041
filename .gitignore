@@ -50,6 +50,9 @@ rsconnect/
 
 # Not tracking outputs that can be regenerated
 *.xml
+*_files/
+*.html
 
 # Don't track previous year's content
 *-2024/
+
