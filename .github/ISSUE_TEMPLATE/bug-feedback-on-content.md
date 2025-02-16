@@ -1,6 +1,6 @@
 ---
 name: Bug/Feedback on content
-about: Used by demonstrators to submit anytypos/feedback on content.
+about: Used by demonstrators to submit any typos/feedback on content.
 title: Week X-X bug/feedback
 labels: ''
 assignees: ''
