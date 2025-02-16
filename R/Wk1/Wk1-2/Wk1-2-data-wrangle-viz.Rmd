@@ -44,20 +44,31 @@ Each dataset is associated with its own Quarto document (`Wk1-2-plant-height.qmd
 
 Before we dive in, let's consider what data visualisation means.
 
-### How can we visualise data?
+### Thinking about data visualisations
 
-A picture is worth a thousands words. The choice of your visualisation can have a huge impact on the key message you want to give to the viewer. So ask yourself: **What is it that I want to convey?**
+A picture is worth a thousands words. The choice of your visualisation can have a huge impact on the key message you want to give to the viewer - consider: **What is it that I want to convey?**
 
-Below are a series questions, we want you to try answer with a data viz. 
+> Remember the `palmerpengiuns`? They will also be joining us in this prac.
 
-For each question, work your fellow classmates to determine: 
+**Activity**: 
 
-- what variables you'll need and,
-- how to best represent that data. 
+For each question below, work with your fellow classmates to determine a suitable data viz. Think about:
 
-Free free to put the white boards/pen and paper to go use!
+- what are the key variables of interest and their respective variable type,
+- how to best represent that data using graphics 
 
-Get creative, you can also use this [data-to-viz website](https://www.data-to-viz.com/) to explore get inspiration.
+Get creative, feel free to put the white boards/pen and paper to good use!
+
+> You can also use this [data-to-viz website](https://www.data-to-viz.com/) to explore and get inspired
+
+```{r}
+# install.packges(c("ggplot2", "palmerpenguins"))
+
+library(ggplot2)
+library(palmerpenguins)
+
+penguins
+```
 
 **Questions:**
 
@@ -67,7 +78,7 @@ Get creative, you can also use this [data-to-viz website](https://www.data-to-vi
 4. What is the relationship between bill length and depth in different species?
 5. Does this relationship change over time?
 
-Now, let's give you the run down on `ggplot2`
+> Now, let's properly introduce `ggplot2` to you.
 
 ## ggplot2 
 
@@ -75,26 +86,40 @@ Now, let's give you the run down on `ggplot2`
 
 ![Have you met `ggplot2`?](ggplot2-hex.png){width=20%}
 
-## The recipe for a `ggplot()`
+### The recipe for a `ggplot()`
 
-![](ggplot2-basic-recipe.jpg)
+There are four core components to a `ggplot` :
+
+1. The **data** you are working with e.g `penguins`
+2. The **aesthetics** which controls which variables you want to work with
+3. The **geometries** dictates the type of plot you want to create
+3. The **theme** where you can fine tune the "look" of your plot
+
+![Image credit: Fonti Kar](ggplot2-basic-recipe.jpg)
+
+Throughout the course, you'll learn to tweak these four components to create beautiful data vizzes. 
+
+> Let's try tackle the first question together
+
+**1. What is the distribution of bill depth of each penguin species?**
+
+From the question, we know we want to be working with `species` and `bill_depth_mm`, these will be our **aesthetics**.
+
+```{r}
+penguins
+```
+
 
 ## Now, your turn!
 
-Now try to make the plots your group discussed, using ggplot.
+Using the `ggplot-intro.qmd` try use `ggplot2` to make the plots you planned out above.
 
-Take a look at the `ggplot2` cheatsheet
+> Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal
 
-### Setting up
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png)
 
-Remember the `palmerpengiuns`? They will also be joining us in this demo. 
+<br>
 
-```{r}
-# install.packges(c("ggplot2", "palmerpenguins"))
-
-library(ggplot2)
-library(palmerpenguins)
-```
 
 
 ## Bring on the real-world datasets!
