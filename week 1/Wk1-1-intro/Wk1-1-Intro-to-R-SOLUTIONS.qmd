@@ -1,5 +1,7 @@
 ---
 title: Week 1 - working with R
+format: html 
+editor: visual
 editor_options: 
   chunk_output_type: console
 ---

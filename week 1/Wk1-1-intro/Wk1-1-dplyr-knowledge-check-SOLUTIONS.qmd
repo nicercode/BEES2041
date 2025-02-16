@@ -1,6 +1,9 @@
 ---
 title: "dplyr-knowledge-check-SOLUTIONS"
-format: html
+format: html 
+editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Knowledge Check

@@ -97,18 +97,36 @@ There are four core components to a `ggplot` :
 
 ![Image credit: Fonti Kar](ggplot2-basic-recipe.jpg)
 
+**Notice** instead of pipes `|>`, we use `+` to add layers of components to a plot. 
+
 Throughout the course, you'll learn to tweak these four components to create beautiful data vizzes. 
 
 > Let's try tackle the first question together
 
 **1. What is the distribution of bill depth of each penguin species?**
 
-From the question, we know we want to be working with `species` and `bill_depth_mm`, these will be our **aesthetics**.
+From the question, we know we want to be working with `species` and `bill_depth_mm`, these will be our **aesthetics**. 
+
+- `species` is the `group` variable we want to detect differences, making it an "independent" or **"predictor"** variable. 
+- `bill_depth_mm` is the entity we want to use compare, making it a "dependent" or **"response"** variable. 
+
+> I've decided that a histogram would be a good choice to very the distribution of `bill_depth_mm` and looking at the shapes of histograms for the three species will help me answer the question.
+
+Histograms depict the range of values along the `x` axis and the height of the bars represent the `count` of each value. 
+
+Here's the code to create a histogram for each species: 
 
 ```{r}
-penguins
+ggplot(data = penguins, # my data 
+       aes(x = bill_depth_mm, # what I want to depict on the x axis `bill_depth_mm`
+           group = species,  # what I want to compare between species
+           colour = species, # I want to colour my histograms by `species`
+           fill = species)) + # I want to fill the bars of my histogram by `species`
+         geom_histogram() +  # my choice of geometry
+         theme_minimal() # my choice of theme styling
 ```
 
+Let's talk through this code:
 
 ## Now, your turn!
 
@@ -120,7 +138,9 @@ Using the `ggplot-intro.qmd` try use `ggplot2` to make the plots you planned out
 
 <br>
 
-
+Depending on the plot or `geom_` you of your choice, I like to think **aesthetics** as: 
+- `x` as the variable in which I want to test if there is an effect. e.g. `year`, `species`, `island`
+- `y` as the variable where I want to detect an effect. e.g `bill_depth_mm`, `body_mass_g`
 
 ## Bring on the real-world datasets!
 
