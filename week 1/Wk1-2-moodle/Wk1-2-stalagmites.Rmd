@@ -14,26 +14,30 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
+
+# Read data from maintainer perspective
+data_sites <- read_xlsx("week 1/Wk1-2-moodle/data/staligmites/Tables.xlsx") |> 
+  janitor::clean_names()
 ```
 
 
 # Overview
 
-Stalagmites are "a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings" (<https://en.wikipedia.org/wiki/Stalagmite>).
+[Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Labeled_speleothems.jpg/780px-Labeled_speleothems.jpg){fig-align="center"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
 
-Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses Stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
+Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
 
-This exercise builds off two papers published by Andy and his team
+This section builds off two papers published by Andy and his team:
 
--   Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. https://doi. org/10.1029/2020RG000722 (see file `data/staligmites/refs/Baker et al 2021 Reviews of Geophysics.pdf`
+-   Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. https://doi.org/10.1029/2020RG000722 (see file `doc/Baker et al 2021 Reviews of Geophysics.pdf`
 
--   Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `data/staligmites/refs/Baker et al 2015.pdf`)
+-   Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `doc/Baker et al 2015.pdf`)
 
 # Aims
 
-Andy asked us to cross check his results by re-anlaysing the data. Your goal is reproduce some key figures from the paper 2021 paper.
+Andy asked us to cross check his results, your goal is reproduce some key figures from the paper 2021 paper.
 
 # Assembling the data
 
@@ -47,7 +51,7 @@ The data is available at https://figshare.com/articles/dataset/Laminated_stalagm
 
 We've downloaded this into the folder at `data/staligmites/Laminated stalagmite Dataset.csv`
 
-Load this into R use the `read_csv` function
+Load this into R use the `read_csv()` function.
 
 ```{r}
 
@@ -55,17 +59,14 @@ Load this into R use the `read_csv` function
 
 ## Data structure
 
-Check the structure of the dataset, including the names of the columns. The dataset gives records of lamina thickness through time for a series of different stalagmites.
+Check the structure of the dataset, including the names of the columns. 
 
-The variables provided are
+This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
 
--   `entity_id` : The ID of the satalgmite sampled.
-
--   `seq_id` : The ID of the sequence taken through the sample
-
--   `lamina thickness (mm)` : The thickness of each layer. Which provides an indicator of growth rate.
-
--   `lam_age (BP, 0=1950AD)` : Years Before Present (=1950), corresponding to the age of the layer.
+-   `entity_id`: Identifier for the stalagmite sample.
+-   `seq_id`: Sequence identifier (likely referring to sample grouping).
+-   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
+-   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
 ## Data manipulation
 
@@ -75,23 +76,17 @@ This dataset has some difficult variable names. Perhaps rename to something more
 
 ```
 
-## Check distributions
+## Check the data
 
-Do the properties of each variable seem reasonable?
-
-```{r}
-
-```
-
-Did you notice any errors in the dataset? There is one really weird value. What is it?
+Did you notice any errors in the dataset? There is one really weird value. Which is it?
 
 ```{r}
 
 ```
 
-You check whit Andy and he confirms an error in the data entry for this point. Can you remove it?
+You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
 
-The `filter` function could be useful
+The `filter()` function could be useful
 
 ```{r}
 
@@ -105,21 +100,27 @@ Now let's go ahead and make some plots. We're going to try and recreate figures 
 
 Have a go at creating this plot.
 
+![Figure 5](baker-fig5.png)
+
 ```{r}
 
 ```
 
 ### Figure 3
 
-Have a go at creating this plot. I suggest trying for a single panel before making a bunch of panels.
+Have a go at creating this plot.
 
-Start with single sample. use the `filter` command to subset your data before plotting it.
+![Figure 3](baker-fig3.png)
+
+I suggest trying for a single panel before making a bunch of panels.
+
+Start with single sample. Use the `filter()` function to subset your data before plotting it.
 
 ```{r}
 
 ```
 
-Now try making a panel of plots. Note the section in the intro on facetting will be helpful for multi panel plots.
+Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
 
 ```{r}
 
@@ -127,7 +128,11 @@ Now try making a panel of plots. Note the section in the intro on facetting will
 
 ### **Figure 10**
 
-Have a go at creating this plot. It's similar to the one above, but there's data for select values of seq_id
+Have a go at creating this plot. 
+
+![Figure 10](baker-fig10.png)
+
+It's similar to the one above, but there's data for select values of `seq_id`
 
 ```{r}
 
@@ -137,28 +142,29 @@ Have a go at creating this plot. It's similar to the one above, but there's data
 
 Finally, can you plot a map of sample locations as in figure 2?
 
-The data with locations is in `data/staligmites/Tables.xlsx` . It's an excel file. We can read it in using the following code:
+![Figure 2](baker-fig2.png)
+
+The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
 ```{r}
+# install.packages("readxl")
+library(readxl)
 
-data_sites <- readxl::read_xlsx("data/staligmites/Tables.xlsx") %>% 
+data_sites <- read_xlsx("data/staligmites/Tables.xlsx") |> 
   janitor::clean_names()
-
 ```
 
-Are all variables correct type?
+Are `lat` and `long` variables correct type?
 
 ```{r}
-data_sites <- data_sites %>%
+data_sites <- data_sites |>
   mutate(lat = as.numeric(lat),
          long = as.numeric(long))
-
 ```
 
 First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add code with points
 
 ```{r}
-
 # create data for world coordinates using
 # map_data() function
 world_coordinates <- map_data("world")
@@ -177,13 +183,15 @@ ggplot(data_sites, aes(long, lat)) +
 
 ```
 
-Second, we can use the package leaflet to create an interactive plot. The code is a little different
+### BONUS:
+
+Second, we can use the package `leaflet` to create an interactive plot. The code is a little different
 
 ```{r, keep}
 library(leaflet)
 
-leaflet() %>%
-  addTiles() %>%
+leaflet() |>
+  addTiles() |>
   addMarkers(
     lng = data_sites$long,
     lat = data_sites$lat,
@@ -192,7 +200,7 @@ leaflet() %>%
         data_sites$entity_id_1000_sisal_entity_id,
         data_sites$site_name
       )
-  )	%>%
+  )	|>
   addScaleBar()
 
 
