@@ -74,11 +74,12 @@ Get creative, feel free to put the white boards/pen and paper to good use!
 
 **Question: What type of plot would be suitable to answer the following questions (Select all that apply):**
 
-1. What is the distribution of bill depth of each penguin species? `r`
-2. How does bill length vary between islands?  (Select all that apply) `r`
-3. Which penguin species have the shortest flippers? `r`
-4. What is the relationship between bill length and depth in different species? `r`
-5. Does the relationship between bill length and depth change over time? `r`
+1. What is the distribution of bill depth of each penguin species? `r cloze(c("boxplot" = 1, "histogram" = 1, "line plot" = 0, "pie chart" = 0, "scatterplot" = 0, violin" = 1))`,
+  type = "vertical")`
+2. How does bill length vary between islands?  (Select all that apply)`r cloze(c("boxplot" = 1, "histogram" = 1, "line plot" = 0, "pie chart" = 0, "violin" = 1,"scatterplot" = 0, "line plot" = 0))`
+3. Which penguin species have the shortest flippers? `r cloze(c("boxplot" = 1, "histogram" = 1, "line plot" = 0, "pie chart" = 0, "scatterplot" = 0, "violin" = 1))`
+4. What is the relationship between bill length and depth in different species?`r cloze(c("boxplot" = 0, "histogram" = 0, "line plot" = 1, "pie chart" = 0, "scatterplot" = 1, "violin" = 0))`
+5. Does the relationship between bill length and depth change over the years? `r cloze(c("boxplot" = 0, "histogram" = 0, "line plot" = 1, "pie chart" = 0, "scatterplot" = 1, "violin" = 0))`
 
 > Now, let's properly introduce `ggplot2` to you.
 
