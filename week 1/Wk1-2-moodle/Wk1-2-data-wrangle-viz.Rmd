@@ -50,6 +50,16 @@ A picture is worth a thousands words. The choice of your visualisation can have 
 
 > Remember the `palmerpengiuns`? They will also be joining us in this prac.
 
+
+```{r}
+# install.packges(c("ggplot2", "palmerpenguins"))
+
+library(ggplot2)
+library(palmerpenguins)
+
+penguins
+```
+
 **Activity**: 
 
 For each question below, work with your fellow classmates to determine a suitable data viz. Think about:
@@ -61,22 +71,13 @@ Get creative, feel free to put the white boards/pen and paper to good use!
 
 > You can also use this [data-to-viz website](https://www.data-to-viz.com/) to explore and get inspired
 
-```{r}
-# install.packges(c("ggplot2", "palmerpenguins"))
+**Question: What type of plot would be suitable to answer the following questions (Select all that apply):**
 
-library(ggplot2)
-library(palmerpenguins)
-
-penguins
-```
-
-**Questions:**
-
-1. What is the distribution of bill depth of each penguin species?
-2. How does bill length vary between islands?
-3. Which penguin species have the shortest flippers?
-4. What is the relationship between bill length and depth in different species?
-5. Does this relationship change over time?
+1. What is the distribution of bill depth of each penguin species? `r`
+2. How does bill length vary between islands?  (Select all that apply) `r`
+3. Which penguin species have the shortest flippers? `r`
+4. What is the relationship between bill length and depth in different species? `r`
+5. Does the relationship between bill length and depth change over time? `r`
 
 > Now, let's properly introduce `ggplot2` to you.
 
@@ -95,7 +96,7 @@ There are four core components to a `ggplot` :
 3. The **geometries** dictates the type of plot you want to create
 3. The **theme** where you can fine tune the "look" of your plot
 
-![Image credit: Fonti Kar](ggplot2-basic-recipe.jpg)
+![Image credit: Fonti Kar](ggplot2-basic-recipe.png)
 
 **Notice** instead of pipes `|>`, we use `+` to add layers of components to a plot. 
 
@@ -130,7 +131,17 @@ Let's talk through this code:
 
 ## Now, your turn!
 
-Using the `ggplot-intro.qmd` try use `ggplot2` to make the plots you planned out above.
+Using the `ggplot-intro.qmd` document, use `ggplot2` to make the remaining plots from about.
+
+> Reposting the questions here again so you don't have to scroll back and forth
+
+**Question: What type of plot would be suitable to answer the following questions:**
+
+1. What is the distribution of bill depth of each penguin species? [DONE]
+2. How does bill length vary between islands?  
+3. Which penguin species have the shortest flippers? 
+4. What is the relationship between bill length and depth in different species? 
+5. Does the relationship between bill length and depth change over time? 
 
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal
 
