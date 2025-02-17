@@ -36,3 +36,8 @@ Note, depending on content you may not all want to turn all chunks into webr. e.
 ## Update and check uniqueness of r-editor-id
 
 The numbers after `r-editor-` needs to be unique within the document
+
+
+## Check your numbered lists
+
+If you have duplication moodlequiz
