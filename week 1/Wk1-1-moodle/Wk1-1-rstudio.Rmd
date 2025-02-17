@@ -17,7 +17,30 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 
 ![](r-learners.png){width=70%}
 
+## Installing or updating R and RStudio
+
+If you haven't already, please install the latests vesrions of R and Rstduio.  If you've previously had R or Rstudio installed, we request you update these to the latest version.
+These are available from:
+
+* Install R (version 4.4 or newer) from https://cran.csiro.au
+* Install Rstudio (latest) from https://www.rstudio.com/products/rstudio/download/.
+
+<h2>Checking R version</h2>
+
+Make sure you have R vesrion 4.4. or newer installed. The version of R should be displayed in the console when you open Rstudio. Alternatievly you can type the following command into the console:
+
+```{r, eval=FALSE}
+getRversion()
+```
+
+![Check R vesion`](check-Rversion.png){width=60%}
+
+Sometimes Windows machines don't connect the latest version, even though you've installed it. In that case, you need to go to `Tools` -> `Global options` and then change the R vesrsion used. 
+
+![Check R vesion`](change-Rversion.png){width=60%}
+
 ## Getting Started in RStudio
+
 
 <h2>Getting Started in RStudio</h2>
 
@@ -25,15 +48,18 @@ R Studio is an integrated development environment (IDE) that allows you to write
 
 We will use this program throughout the course and over time you will really know your way around! But first let's get you set up for success...
 
+
+
 <h3>Setting up</h3>
 
 1. Create a folder in a meaningful location on your computer called `BEES2041`
 2. Download `Wk1-1-materials` from the course page in Moodle. This is a zip file.
-3. Move the zip file `Wk-1-intro` into your course folder (`BEES2041`) you created in step 1.
-4. Unzip the file by: 
+3. Unzip the file by: 
   - MacOS: Double clicking the file `Wk-1-intro`
-  - Windows: Right click on the zip file and click "Extract All" 
-5. **Click on the `Wk-1-intro.Rproj`** to open the RStudio project and you're in!!!
+  - Windows: Right click on the zip file and click "Extract All"
+4. Move the folder created, called `Wk-1-intro`, into your course folder (`BEES2041`) you created in step 1.
+
+5. Withing that folder, **Click on the `Wk-1-intro.Rproj`** to open the RStudio project and you're in!!!
 
 <h3>The RStudio Layout</h3>
 
@@ -101,7 +127,7 @@ The **code chunks** are the grey boxes with the header `{r}` at top left corner.
 
 <h3>Errors in R</h3>
 
-When you ran the code in the first chunk, you'll notice R was not happy. 
+When you ran the code in the first chunk, you might notice R was not happy. (It depends if you already have the packages installed.)
 
 ![R complains in red](first-error.png)
 <br>
@@ -127,16 +153,47 @@ You can click on the "Install" and that should take care of the error.
 
 **Importantly** you only need to install packages **ONCE**. This is different to **loading** packages into R using the `library()` function. You load packages once using `library()` for each Quarto doc right at the start of the document.
 
+
+<h3>Install essential packages for this course</h3>
+
+In this course we're going to rely heavily on two packages, `tidyverse` and `easystats`. You'll learn more about these as we go through, but for now, let's just get them installed. 
+
+Both these packages are in fact a collection of packages, so you may see quite a bit of installing happening. 
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+
+Now let's check it loads, and also update any of the components, in case you already had them installed. 
+
+```{r, eval=FALSE}
+library(tidyverse)
+tidyverse_update()
+```
+
+When you load the library, you'll get some output showing you what packages have been loaded:
+
+![Loading tidyvesre`](library_tidyverse.jpg){width=60%}
+
+We can now do the same for the `easystats` package:
+
+```{r, eval=FALSE}
+install.packages("easystats")
+library(easystats)
+easystats_update()
+```
+
+
 <h3>Loading data into R</h3>
 
-Now that we have all the packages we need for this prac installed and loaded (yay!), let's get into some data!! 
+Now that we have all the packages we need for this practical installed and loaded (yay!), let's get into some data!! 
 
-The data you need for this prac lives in the `data/` folder that you can see in the **"Files" tab** in the bottom-left pane. There are 2 datasets in the folder: 
+The data you need for this practical lives in the `data/` folder that you can see in the **"Files" tab** in the bottom-left pane. There are 2 datasets in the folder: 
 
 - `Laminated stalagmite Dataset.csv` 
 - `sydneybeaches.csv`
 
-You can tell these are "comma-seperated values" by the file type `.csv`.
+You can tell these are "comma-separated values" by the file type `.csv`.
 
 We are going to use the function `read_csv` to load the `Laminated stalagmite Dataset.csv` into R.
 
