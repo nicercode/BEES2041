@@ -44,7 +44,7 @@ Each dataset is associated with its own Quarto document (`Wk1-2-plant-height.qmd
 
 Before we dive in, let's consider what data visualisation means.
 
-### Thinking about data visualisations
+<h3>Thinking about data visualisations</h3>
 
 A picture is worth a thousands words. The choice of your visualisation can have a huge impact on the key message you want to give to the viewer - consider: **What is it that I want to convey?**
 
@@ -89,7 +89,7 @@ Get creative, feel free to put the white boards/pen and paper to good use!
 
 ![Have you met `ggplot2`?](ggplot2-hex.png){width=20%}
 
-### The recipe for a `ggplot()`
+<h3>The recipe for a `ggplot()`</h3>
 
 There are four core components to a `ggplot` :
 
