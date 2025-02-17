@@ -38,11 +38,19 @@ This section builds off two papers published by Andy and his team:
 # Aims
 
 Andy asked us to cross check his results, your goal is reproduce some key figures from the paper 2021 paper.
+Do these visualisations in your `Wk1-2-stalagmites.qmd` document
 
-# Assembling the data
+# Setting up 
+
+You may need to uncomment the first line and install packages you don't have
 
 ```{r}
+# install.packages(c("tidyverse", "janitor", "readxl", "leaflet"))
+
 library(tidyverse)
+library(janitor)
+library(readxl)
+library(leaftlet)
 ```
 
 ## Loading data
@@ -52,10 +60,6 @@ The data is available at https://figshare.com/articles/dataset/Laminated_stalagm
 We've downloaded this into the folder at `data/staligmites/Laminated stalagmite Dataset.csv`
 
 Load this into R use the `read_csv()` function.
-
-```{r}
-
-```
 
 ## Data structure
 
@@ -68,17 +72,13 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 -   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
 -   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
-## Data manipulation
+## Data wrangling
 
 This dataset has some difficult variable names. Perhaps rename to something more R friendly? The function `clean_names()` from the package `janitor` may be useful here. You might need to install the package first.
 
-```{r}
-
-```
-
 ## Check the data
 
-Did you notice any errors in the dataset? There is one really weird value. Which is it?
+**Question: Did you notice any errors in the dataset? There is one really weird value. Which is it?**
 
 ```{r}
 
@@ -86,11 +86,7 @@ Did you notice any errors in the dataset? There is one really weird value. Which
 
 You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
 
-The `filter()` function could be useful
-
-```{r}
-
-```
+The `filter()` function could be useful here.
 
 # Making plots
 
@@ -98,13 +94,10 @@ Now let's go ahead and make some plots. We're going to try and recreate figures 
 
 ### Figure 5
 
-Have a go at creating this plot.
+Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document
 
 ![Figure 5](baker-fig5.png)
-
-```{r}
-
-```
+**Question: Interpret this plot, what does this visualisation tell us?**
 
 ### Figure 3
 
@@ -112,19 +105,12 @@ Have a go at creating this plot.
 
 ![Figure 3](baker-fig3.png)
 
-I suggest trying for a single panel before making a bunch of panels.
+Try making a single panel before making a bunch of panels.
 
-Start with single sample. Use the `filter()` function to subset your data before plotting it.
+1. Start with single sample. Use the `filter()` function to subset your data before plotting it.
+2. Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
 
-```{r}
-
-```
-
-Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
-
-```{r}
-
-```
+**Question: Interpret this plot, what does this visualisation tell us?**
 
 ### **Figure 10**
 
@@ -134,9 +120,7 @@ Have a go at creating this plot.
 
 It's similar to the one above, but there's data for select values of `seq_id`
 
-```{r}
-
-```
+**Question: Interpret this plot, what does this visualisation tell us?**
 
 ### Figure 2
 
@@ -147,20 +131,10 @@ Finally, can you plot a map of sample locations as in figure 2?
 The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
 ```{r}
-# install.packages("readxl")
-library(readxl)
-
-data_sites <- read_xlsx("data/staligmites/Tables.xlsx") |> 
-  janitor::clean_names()
+data_sites <- read_xlsx("data/staligmites/Tables.xlsx") |> clean_names()
 ```
 
-Are `lat` and `long` variables correct type?
-
-```{r}
-data_sites <- data_sites |>
-  mutate(lat = as.numeric(lat),
-         long = as.numeric(long))
-```
+** Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
 
 First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add code with points
 
@@ -171,25 +145,23 @@ world_coordinates <- map_data("world")
 
 # create world map using ggplot() function
 ggplot(data_sites, aes(long, lat)) +
-  
-  # geom_map() function takes world coordinates
-  # as input to plot world map
-  geom_map(data = world_coordinates, map = world_coordinates,
-           aes(long, lat, map_id = region)) +
+  geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
+           aes(long, lat, map_id = region)) +  
   geom_point(col = "red") +
   geom_text(col = "red", aes(label = site_name), nudge_y = 2) +
   coord_quickmap() +
   theme_classic()
-
 ```
+
+Now try it with Andy's data that you just cleaned up!
+
+**Question: Interpret this plot, what does this visualisation tell us?**
 
 ### BONUS:
 
-Second, we can use the package `leaflet` to create an interactive plot. The code is a little different
+R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to use you the possibilities of R!
 
 ```{r, keep}
-library(leaflet)
-
 leaflet() |>
   addTiles() |>
   addMarkers(
@@ -202,6 +174,4 @@ leaflet() |>
       )
   )	|>
   addScaleBar()
-
-
 ```
