@@ -1,12 +1,12 @@
 ---
 title: "Week 1-1 Data manipulation and visualisation"
-output: 
-  moodlequiz::moodlequiz:
-    replicates: 1
-moodlequiz:
-  category: "Week 1-2 data wrangle + viz"
-editor_options:
-  chunk_output_type: console
+output: html_document
+#   moodlequiz::moodlequiz:
+#     replicates: 1
+# moodlequiz:
+#   category: "Week 1-2 data wrangle + viz"
+# editor_options:
+#   chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -15,9 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
+# Libraries for prac
+library(tidyverse)
+library(janitor)
+library(readxl)
+library(leaflet)
+
 # Read data from maintainer perspective
-data_sites <- read_xlsx("week 1/Wk1-2-moodle/data/staligmites/Tables.xlsx") |> 
-  janitor::clean_names()
+stalagmites_sites <- read_xlsx("week 1/Wk1-2-moodle/data/stalagmites/Tables.xlsx") |> clean_names()
 ```
 
 
@@ -50,7 +55,7 @@ You may need to uncomment the first line and install packages you don't have
 library(tidyverse)
 library(janitor)
 library(readxl)
-library(leaftlet)
+library(leaflet)
 ```
 
 ## Loading data
@@ -112,7 +117,7 @@ Try making a single panel before making a bunch of panels.
 
 **Question: Interpret this plot, what does this visualisation tell us?**
 
-### **Figure 10**
+### Figure 10
 
 Have a go at creating this plot. 
 
@@ -130,13 +135,32 @@ Finally, can you plot a map of sample locations as in figure 2?
 
 The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
+```{r, eval=FALSE}
+stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()
+```
+
+**Question: Did you notice any errors in the dataset? There is one row isn't data, which is it?**
+
 ```{r}
-data_sites <- read_xlsx("data/staligmites/Tables.xlsx") |> clean_names()
+stalagmites_sites |> filter(row_number() == 1)
+```
+
+Exclude this row using the filter function
+
+
+```{r}
+stalagmites_sites <- stalagmites_sites |> filter(!row_number() == 1)
 ```
 
 ** Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
 
-First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add code with points
+```{r}
+stalagmites_sites <- stalagmites_sites |> 
+  mutate(lat = as.numeric(lat),
+         long = as.numeric(long))
+```
+
+First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add points and site names with `geom_text()`
 
 ```{r}
 # create data for world coordinates using
@@ -144,11 +168,11 @@ First, let's make a map using the standard ggplot. I'll start you off with code 
 world_coordinates <- map_data("world")
 
 # create world map using ggplot() function
-ggplot(data_sites, aes(long, lat)) +
+ggplot(stalagmites_sites, aes(long, lat)) +
   geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
            aes(long, lat, map_id = region)) +  
-  geom_point(col = "red") +
-  geom_text(col = "red", aes(label = site_name), nudge_y = 2) +
+  # geom_point(colour = "red") +
+  # geom_text(colour = "red", aes(label = site_name), nudge_y = 2) +
   coord_quickmap() +
   theme_classic()
 ```
