@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 
 ## Installing or updating R and RStudio
 
-If you haven't already, please install the latests vesrions of R and Rstduio.  If you've previously had R or Rstudio installed, we request you update these to the latest version.
+If you haven't already, please install the latest versions of R and RStudio.  If you've previously had R or Rstudio installed, we request you update these to the latest version.
 These are available from:
 
 * Install R (version 4.4 or newer) from https://cran.csiro.au
@@ -27,17 +27,17 @@ These are available from:
 
 <h2>Checking R version</h2>
 
-Make sure you have R vesrion 4.4. or newer installed. The version of R should be displayed in the console when you open Rstudio. Alternatievly you can type the following command into the console:
+Make sure you have R version 4.4. or newer installed. The version of R should be displayed in the console when you open Rstudio. Alternatively you can type the following command into the console:
 
 ```{r, eval=FALSE}
 getRversion()
 ```
 
-![Check R vesion`](check-Rversion.png){width=60%}
+![Check R version](check-Rversion.png){width=60%}
 
-Sometimes Windows machines don't connect the latest version, even though you've installed it. In that case, you need to go to `Tools` -> `Global options` and then change the R vesrsion used. 
+Sometimes Windows machines don't connect the latest version, even though you've installed it. In that case, you need to go to `Tools` -> `Global options` and then change the R version used. 
 
-![Check R vesion`](change-Rversion.png){width=60%}
+![Check R version](change-Rversion.png){width=60%}
 
 ## Getting Started in RStudio
 
@@ -47,8 +47,6 @@ Sometimes Windows machines don't connect the latest version, even though you've 
 R Studio is an integrated development environment (IDE) that allows you to write and run code and visualise data all in one place.
 
 We will use this program throughout the course and over time you will really know your way around! But first let's get you set up for success...
-
-
 
 <h3>Setting up</h3>
 
@@ -182,7 +180,6 @@ install.packages("easystats")
 library(easystats)
 easystats_update()
 ```
-
 
 <h3>Loading data into R</h3>
 
