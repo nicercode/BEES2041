@@ -14,9 +14,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
+
+# Set up for multichoice question
+possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatterplot", "violin")
 ```
 
-# Data wrangling + visualisation
+## Data wrangling + visualisation
 
 <h3>Data wrangling + visualisation</h3>
 
@@ -73,13 +76,12 @@ Get creative, feel free to put the white boards/pen and paper to good use!
 > You can also use this [data-to-viz website](https://www.data-to-viz.com/) to explore and get inspired
 
 **Question: What type of plot would be suitable to answer the following questions (Select all that apply):**
-  
-1. What is the distribution of bill depth of each penguin species? `r cloze(c("boxplot" = 1, "histogram" = 1, "line plot" = 0, "pie chart" = 0, "scatterplot" = 0, "violin" = 1))`,
-type = "vertical")`
-2. How does bill length vary between islands?  (Select all that apply)`r cloze(c("boxplot" = 1, "histogram" = 1, "line plot" = 0, "pie chart" = 0, "violin" = 1,"scatterplot" = 0, "line plot" = 0))`
-3. Which penguin species have the shortest flippers? `r cloze(c("boxplot" = 1, "histogram" = 1, "line plot" = 0, "pie chart" = 0, "scatterplot" = 0, "violin" = 1))`
-4. What is the relationship between bill length and depth in different species?`r cloze(c("boxplot" = 0, "histogram" = 0, "line plot" = 1, "pie chart" = 0, "scatterplot" = 1, "violin" = 0))`
-5. Does the relationship between bill length and depth change over the years? `r cloze(c("boxplot" = 0, "histogram" = 0, "line plot" = 1, "pie chart" = 0, "scatterplot" = 1, "violin" = 0))`
+
+1. What is the distribution of bill depth of each penguin species? `r cloze(c("boxplot", "histogram", "violin"), possible_choices)`
+2. How does bill length vary between islands?  `r cloze(c("boxplot", "histogram", "violin"), possible_choices)`
+3. Which penguin species have the shortest flippers? `r cloze(c("boxplot", "histogram", "violin"), possible_choices)`
+4. What is the relationship between bill length and depth in different species? `r cloze(c("scatterplot"), possible_choices)`
+5. Does the relationship between bill length and depth change over the years? `r cloze(c("scatterplot", "line plot"), possible_choices)`
 
 > Now, let's properly introduce `ggplot2` to you.
 
@@ -98,7 +100,7 @@ There are four core components to a `ggplot` :
 3. The **geometries** dictates the type of plot you want to create
 4. The **theme** where you can fine tune the "look" of your plot
 
-![Image credit: Fonti Kar](ggplot2-basic-recipe.png)
+![Image credit: Fonti Kar](ggplot2-basic-recipe.png){10%}
 
 <br> 
 
@@ -109,6 +111,8 @@ Throughout the course, you'll learn to tweak these four components to create bea
 > Let's try tackle these questions and plots together
 
 ## What is the distribution of bill depth of each penguin species
+
+<h3>1. What is the distribution of bill depth of each penguin species?</h3>
 
 From the question, we know we need to work with `species` and `bill_depth_mm`, these will be our **aesthetics**. 
 
@@ -142,6 +146,8 @@ Let's talk through this code:
 
 ## How does bill length vary between islands
 
+<h3>2. How does bill length vary between islands?</h3>
+
 This question is similar to Q1. We are working with `bill_length_mm` a numeric variable and `islands` a grouping/categorical variable
 
 > Let's make some boxplots to view the distributions of `bill_length_mm` of each island (histograms/violins are valid choices too!). 
@@ -149,7 +155,7 @@ This question is similar to Q1. We are working with `bill_length_mm` a numeric v
 Boxplots depict the range of numeric values along the `y` axis and the groups you want to compare on the `x` axis represent the `count` of each value. 
 
 - the **thick bold line** represents the **median** (50th percentile) 
-- the *box* represents the **interquartile range** and shows where the middle 50% of the data lies.
+- the **box** represents the **interquartile range** and shows where the middle 50% of the data lies.
   - The bottom of the box is the  first quartile (first quartile, 25th percentile) 
   - The top of the box is the third quartile (third quartile, 75th percentile). 
 - the **vertical lines** are the whiskers. 
@@ -177,6 +183,7 @@ We used the `labs()` function to create some nicer looking axes labels for the p
 
 ## Which penguin species have the shortest flippers
 
+<h3>3. Which penguin species have the shortest flippers?</h3>
 Like Q1, we are interested in `species` comparisons in `flipper_length_mm`.
 
 > Let's make some violin plots AND boxplots to view the distributions of `flipper_length_mm` of each species (histograms are a valid choice too!)
@@ -184,7 +191,7 @@ Like Q1, we are interested in `species` comparisons in `flipper_length_mm`.
 Violin plots combine aspects of density/histograms to show:
 
 - shape of the distribution (like a smoothed histogram)
-- density of the data ()
+- density of the data (widest part is where most of the data is)
 
 ```{r}
 penguins |> 
@@ -213,7 +220,9 @@ Let's talk through the code a little:
 
 ## What is the relationship between bill length and depth in different species
 
-So far, we have been working with one numeric variable and one grouping/categorical variable. What if we are interested in relationships (correlation) between two numeric variables? This is where `geom_point()` will come in handy.
+<h3>4. What is the relationship between bill length and depth in different species?</h3>
+
+So far, we have been working with one numeric variable and one grouping/categorical variable. What if we are interested in **relationships (correlation)** between **two numeric** variables? This is where `geom_point()` will come in handy.
 
 > Let's make a scatterplot + line plot to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species
 
@@ -241,6 +250,7 @@ Code explainer:
 
 ## Does the relationship between bill length and depth for each species change over time
 
+<h3>Does the relationship between bill length and depth for each species change over time?</h3>
 This question expands on Q4. We want to recreate the scatter plot from above for every year we have data for. This is where `facet_wrap()` will be super handy. Remember the "split-apply-combine" paradigm? `facet_wrap()` is a great example of it. `facet_wrap()`  splits your data by what you want to "facet" on and reproduce your plot using the smaller data and then combine all the outputs into one plot. 
 
 > Let's make a scatterplot for each year to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species change over time
@@ -269,7 +279,7 @@ Now that you are all geared up with `ggplot2` skills, let's have a go with worki
 
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
 
-![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png){60%}
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png){30%}
 
 
 
