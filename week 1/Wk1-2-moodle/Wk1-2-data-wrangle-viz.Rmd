@@ -130,10 +130,11 @@ ggplot(data = penguins, # `penguins` data
 Let's talk through this code:
 
 - `ggplot(data = penguins,`, specify what data frame you are working with 
-- `aes(x = bill_depth_mm,`, specify what you want to show on the x axis
-- `group = species,`, tell `ggplot()` you are interested in group comparisons at the `species` level
-- `colour = species`, set the colour to change by `species` e.g outline of bars
-- `fill = species))`, set the fill to change by `species` e.g inside of bars
+- `aes()` declaring what you want to show in plot
+  - `x = bill_depth_mm`, specify what you want to show on the x axis
+  - `group = species`, tell `ggplot()` you are interested in group comparisons at the `species` level
+  - `colour = species`, set the colour to change by `species` e.g outline of bars
+  - `fill = species`, set the fill to change by `species` e.g inside of bars
 - `geom_histogram()`, make a histogram
 - `theme_minimal()`, apply minimal styling
 
@@ -164,10 +165,13 @@ penguins |>
              group = island,  # group level comparisons using `island`  
              colour = island)) + # colour my boxplots by `island`
   geom_boxplot() +  # create boxplot
+  labs(x= "Bill length (mm) ", y = "Cbservation counts", title = "Distribution of bill length (mm) by island") +  # Add some nicer axes labels
   theme_minimal() # minimal styling
 ```
 
-Notice the code format doesn't change very much from Q1. We've swapped out the all the variables and the `geom_`. We also removed the `fill` setting so we can see the thick bold line of each boxplot.
+**Notice* *the code format didn't change very much from Q1. We've swapped out the all the variables and the `geom_`. We also removed the `fill` setting so we can see the thick bold line of each boxplot.
+
+We used the `labs()` function to create some nicer looking axes labels for the plot
 
 ## 3. Which penguin species have the shortest flippers?
 
@@ -175,6 +179,10 @@ Like Q1, we are interested in `species` comparisons in `flipper_length_mm`.
 
 > Let's make some violin plots AND boxplots to view the distributions of `flipper_length_mm` of each species (histograms are a valid choice too!)
 
+Violin plots combine aspects of density/histograms to show:
+
+- shape of the distribution (like a smoothed histogram)
+- density of the data ()
 
 
 ```{r}
@@ -183,7 +191,7 @@ penguins |>
          aes(x = species, # what I want to depict on the x axis
              y = flipper_length_mm, # what I want to depict on the y axis 
              group = species,  # group level comparisons using `species`  
-             colour = species)) + # colour my boxplots by `species`
+             colour = species)) + # colour violin by `species`
   geom_violin(aes(fill = species), # create violin, fill the violins by `species`
               alpha = 0.2, # set the transparency of fill
               trim = FALSE) +  # don't crop violin
@@ -192,18 +200,70 @@ penguins |>
   theme_minimal() # minimal styling
 ```
 
+Here, we are plotting **2 geometries** in one graphic. Think of `ggplots` like a cake, you can add components layer by layer e.g.  violins and then a boxplot. 
+
+Let's talk through the code a little: 
+
+- **Notice** how we have also placed an `aes()` function within `geom_violin()`? This allows you to finely control the fill setting specifically to the violin plot. If you put `fill = species` in `ggplot(aes())`, the fill setting will roll out across layers of the graphic.
+
+- We adjusted the width of the boxplot so they fit nicely within the violins using the `width` argument
+
+- We used `coord_flip()` to swap the `x` and `y` axis to compare the shapes of the distributions more easily.
+
 ## 4. What is the relationship between bill length and depth in different species? 
+
+So far, we have been working with one numeric variable and one grouping/categorical variable. What if we are interested in relationships (correlation) between two numeric variables? This is where `geom_point()` will come in handy.
 
 > Let's make a scatterplot + line plot to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species
 
-## 5. Does the relationship between bill length and depth change over time?
+```{r}
+penguins |> 
+  ggplot(data = , # `penguins` data 
+         aes(x = bill_depth_mm, # what I want to depict on the x axis
+             y = bill_length_mm, # what I want to depict on the y axis 
+             group = species,  # group level comparisons using `species`  
+             colour = species)) + # colour my points by `species`
+  geom_point() + # create scatterplot by `species`
+  geom_smooth(method = "lm", # draw line of best fit of linear model
+              se = FALSE) +  # don't display confidence interval
+  theme_minimal() # minimal styling
+```
+
+Code explainer: 
+
+- we specified our numeric variables of interest in  `aes(x = bill_depth_mm, y = bill_length_mm)`
+- we are still grouping and colouring by `species`
+- `geom_point()` adds points to the plot
+- `geom_smooth()` adds a "smoother" on top of the points
+  - `method = lm` the smoother will take form of a linear model
+  - `se = FALSE` turn off the confidence intervals
+
+
+## 5. Does the relationship between bill length and depth for each species change over time?
+
+This question expands on Q4. We want to recreate the scatter plot from above for every year we have data for. This is where `facet_wrap()` will be super handy. Remember the "split-apply-combine" paradigm? `facet_wrap()` is a great example of it. `facet_wrap()`  splits your data by what you want to "facet" on and reproduce your plot using the smaller data and then combine all the outputs into one plot. 
 
 > Let's make a scatterplot for each year to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species change over time
 
+```{r}
+penguins |> 
+  ggplot(data = , # `penguins` data 
+         aes(x = bill_depth_mm, # what I want to depict on the x axis
+             y = bill_length_mm, # what I want to depict on the y axis 
+             group = species,  # group level comparisons using `species`  
+             colour = species)) + # colour my points by `species`
+  geom_point() + # create scatterplot by `species`
+  geom_smooth(method = "lm", # draw line of best fit of linear model
+              se = FALSE) +  # don't display confidence interval
+  facet_wrap(~year) + # produce plot by year
+  theme_minimal() # minimal styling
+```
+
 ## Now, your turn!
 
+Let's get you going with the real-world datasets: 
 
-
+**Activity:**
 
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
 
@@ -215,5 +275,6 @@ penguins |>
 
 Now that you are all geared up with `ggplot2` skills, let's have a go with working those real-world datasets. 
 
-> Open either the `plant
+**Activity**
 
+> Complete the exercises in  `Wk1-2-plant-height.qmd` and `Wk1-2-plant-height.qmd`. Start with whichever one you like. 
