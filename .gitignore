@@ -63,3 +63,6 @@ renv*
 
 # Images
 images/
+
+# Ignore user changes to BEES2041.Rproj
+BEES2041.Rproj
