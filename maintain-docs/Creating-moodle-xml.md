@@ -31,6 +31,8 @@ TIP: Search and replace header hashes at the deepest level first, otherwise you 
 1. Search ```{r} and replace with `<div id="r-editor-01"><pre>`
 2. Search ``` and replace with `</pre></div>`
 
+Tip: Careful not to replace it for the set up chunk
+
 Note, depending on content you may not all want to turn all chunks into webr. e.g. demo code
 
 ## Update and check uniqueness of r-editor-id

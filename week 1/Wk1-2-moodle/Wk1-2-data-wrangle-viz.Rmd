@@ -54,14 +54,14 @@ A picture is worth a thousands words. The choice of your visualisation can have 
 > Remember the `palmerpengiuns`? They will also be joining us in this prac.
 
 
-```{r}
+<div id="r-editor-01"><pre>
 # install.packges(c("ggplot2", "palmerpenguins"))
 
 library(ggplot2)
 library(palmerpenguins)
 
 penguins
-```
+</pre></div>
 
 **Activity:** 
 
@@ -89,7 +89,7 @@ Get creative, feel free to put the white boards/pen and paper to good use!
 
 `ggplot2` is package for creating graphics, based on [The Grammar of Graphics](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448/ref=as_li_ss_tl). You provide the data, speak to `ggplot2` about how to map variables to **aesthetics**, what **geometries** to you, and it takes care of the details.
 
-![Have you met `ggplot2`?](ggplot2-hex.png){width=20%}
+![Have you met `ggplot2`?](ggplot2-hex.png)
 
 <h3>The recipe for a `ggplot()`</h3>
 
@@ -123,7 +123,7 @@ From the question, we know we need to work with `species` and `bill_depth_mm`, t
 
 Histograms depict the range of numeric values along the `x` axis and the height of the bars represent the `count` of each value. Here's the code to create a histogram for each species: 
 
-```{r}
+<div id="r-editor-01"><pre>
 ggplot(data = penguins, # `penguins` data 
        aes(x = bill_depth_mm, # what I want to depict on the x axis 
            group = species,  # group level comparisons using `species`
@@ -131,7 +131,7 @@ ggplot(data = penguins, # `penguins` data
            fill = species)) + #  fill the bars of my histogram by `species`
          geom_histogram() +  # create histogram
          theme_minimal() # minimal styling
-```
+</pre></div>
 
 Let's talk through this code:
   
@@ -165,7 +165,7 @@ Boxplots depict the range of numeric values along the `y` axis and the groups yo
 
 Here's the code to create a boxplot for each species: 
   
-```{r}
+<div id="r-editor-01"><pre>
 penguins |> 
   ggplot(data = , # `penguins` data 
          aes(x = island, # what I want to depict on the x axis
@@ -175,7 +175,7 @@ penguins |>
   geom_boxplot() +  # create boxplot
   labs(x= "Bill length (mm) ", y = "Cbservation counts", title = "Distribution of bill length (mm) by island") +  # Add some nicer axes labels
   theme_minimal() # minimal styling
-```
+</pre></div>
 
 **Notice** the code format didn't change very much from Q1. We've swapped out the all the variables and the `geom_`. We also removed the `fill` setting so we can see the thick bold line of each boxplot.
 
@@ -193,7 +193,7 @@ Violin plots combine aspects of density/histograms to show:
 - shape of the distribution (like a smoothed histogram)
 - density of the data (widest part is where most of the data is)
 
-```{r}
+<div id="r-editor-01"><pre>
 penguins |> 
   ggplot(data = , # `penguins` data 
          aes(x = species, # what I want to depict on the x axis
@@ -206,7 +206,7 @@ penguins |>
 geom_boxplot(width = 0.1) + 
   coord_flip() + # change axes orientation
   theme_minimal() # minimal styling
-```
+</pre></div>
 
 Here, we are plotting **2 geometries** in one graphic. Think of `ggplots` like a cake, you can add components layer by layer e.g.  violins and then a boxplot. 
 
@@ -226,7 +226,7 @@ So far, we have been working with one numeric variable and one grouping/categori
 
 > Let's make a scatterplot + line plot to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species
 
-```{r}
+<div id="r-editor-01"><pre>
 penguins |> 
   ggplot(data = , # `penguins` data 
          aes(x = bill_depth_mm, # what I want to depict on the x axis
@@ -237,7 +237,7 @@ penguins |>
   geom_smooth(method = "lm", # draw line of best fit of linear model
               se = FALSE) +  # don't display confidence interval
   theme_minimal() # minimal styling
-```
+</pre></div>
 
 Code explainer: 
   
@@ -251,11 +251,12 @@ Code explainer:
 ## Does the relationship between bill length and depth for each species change over time
 
 <h3>Does the relationship between bill length and depth for each species change over time?</h3>
+
 This question expands on Q4. We want to recreate the scatter plot from above for every year we have data for. This is where `facet_wrap()` will be super handy. Remember the "split-apply-combine" paradigm? `facet_wrap()` is a great example of it. `facet_wrap()`  splits your data by what you want to "facet" on and reproduce your plot using the smaller data and then combine all the outputs into one plot. 
 
 > Let's make a scatterplot for each year to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species change over time
 
-```{r}
+<div id="r-editor-01"><pre>
 penguins |> 
   ggplot(data = , # `penguins` data 
          aes(x = bill_depth_mm, # what I want to depict on the x axis
@@ -267,9 +268,11 @@ penguins |>
               se = FALSE) +  # don't display confidence interval
 facet_wrap(~year) + # produce plot by year
   theme_minimal() # minimal styling
-```
+</pre></div>
 
 ## Now, your turn!
+
+<h3>Over to you!</h3>
 
 Now that you are all geared up with `ggplot2` skills, let's have a go with working  real-world datasets. 
 
@@ -279,10 +282,17 @@ Now that you are all geared up with `ggplot2` skills, let's have a go with worki
 
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
 
-![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png){30%}
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png)
 
 
+## Prac reflection {type=essay}
 
+<h3>Prac reflection</h3>
+
+**Which parts of the coding and tidyverse you've encountered so far did you find:**
+
+- most exciting?
+- most challenging?
 
 
 
