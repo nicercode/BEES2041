@@ -261,20 +261,15 @@ penguins |>
 
 ## Now, your turn!
 
-Let's get you going with the real-world datasets: 
-
-**Activity:**
-
-> Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
-
-![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png)
-
-<br>
-
-## Bring on the real-world datasets!
-
-Now that you are all geared up with `ggplot2` skills, let's have a go with working those real-world datasets. 
+Now that you are all geared up with `ggplot2` skills, let's have a go with working  real-world datasets. 
 
 **Activity**
 
-> Complete the exercises in  `Wk1-2-plant-height.qmd` and `Wk1-2-plant-height.qmd`. Start with whichever one you like. 
+- Complete the exercises in  `Wk1-2-plant-height.qmd` and `Wk1-2-plant-height.qmd`. Start with whichever one you like. 
+
+> Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
+
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png){60%}
+
+<br>
+
