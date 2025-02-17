@@ -22,6 +22,7 @@ library(readxl)
 library(leaflet)
 
 # Read data from maintainer perspective
+stalagmites_data <- read_csv("week 1/Wk1-2-moodle/data/stalagmites/Laminated stalagmite Dataset.csv") |> clean_names()
 stalagmites_sites <- read_xlsx("week 1/Wk1-2-moodle/data/stalagmites/Tables.xlsx") |> clean_names()
 ```
 
@@ -83,15 +84,21 @@ This dataset has some difficult variable names. Perhaps rename to something more
 
 ## Check the data
 
-**Question: Did you notice any errors in the dataset? There is one really weird value. Which is it?**
+**Question: Did you notice any errors in the dataset? There is one really weird value in `lamina_thickness_mm`. Which is it? Try spot it using `geom_boxplot()`**
 
 ```{r}
-
+ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) + 
+  geom_boxplot()
 ```
 
 You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
 
 The `filter()` function could be useful here.
+
+```{r}
+stalagmites_data <- stalagmites_data |> 
+  filter(!lamina_thickness_mm > 60)
+```
 
 # Making plots
 
