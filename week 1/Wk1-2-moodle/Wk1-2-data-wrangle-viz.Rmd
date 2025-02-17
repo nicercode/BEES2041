@@ -60,7 +60,7 @@ library(palmerpenguins)
 penguins
 ```
 
-**Activity**: 
+**Activity:** 
 
 For each question below, work with your fellow classmates to determine a suitable data viz. Think about:
 
@@ -170,7 +170,7 @@ penguins |>
   theme_minimal() # minimal styling
 ```
 
-**Notice* *the code format didn't change very much from Q1. We've swapped out the all the variables and the `geom_`. We also removed the `fill` setting so we can see the thick bold line of each boxplot.
+**Notice** the code format didn't change very much from Q1. We've swapped out the all the variables and the `geom_`. We also removed the `fill` setting so we can see the thick bold line of each boxplot.
 
 We used the `labs()` function to create some nicer looking axes labels for the plot
 
@@ -271,6 +271,4 @@ Now that you are all geared up with `ggplot2` skills, let's have a go with worki
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
 
 ![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png){60%}
-
-<br>
 
