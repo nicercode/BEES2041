@@ -20,9 +20,13 @@ library(here)
 library(tidyverse)
 library(janitor)
 
+# Set up for quizes
+possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatterplot", "violin")
 ```
 
 ## Overview
+
+![](trees.jpeg){60%}
 
 Professor Angela Moles, a professor here at UNSW, used an open-source dataset of maximum height data for 7084 plant species and site combinations to provide the first global, cross-species quantification of the latitudinal gradient in plant height. (You can read more about the original study at [doi:10.1111/j.1365-2745.2009.01526.x](doi.org/10.1111/j.1365-2745.2009.01526.x) or in `docs/Journal of Ecology - 2009 - Moles - Global patterns in plant height.pdf`)
 
@@ -45,44 +49,57 @@ We are going to use this data to do a bit of preliminary analyses and see if we 
 ```{r}
 # install.packages("tidyverse")
 library(tidyverse)
+library(janitor)
 ```
 
 ## Assembling the Data
 
-Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`:
+Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and seperator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
 
 ```{r}
 # plant_height <- read_csv("week 1/Wk1-2-moodle/data/plant_height/plantHeightSingleSpp.csv")
-plant_height <- read_csv("data/plant_height/plantHeightSingleSpp.csv")
+plant_height <- read_csv("data/plant_height/plantHeightSingleSpp.csv") |> clean_names()
 ```
 
 WOAH there are a LOT of variables in this data set. Sometimes it's nice to select only the columns you need for your analysis. This can make things easier in the long-run. Luckily, `dplyr` can help with that!
 
 **Question: Which columns are relevant to these 2 questions? Select all that apply**
 
-<!-- TODO `r cloze(c("boxplot", "histogram", "violin"), possible_choices)` -->
+`r cloze(c("genus_species", "height", "lat", "alt"), c(colnames(plant_height)))` -->
 
 Now, create a new data frame with only the relevant columns using `select()`
 
 ```{r}
-plant_height_subset <- plant_height |> select(Genus_species, height, alt, lat)
+plant_height_subset <- plant_height |> select(genus_species, height, alt, lat)
 ```
 
 ## Check the distribution for the data
 
-Check the distribution of your data to make sure there are no potential outliers in your key variables. What plot would be good for this check? 
+<h3>Check the distribution for `height`</h3>
 
-<!-- TODO: `r cloze(c("boxplot", "histogram", "violin"), possible_choices)` -->
+Check the distribution of your data to make sure there are no potential outliers in your key variables. 
+
+**Question: What plot would be good for this check?**
+
+A `r cloze(c("boxplot", "histogram"), possible_choices)` is suitable to assess the distribution of `height`
 
 ```{r}
 plant_height_subset |> 
   ggplot(aes(x = height)) + 
   geom_histogram()
+
+plant_height_subset |> 
+  ggplot(aes(x = height)) + 
+  geom_boxplot()
 ```
 
-<!-- TODO Is this data left skewed or right skewed? -->
+**Question: Is `height` left skewed or right skewed?** 
 
-<!-- TODO Is the extreme value a true outlier? Which species is this? Google search and see if you can verify this yourself -->
+The data is `r cloze("left", c("left", "right"))` skewed. 
+
+**Question: Which species is the extreme value? Is the extreme value a true outlier? (Do some research and see verify this value)**
+
+The species with the extreme value for `height` is: `r cloze("Pseudotsuga menziesii" c("Dicksonia antarctica", "Eragrostis dielsii", Pseudotsuga menziesii"))`. It `r cloze(c("is not", c("is indeed", "is not"))` a true outlier.
 
 ```{r}
 plant_height_subset |> 
@@ -90,6 +107,8 @@ plant_height_subset |>
 ```
 
 ## Data transformation
+
+<h3>Data transformation</h3>
 
 It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform this variable and assign this update into a new data frame.
 
@@ -100,13 +119,20 @@ plant_height_transformed <- plant_height_subset |>
 
 ## Visualisation
 
-<!-- TODO: Question: What should be the x variable and what should be the y variable? -->
+<h3>The effects of latitude on plant height</h3>
+
+**Question: What should be the x variable and what should be the y variable?** 
+
+- x variable: `r cloze(c("lat", colnames(plant_height)))`
+- y variable: `r cloze(c("height", colnames(plant_height)))`
 
 We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the `y`-axis. Then, we'll create the same figure but using the `log10` transformed data to see how it changes the patterns.
 
 > Create a plot to visualise the relationship between latitude and height.
 
-<!-- TODO **Question: What type of plot is suited to visualise these two variables?** -->
+**Question: What type of plot is suited to visualise these two variables?**
+
+A `r cloze(c("scatterplot", possible_choices))` is suited to visualise the relationship between these two variables.
 
 ```{r}
 ggplot(plant_height_transformed, aes(x = lat, y =height)) + 
@@ -129,13 +155,15 @@ ggplot(plant_height_transformed, aes(x = lat, y = log10_height)) +
   geom_smooth(method="lm")
 ```
 
-<!-- TODO **Question: 1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?** -->
+**Question: 1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?**
 
-Plant height increases/decrease from tropics to poles
+Plant height `r cloze("increases", c("increases", "decrease"))` from tropics to poles.
 
 > Now, we are going to try to answer our second question; Does plant height increase as **altitude** increases?
 
 ## Altitude
+
+<h3>The effects of altitude on plant height</h3>
 
 We will continue to use the `log10` transformed `height`
 
@@ -147,15 +175,15 @@ ggplot(plant_height_transformed, aes(x = alt, y = log10_height)) +
   geom_smooth(method="lm")
 ```
 
-<!-- TODO **Question: 2. Are there taller plants at higher altitudes?** -->
+**Question: 2. Are there taller plants at higher altitudes?**
 
-There are taller/shorter trees in higher altitudes
+There are `r cloze("shorter", c("taller", "shorter"))` trees at higher altitudes.
 
 ## Prac reflection {type=essay}
 
 <h3>Prac reflection</h3>
 
-<!-- TODO  **Question: Which parts of the coding and the tidyverse you've encountered so far did you find:** -->
+ **Question: Which parts of the coding and the tidyverse you've encountered so far did you find:** 
 
 - most exciting?
 - most challenging?
