@@ -65,6 +65,8 @@ Check the distribution of your data to make sure there are no potential outliers
 
 A boxplot or histogram are suitable to assess the distribution of `height`
 
+Make a plot to assess the distribution of `height`
+
 ```{r}
 # Histogram
 plant_height_subset |> 

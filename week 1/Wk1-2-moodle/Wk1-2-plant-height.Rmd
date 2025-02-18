@@ -4,7 +4,7 @@ output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
-  category: "Week 1-2 data wrangle + viz"
+  category: "Week 1-2 plant height"
 editor_options:
   chunk_output_type: console
 ---
@@ -22,9 +22,14 @@ library(janitor)
 
 # Set up for quizes
 possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatterplot", "violin")
+
+# Data for quiz
+plant_height <- read_csv("data/plant_height/plantHeightSingleSpp.csv")
 ```
 
-## Overview
+## Intro
+
+<h2>Overview</h2>
 
 ![](trees.png){width=60%}
 
@@ -60,7 +65,7 @@ WOAH there are a LOT of variables in this data set. Sometimes it's nice to selec
 
 **Question: Which columns are relevant to these 2 questions? Select all that apply**
 
-`r cloze(c("genus_species", "height", "lat", "alt"), c(colnames(plant_height)))` -->
+`r cloze(c("genus_species", "height", "lat", "alt"), c(colnames(plant_height)))`
 
 > Now, create a new data frame with only the relevant columns using `select()`
 
@@ -70,19 +75,12 @@ WOAH there are a LOT of variables in this data set. Sometimes it's nice to selec
 
 > Check the distribution of your data to make sure there are no potential outliers in your key variables. 
 
+
 **Question: What plot would be good for this check?**
 
 A `r cloze(c("boxplot", "histogram"), possible_choices)` are suitable to assess the distribution of `height`
 
-```{r}
-plant_height_subset |> 
-  ggplot(aes(x = height)) + 
-  geom_histogram()
-
-plant_height_subset |> 
-  ggplot(aes(x = height)) + 
-  geom_boxplot()
-```
+> Make a plot to assess the distribution of `height`
 
 **Question: Is `height` left skewed or right skewed?** 
 
@@ -90,7 +88,7 @@ The data is `r cloze("left", c("left", "right"))` skewed.
 
 **Question: Which species is the extreme value? Is the extreme value a true outlier? (Do some research and see verify this value)**
 
-The species with the extreme value for `height` is: `r cloze("Pseudotsuga menziesii", c("Dicksonia antarctica", "Eragrostis dielsii", Pseudotsuga menziesii"))`. It `r cloze(c("is not", c("is indeed", "is not"))` a true outlier.
+The species with the extreme value for `height` is: `r cloze("Pseudotsuga menziesii", c("Dicksonia antarctica", "Eragrostis dielsii", "Pseudotsuga menziesii"))`. It `r cloze("is not", c("is indeed", "is not"))` a true outlier.
 
 ## Data transformation
 
@@ -106,8 +104,8 @@ It is common to transform your data when its heavily skewed as in `height`.
 
 **Question: What should be the x variable and what should be the y variable?** 
 
-- x variable: `r cloze(c("lat", colnames(plant_height)))`
-- y variable: `r cloze(c("height", colnames(plant_height)))`
+- x variable: `r cloze("lat", colnames(plant_height))`
+- y variable: `r cloze("height", colnames(plant_height))`
 
 We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the `y`-axis. Then, we'll create the same figure using the `log10` transformed data to see how it changes the patterns.
 
@@ -115,7 +113,7 @@ We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the 
 
 **Question: What type of plot is suited to visualise these two variables?**
 
-A `r cloze(c("scatterplot", possible_choices))` is suited to visualise the relationship between these two variables.
+A `r cloze("scatterplot", possible_choices)` is suited to visualise the relationship between these two variables.
 
 > Let's take a look at the line of best fit! To add this to our figure, use `geom_smooth(method="lm")`.
 
@@ -149,3 +147,5 @@ There are `r cloze("shorter", c("taller", "shorter"))` trees at higher altitudes
 
 - most exciting?
 - most challenging?
+
+

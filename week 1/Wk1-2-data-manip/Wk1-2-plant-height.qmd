@@ -56,6 +56,8 @@ Check the distribution of your data to make sure there are no potential outliers
 
 **Question: What plot would be good for this check? [ANSWER IN MOODLE]**
 
+Make a plot to assess the distribution of `height`
+
 ```{r}
 
 ```
