@@ -1,10 +1,10 @@
 ---
-title: "Week X-X XXX"
+title: "Week X-X name of prac"
 output: html_document
 #   moodlequiz::moodlequiz:
 #     replicates: 1
 # moodlequiz:
-#   category: "Week 1-2 data wrangle + viz"
+#   category: "Week X-X name of prac"
 # editor_options: 
 #   chunk_output_type: console
 ---
