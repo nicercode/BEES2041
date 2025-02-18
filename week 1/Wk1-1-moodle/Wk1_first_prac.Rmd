@@ -71,19 +71,19 @@ Using the functions you've learned so far in this prac, try answer the following
 
 ##  What type of variable is `lamina_thickness_mm`?
 
-**What type of variable is `lamina_thickness_mm`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
+**What type of variable is `lamina_thickness_mm`?** `r cloze("double", c("complex number", "integer", "logical", "numeric", "double"))`
 
 ## What type of variable is `lam_age_bp_0_1950ad`
 
-**What type of variable is `lam_age_bp_0_1950ad`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
+**What type of variable is `lam_age_bp_0_1950ad`?** `r cloze("double", c("complex number", "integer", "logical", "numeric", "double"))`
 
 ## What is a more suitable variable type for `lam_age_bp_0_1950ad`?
 
 **What is a more suitable variable type for `lam_age_bp_0_1950ad`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
 
-## Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `?as.integer()` , you may need to install/load the package `dplyr`** )
+## Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `mutate` and `as.integer()`, you may need to install/load the package `dplyr`** )
 
-**Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `?as.integer()` , you may need to install/load the package `dplyr`** )
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `mutate` and `as.integer()`, you may need to install/load the package `dplyr`** )
 
 ## Write some code to display a quick summary of this dataset (Feel free to use additional packages! You may need to install and load them first)
 
