@@ -26,7 +26,7 @@ possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatter
 
 ## Overview
 
-![](trees.jpeg){60%}
+![](trees.png){width=60%}
 
 Professor Angela Moles, a professor here at UNSW, used an open-source dataset of maximum height data for 7084 plant species and site combinations to provide the first global, cross-species quantification of the latitudinal gradient in plant height. (You can read more about the original study at [doi:10.1111/j.1365-2745.2009.01526.x](doi.org/10.1111/j.1365-2745.2009.01526.x) or in `docs/Journal of Ecology - 2009 - Moles - Global patterns in plant height.pdf`)
 
@@ -81,7 +81,7 @@ Check the distribution of your data to make sure there are no potential outliers
 
 **Question: What plot would be good for this check?**
 
-A `r cloze(c("boxplot", "histogram"), possible_choices)` is suitable to assess the distribution of `height`
+A `r cloze(c("boxplot", "histogram"), possible_choices)` are suitable to assess the distribution of `height`
 
 ```{r}
 plant_height_subset |> 
