@@ -1,12 +1,12 @@
 ---
 title: "Week 1-1 Data manipulation and visualisation"
-output: html_document()
-#   moodlequiz::moodlequiz:
-#     replicates: 1
-# moodlequiz:
-#   category: "Week 1-2 data wrangle + viz"
-# editor_options:
-#   chunk_output_type: console
+output: 
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: "Week 1-2 data wrangle + viz"
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -56,28 +56,19 @@ library(janitor)
 
 Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and seperator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
 
-```{r}
-# plant_height <- read_csv("week 1/Wk1-2-moodle/data/plant_height/plantHeightSingleSpp.csv")
-plant_height <- read_csv("data/plant_height/plantHeightSingleSpp.csv") |> clean_names()
-```
-
 WOAH there are a LOT of variables in this data set. Sometimes it's nice to select only the columns you need for your analysis. This can make things easier in the long-run. Luckily, `dplyr` can help with that!
 
 **Question: Which columns are relevant to these 2 questions? Select all that apply**
 
 `r cloze(c("genus_species", "height", "lat", "alt"), c(colnames(plant_height)))` -->
 
-Now, create a new data frame with only the relevant columns using `select()`
-
-```{r}
-plant_height_subset <- plant_height |> select(genus_species, height, alt, lat)
-```
+> Now, create a new data frame with only the relevant columns using `select()`
 
 ## Check the distribution for the data
 
 <h3>Check the distribution for `height`</h3>
 
-Check the distribution of your data to make sure there are no potential outliers in your key variables. 
+> Check the distribution of your data to make sure there are no potential outliers in your key variables. 
 
 **Question: What plot would be good for this check?**
 
@@ -99,23 +90,15 @@ The data is `r cloze("left", c("left", "right"))` skewed.
 
 **Question: Which species is the extreme value? Is the extreme value a true outlier? (Do some research and see verify this value)**
 
-The species with the extreme value for `height` is: `r cloze("Pseudotsuga menziesii" c("Dicksonia antarctica", "Eragrostis dielsii", Pseudotsuga menziesii"))`. It `r cloze(c("is not", c("is indeed", "is not"))` a true outlier.
-
-```{r}
-plant_height_subset |> 
-  filter(height > 60)
-```
+The species with the extreme value for `height` is: `r cloze("Pseudotsuga menziesii", c("Dicksonia antarctica", "Eragrostis dielsii", Pseudotsuga menziesii"))`. It `r cloze(c("is not", c("is indeed", "is not"))` a true outlier.
 
 ## Data transformation
 
 <h3>Data transformation</h3>
 
-It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform this variable and assign this update into a new data frame.
+It is common to transform your data when its heavily skewed as in `height`. 
 
-```{r}
-plant_height_transformed <- plant_height_subset |> 
-  mutate(log10_height = log10(height))
-```
+> Can you `log10()` transform `height` and assign this update into a new data frame?
 
 ## Visualisation
 
@@ -126,7 +109,7 @@ plant_height_transformed <- plant_height_subset |>
 - x variable: `r cloze(c("lat", colnames(plant_height)))`
 - y variable: `r cloze(c("height", colnames(plant_height)))`
 
-We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the `y`-axis. Then, we'll create the same figure but using the `log10` transformed data to see how it changes the patterns.
+We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the `y`-axis. Then, we'll create the same figure using the `log10` transformed data to see how it changes the patterns.
 
 > Create a plot to visualise the relationship between latitude and height.
 
@@ -134,26 +117,11 @@ We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the 
 
 A `r cloze(c("scatterplot", possible_choices))` is suited to visualise the relationship between these two variables.
 
-```{r}
-ggplot(plant_height_transformed, aes(x = lat, y =height)) + 
-  geom_point()
-```
+> Let's take a look at the line of best fit! To add this to our figure, use `geom_smooth(method="lm")`.
 
-Let's take a look at the line of best fit! To add this to our figure, use `geom_smooth(method="lm")`.
+<br>
 
-```{r}
-ggplot(plant_height_transformed, aes(x = lat, y = height)) + 
-  geom_point() +
-  geom_smooth(method="lm")
-```
-
-Now create the same plot but using your `log10()` transformed variable instead of `height` and include the line of best fit.
-
-```{r}
-ggplot(plant_height_transformed, aes(x = lat, y = log10_height)) + 
-  geom_point() +
-  geom_smooth(method="lm")
-```
+> Now create the same plot but using your `log10()` transformed variable instead of `height` and include the line of best fit.
 
 **Question: 1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?**
 
@@ -167,13 +135,7 @@ Plant height `r cloze("increases", c("increases", "decrease"))` from tropics to 
 
 We will continue to use the `log10` transformed `height`
 
-Make a plot that can help us answer question 2. - add the line of best fit.
-
-```{r}
-ggplot(plant_height_transformed, aes(x = alt, y = log10_height)) + 
-  geom_point() +
-  geom_smooth(method="lm")
-```
+> Make a plot that can help us answer question 2. - add the line of best fit.
 
 **Question: 2. Are there taller plants at higher altitudes?**
 

@@ -72,7 +72,7 @@ Check the distribution of your data to make sure there are no potential outliers
 
 ## Data transformation
 
-It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform this variable and assign this update into a new data frame.
+It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform `height` and assign this update into a new data frame.
 
 ```{r}
 

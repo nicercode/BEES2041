@@ -92,7 +92,7 @@ plant_height_subset |>
 
 ## Data transformation
 
-It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform this variable and assign this update into a new data frame.
+It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform `height` and assign this update into a new data frame.
 
 ```{r}
 plant_height_transformed <- plant_height_subset |> 
