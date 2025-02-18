@@ -5,24 +5,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-# remotes::install_github("numbats/moodlequiz")
-library(moodlequiz)
-
-# Libraries for prac
-library(tidyverse)
-library(janitor)
-library(readxl)
-library(leaflet)
-
-# Read data from maintainer perspective
-stalagmites_data <- read_csv("week 1/Wk1-2-moodle/data/stalagmites/Laminated stalagmite Dataset.csv") |> clean_names()
-stalagmites_sites <- read_xlsx("week 1/Wk1-2-moodle/data/stalagmites/Tables.xlsx") |> clean_names()
-```
-
-
 # Overview
 
 [Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
@@ -82,15 +64,17 @@ Check the structure of the dataset, including the names of the columns.
 **Question: Did you notice any errors in the dataset? There is one really weird value in `lamina_thickness_mm`. Which is it? Try spot it using `geom_boxplot()`**
 
 ```{r}
-
+ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) + 
+  geom_()
 ```
 
 You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
 
-The `filter()` function could be useful here.
+The `filter()` function and the `!` exclusion operator could be useful here.
 
 ```{r}
-
+stalagmites_data <- stalagmites_data |> 
+  filter(!)
 ```
 
 # Making plots
@@ -99,10 +83,21 @@ Now let's go ahead and make some plots. We're going to try and recreate figures 
 
 ##  Figure 5
 
-Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document
+Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis
 
 ![Figure 5](baker-fig5.png)
-**Question: Interpret this plot, what does this visualisation tell us?** 
+```{r}
+stalagmites_data |>
+  ggplot(aes(x = lamina_thickness_mm)) +
+  geom_histogram() +
+  theme_classic() +
+  labs() +
+  xlim()
+```
+
+
+**Question: Interpret this plot, what does this visualisation tell us? [ANSWER IN MOODLE]** 
+
 
 ### Figure 3
 
@@ -112,10 +107,37 @@ Have a go at creating this plot.
 
 > Try making a single panel before making a bunch of panels.
 
-1. Start with single sample. Use the `filter()` function to subset your data before plotting it.
+1. Start with single sample. Use the `filter()` function to subset your data before plotting it. You may need to log10 + 1 transform your y variable. Add some nice axes labels.
+
+```{r}
+# Transform data
+transformed_stalagmites_data <- stalagmites_data |> 
+  mutate(log10_1_lamina_thickness_mm = log10( + 1))
+
+# Create plot
+stalagmites_data |>
+  filter() |>
+  ggplot(aes(x = lam_age_bp_0_1950ad, y = )) +
+  geom_line() +
+  labs() + 
+  theme_classic()
+```
+
 2. Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
 
-**Question: Interpret this plot, what does this visualisation tell us?**
+```{r}
+stalagmites_data |>
+  ggplot(aes(x = , y = )) +
+  geom_line() +
+  scale_y_log10() +
+  theme_classic() +
+  labs("Years BP", y = "Growth rate (mm/yr)") + 
+  facet_wrap( ~ entity_id, scales = "free")
+```
+
+**Question: Interpret this plot, what does this visualisation tell us? [ANSWER IN MOODLE]**
+
+The annual growth of all lamina samples are highly variable
 
 ### Figure 10
 
@@ -123,7 +145,21 @@ Have a go at creating this plot.
 
 ![Figure 10](baker-fig10.png)
 
-You'll need to extract data for the samples numbers in black with `seq_id` before plotting. 
+You'll need to extract data for the samples numbers in black with `seq_id` before plotting. Using the **`%in%`** operator to filter for specific sequences.
+
+```{r}
+# Check vector of seq_id that you want 
+ids <- c(85, 1004, 385, 217.1, 1008.1, 128, 465, 217.2, 1007.2, 128,  466, 1009.2, 1003.1, 1006)
+
+# Create plot
+stalagmites_data |> 
+  filter(seq_id %in% ids) |> 
+  ggplot(aes(x =  ,y = )) +
+  geom_line() +
+  facet_wrap( ~ seq_id, scales = "free") +
+  labs("Years BP", y = "Growth rate (mm/yr)")
+```
+
 
 ##  Figure 2
 
@@ -139,8 +175,6 @@ stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()
 
 **Question: Did you notice any errors in the dataset? There is one row isn't data, which is it?**
 
-
-
 ```{r}
 stalagmites_sites |> filter(row_number() == 1)
 ```
@@ -148,15 +182,15 @@ stalagmites_sites |> filter(row_number() == 1)
 Exclude this row using the `filter`() function
 
 ```{r}
-stalagmites_sites <- stalagmites_sites |> filter(!row_number() == 1)
+stalagmites_sites <- stalagmites_sites |> filter(! )
 ```
 
 **Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
 
 ```{r}
 stalagmites_sites <- stalagmites_sites |> 
-  mutate(lat = as.numeric(lat),
-         long = as.numeric(long))
+  mutate(lat = ),
+         long = )
 ```
 
 First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add points and site names with `geom_text()`
@@ -170,8 +204,6 @@ world_coordinates <- map_data("world")
 ggplot(stalagmites_sites, aes(long, lat)) +
   geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
            aes(long, lat, map_id = region)) +  
-  # geom_point(colour = "red") +
-  # geom_text(colour = "red", aes(label = site_name), nudge_y = 2) +
   coord_quickmap() +
   theme_classic()
 ```
