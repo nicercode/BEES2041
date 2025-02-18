@@ -285,14 +285,4 @@ Now that you are all geared up with `ggplot2` skills, let's have a go with worki
 ![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png)
 
 
-## Prac reflection {type=essay}
-
-<h3>Prac reflection</h3>
-
-**Which parts of the coding and tidyverse you've encountered so far did you find:**
-
-- most exciting?
-- most challenging?
-
-
 
