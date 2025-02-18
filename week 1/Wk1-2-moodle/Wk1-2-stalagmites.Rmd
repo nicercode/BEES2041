@@ -41,12 +41,13 @@ This section builds off two papers published by Andy and his team:
 
 -   Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `doc/Baker et al 2015.pdf`)
 
-# Aims
+**Activity:**
 
 Andy asked us to cross check his results, your goal is reproduce some key figures from the paper 2021 paper.
-Do these visualisations in your `Wk1-2-stalagmites.qmd` document
 
-# Setting up 
+> Do these visualisations in your `Wk1-2-stalagmites.qmd` document
+
+## Setting up 
 
 You may need to uncomment the first line and install packages you don't have
 
@@ -69,8 +70,6 @@ Load this into R use the `read_csv()` function.
 
 ## Data structure
 
-Check the structure of the dataset, including the names of the columns. 
-
 This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
 
 -   `entity_id`: Identifier for the stalagmite sample.
@@ -78,9 +77,9 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 -   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
 -   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
-## Data wrangling
+Check the structure of the dataset, including the names of the columns. 
 
-This dataset has some difficult variable names. Perhaps rename to something more R friendly? The function `clean_names()` from the package `janitor` may be useful here. You might need to install the package first.
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. You might need to install the package first.
 
 ## Check the data
 
@@ -104,12 +103,14 @@ stalagmites_data <- stalagmites_data |>
 
 Now let's go ahead and make some plots. We're going to try and recreate figures similar to Figure 3, 5, 10 in Baker et al 2021. Don't worry about getting them exact, just close.
 
-### Figure 5
+##  Figure 5
 
 Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document
 
 ![Figure 5](baker-fig5.png)
-**Question: Interpret this plot, what does this visualisation tell us?**
+**Question: Interpret this plot, what does this visualisation tell us?** 
+
+`r cloze("The majority of annual lamina growth in stalagmites is really slowly" c("The majority of annual lamina growth in stalagmites is really fast", "The majority of annual lamina growth in stalagmites is really slowly", "There's no annual lamina growth in stalagmites"))`
 
 ### Figure 3
 
@@ -117,12 +118,14 @@ Have a go at creating this plot.
 
 ![Figure 3](baker-fig3.png)
 
-Try making a single panel before making a bunch of panels.
+> Try making a single panel before making a bunch of panels.
 
 1. Start with single sample. Use the `filter()` function to subset your data before plotting it.
 2. Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
 
 **Question: Interpret this plot, what does this visualisation tell us?**
+
+`r cloze("The annual growth of all lamina samples are highly variable", c("The annual growth of all lamina samples are very similar", "The annual growth of all lamina samples are highly variable"))`
 
 ### Figure 10
 
@@ -130,11 +133,9 @@ Have a go at creating this plot.
 
 ![Figure 10](baker-fig10.png)
 
-It's similar to the one above, but there's data for select values of `seq_id`
+You'll need to extract data for the samples numbers in black with `seq_id` before plotting. 
 
-**Question: Interpret this plot, what does this visualisation tell us?**
-
-### Figure 2
+##  Figure 2
 
 Finally, can you plot a map of sample locations as in figure 2?
 
@@ -152,14 +153,13 @@ stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()
 stalagmites_sites |> filter(row_number() == 1)
 ```
 
-Exclude this row using the filter function
-
+Exclude this row using the `filter`() function
 
 ```{r}
 stalagmites_sites <- stalagmites_sites |> filter(!row_number() == 1)
 ```
 
-** Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
+**Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
 
 ```{r}
 stalagmites_sites <- stalagmites_sites |> 
@@ -184,10 +184,6 @@ ggplot(stalagmites_sites, aes(long, lat)) +
   theme_classic()
 ```
 
-Now try it with Andy's data that you just cleaned up!
-
-**Question: Interpret this plot, what does this visualisation tell us?**
-
 ### BONUS:
 
 R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to use you the possibilities of R!
@@ -196,12 +192,12 @@ R is a powerhouse for creating really cool outputs. For fun, here we've provided
 leaflet() |>
   addTiles() |>
   addMarkers(
-    lng = data_sites$long,
-    lat = data_sites$lat,
+    lng = stalagmites_sites$long,
+    lat = stalagmites_sites$lat,
     label =
       paste(
-        data_sites$entity_id_1000_sisal_entity_id,
-        data_sites$site_name
+        stalagmites_sites$entity_id_1000_sisal_entity_id,
+        stalagmites_sites$site_name
       )
   )	|>
   addScaleBar()
