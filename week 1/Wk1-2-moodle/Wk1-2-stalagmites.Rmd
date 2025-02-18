@@ -132,7 +132,9 @@ stalagmites_data |>
   xlim()
 ```
 
-**Question: Interpret this plot, what does this visualisation tell us? [ANSWER IN MOODLE]** 
+**Question: Interpret this plot, what does this visualisation tell us?** 
+
+The annual lamina growth rate is  `r cloze("very slow", c("very fast", "very slow"))` in the majority of samples.
 
 ## Figure 3
 
@@ -174,9 +176,9 @@ stalagmites_data |>
   facet_wrap( ~ entity_id, scales = "free")
 ```
 
-**Question: Interpret this plot, what does this visualisation tell us? [ANSWER IN MOODLE]**
+**Question: Interpret this plot, what does this visualisation tell us?**
 
-The annual growth of all lamina samples are highly variable
+The annual growth of all lamina samples are `r cloze("highly variable", c("very consistent", "highly variable"))`
 
 ## Figure 10
 
@@ -257,11 +259,11 @@ ggplot(stalagmites_sites, aes(long, lat)) +
   theme_classic()
 ```
 
-<h3>BONUS</h3>:
+<h3>BONUS</h3>
 
 R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to use you the possibilities of R!
 
-```{r}
+```{r, warning=FALSE}
 leaflet() |>
   addTiles() |>
   addMarkers(
