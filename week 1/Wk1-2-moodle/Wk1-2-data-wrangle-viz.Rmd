@@ -163,6 +163,13 @@ From the question, we know we need to work with `species` and `bill_depth_mm`, t
 
 > Let's make some histograms to view the distributions of `bill_depth_mm` of each species (boxplots/violins are valid choices too!).
 
+We might need to reload the library here, only because we're doing this in the browser
+
+<div id=`r class_id()`><pre>
+library(ggplot2)
+library(palmerpenguins)
+</pre></div>
+
 Histograms depict the range of numeric values along the `x` axis and the height of the bars represent the `count` of each value. Here's the code to create a histogram for each species:
 
 <div id=`r class_id()`><pre>
