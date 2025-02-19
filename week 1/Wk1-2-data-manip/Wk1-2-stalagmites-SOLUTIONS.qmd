@@ -9,7 +9,7 @@ editor_options:
 
 [Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width="100%"}
 
 Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
 
@@ -29,15 +29,14 @@ Andy asked us to cross check his results, your goal is reproduce some key figure
 
 ## Setting up 
 
-You may need to uncomment the first line and install packages you don't have
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don’t have.
 
 ```{r}
-# install.packages(c("tidyverse", "janitor", "readxl", "leaflet"))
+# install.packages(c("tidyverse", "janitor", "readxl"))
 
 library(tidyverse)
 library(janitor)
 library(readxl)
-library(leaflet)
 ```
 
 ## Loading data
@@ -85,7 +84,7 @@ stalagmites_data <- stalagmites_data |>
 
 Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document
 
-![Figure 5](baker-fig5.png)
+![Figure 5](images/baker-fig5.png)
 ```{r}
 stalagmites_data |>
   ggplot(aes(x = lamina_thickness_mm)) +
@@ -104,7 +103,7 @@ The majority of annual lamina growth in stalagmites is really slowly
 
 Have a go at creating this plot.
 
-![Figure 3](baker-fig3.png)
+![Figure 3](images/baker-fig3.png)
 
 > Try making a single panel before making a bunch of panels.
 
@@ -144,7 +143,7 @@ The annual growth of all lamina samples are highly variable
 
 Have a go at creating this plot. 
 
-![Figure 10](baker-fig10.png)
+![Figure 10](images/baker-fig10.png)
 
 You'll need to extract data for the samples numbers in black with `seq_id` before plotting. Using the **`%in%`** operator to filter for specific sequences.
 
@@ -165,7 +164,7 @@ stalagmites_data |>
 
 Finally, can you plot a map of sample locations as in figure 2?
 
-![Figure 2](baker-fig2.png)
+![Figure 2](images/baker-fig2.png)
 
 The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
@@ -217,6 +216,10 @@ ggplot(stalagmites_sites, aes(long, lat)) +
 R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to use you the possibilities of R!
 
 ```{r, keep}
+# install.packages("leaflet")
+
+library(leaflet)
+
 leaflet() |>
   addTiles() |>
   addMarkers(

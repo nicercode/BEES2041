@@ -8,7 +8,7 @@ editor_options:
 
 ## Overview
 
-![](trees.png){width="60%"}
+![](images/trees.png){width="60%"}
 
 Professor Angela Moles, a professor here at UNSW, used an open-source dataset of maximum height data for 7084 plant species and site combinations to provide the first global, cross-species quantification of the latitudinal gradient in plant height. (You can read more about the original study at [doi:10.1111/j.1365-2745.2009.01526.x](doi.org/10.1111/j.1365-2745.2009.01526.x) or in `docs/Journal of Ecology - 2009 - Moles - Global patterns in plant height.pdf`)
 

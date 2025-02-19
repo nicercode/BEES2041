@@ -9,7 +9,7 @@ editor_options:
 
 [Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width="100%"}
 
 Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
 
@@ -29,15 +29,14 @@ Andy asked us to cross check his results, your goal is reproduce some key figure
 
 ## Setting up 
 
-You may need to uncomment the first line and install packages you don't have
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don’t have.
 
 ```{r}
-# install.packages(c("tidyverse", "janitor", "readxl", "leaflet"))
+# install.packages(c("tidyverse", "janitor", "readxl"))
 
 library(tidyverse)
 library(janitor)
 library(readxl)
-library(leaflet)
 ```
 
 ## Loading data
@@ -65,9 +64,11 @@ Check the structure of the dataset, including the names of the columns.
 
 **Question: Did you notice any errors in the dataset? There is one really weird value in `lamina_thickness_mm`. Which is it? Try spot it using `geom_boxplot()`**
 
+The code below get’s you started. You’ll need to fill in the spaces indicated by XXX.
+
 ```{r}
 ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) + 
-  geom_()
+  geom_XXX()
 ```
 
 You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
@@ -76,7 +77,7 @@ The `filter()` function and the `!` exclusion operator could be useful here.
 
 ```{r}
 stalagmites_data <- stalagmites_data |> 
-  filter(!)
+  filter(!XXX)
 ```
 
 > Now let's go ahead and make some plots. We're going to try and recreate figures similar to Figure 3, 5, 10 in Baker et al 2021. Don't worry about getting them exact, just close.
@@ -85,7 +86,7 @@ stalagmites_data <- stalagmites_data |>
 
 Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis
 
-![Figure 5](baker-fig5.png)
+![Figure 5](images/baker-fig5.png)
 ```{r}
 stalagmites_data |>
   ggplot(aes(x = lamina_thickness_mm)) +
@@ -103,7 +104,7 @@ stalagmites_data |>
 
 Have a go at creating this plot.
 
-![Figure 3](baker-fig3.png)
+![Figure 3](images/baker-fig3.png)
 
 > Try making a single panel before making a bunch of panels.
 
@@ -112,12 +113,12 @@ Have a go at creating this plot.
 ```{r}
 # Transform data
 transformed_stalagmites_data <- stalagmites_data |> 
-  mutate(log10_1_lamina_thickness_mm = log10( + 1))
+  mutate(log10_1_lamina_thickness_mm = log10(lamina_thickness_mm + 1))
 
 # Create plot
-stalagmites_data |>
-  filter() |>
-  ggplot(aes(x = lam_age_bp_0_1950ad, y = )) +
+transformed_stalagmites_data |>
+  filter( XXX) |>
+  ggplot(aes(x = lam_age_bp_0_1950ad, y = XXX)) +
   geom_line() +
   labs() + 
   theme_classic()
@@ -126,8 +127,8 @@ stalagmites_data |>
 2. Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
 
 ```{r}
-stalagmites_data |>
-  ggplot(aes(x = , y = )) +
+transformed_stalagmites_data |>
+  ggplot(aes(x = XXX, y = XXX )) +
   geom_line() +
   scale_y_log10() +
   theme_classic() +
@@ -143,7 +144,7 @@ The annual growth of all lamina samples are highly variable
 
 Have a go at creating this plot. 
 
-![Figure 10](baker-fig10.png)
+![Figure 10](images/baker-fig10.png)
 
 You'll need to extract data for the samples numbers in black with `seq_id` before plotting. Using the **`%in%`** operator to filter for specific sequences.
 
@@ -152,9 +153,9 @@ You'll need to extract data for the samples numbers in black with `seq_id` befor
 ids <- c(85, 1004, 385, 217.1, 1008.1, 128, 465, 217.2, 1007.2, 128,  466, 1009.2, 1003.1, 1006)
 
 # Create plot
-stalagmites_data |> 
+transformed_stalagmites_data |> 
   filter(seq_id %in% ids) |> 
-  ggplot(aes(x =  ,y = )) +
+  ggplot(aes(x =XXX , y = XXX)) +
   geom_line() +
   facet_wrap( ~ seq_id, scales = "free") +
   labs("Years BP", y = "Growth rate (mm/yr)")
@@ -165,7 +166,7 @@ stalagmites_data |>
 
 Finally, can you plot a map of sample locations as in figure 2?
 
-![Figure 2](baker-fig2.png)
+![Figure 2](images/baker-fig2.png)
 
 The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
@@ -189,8 +190,8 @@ stalagmites_sites <- stalagmites_sites |> filter(! )
 
 ```{r}
 stalagmites_sites <- stalagmites_sites |> 
-  mutate(lat = ),
-         long = )
+  mutate(lat = XXX ),
+         long = XXX )
 ```
 
 First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add points and site names with `geom_text()`
@@ -213,6 +214,10 @@ ggplot(stalagmites_sites, aes(long, lat)) +
 R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to use you the possibilities of R!
 
 ```{r, keep}
+# install.packages("leaflet")
+
+library(leaflet)
+
 leaflet() |>
   addTiles() |>
   addMarkers(
