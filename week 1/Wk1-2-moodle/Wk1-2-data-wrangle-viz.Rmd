@@ -125,7 +125,7 @@ Get creative, feel free to put the white boards/pen and paper to good use!
 
 ## ggplot2
 
-`ggplot2` is package for creating graphics, based on [The Grammar of Graphics](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448/ref=as_li_ss_tl). You provide the data, speak to `ggplot2` about how to map variables to **aesthetics**, what **geometries** to you, and it takes care of the details.
+`ggplot2` is package for creating graphics, based on [The Grammar of Graphics](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448/ref=as_li_ss_tl). You provide the data, speak to `ggplot2` about how to map variables to **aesthetics**, what **geometries** you want, and any styling, it takes care of the details.
 
 ![Have you met `ggplot2`?](ggplot2-hex.png)
 
@@ -173,14 +173,13 @@ library(palmerpenguins)
 Histograms depict the range of numeric values along the `x` axis and the height of the bars represent the `count` of each value. Here's the code to create a histogram for each species:
 
 <div id=`r class_id()`><pre>
-penguins |>                    # pass `penguins` data to ggplot
-  ggplot(
-       aes(x = bill_depth_mm, # what I want to depict on the x axis 
-           group = species,   # group level comparisons using `species`
-           colour = species,  # colour my histograms by `species`
-           fill = species)) + #  fill the bars of my histogram by `species`
-  geom_histogram() +          # create histogram
-  theme_minimal()             # minimal styling
+ggplot(data = penguins,      # pass `penguins` data to ggplot
+      aes(x = bill_depth_mm, # what I want to depict on the x axis 
+          group = species,   # group level comparisons using `species`
+          colour = species,  # colour my histograms by `species`
+          fill = species)) + #  fill the bars of my histogram by `species`
+geom_histogram() +          # create histogram
+theme_minimal()             # minimal styling
 </pre></div>
 
 Let's talk through this code:
@@ -192,7 +191,21 @@ Let's talk through this code:
 - `colour = species`, set the colour to change by `species` e.g outline of bars
 - `fill = species`, set the fill to change by `species` e.g inside of bars
 - `geom_histogram()`, make a histogram
-- `theme_minimal()`, apply minimal styling
+- `theme_minimal()`, apply minimal styling.
+
+Note, we can also use the pipe to feed data into the `ggplot` function. The example below produces the same plot, but differs on the first two lines to the example above. We'll follow that approach below. 
+
+<div id=`r class_id()`><pre>
+penguins |>                   # pass `penguins` data to ggplot            
+  ggplot(     
+       aes(x = bill_depth_mm, # what I want to depict on the x axis 
+           group = species,   # group level comparisons using `species`
+           colour = species,  # colour my histograms by `species`
+           fill = species)) + #  fill the bars of my histogram by `species`
+  geom_histogram() +          # create histogram
+  theme_minimal()             # minimal styling
+</pre></div>
+
 
 ## How does bill length vary between islands
 

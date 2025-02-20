@@ -79,6 +79,14 @@ We've downloaded this into the folder at `data/staligmites/Laminated stalagmite 
 
 Load this into R use the `read_csv()` function.
 
+The code below get's you started. You'll need to fill in the spaces indicated by XXX.
+
+
+```{r}
+stalagmites_data <- read_csv("data/XXX")
+```
+
+
 ## Data structure
 
 <h3>Data structure</h3>
@@ -92,7 +100,19 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 
 Check the structure of the dataset, including the names of the columns. 
 
-> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. You might need to install the package first.
+```{r}
+names(stalagmites_data)
+```
+
+
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. 
+
+
+```{r}
+stalagmites_data <- read_csv("data/XXX") |>
+  clean_names()
+```
+
 
 ## Check the data
 
