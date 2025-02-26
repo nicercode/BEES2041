@@ -29,7 +29,13 @@ class_id <- function() {
 
 <h3>Sampling from populations</h3>
 
-The natural world is variable. We can't measure everything, so we take samples. We use these samples to estimate the mean and variance of a quantity for the population. In future weeks we'll be looking at how the mean of a population changes with some predictor, x. But in today's practical we'll be looking at how we can estimate the mean of a population, and how confident we can be in our estimate. You should have covered this in MATH1041, but we'll go over it again here, as these are core fundamentals underpinning most statistical analyses you'll undertake during your schooling and future work. <!-- ![Artwork by @allison_horst](nice-R.png){width=70%} --> <br>
+The natural world is variable. We can't measure everything, so we take samples. We use these samples to estimate the mean and variance of a quantity for the population. In future weeks we'll be looking at how the mean of a population changes with some predictor, x. 
+
+In today's practical we'll learn how to estimate the mean of a population, and the uncertainty in our estimate. 
+
+You may have covered some of this material in MATH1041. Let's revise it again here, as these are core fundamentals underpinning most statistical analyses you'll undertake during your schooling and future work. 
+
+<!-- ![Artwork by @allison_horst](nice-R.png){width=70%} --> <br>
 
 <h3>Setting up</h3>
 
@@ -45,7 +51,7 @@ Everything you need for this practical is on Moodle
 -   Windows: Right click on the zip file and click "Extract All"
 
 4.  Go into the folder `Wk2-1-materials` created by extracting the zip.
-5.  **Click on the `Wk-2-1-Sampling.Rproj`** to open the RStudio project and you're in!!!
+5.  Click on the `Wk-2-1-Sampling.Rproj` to open the RStudio project and you're in!!!
 
 We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
@@ -62,7 +68,7 @@ install.packages("parameters")
 And don't forget to load them
 
 
-```{r}
+```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
 library(parameters)
 ```
@@ -78,15 +84,21 @@ To get us started, let's consider a real question that a researcher might ask ab
 
 This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
 
-You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emrgence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
+You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
 
-The first challenge a baby turtle faces after hatching is to reach the surface of the sand. Davey thought it would be good to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. He collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then buyring the turtles again, as though they had just emerged from the nest.
+## Turlte challenge
+
+<h3>Turtle first challenge</h3>
+
+The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. 
+
+Davey collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then burying the turtles again, as though they had just emerged from the nest.
 
 ![Image: Davey Dor](pics/turtle.jpeg)
 
-Davey now wants to know the average time it takes for baby turtles to reach the surface.
+Now he wants to know the average time it takes for baby turtles to reach the surface.
 
-He could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
+Davey could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
 
 What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
 
@@ -94,14 +106,13 @@ What Davey needs is to estimate the confidence interval for the mean time it tak
 
 <h3>Distributions, probability and sampling</h3>
 
-Before looking at Davey's data, let's briefly review some of the key concepts about probability, that underpin the estimation of confidence intervals.
+Before looking at Davey's data, let's review some of the key concepts about probability, that underpin the estimation of confidence intervals.
 
 In MATH1041 (or equivalent), you learned about probability distributions, and how to calculate probabilities of observing a particular value. You also learned about sampling distributions, and how to calculate the probability of observing a particular sample mean.
 
 For this exercise we're going to use the following packages. Recall, when running R in the browser we need to install the packages each time we start a new session.
 
 Install:
-
 
 <div id=`r class_id()`><pre>
 install.packages(c("ggplot2", "dplyr"))
@@ -119,11 +130,13 @@ library(dplyr)
 
 ## Probability distributions
 
+<h3>Probability distributions</h3>
+
 Imagine we have a continuous variable that captures something about the natural world. Often (but not always) such variables follows a *normal distribution*.
 
 The normal distribution is a continuous probability distribution that is symmetrical around the mean, $\mu$. It is defined by two parameters:
 
--   the mean, $\mu$:, which is the centre of the distribution, and
+-   the mean, $\mu$:, which gives the centre of the distribution, and
 -   standard deviation, $\sigma$, which describes how spread out the distribution is.
 
 The normal distribution is often denoted by $N(\mu, \sigma)$. The standard normal distribution is a normal distribution with a mean of 0 and a standard deviation of 1, which can be denoted, by $N(0, 1)$.
@@ -156,12 +169,13 @@ data |>
   theme_classic()
 </pre></div>
 
-
 You can see that the standard normal distribution, $N(0, 1)$, (red) is centred around 0. The other distribution $N(2, 2)$ is centred around 2, and has a wider spread, reflecting its larger deviation.
 
 You can vary the mean and standard deviation in the code above to see how the distribution changes.
 
 ## Probability calculations
+
+<h3>Probability of sampling a value</h3>
 
 If we know the mean and standard deviation of the population, we can calculate the probability of observing a particular value for an individual in our population of interest. For example, for the standard normal, the probability of observing a value \< 1.96 in a standard normal distribution is 0.975, and the probability of observing a value \> 1.96 is 0.025 (=1-0.975).
 
@@ -186,10 +200,13 @@ p = 0.75
 qnorm(p, mean = 0, sd = 1, lower.tail = TRUE)
 </pre></div>
 
+Modifying the code above, what is the value corresponding to a probability of 0.25 in the standard normal distribution? 
 
-Question: What is the value corresponding to a probability of 0.25 in the standard normal distribution? Answer: -0.6744898
+You should get -0.6744898
 
-### Chance sampling
+## Chance sampling
+
+<h3>Chance sampling</h3>
 
 However, if this was a real sampling event out in the field, we would not know the population mean and standard deviation. In fact, we would be using our sample to estimate these. The problem is that the mean and standard deviation of our sample will differ from the true population mean and standard deviation, and from sample to sample, simply by chance.
 
@@ -212,11 +229,15 @@ sample_sd
 </pre></div>
 
 
-Question: Did the sample mean and standard deviation match the population mean and standard deviation?
+**Question: Did the sample mean and standard deviation match the population mean and standard deviation?**
 
 Rerun the code above a few times to see how the sample mean and standard deviation change. Notice each sample gives a different estimate of the population mean and standard deviation.
 
-Do this enough times and you'll get a sense of the distribution of the sample means. This is the **sampling distribution of the mean**. The sampling distribution of the mean shows us the variety of values we might observe for the mean of a sample of a particular size, from a population with a particular mean and standard deviation. The sampling distribution of the mean is centred around the true population mean, but there is a lot of variability in the sample means. Just by chance, your sample mean could be a lot higher or lower than the true population mean.
+## The sampling distribution of the mean
+
+<h3> The sampling distribution of the mean</h3>
+
+Take enough samples and you'll get a sense of the distribution of the sample means. This is the **sampling distribution of the mean**. The sampling distribution of the mean shows us the variety of values we might observe for the mean of a sample of a particular size, from a population with a particular mean and standard deviation. The sampling distribution of the mean is centred around the true population mean, but there is a lot of variability in the sample means. Just by chance, your sample mean could be a lot higher or lower than the true population mean.
 
 The plot below shows the distribution of the sample means, based on 1000 random samples from the true population.
 
@@ -244,7 +265,11 @@ data |>
 
 You can see that the distribution of the sample means is centred around the true population mean of 5, but there is a lot of variability in the sample means. Just by chance, your sample mean could be a lot higher or lower than the true population mean.
 
-**How does the sampling distribution of the mean relate to the population distribution?**
+## The mean vs population distribution
+
+<h3>The distribution of the means vs population</h3>
+
+How does the sampling distribution of the mean relate to the population distribution?
 
 You can see that the distribution of the sample means has an approximately normal distribution. Is this the same as the original distribution?
 
@@ -293,7 +318,9 @@ data |>
 </pre></div>
 
 
-### Estimating uncertainty
+## Estimating uncertainty
+
+<h3>Estimating uncertainty</h3>
 
 The sampling distribution of the mean shows us that just by chance, your sample mean could be a lot higher or lower than the true population mean.
 
@@ -303,13 +330,19 @@ This is how confidence intervals are built. We estimate the mean of the sample, 
 
 $$\bar{\mu_y} \pm \rm{Uncertainty}$$
 
-To estimate the uncertainty, we use the t-distribution. When the sample size is small (n \< 50), the sample standard deviation is a poor estimate of the population standard deviation, and using the normal distribution here would underestimate variability. The t-distribution accounts for this additional uncertainty by having heavier tails, which leads to wider confidence intervals and more conservative hypothesis testing
+## Enter The t-distribution
+
+<h3>Enter the t-distribution</h3>
+
+To estimate the uncertainty, we use the t-distribution. When the sample size is small (n \< 50), the sample standard deviation is a poor estimate of the population standard deviation, and using the normal distribution here would underestimate variability. The t-distribution accounts for this additional uncertainty by having heavier tails, which leads to wider confidence intervals and more conservative hypothesis testing.
 
 So the equation above becomes
 
 $$\bar{\mu_y} \pm t_{0.05, n-1} \times SE$$
 
 where $t_{0.05, n-1}$ is the value of the t-distribution for a 95% confidence interval and n-1 degrees of freedom, and $SE$ is the standard error of the mean. The standard error of the mean is the standard deviation of the sample means, and is calculated as the standard deviation of the population divided by the square root of the sample size.
+
+![The t-distribution](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Student_t_pdf.svg/650px-Student_t_pdf.svg.png){width=50%}
 
 Like the normal distribution, R has functions that can calculate critical values from the t-distribution
 
@@ -326,9 +359,11 @@ t_05
 </pre></div>
 
 
-## applying this to turtle data
+## Applying this to turtle data
 
-Let's go back to Davey. Davey has collected data on XX baby turtles. Davey wants to estimate the average time it takes for all baby turtles to reach the surface, based on his sample. He could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. He wants to know how confident he can be that the average time he has calculated is the true average time across all baby turtles.
+<h3>Applying this to turtle data</h3>
+
+Let's go back to Davey. Davey has collected data on 10 baby turtles. Davey wants to estimate the average time it takes for all baby turtles to reach the surface, based on his sample. He could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. He wants to know how confident he can be that the average time he has calculated is the true average time across all baby turtles.
 
 What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
 
@@ -341,12 +376,16 @@ Here is Davey's data:
 baby_turtles <- tibble(
   time_to_surface = c(83.88, 55.21, 94.17, 31.54, 75.92, 73.91, 57.52, 77.47, 76.21, 75.51)
 )
+
+baby_turtles
 </pre></div>
 
 
 There's two ways to estimate confidence intervals. The first way is to do it manually, using the t-distribution. The second way is to use the `lm()` function in R to build a model for the mean of the sample data, and calculate the confidence interval for the mean.
 
-### Estimating the confidence interval (the hard and manual way)
+## Estimating the confidence interval (the hard and manual way)
+
+<h3>Estimating the confidence interval (the hard and manual way)</h3>
 
 Let's start with the manual way. This shows you how the process works, though in practice you use the easier method below.
 
@@ -375,7 +414,9 @@ c(mean_time = mean_time, ci = ci)
 </pre></div>
 
 
-### Estimating the confidence interval (the easy way)
+## Estimating the confidence interval (the easy way)
+
+<h3>Estimating the confidence interval (the easy way)</h3>
 
 In practice, Davey can use the `lm()` function in R to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface. `lm` stands for linear model. We're going to use this in coming weeks to see how the mean of a population changes with some predictor, x. But we can also use it to estimate the confidence interval for the mean of a sample, without any x. Importantly, behind the scenes, the `lm()` function calculates the confidence interval for the mean, just like the manual method above.
 
@@ -442,6 +483,8 @@ From the data above, you can see the etsimate of the mean time it takes for baby
 
 ## Asking questions using confidence intervals
 
+<h3>Asking questions using confidence intervals</h3>
+
 Confidence intervals around the mean are a powerful tool in our analysis toolbox. For example, Davey could ask:
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is less than or greater than some critical value, e.g. 20 minutes?**
@@ -464,40 +507,37 @@ Often we may also be interested in how the mean of the population changes with s
 
 ## Relationship to t.tests
 
-This test with confidence intervals is equivalent to running a two-sample t-test. You may have covered t-tests in MATH1041. In fact, estimating confidence intervals is closely related to t-tests. They use the same basic maths, and produce identical results.
+<h3>Relationship to t-tests</h3>
 
-We can also use the t-test function in R to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
+This test with confidence intervals is equivalent to running a two-sample t-test. You may have covered t-tests in MATH1041. In fact, estimating confidence intervals is closely related to t-tests; they use the same basic maths, and produce identical results.
 
+We can also use the `t.test` function in R to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface. Additionally, the `t.test` function can be used to test if the mean of the population is different to some critical value, by default zero.
 
 <div id=`r class_id()`><pre>
 t.test(baby_turtles$time_to_surface, alternative = "two.sided", mu = 0)
 </pre></div>
 
-
 You should see that the results are the same as those calculated above.
 
-A big advantage of the t-test is that you easily calculate an exact probability that the population mean you calculated is different to some critical value other than zero. This is harder to do with linear models.
+The one big advantage of a t-test is that you easily calculate an exact probability that the population mean you estimated is different to some critical value, other than zero. This is harder to do with linear models.
 
-With a t-test
-
+**Comparing the mean to $mu_0$ with a t-test**
 
 <div id=`r class_id()`><pre>
 mu_null <- 2
 t.test(baby_turtles$time_to_surface, alternative = "two.sided", mu = mu_null)
 </pre></div>
 
-
-With a linear model
-
+**Comparing the mean to $mu_0$ with a linear model**
 
 <div id=`r class_id()`><pre>
 # repeating the code we ran above
 fit <- lm(time_to_surface ~ 1, data = baby_turtles)
-
 pars <- parameters(fit)
 
-# Compute t-statistic manually
+# Compute t-statistic, comparing the mean to mu_null
 t_stat <- (pars$Coefficient - mu_null) / pars$SE
+
 # Compute p-value (two-tailed test)
 p_value <- 2 * pt(abs(t_stat), df = n - 1, lower.tail = FALSE)
 
@@ -510,6 +550,8 @@ The reason we're teaching you linear models over t-tests, is that they are more 
 As explained in the course text book Warton 2024, technically one-sample & two-sample t-tests are all simple cases of a linear model. We're barely covering t-tests as it's one less tool to remember -- and a tool you will probably use infrequently in research.
 
 ## Why sample size matters
+
+<h3>Why sample size matters</h3>
 
 Recall the formula for the standard error of the mean:
 
@@ -534,6 +576,10 @@ Let's use your new skills to estimate the mean and confidence interval for the f
 
 # Running tests on you laptop
 
+<h2>Running tests on you laptop</h2>
+
+Let's now run some tests on your laptop to see if you can estimate the mean and confidence interval for some datasets. 
+
 Don't forget to load the packages you need to run the code below.
 
 ```{r}
@@ -542,11 +588,15 @@ library(tidyverse)
 
 ## Lead contamination in soils
 
+<h3> Lead contamination in soils</h3>
+
 An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by local community. Safety guidelines dictate that lead concentrations in soil should not exceed 300mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with a X-ray Fluorescence (pXRF) spectrometer.
+
+![Collecting soil samples](https://media.news.climate.columbia.edu/wp-content/uploads/2018/09/soil-sampling-1300x975.avif){width=50%}
 
 The data obtained are in the folder `data/` in the file `lead_contamination.csv`. Load the data using `read_csv` from the `tidyverse`.
 
-```{r, show=FALSE}
+```{r, echo=FALSE, results='hide'}
 data <- read_csv("data/lead_contamination.csv")
 ```
 
@@ -554,28 +604,30 @@ data <- read_csv("data/lead_contamination.csv")
 
 ```
 
-And then calculate the 95% confidence intervals for the population mean
+And then calculate the 95% confidence intervals for the population mean. You should use the `lm()` function to fit a model to the data, and the `parameters()` function to extract the estimates of the mean and confidence interval for the mean. 
 
 ```{r}
 
 ```
 
-```{r, show=FALSE}
+```{r, echo=FALSE, results='hide'}
 lm_lead <- lm(lead_concentration ~ 1, data = data)
 parameters(lm_lead)
 ```
 
-What are the mean and confidnece intervals for the school garden soil lead concentration?
+What are the mean and confidence intervals for the school garden soil lead concentration?
 
--   mean: {1:NUMERICAL:=272.70:0.1}
--   min: {1:NUMERICAL:=230.09:0.1}
--   max: {1:NUMERICAL:=315.31:0.1}
+-   mean: `r cloze(272.70, tolerance = 0.1)`
+-   lower CI: `r cloze(230.09, tolerance = 0.1)`
+-   upper CI: `r cloze(315.31, tolerance = 0.1)`
 
-Based on the CI, is there evidence that soils from this garden exceeded the safety guidelines? {1:MULTICHOICE_S:=No\~Yes}
+** Based on the CI, is there evidence that soils from this garden exceeded the safety guidelines? ** `r cloze("no", c("yes", "no"))`
 
 ## Palmer penguins
 
-The Palmer penguins dataset contains data on the size of different penguins. A biologist was writing a field guide about the different species and thought to icnlude some infomation on the size of the penguins.
+<h3>Palmer penguins</h3>
+
+The Palmer penguins dataset contains data on the size of different penguins. A biologist was writing a field guide about the different species and thought to include some infomation on the size of the penguins. Below we'll focus on the bill length of the different species of penguins. However, you can also explore other variables in the dataset using the same methods.
 
 Recall the data from the `palmerpenguins` package.
 
@@ -585,7 +637,12 @@ library(palmerpenguins)
 penguins
 ```
 
+## Chinstraps
+
 **Chinstraps**
+
+![Chinstrap penguin. Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg/440px-South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg){width=50%}
+
 
 Calculate the mean and 95% confidence intervals for the bill_length_mm of the Chinstrap penguins.
 
@@ -601,7 +658,7 @@ Now calculate the mean and confidence intervals for the bill length of the Chins
 
 ```
 
-```{r, show=FALSE}
+```{r, echo=FALSE, results='hide'}
 
 lm_chinstrap <- lm(bill_length_mm ~ 1, data = data_chinstrap)
 parameters(lm_chinstrap)
@@ -609,12 +666,15 @@ parameters(lm_chinstrap)
 
 What are the mean and confidnece intervals for the bill length of the Chinstrap penguins?
 
--   mean: {1:NUMERICAL:= 48.83:0.1}
--   min: {1:NUMERICAL:= 48.03:0.1}
--   max: {1:NUMERICAL:= 49.64:0.1}
+-   mean: `r cloze(48.83, tolerance = 0.1)`
+-   lower CI: `r cloze(48.03, tolerance = 0.1)`
+-   upper CI: `r cloze(49.64, tolerance = 0.1)`
+
+## Adelie
 
 **Adelie**
 
+![Adelie penguin. Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg/800px-Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg){width=50%}
 
 Now what is the mean and confidence intervals for the bill length of the Adelie penguins?
 
@@ -622,7 +682,7 @@ Now what is the mean and confidence intervals for the bill length of the Adelie 
 
 ```
 
-```{r, show=FALSE}
+```{r, echo=FALSE, results='hide'}
 
 data_Adelie <- penguins |> filter(species == "Adelie")
 ```
@@ -633,21 +693,25 @@ Now calculate the mean and confidence intervals for the bill length of the Adeli
 
 ```
 
-```{r, show=FALSE}
+```{r, echo=FALSE, results='hide'}
 
 lm_Adelie <- lm(bill_length_mm ~ 1, data = data_Adelie)
 parameters(lm_Adelie)
 ```
 
-What are the mean and confidnece intervals for the bill length of the Chinstrap penguins?
+What are the mean and confidence intervals for the bill length of the Chinstrap penguins?
 
--   mean: {1:NUMERICAL:= 38.79:0.1}
--   min: {1:NUMERICAL:= 38.36:0.1}
--   max: {1:NUMERICAL:= 39.22:0.1}
+-   mean: `r cloze(38.79, tolerance = 0.1)`
+-   lower CI: `r cloze(38.36, tolerance = 0.1)`
+-   upper CI: `r cloze(39.22, tolerance = 0.1)`
 
-Based on the CIs, is there evidence that the bill length of the Adelie penguins is different to the bill length of the Chinstrap penguins? {1:MULTICHOICE_S:=Yes\~No}
+Based on the CIs, is there evidence that the bill length of the Adelie penguins is different to the bill length of the Chinstrap penguins? `r cloze("yes", c("yes", "no"))`
+
+## Gentoo
 
 **Gentoos**
+
+![Gentoo penguin.  Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg/1202px-Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg){width=50%}
 
 Now what is the mean and confidence intervals for the bill length of the Gentoo penguins?
 
@@ -655,9 +719,9 @@ Now what is the mean and confidence intervals for the bill length of the Gentoo 
 
 ```
 
-```{r, show=FALSE}
+```{r, echo=FALSE, results='hide'}
 
-data_Gentoo <- penguins |> filter(species == "Adelie")
+data_Gentoo <- penguins |> filter(species == "Gentoo")
 ```
 
 Now calculate the mean and confidence intervals for the bill length of the Gentoo penguins.
@@ -666,22 +730,32 @@ Now calculate the mean and confidence intervals for the bill length of the Gento
 
 ```
 
-```{r, show=FALSE}
+```{r, echo=FALSE, results='hide'}
 
 lm_Gentoo <- lm(bill_length_mm ~ 1, data = data_Gentoo)
 parameters(lm_Gentoo)
 ```
 
-What are the mean and confidnece intervals for the bill length of the Gentoo penguins?
+What are the mean and confidence intervals for the bill length of the Gentoo penguins?
 
--   mean: {1:NUMERICAL:= 47.50:0.1}
--   min: {1:NUMERICAL:= 46.95:0.1}
--   max: {1:NUMERICAL:= 48.05:0.1}
+-   mean: `r cloze(47.50, tolerance = 0.1)`
+-   lower CI: `r cloze(46.95, tolerance = 0.1)`
+-   upper CI: `r cloze(48.05, tolerance = 0.1)`
 
-Based on the CIs, is there evidence that the bill length of the Gentoo penguins is different to the bill length of the Chinstrap penguins? {1:MULTICHOICE_S:=Oh it's very close~Yes~No}
+Based on the CIs, is there evidence that the bill length of the Gentoo penguins is different to the bill length of the Chinstrap penguins? `r cloze("oh, it's very close!", c("yes", "oh, it's very close!", "no"))`
 
-## Why we need linear models!
+## finished
+
+<h3>Final words and solutions</h3>
+
+Congrats, you've finished the practical!
+
+You can find worked solutions to the practical [here]().
+
+Download these and save them into the same folder as the practical material.
+
+<h3> Why we need linear models! </h3>
 
 Today you've learned how to estimate the mean of a population, and how confident you can be in your estimate.
 
-In general, there's relative few insnaces where researchers only have one group of data, and want to estimate the mean of only that one population. In most cases we have two or more groups of data, and we want to estimate the difference between the means of the populations. This is what we started doing with the penguins data above. Next week we'll be looking at how we can compare the means of populations to each other, using a linear model, by including some predictor, x. The foundations you've learned today are the basis for this.
+In general, there's relative few instances where researchers only have one group of data, and want to estimate the mean of only that one population. In most cases we have two or more groups of data, and we want to estimate the difference between the means of the populations. This is what we started doing with the penguins data above. Next week we'll be looking at how we can compare the means of populations to each other, using a linear model, by including some predictor, x. The foundations you've learned today are the basis for this.
