@@ -1,0 +1,790 @@
+---
+title: "Making plots for linear rgression ppt"
+format: html
+---
+
+
+
+# Setup
+
+Path
+
+```{r}
+setwd("week 3/Wk3-slides")
+```
+
+Libraries
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(patchwork)
+
+library(easystats)
+```
+
+Datasets: Examples using iris and generated data
+
+```{r}
+# Regression exmaple
+data_iris_reg <- iris |>
+  filter(Species != "setosa") |>
+  select(x = Sepal.Length, y = Sepal.Width, species = "Species")
+
+# Anova exmaple
+data_iris_anova_2grp <- iris |>
+  filter(Species %in% c("setosa", "versicolor")) |>
+  select(x = Species, y = Sepal.Width)
+
+data_iris_anova_3grp <- iris |> select(x = Species, y = Sepal.Width)
+
+## Generate data for simple example on intro slides
+n <- 20
+B0 <- 2
+B1 <- 1.5
+
+generate_data_reg <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 + B1 * x,
+    y = y_hat + rnorm(n, sd = sigma),
+    error = lab
+  )
+}
+
+# plots generated with seed = 10
+data_gen_1_5 <- generate_data_reg(n, B0, B1, 1.1, "med", 110) |>
+  mutate(y_bar = mean(y))
+# saveRDS(data, "output/data.rds")
+
+## Generate data for ANOVA 
+generate_data_anova <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = rep(c(0, 1), n / 2),
+    y_hat = B0 + B1 * x,
+    y = y_hat + rnorm(n, sd = sigma),
+    error = lab
+  ) |>
+    mutate(x = letters[x + 1] |> as.factor())
+}
+
+data_gen_a1 <- generate_data_anova(n, B0, B1 = 4, 1.1, "med", 110)
+
+```
+
+## Intro slides visuals - plot data and fitted line
+
+Regression 
+```{r}
+## Fit model
+fit <- lm(y ~ x, data = data_gen_1_5)
+
+# basic scatter
+p0 <-
+  ggplot(data_gen_1_5, aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  theme_classic() +
+  ylim(c(0, 10))
+
+# format for small plot
+p1 <- p0 +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+#ggsave("output/scatter.png", p1, height = 2, width = 2, bg = "transparent")
+
+## fitted line no ribbon, large size
+p2a <-
+  p0 +
+  geom_smooth(method = "lm", col = "#eb8240", se = FALSE) +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    #        axis.text = element_blank(),    # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_blank() # Plot title
+  )
+
+## fitted line - with ribbon, large size
+p2b <- p0 +
+  geom_smooth(method = "lm", col = "#eb8240") +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    #        axis.text = element_blank(),    # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+#ggsave("output/scatter_lm.png", p2a, height = 2.5, width = 3.5, bg = "transparent")
+#ggsave("output/scatter_lm_ribbon.png", p2b, height = 2.5, width = 3.5, bg = "transparent")
+
+```
+
+## Intro slide - Regression and ANOVA
+
+use rgression plot from above 
+
+Now make Anova plot 
+```{r}
+## Fit model
+fit <- lm(y ~ x, data = data_gen_a1)
+means <- estimate_means(fit, by = c("x")) |> mutate(x = as.factor(x))
+
+# basic scatter
+p0a <-
+  ggplot(data_gen_a1, aes(x = x, y = y)) +
+  geom_errorbar(data = means, aes(ymin = CI_low, ymax = CI_high, y = Mean), width = 0, color = "darkgray", size = 5, alpha = 0.8) + # Confidence intervals
+  # geom_point(data = means, aes(y = Mean), size = 6, color = "#eb8240") + # Estimated means
+  geom_segment(data = means, aes(x = as.numeric(x) - 0.2, xend = as.numeric(x) + 0.2, y = Mean, yend = Mean), color = "#eb8240", size = 2) + # Estimated means
+  scale_x_discrete() + # Keep x-axis categorical
+  geom_jitter(color = "red", width = 0.1) +
+  theme_classic() + # Style plot
+  ylim(c(0, 10)) +
+  labs(title = "Categorical x")
+
+
+# format for small plot
+p1a <- p0a +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    # axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+p_joint <- p1a / (p2b + labs(title = "Continuous x"))
+
+ggsave("output/scatter_anova_regression.png", p_joint, height = 5, width = 4, bg = "transparent")
+```
+
+## Actual output in slides generated with iris
+
+Note this output is different to above
+
+```{r}
+fit <- lm(y ~ x, data = data_iris_reg)
+
+summary(fit)
+
+parameters(fit)
+
+report(fit)
+
+# Estimate means and precited range
+means <- estimate_means(fit, by = "x")
+px <- means |> plot()
+
+ggsave("output/scatter_estimate_means.png", px, height = 2.5, width = 3.5, bg = "transparent")
+
+# simple plot with raw data points
+ggplot(means, aes(x = x, y = Mean)) +
+  geom_point(data = data_iris_reg, aes(x = x, y = y), color = "red") + # Raw data
+  geom_line(size = 3, color = "orange") + # Estimated means
+  theme_classic() + # Style plot
+  labs(
+    title = "Estimated Means with Raw Data"
+  )
+
+# Detailed Plot with raw data points
+ggplot(means, aes(x = x, y = Mean)) +
+  geom_ribbon(data = predicted, aes(ymin = CI_low, ymax = CI_high, y = Predicted), fill = "grey", alpha = 0.5) + # Confidence intervals
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), width = 0, fill = "orange", size = 3, alpha = 0.5) + # Confidence intervals
+  geom_point(data = data_iris_reg, aes(x = x, y = y), color = "red") + # Raw data
+  geom_line(size = 3, color = "orange") + # Estimated means
+  theme_classic() + # Style plot
+  labs(
+    title = "Estimated Means with Raw Data"
+  )
+```
+
+
+## demo Maximising likelihood
+
+ create a 2d plot show residual sum of squares for different slope and intercept values
+```{r}
+# Custom RSS function
+calculate_rss <- function(intercept, slope, data) {
+  y_pred <- intercept + slope * data$x
+  residuals <- data$y - y_pred
+  sum(residuals^2)
+}
+
+# Create a grid of slope and intercept values
+data_rss_grid <-
+  expand_grid(intercept = seq(-5, 10, length.out = 100), slope = seq(-5, 8, length.out = 100)) |>
+  mutate(rss = map2_dbl(intercept, slope, ~ calculate_rss(.x, .y, data = data_gen_1_5)))
+
+# Plot RSS as a tile plot
+p_rss <-
+  ggplot(data_rss_grid, aes(x = intercept, y = slope, z = log(rss), fill = log(rss))) +
+  geom_tile() +
+  labs(
+    title = "Residual Sum of Squares (RSS)",
+    x = "B0",
+    y = "B1",
+    fill = "RSS"
+  ) +
+  geom_point(data = tibble(intercept = B0, slope = B1, rss = NA), col = "red") +
+  scale_fill_viridis_c(option = "magma") + # "magma", "inferno", "plasma", "viridis", "cividis", etc.
+  theme_classic() +
+  theme(
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+ggsave("output/rss.png", p_rss, height = 2, width = 2, bg = "transparent")
+```
+
+Create a gif of poor fits
+
+```{r}
+# Create a grid of values
+
+make_plot <- function(b0, b1) {
+  data_gen_1_5 |>
+    mutate(y_bar = pmin(b0 + b1 * x, 15)) |>
+    ggplot(aes(x = x, y = y)) +
+    geom_point(size = 2, col = "red") +
+    geom_abline(intercept = b0, slope = b1, col = "#eb8240") +
+    geom_segment(aes(x = x, xend = x, y = y, yend = y_bar), col = "purple") +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    ylim(c(0, 15)) +
+    theme_classic() +
+    # labs(title = sprintf("B0 = %0.1f, B1 = %0.1f", b0, b1)) +
+    theme(
+      #      panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+      #      plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+      axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+      axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+      axis.text = element_blank(), # Axis tick labels
+      axis.title = element_text(size = 18), # Axis titles
+      plot.title = element_text(size = 18, face = "bold")
+    )
+}
+
+make_plot(5, 4)
+
+data_path <-
+  tibble(
+    intercept = seq(5, B0, length.out = 100),
+    slope = seq(5, B1, length.out = 100)
+  ) |>
+  mutate(plot = map2(intercept, slope, ~ make_plot(.x, .y)))
+
+# Save plots as png
+walk2(data_path$plot, seq_along(data_path$plot), ~ ggsave(sprintf("output/MLE_path/resid_plot_%03d.png", .y), .x, height = 3, width = 5))
+
+# make gif from pngs
+system("convert -delay 10 -loop 10 output/MLE_path/resid_plot_*.png output/MLE_path/resid_movie.gif")
+
+# make it smaller
+system("convert resid_movie.gif -resize 50% -coalesce -set delay 3 -layers Optimize resid_movie_opt.gif")
+
+```
+
+```
+
+## Plot lines with different slope
+
+```{r}
+
+z <- c(c(-1, 0, 0.5, 2.5))
+labs <- c("negative", "flat", "positive", "stronger positive")
+
+data2 <- map2_df(z, factor(labs, levels = labs), ~generate_data_reg(n, B0, .x, 1.1, .y, 110))
+
+pz <- 
+    ggplot(data2, aes(x = x, y = y)) +
+    geom_point(size=2, col= "red") +
+    theme_classic() +
+    ylim(c(-5, 12)) +
+    geom_smooth(method= "lm", col ="#eb8240", se = FALSE) +
+    theme(
+        panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+        plot.background = element_rect(fill = "transparent", color = NA),  # Plot background
+        axis.title.x = element_text(margin = margin(t = 10)),  # Adds space above X-axis title
+        axis.title.y = element_text(margin = margin(r = 10)),   # Adds space to the right of Y-axis title
+#        axis.text = element_blank(),    # Axis tick labels
+        axis.title = element_text(size = 18),   # Axis titles
+        plot.title = element_blank(), # Plot title
+        strip.background = element_blank(),  # Removes the box
+        strip.text = element_text(face = "bold"), # Optional: Style the text
+axis.text.x = element_text()
+    ) + facet_wrap(~error, ncol=1) 
+
+pz
+
+ggsave("output/scatter_lm_panel_slopes.png", pz, height = 5, width = 3, bg = "transparent")
+
+```
+
+## Confidence intervals
+
+Variation among samples
+
+```{r}
+
+
+data2 <- map_df(1:4, ~generate_data_reg(5, B0, B1, 1.1, .x, .x + 20))
+
+pz <- 
+    ggplot(data2, aes(x = x, y = y)) +
+    geom_abline(intercept = B0, slope = B1, col = "black") +
+    geom_point(size=2, col= "red") +
+    theme_classic() +
+    ylim(c(0, 10)) +
+    xlim(c(0, 4.5)) +
+    geom_smooth(method= "lm", col ="#eb8240", se = FALSE) +
+    theme(
+        panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+        plot.background = element_rect(fill = "transparent", color = NA),  # Plot background
+        axis.title.x = element_text(margin = margin(t = 10)),  # Adds space above X-axis title
+        axis.title.y = element_text(margin = margin(r = 10)),   # Adds space to the right of Y-axis title
+#        axis.text = element_blank(),    # Axis tick labels
+        axis.title = element_text(size = 18),   # Axis titles
+        plot.title = element_blank(), # Plot title
+        strip.background = element_blank(),  # Removes the box
+        strip.text = element_blank(), # Optional: Style the text
+axis.text.x = element_text()
+    ) + facet_wrap(~error, ncol=1) 
+
+pz
+
+ggsave("output/scatter_lm_panel_samples.png", pz, height = 5, width = 3, bg = "transparent")
+
+```
+
+Variation with sample size
+
+```{r}
+nz <- c(5,10, 20, 40)
+labs <- sprintf("n = %s", nz)
+labs <- factor(labs, levels = labs)
+
+data2 <- map2_df(nz, labs, ~generate_data_reg(.x, B0, B1, 1.1, .y, 8)) 
+
+pz <- 
+    ggplot(data2, aes(x = x, y = y)) +
+    geom_abline(intercept = B0, slope = B1, col = "black") +
+    geom_point(size=2, col= "red") +
+    theme_classic() +
+    ylim(c(0, 10)) +
+    xlim(c(0, 4.5)) +
+    geom_smooth(method= "lm", col ="#eb8240", se = TRUE) +
+    theme(
+        panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+        plot.background = element_rect(fill = "transparent", color = NA),  # Plot background
+        axis.title.x = element_text(margin = margin(t = 10)),  # Adds space above X-axis title
+        axis.title.y = element_text(margin = margin(r = 10)),   # Adds space to the right of Y-axis title
+#        axis.text = element_blank(),    # Axis tick labels
+        axis.title = element_text(size = 18),   # Axis titles
+        plot.title = element_blank(), # Plot title
+        strip.background = element_blank(),  # Removes the box
+        strip.text = element_text(face = "bold"), # Optional: Style the text
+axis.text.x = element_text()
+    ) + facet_wrap(~error, ncol=1) 
+
+pz
+
+ggsave("output/scatter_lm_panel_n.png", pz, height = 5, width = 3, bg = "transparent")
+
+```
+
+## Evaluating fit - variance explained
+
+```{r}
+## Fit model
+fit <- lm(y ~ x, data = data_gen_1_5)
+
+means <- estimate_means(fit, by = "x", data = data_gen_1_5)
+
+data_plot <- data_gen_1_5 |>
+  mutate(
+    y_fit = predict(fit),
+    y_bar = mean(y)
+  )
+
+# basic scatter
+
+p_tot <-
+  ggplot(data_plot, aes(x = x, y = y)) +
+  theme_classic() +
+  ylim(c(0, 10)) +
+  geom_line(aes(y = y_bar), linetype = "dashed", col = "#eb8240") +
+  geom_segment(aes(x = x, xend = x, y = y, yend = y_bar), col = "purple") +
+  geom_point(size = 2, col = "red") +
+  labs(title = "Total variation", x = "") +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    #axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+p_model <-
+  ggplot(data_plot, aes(x = x, y = y)) +
+  theme_classic() +
+  ylim(c(0, 10)) +
+  geom_line(aes(y = y_bar), linetype = "dashed", col = "#eb8240") +
+  geom_line(aes(y = y_fit), col = "#eb8240") +
+  geom_segment(aes(x = x, xend = x, y = y_fit, yend = y_bar), col = "purple") +
+  geom_point(size = 2, col = "red") +
+  #geom_point(size = 2, col = "#eb8240", aes(y = y_fit)) +
+  labs(title = "Modelled variation", x = "") +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    #axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+p_resid <-
+  ggplot(data_plot, aes(x = x, y = y)) +
+  theme_classic() +
+  ylim(c(0, 10)) +
+  geom_line(aes(y = y_fit), col = "#eb8240") +
+  geom_segment(aes(x = x, xend = x, y = y, yend = y_fit), col = "purple") +
+  geom_point(size = 2, col = "red") +
+  labs(title = "Residual variation") +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+p_all <- p_tot / p_model / p_resid
+
+ggsave("output/variance_partition.png", p_all, height = 6, width = 3.5, bg = "transparent")
+```
+
+## Plot lines with R2 values
+
+```{r}
+z <- c(0, 0.25, 2, 5)
+labs <- z |> as.character()
+
+data2 <- map2_df(z, factor(labs, levels = labs), ~ generate_data_reg(n, B0, .x, 1.1, .y, 110))
+
+data2 |>
+  nest(data = c(x, y, y_hat)) |>
+  mutate(
+    fit = map(data, ~lm(y ~ x, data = .x)),
+    summary = map(fit, ~summary(.x)),
+    f = map_dbl(summary, ~.x$fstatistic[1]),
+    r2 = map_dbl(summary, ~.x$r.squared),
+    p = map_dbl(summary, ~ pf(.x$fstatistic[1], .x$fstatistic[2], .x$fstatistic[3], lower.tail = FALSE))
+    )
+
+pz <-
+  ggplot(data2, aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  theme_classic() +
+  # ylim(c(-5, 25)) +
+  geom_smooth(method = "lm", col = "#eb8240", se = FALSE) +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    #        axis.text = element_blank(),    # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_blank(), # Plot title
+    strip.background = element_blank(), # Removes the box
+    strip.text = element_text(face = "bold"), # Optional: Style the text
+    axis.text.x = element_text()
+  ) +
+  facet_wrap(~error, ncol = 1, scales = "free_y")
+
+pz
+
+ggsave("output/scatter_lm_panel_r2_f_p.png", pz, height = 5, width = 3, bg = "transparent")
+
+```
+
+## Evaluating fit - F distrbution
+
+```{r}
+df1 <- 1
+df2 <- 18
+F_stat <- summary(fit)$fstatistic[1]
+p_val <- pf(F_stat, df1, df2, lower.tail = FALSE)
+F_crit <- qf(p = 0.95, df1 = df1, df2 = df2)
+
+x_vals <- seq(0.1, 100, length.out = 500)
+y_vals <- df(x_vals, df1, df2)
+p_vals <- pf(x_vals, df1, df2, lower.tail = FALSE)
+df_data <- tibble(x = x_vals, y = y_vals, p = p_vals)
+
+p <- ggplot(df_data, aes(x, y)) +
+  geom_line(color = "darkgrey", size = 1) +
+  labs(
+    title = paste("F (df1 =", df1, ", df2 =", df2, ")"),
+    x = "F",
+    y = "density"
+  ) +
+    geom_point(data  = tibble(x = F_stat, y = pf(F_stat, df1, df2, lower.tail = FALSE), col="red")) +
+  theme_classic() +
+  scale_x_log10() +
+  theme(
+      panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+      plot.background = element_rect(fill = "transparent", color = NA),  # Plot background
+      axis.title.x = element_text(margin = margin(t = 8), size = 18),  # Adds space above X-axis title
+      axis.title.y = element_text(margin = margin(r = 10),size = 12),   # Adds space to the right of Y-axis title
+      axis.text.x = element_text(size = 10),    # Axis tick labels
+      axis.text.y = element_blank(),    # Axis tick labels
+      plot.title = element_blank() # Plot title
+  )
+
+ggsave("output/F-dist.png", p, height = 2, width = 2, bg = "transparent")
+
+```
+
+
+## pval
+
+
+Variatioon among samples when B0 = 0
+
+```{r}
+
+
+data2 <- map_df(1:4, ~generate_data_reg(5, B0, 0, 1.1, .x, .x + 20))
+
+pz <- 
+    ggplot(data2, aes(x = x, y = y)) +
+    geom_abline(intercept = B0, slope = 0, col = "black") +
+    geom_point(size=2, col= "red") +
+    theme_classic() +
+    ylim(c(0, 10)) +
+    xlim(c(0, 4.5)) +
+    geom_smooth(method= "lm", col ="#eb8240", se = FALSE) +
+    theme(
+        panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+        plot.background = element_rect(fill = "transparent", color = NA),  # Plot background
+        axis.title.x = element_text(margin = margin(t = 10)),  # Adds space above X-axis title
+        axis.title.y = element_text(margin = margin(r = 10)),   # Adds space to the right of Y-axis title
+#        axis.text = element_blank(),    # Axis tick labels
+        axis.title = element_text(size = 18),   # Axis titles
+        plot.title = element_blank(), # Plot title
+        strip.background = element_blank(),  # Removes the box
+        strip.text = element_blank(), # Optional: Style the text
+axis.text.x = element_text()
+    ) + facet_wrap(~error, ncol=1) 
+
+pz
+
+ggsave("output/scatter_lm_panel_samples_NULL.png", pz, height = 5, width = 3, bg = "transparent")
+
+```
+
+
+# ANOVA 
+
+```{r}
+fit <- lm(y ~ x, data = data_iris_anova_3grp)
+means <- estimate_means(fit, by = "x")
+
+summary(fit)
+
+anova(fit)
+report(fit)
+
+estimate_contrasts(fit, contrast = "x")
+
+
+# simple plot
+means |> plot(line = list(size = 0), col = list(col = "#eb8240")) +
+  geom_jitter(data = data_iris_anova_3grp, aes(x = x, y = y), color = "red", width = 0.05) + # Confidence intervals
+  theme_classic()
+
+# Plot with raw data points
+pa1 <-
+  ggplot(means, aes(x = x, y = Mean)) +
+  geom_jitter(data = data_iris_anova_3grp, aes(x = x, y = y), color = "red", width = 0.1) + # Raw data
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3) + # Confidence intervals
+  geom_point(size = 5, color = "orange") + # Estimated means
+  theme_classic() + # Style plot
+  labs(y = "y") +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    #   axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+
+ggsave("output/scatter_anova.png", pa1, height = 3.5, width = 5, bg = "transparent")
+
+
+
+
+```
+
+
+
+
+## GLM vs lm
+
+```{r}
+# Gaussian glm (equivalent to lm)
+
+lm_fit <- lm(mpg ~ hp + wt, data = mtcars)
+glm_fit <- glm(mpg ~ hp + wt, data = mtcars, family = gaussian)
+TMB_fit <- glmmTMB::glmmTMB(mpg ~ hp + wt, data = mtcars)
+
+# summary
+summary(lm_fit)
+summary(glm_fit)  
+
+
+# Traditional ANOVA table
+anova(lm_fit)
+anova(glm_fit)  
+
+parameters(lm_fit)
+parameters(glm_fit)
+parameters(TMB_fit)
+
+report(lm_fit)
+report(glm_fit)
+
+
+# categorical only
+lm_fit2 <- lm(mpg ~ as.factor(gear), data = mtcars)
+glm_fit2 <- glm(mpg ~as.factor(gear), data = mtcars, family = gaussian)
+
+anova(lm_fit2)
+anova(glm_fit2)  
+
+parameters(lm_fit2)
+parameters(glm_fit2)
+
+# mix
+
+lm_fit3 <- lm(mpg ~ hp*as.factor(gear), data = mtcars)
+glm_fit3 <- glm(mpg ~  hp*as.factor(gear), data = mtcars)
+TMB_fit2 <- glmmTMB::glmmTMB(mpg ~  as.factor(gear), data = mtcars)
+TMB_fit3 <- glmmTMB::glmmTMB(mpg ~  hp*as.factor(gear), data = mtcars)
+
+summary(lm_fit3)
+summary(glm_fit3)
+summary(TMB_fit3)
+
+anova(lm_fit3)
+anova(glm_fit3)  
+anova(TMB_fit2, TMB_fit3)  
+
+parameters(lm_fit3)
+parameters(glm_fit3)
+parameters(TMB_fit3)
+
+performance(lm_fit3)
+performance(glm_fit3)
+performance(TMB_fit3)
+
+report(lm_fit3)
+report(glm_fit3)
+report(TMB_fit3)  # some minor issues here
+
+check_model(lm_fit3)
+check_model(glm_fit3)
+check_model(TMB_fit3)
+
+estimate_contrasts(lm_fit3, contrast = "gear")
+estimate_contrasts(glm_fit3, contrast = "gear")
+estimate_contrasts(TMB_fit3, contrast = "gear")
+
+## two way anova
+glm_fit4 <- lm(mpg ~ as.factor(hp)*as.factor(gear), data = mtcars)
+TMB_fit4 <- glmmTMB::glmmTMB(mpg ~ as.factor(hp)*as.factor(gear), data = mtcars)
+
+```
+
+
+# Examples
+
+## REgression - Towers 2024
+
+```{r}
+# data_towers <- readRDS("data/ignore/Towers_2024_woody_traits_climate.rds") |>
+#   filter(growth_form == "Woody") |>
+#   select(cell,
+#     temperature = Temp, rainfall = Prec,
+#     # leaf_area, wood_density,
+#     leaf_mass_per_area
+#   ) |>
+#   mutate(
+#     log10_rainfall = log10(rainfall),
+#     log10_leaf_mass_per_area = log10(leaf_mass_per_area)
+#   ) |>
+#   drop_na()
+# data_towers |> saveRDS("data/Towers2024.rds")
+
+data_towers <- readRDS("data/Towers2024.rds")
+
+fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
+
+means <- estimate_means(fit, by = "log10_rainfall")
+
+summary(fit)
+
+p_results <-
+  ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
+  geom_point(size = 2, col = "red", alpha = 0.2, stroke = 0) +
+  geom_ribbon(data = means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey") +
+  geom_line(data = means, aes(y = Mean), col = "#eb8240", size = 1) +
+  theme_classic() +
+  labs(
+    title = "Response of woody-plants to rainfall",
+    x = "log10 Rainfall",
+    y = "log10 Leaf Mass per Area"
+  ) +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    axis.title = element_text(size = 14), # Axis titles
+    plot.title = element_text(size = 14, face = "bold") # Plot title
+  )
+
+p_results
+
+ggsave("output/example_lm.png", p_results, height = 4, width = 5, bg = "transparent")
+
+```

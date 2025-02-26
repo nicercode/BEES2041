@@ -16,6 +16,15 @@ knitr::opts_chunk$set(echo = TRUE)
 library(moodlequiz)
 ```
 
+## to do
+
+Applet - regression residuals
+
+https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_en.html
+
+
+https://media.licdn.com/dms/image/v2/D4D12AQEd4cLzZLzCzQ/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1674548383287?e=2147483647&v=beta&t=Xob9DkajVY87FLILfofc-Pu1Nr_r96Uu0BzYPG8JT-M
+
 ## Section header
 
 <h1>Section header</h1>
