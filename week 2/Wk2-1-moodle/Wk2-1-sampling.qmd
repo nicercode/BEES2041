@@ -1,0 +1,479 @@
+---
+title: "Week 2-1 Sampling from populations"
+output: 
+  moodlequiz::moodlequiz:
+    replicates: 1
+  html_document:
+    toc: true
+moodlequiz:
+  category: "Week 2-1 Sampling from populations"
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+
+reditor_count <- 1
+
+class_id <- function() {
+  reditor_count <<- reditor_count + 1
+  sprintf("r-editor-%d", reditor_count)
+}
+```
+
+
+
+## Sampling from populations
+
+<h3>Sampling from populations</h3>
+
+The natural world is variable. We can't measure everything, so we take samples. We use these samples to estimate the mean and variance of a quanity for the population. In future weeks we'll be looking at how the mean of a population changes with some predictor, x. But in today's practial we'll be looking at how we can estimate the mean of a population, and how confident we can be in our estimate. You should have covered this in MATH1041, but we'll go over it again here,a s these are core fundamentals undeprinning most of your statistical analsyes.
+<!-- ![Artwork by @allison_horst](nice-R.png){width=70%} -->
+<br>
+
+<h4>Setting up</h4>
+
+**Materials:**
+
+Everything you need for this practical is on Moodle
+
+1.  Download the `Wk2-1-materials.zip` zip file from Moodle, from the course page
+2.  Extract the zip file into your `BEES2041/` folder
+3.  Unzip the file by:
+  -   MacOS: Double clicking the zip file
+  -   Windows: Right click on the zip file and click "Extract All"
+4.  Go into the folder `Wk2-1-materials` created by extracting the zip.
+5.  **Click on the `Wk-2-1-Sampling.Rproj`** to open the RStudio project and you're in!!!
+
+We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+
+We will also be working with the packages `dplyr` and `ggplot2`, building on skills from the first practical. You should have these already installed from the first week. Addionally we'll use the `parameters` package from the `easystats` suite of packages. If you don't have this installed, you can install it by running the following code:
+
+```{r, eval=FALSE}
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("parameters")
+```
+
+# A motivating example
+
+To get us started, let's consider a real question that a researcher might ask about a population mean. 
+
+This is Davey. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population, in how these strategies affect sea turtle hatchlings in their development, behavior, and performance.
+
+The first challenge a baby turtle faces is to reach the surface of the sand and then ocean, after hatching. Davey thought it would be good to know roughly how long this takes. However, he couldn't find any data on this. So he decided to collect some data himself. 
+
+Davey has collected data on XX baby turtles, using some coll accelerometers he attached to the tutrles as they hatch. 
+
+Davey now wants to know the average time it takes for baby turtles to reach the surface. 
+
+He could of course just take the average of the XX turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles. 
+
+What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
+
+# MATH1041 refresher - Distributions, probability and sampling
+
+Before looking at Davey's data, let's briefly review some of the key concepts about probability, that underpin the estimation of confidence inetrvals.
+
+In MATH1041 (or equivalent), you learned about probability distributions, and how to calculate probabilities of observing a particular value. You also learned about sampling distributions, and how to calculate the probability of observing a particular sample mean.
+
+For this exercise we're going to use the following packages. Recall, when running R in the browser we need to install the packages each time we start a new session.
+
+Install:
+
+```{r}
+install.packages(c("ggplot2", "dplyr"))
+``` 
+
+Then load them so we can usue them
+
+```{r}
+library(ggplot2)
+library(dplyr)
+``` 
+
+### Probability distributions
+
+Imagine we have a continuous variable that captures somethign about the natural world. Often (but not always) such variables follows a *normal distribution*.
+
+The normal distribution is a continuous probability distribution that is symmetrical around the mean, $\mu$. It is defined by two parameters: 
+
+- the mean, $\mu$:, which si the centre of the distribtuion, and 
+- standard deviation, $\sigma$, which descirbes how spread out the distribtuion is. 
+
+The normal distribution is often denoted by $N(\mu, \sigma)$. The standard normal distribution is a normal distribution with a mean of 0 and a standard deviation of 1, which can be denoted, by $N(0, 1)$.
+
+Let's plot the two normal distributions, the standard normal $N(0, 1)$ and a normal which different mean and variance, $N(2, 2)$.
+
+```{r}
+# define the parameters of the normal distributions
+mu_1 <- 0
+sd_1 <- 1
+
+mu_2 <- 2
+sd_2 <- 2
+
+# create a dataframe with the standard normal distribution
+x <- seq(-8, 8, by = 0.01)
+
+data <-
+  bind_rows(
+    tibble(x, label = paste("N", mu_1, sd_1), density = dnorm(x, mean = mu_1, sd = sd_1)),
+    tibble(x, label = paste("N", mu_2, sd_2), density = dnorm(x, mean = mu_2, sd = sd_2))
+  )
+
+# plot the normal distributions
+data |>
+  ggplot(aes(x = x, y = density, color = label)) +
+  geom_line() +
+  labs(title = "Normal distributions", x = "Value", y = "Density") +
+  theme_classic()
+```
+
+You can see that the standard normal distribution, $N(0, 1)$, (red) is centred around 0. The other distribution $N(2, 2)$ is centred around 2, and has a wider spread, reflected its larger deviation.
+
+You can vary the mean and standard deviation in the code above to see how the distribtuion changes.
+
+### Probability calculations
+
+If we know the mean and standard deviation of the population, we can calculate the probability of observing a particular value for an indivdual in our population of interest. For example, for the standard normal, the probability of observing a value < 1.96 in a standard normal distribution is 0.975, and the probability of observing a value > 1.96 is 0.025 (=1-0.975).
+
+Fortunately, R has a function `pnorm()` that allows us to calculate the probability of observing a value below a particular value.
+
+```{r}
+y <- 1.96
+pnorm(y, mean = 0, sd = 1, lower.tail = TRUE)
+```
+
+Question: What is the probability of observing a value above 1.96 from the standard normal distribtuion?
+
+
+We can also calculate the value corresponding to a particular probability. For example, the value corresponding to a probability of 0.75 in a standard normal distribution is 0.67. That is, 75% of the values in a standard normal distribution are below 0.67.
+
+```{r}
+p < 0.75
+qnorm(p, mean = 0, sd = 1, lower.tail = TRUE)
+```
+
+Question: What is the value corresponding to a probability of 0.25 in the standard normal distribution? Answer:  -0.6744898
+
+### Chance sampling
+
+However, if this was a real sampling event out in the field, we would not know the population mean and standard deviation. In fact, we would be usign our sample to estimate these.  The probelm is that the mean and standard deviation of our sample will differ from the true population mean and standard deviation, and from sample to sample, simply by chance.
+
+To illustarte the variation that comes from chance sampling, we can simulate the process of taking samples to see how well we can estimate the population mean and standard deviation from a sample.
+
+Let's take a small sample of 10 individuals from a population with distribution $N(5, 2)$. We can use R to simulate (i.e. pretend ) we are taking a sample of 10 observations.
+
+```{r}
+true_mean <- 5
+true_sd <- 2
+
+sample <- rnorm(10, mean = true_mean, sd = true_sd)
+
+sample_mean <- mean(sample)
+sample_sd <- sd(sample)
+
+sample_mean
+sample_sd
+```
+
+Question: Did the sample mean and standard deviation match the population mean and standard deviation? 
+
+Rerun the code above a few times to see how the sample mean and standard deviation change. Notice each sample gives a different estimate of the population mean and standard deviation.
+
+Do this enough times and you'll get a sense of the distribution of the sample means. This is the **sampling distribution of the mean**. The sampling distribution of the mean shows us the variety of values we might observe for the mean of a sample of a particular size, from a population with a particular mean and standard deviation. The sampling distribution of the mean is centred around the true population mean, but there is a lot of variability in the sample means. Just by chance, your sample mean could be a lot higher or lower than the true population mean.
+
+The plot below shows the distribution of the sample means, based on 1000 random samples from the true population.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+true_mean <- 5
+true_sd <- 2
+
+# take 1000 samples of 10 observations from a population with mean 5 and standard deviation 2
+sample_means <- replicate(1000, mean(rnorm(10, mean = true_mean, sd = true_sd)))
+
+# create a tibble with the sample means
+data <- tibble(sample_means = sample_means)
+
+# plot the distribution of the sample means
+data |>
+  ggplot(aes(x = sample_means)) +
+  geom_histogram(binwidth = 0.5, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of sample means", x = "Sample mean", y = "Frequency")
+```
+
+You can see that the distribution of the sample means is centred around the true population mean of 5, but there is a lot of variability in the sample means. Just by chance, your sample mean could be a lot higher or lower than the true population mean.
+
+**How does the sampling distribution of the mean relate to the population distribution?** 
+
+You can see that the distribution of the sample means has an approximately normal distribtuion.  Is this the same as the original distribtuioon? 
+
+Let's compare the distribution of the sample means to the population distribution.  The next plot shows, that if we took a sample of 10 observations from the population,
+
+- (red) the range of possible values we might observe for any one individual, 
+- (blue) the range of possible values we might observe for the mean of a sample of 10 observations.
+
+```{r}
+# create a tibble with the population and sample means
+
+# take a sample of 1000 observations from a population with mean 5 and standard deviation 2
+data1 <- tibble(
+  value = rnorm(1000, mean = true_mean, sd = true_sd),
+  type = "Population"
+)
+
+# take 1000 samples of 10 observations from a population with mean 5 and standard deviation 2
+data2 <- tibble(
+  value = replicate(1000, mean(rnorm(10, mean = true_mean, sd = true_sd))),
+  type = "Sample mean"
+)
+
+# combine the population and sample means
+data <- bind_rows(data1, data2)
+
+# plot the distribution of the population and sample means
+data |>
+  ggplot(aes(x = value, fill = type)) +
+  geom_histogram(binwidth = 0.5, color = "black", alpha = 0.5) +
+  labs(title = "Distribution of population and sample means", x = "Value", y = "Frequency")
+```
+
+
+As you can see, the distribution of the sample means is narrower than the individual samples, and the standard deviation of the sample means is smaller than the standard deviation of the population. This makes sense. When we take a mean of something, it's less variable than the original data.
+
+We could also calculate the mean and standard deviation of both the population and sample means:
+
+```{r}
+data |>
+  group_by(type) |>
+  summarise(mean = mean(value), sd = sd(value))
+```
+
+### Estimating uncertainty
+
+The sampling distribution of the mean shows us that just by chance, your sample mean could be a lot higher or lower than the true population mean.
+
+OK, so what? Well, using some fancy mathematics, statisticians have shown that if for a variety of situations, the distribution of the sample means follows a normal distribution. This is the central limit theorem. Moreover, the standard deviation of the sample means is equal to the standard deviation of the population divided by the square root of the sample size. *This is really cool*, because it means that **we can estimate the range of possible values for the mean of the population, based on the mean and standard deviation of the population**.
+
+This is how confidence intervals are built. We estimate the mean of the sample, then add a dose of uncertainty, based on some assumptions about the distribution of the sample means. 
+
+$$\bar{\mu_y} \pm \rm{Uncertainty}$$
+
+To estimate the uncertainty, we use the t-distribution. When the sample size is small (n < 50), the sample standard deviation is a poor estimate of the population standard deviation, and using the normal distribution here would underestimate variability. The t-distribution accounts for this additional uncertainty by having heavier tails, which leads to wider confidence intervals and more conservative hypothesis testing
+
+So the equation above becomes
+
+$$\bar{\mu_y} \pm t_{0.05, n-1} \times SE$$
+
+where $t_{0.05, n-1}$ is the value of the t-distribution for a 95% confidence interval and n-1 degrees of freedom, and $SE$ is the standard error of the mean. The standard error of the mean is the standard deviation of the sample means, and is calculated as the standard deviation of the population divided by the square root of the sample size.
+
+Like the normal distribution, R has functions that can calculate cirtical values from the t-distirbution
+
+- `pt()` allows us to calculate the probability of observing a mean value above or below a particular value. 
+- `qt()` allows us to calculate the value corresponding to a particular probability.
+
+We need the `qt()` function to calculate the critical value for the t-distribution. For a 95% confidence interval, we want to find the value of the t-distribution that corresponds to a probabilites of 0.025 and 0.975. 
+
+```{r, eval = FALSE}
+t_05 <- qt(c(0.025, 0.975), df = n - 1)
+```
+
+## applying this to turtle data
+
+Let's go back to Davey. Davey has collected data on XX baby turtles. Davey wants to estimate the average time it takes for baby turtles to reach the surface for all the turtles, based on his sample. He could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. He wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
+
+What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
+
+A confidence interval is a range of values, derived from the sample mean, that is likely to contain the true population mean. The confidence interval is calculated from the sample mean and standard deviation, and the number of observations in the sample. The confidence interval provides an estimate of the range of possible values for the mean of the population.
+
+
+Here is Davey's data:
+
+```{r}
+baby_turtles <- tibble(
+  time_to_surface = c(10, 12, 14, 16, 18, 20, 22, 24, 26, 28)
+) 
+```
+
+There's two wasy to estimate confidnece intervals. The first way is to do it manually, using the t-distribution. The second way is to use the `lm()` function in R to build a model for the mean of the sample data, and calculate the confidence interval for the mean.
+
+### Estimating the confidence interval (the hard and manual way)
+
+Let's start with the manual way. This shows you how the process works, though in practice you use the easier method below.
+
+Here's the manual way Davey can estimate the confidence interval for the mean time it takes for baby turtles to reach the surface, based on his sample data:
+
+```{r}  
+# sample size
+n <- nrow(baby_turtles)
+
+# estimate the mean time it takes for baby turtles to reach the surface,
+# based on sample data
+mean_time <- mean(baby_turtles$time_to_surface)
+
+# estimate the standard error of the mean, based on sample data
+se <- sd(baby_turtles$time_to_surface) / sqrt(nrow(baby_turtles))
+
+# calculate the uncertainty, based on the t-distribution, desired probabilities, and sample size
+uncertainty <- qt(c(0.025, 0.975), df = n - 1) * se
+
+# calculate the confidence interval for the mean
+ci <- mean_time + uncertainty
+
+# print to screen
+c(mean_time = mean_time, ci = ci)
+```
+
+
+### Estimating the confidence interval (the easy way)
+
+In practice, Davey can use the `lm()` function in R to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface. `lm` stands for linear mdoel. We're  going to use this in coming weeks to see how the mean of a population changes with some predictor, x. But we can also use it to estimate the confidence interval for the mean of a sample, without any x.  Importantly, behind the scenes, the `lm()` function calculates the confidence interval for the mean, just like the manual method above.
+
+```{r}
+# Fit the model to the data. 
+fit <- lm(time_to_surface ~ 1, data = baby_turtles)
+
+# Extract the estimates of the mean and confidence interval for the mean
+coef(fit)
+confint(fit)
+```
+
+The values caluclated here here should be the same as those calculated manually above (with some rounding error).
+
+unpackaging the code above, 
+
+- `lm()` function fits a linear model to the data. 
+- `time_to_surface ~ 1` tells R to fit a model with the mean of the time to surface as the response variable, and no predictors. 
+- `coef()` function extracts the estimates of the mean and confidence interval for the mean from the model. 
+- `confint()` function calculates the confidence interval for the mean.
+
+**The easystats package makes it even easier**
+
+While we can calculate confidence intervals using the `coef()` and `confint` functions, the package `parameters` from `easystats` provides a more better fromatted output. 
+
+```{r}
+# install.packages("parameters")
+
+library(parameters)
+```
+
+```{r}
+# estimate the confidence interval for the mean time it takes for baby turtles to reach the surface
+
+pars <- parameters(fit)
+
+pars
+```
+
+Now let's plot the data and the confidence interval for the mean time it takes for baby turtles to reach the surface.
+
+```{r}  
+# plot the data and the confidence interval for the mean time it takes for baby turtles to reach the surface
+baby_turtles |>
+  ggplot(aes(x = "population", y = time_to_surface)) +
+  geom_jitter(width = 0.1, col = "red") +
+  geom_point(data = pars, aes(y = Coefficient), size = 4) +
+  geom_errorbar(data = pars, aes(y = Coefficient, ymin = CI_low, ymax = CI_high), width = 0.1) +
+  labs(title = "Baby turtles time to surface", x = "", y = "Time to surface (mins)") +
+  theme_classic()
+```
+
+**Interpreting the confidence interval**
+
+From the data above, you can see the etsimate of the mean time it takes for baby turtles to reach the surface (19mins), and a confidence interval for the mean, ranging from 14.668-23.332 mins. As he used a 95% confidence interval, he can be 95% confident that the true mean time it takes for baby turtles to reach the surface is between 14.668 and 23.332 minutes.
+
+## Asking questions using confidence intervals
+
+Confidence intervals around the mean are a powerful tool in our analysis toolbox.  For example, Davey could ask:
+
+**Question: What is the probability that the mean time it takes for baby turtles to reach the surface is less than or greater than some cirtical value, e.g. 20 minutes?**
+
+To answer this, Davey can look at confidence intervals. The confidence interval tells us the range of possible values for the mean of the population. If the critical value is within the confidence interval, then the mean of the population is likely to be less than or greater than the critical value. If the critical value is outside the confidence interval, then the mean of the population is likely to be greater than or less than the critical value. 
+
+As CI is XXX-XX, we can conclude that XXXX
+
+**Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
+
+You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t statsitics and pvalue are rpeorted. these are the results of a t-test, comparing the estimated parameter to zero. 
+
+**Question: How likely is that two samples of baby turtles come from the same population?** 
+
+This is equivalent to asking if the confidence intervals for the two samples overlap. If the confidence intervals overlap, then the means of the two samples may come from the same population. If the confidence intervals do not overlap, then the means of the two samples are unlikely to come from different populations.
+
+This test with confidence intervals is e  quivalent to runnign a two-sample t-test, which you may have covered in MATH1041.
+
+**Question: How does the mean time it takes for baby turtles to reach the surface change with the size of the turtles?** 
+
+Often we may also be inetersted in how the mean of the population changes with some predictor, x. We'll be looking at this in future weeks.
+
+## Relationship to t.tests
+
+You may have covered t-tests in MATH1041. In fact, estimating confidence intervals is closely related to t-tests. They use the same basic maths, and produce idnetical results. 
+
+We can also use the t-test function in R to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
+
+```{r}
+t.test(baby_turtles$time_to_surface, alternative = "two.sided", mu = 0)
+```
+
+You should see that the results are the same as those calculated above.
+
+A big advanatge of the t-test is that you easily calculate an exact probability, comparing your mean to some critical value other than zero. This is harder to do with linear models.
+
+With a t-test
+
+```{r}
+mu_null <- 2
+t.test(baby_turtles$time_to_surface, alternative = "two.sided", mu = mu_null)
+```
+
+With a linear model
+
+```{r}
+pars <- parameters(fit)
+
+# Compute t-statistic manually
+t_stat <- (pars$Coefficient - mu_null) / pars$SE
+# Compute p-value (two-tailed test)
+p_value <- 2 * pt(abs(t_stat), df = n - 1, lower.tail = FALSE)
+
+c(t_stat = t_stat, p_value = p_value)
+```
+
+The reason we're etaching you linear models over t-tests, is that they are more flexible and powerful than t-tests. We can not only use them to estimate the mean of a population, but also how it changes with some predictor, x. Whereas the t-test is limited to testing a single population or comparing the means of maximum two groups.
+
+As explained in the course text book Warton 2024, technically  one-sample & two-sample t-tests are all simple cases of a linear model, so it's one less tool to remember.  
+
+## Why sample size matters
+
+Recall the formaula for the standard error of the mean:
+
+$$SE = \frac{\sigma}{\sqrt{n}}$$
+
+where $\sigma$ is the standard deviation of the population, and n is the sample size.
+
+The standard error of any statsitic is the standard deviation of statistic values. So the SE is the standard deviation of the sample means.
+
+And the formula for the confidence interval is:
+$$x \pm t_{0.05, n-1} SE$$
+
+You can see from the above, the standard error of the mean decreases as the sample size increases. This is because the standard error is inversely proportional to the square root of the sample size. The larger the sample size, the smaller the SE and the smaller the more reliable the mean of the sample will be. 
+
+This is why sample size is so important in statistics. The more we sample, 
+
+* the less uncertain we become about the mean, AND 
+* the more expensive and time consuming the study becomes.
+
+# Your turn!
+
+Let's use your new skills to estimate the mean and confidence interval for the following datasets.
+

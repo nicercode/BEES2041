@@ -175,7 +175,20 @@ my.t
 
 pt(my.t, df = 9, lower.tail = FALSE)*2
 
-t.test(pH, alternative = "two.sided", mu = 7.5) 
+t.test(pH, alternative = "two.sided", mu = 0) 
+
+fit <- lm(pH~1)
+pars <- parameters(fit)
+
+mu_0 <- 7.5
+
+# Compute t-statistic manually
+t_stat <- (pars$Coefficient - mu_0) / pars$SE
+# Compute p-value (two-tailed test)
+p_value <- 2 * pt(abs(t_stat), df = length(pH) -1, lower.tail = FALSE)
+
+# Output results
+print(t_test_result)
 ```
 
 ### 10) Complete in the Moodle Quiz
