@@ -32,7 +32,7 @@ stalagmites_sites <- stalagmites_sites |>
          long = as.numeric(long))
 ```
 
-<h1>Staligmites - Overview</h1>
+<h1>stalagmites - Overview</h1>
 
 [Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
@@ -75,7 +75,7 @@ library(readxl)
 
 The data is available at https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639
 
-We've downloaded this into the folder at `data/staligmites/Laminated stalagmite Dataset.csv`
+We've downloaded this into the folder at `data/stalagmites/Laminated stalagmite Dataset.csv`
 
 Load this into R use the `read_csv()` function.
 
@@ -238,7 +238,7 @@ Finally, can you plot a map of sample locations as in figure 2?
 
 <br>
 
-The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
+The data with locations is in `data/stalagmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
 ```{r, eval=FALSE}
 stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()

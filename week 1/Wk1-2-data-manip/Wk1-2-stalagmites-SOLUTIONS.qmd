@@ -43,7 +43,7 @@ library(readxl)
 
 The data is available at https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639
 
-We've downloaded this into the folder at `data/staligmites/Laminated stalagmite Dataset.csv`
+We've downloaded this into the folder at `data/stalagmites/Laminated stalagmite Dataset.csv`
 
 Load this into R use the `read_csv()` function.
 
@@ -51,7 +51,7 @@ The code below get's you started. You'll need to fill in the spaces indicated by
 
 
 ```{r}
-stalagmites_data <- read_csv("data/staligmites/Laminated stalagmite Dataset.csv")
+stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv")
 ```
 
 
@@ -77,7 +77,7 @@ names(stalagmites_data)
 
 
 ```{r}
-stalagmites_data <- read_csv("data/staligmites/Laminated stalagmite Dataset.csv") |>
+stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv") |>
   clean_names()
 ```
 
@@ -187,7 +187,7 @@ Finally, can you plot a map of sample locations as in figure 2?
 
 ![Figure 2](images/baker-fig2.png)
 
-The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
+The data with locations is in `data/stalagmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
 ```{r, eval=FALSE}
 stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()

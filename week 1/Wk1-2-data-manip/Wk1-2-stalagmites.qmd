@@ -43,11 +43,21 @@ library(readxl)
 
 The data is available at https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639
 
-We've downloaded this into the folder at `data/staligmites/Laminated stalagmite Dataset.csv`
+We've downloaded this into the folder at `data/stalagmites/Laminated stalagmite Dataset.csv`
 
 Load this into R use the `read_csv()` function.
 
+The code below get's you started. You'll need to fill in the spaces indicated by XXX.
+
+
+```{r}
+stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv")
+```
+
+
 ## Data structure
+
+<h3>Data structure</h3>
 
 This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
 
@@ -58,7 +68,18 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 
 Check the structure of the dataset, including the names of the columns. 
 
-> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. You might need to install the package first.
+```{r}
+names(stalagmites_data)
+```
+
+
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. 
+
+
+```{r}
+stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv") |>
+  clean_names()
+```
 
 ## Check the data
 
@@ -168,7 +189,7 @@ Finally, can you plot a map of sample locations as in figure 2?
 
 ![Figure 2](images/baker-fig2.png)
 
-The data with locations is in `data/staligmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
+The data with locations is in `data/stalagmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
 ```{r, eval=FALSE}
 stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()
