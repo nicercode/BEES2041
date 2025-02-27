@@ -574,9 +574,9 @@ This is why sample size is so important in statistics. The more we sample, the b
 
 Let's use your new skills to estimate the mean and confidence interval for the following datasets.
 
-# Running tests on you laptop
+# Running tests on your laptop
 
-<h2>Running tests on you laptop</h2>
+<h2>Running tests on your laptop</h2>
 
 Let's now run some tests on your laptop to see if you can estimate the mean and confidence interval for some datasets. 
 
@@ -584,6 +584,7 @@ Don't forget to load the packages you need to run the code below.
 
 ```{r}
 library(tidyverse)
+library(parameters)
 ```
 
 ## Lead contamination in soils
@@ -664,7 +665,7 @@ lm_chinstrap <- lm(bill_length_mm ~ 1, data = data_chinstrap)
 parameters(lm_chinstrap)
 ```
 
-What are the mean and confidnece intervals for the bill length of the Chinstrap penguins?
+What are the mean and confidence intervals for the bill length of the Chinstrap penguins?
 
 -   mean: `r cloze(48.83, tolerance = 0.1)`
 -   lower CI: `r cloze(48.03, tolerance = 0.1)`
@@ -699,7 +700,7 @@ lm_Adelie <- lm(bill_length_mm ~ 1, data = data_Adelie)
 parameters(lm_Adelie)
 ```
 
-What are the mean and confidence intervals for the bill length of the Chinstrap penguins?
+What are the mean and confidence intervals for the bill length of the Adelie penguins?
 
 -   mean: `r cloze(38.79, tolerance = 0.1)`
 -   lower CI: `r cloze(38.36, tolerance = 0.1)`
