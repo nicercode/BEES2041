@@ -79,7 +79,7 @@ length(unique(penguins$island))
 This is not very nice looking code, you have to read from inside out which is not very intuitive. There is where pipes come in handy. 
 
 <div id="r-editor-113"><pre>
-penguins |>  # Take the dataset
+penguins$island |>  # Take the dataset
   unique() |>  # Tell me the distinct values
   length() # Tell me how long the vector is
 </pre>
