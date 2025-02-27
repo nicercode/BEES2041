@@ -305,7 +305,6 @@ system("convert resid_movie.gif -resize 50% -coalesce -set delay 3 -layers Optim
 
 ```
 
-```
 
 ## Plot lines with different slope
 

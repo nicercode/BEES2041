@@ -47,3 +47,18 @@ Before we dive in, let's consider XXX.
 
 ## Question header
 
+
+
+# To do
+
+## Linear mdoels syntax
+
+y ~ 1        y = B_0 
+ 
+y ~ x        y = B_0 + B_1 x
+
+y ~ x_1 + x_2    y = B_0 + B_1 x_1 + B_2 x_2
+
+y ~ x + (1 | site)    y_j  = B_0_j + B_1 x_1
+
+y ~ x + (1 | site) + (1 | year)    y_ij = B_0_j + B_0_i + B_1 x_1 + B_2 x_2

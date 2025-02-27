@@ -1,0 +1,220 @@
+---
+title: "Week 3-1 linear models"
+output: 
+  moodlequiz::moodlequiz:
+    replicates: 1
+  html_document:
+    toc: true
+moodlequiz:
+  category: "Week 3-1 linear models""
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+
+reditor_count <- 1
+
+class_id <- function() {
+  reditor_count <<- reditor_count + 1
+  sprintf("r-editor-%d", reditor_count)
+}
+```
+
+# Introduction
+
+<h3>Linear models</h3>
+
+The natural world is variable. We can't measure everything, so we take samples. We use these samples to estimate the mean and variance of a quantity for the population. In future weeks we'll be looking at how the mean of a population changes with some predictor, x. 
+
+In today's practical we'll learn how to estimate the mean of a population, and the uncertainty in our estimate. 
+
+You may have covered some of this material in MATH1041. Let's revise it again here, as these are core fundamentals underpinning most statistical analyses you'll undertake during your schooling and future work. 
+
+<!-- ![Artwork by @allison_horst](nice-R.png){width=70%} --> <br>
+
+<h3>Setting up</h3>
+
+**Materials:**
+
+Everything you need for this practical is on Moodle
+
+1.  Download the `Wk3-1-materials.zip` zip file from Moodle, from the course page
+2.  Extract the zip file into your `BEES2041/` folder
+3.  Unzip the file by:
+
+-   MacOS: Double clicking the zip file
+-   Windows: Right click on the zip file and click "Extract All"
+
+4.  Go into the folder `Wk3-1-materials` created by extracting the zip.
+5.  Click on the `Wk-3-1-Linear_models..Rproj` to open the RStudio project and you're in!!!
+
+We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+
+**Packages:**
+
+We will also be working with packages from the `tidyverse` and `easystats`, building on skills from the first two weeks. You should have these already installed on your machines.
+
+```{r, eval=FALSE}
+# Run only the lines below for packages you have not previously installed.
+# install.packages("tidyverse")
+# install.packages("easystats")
+```
+
+And don't forget to load them
+
+
+```{r, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+library(easystats)
+```
+
+
+## A motivating example
+
+<h3>A motivating example</h3>
+
+To get us started, let's consider a real question that a researcher might ask about a population mean.
+
+![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
+
+This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
+
+You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
+
+## Baby turtle's first challenge
+
+<h3>Baby turtle's first challenge</h3>
+
+The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. 
+
+Davey collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then burying the turtles again, as though they had just emerged from the nest.
+
+![Image: Davey Dor](pics/turtle.jpeg)
+
+Now he wants to know the average time it takes for baby turtles to reach the surface.
+
+Davey could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
+
+What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
+
+# MATH1041 refresher
+
+<h3>Distributions, probability and sampling</h3>
+
+Before looking at Davey's data, let's review some of the key concepts about probability, that underpin the estimation of confidence intervals.
+
+In MATH1041 (or equivalent), you learned about probability distributions, and how to calculate probabilities of observing a particular value. You also learned about sampling distributions, and how to calculate the probability of observing a particular sample mean.
+
+For this exercise we're going to use the following packages. Recall, when running R in the browser we need to install the packages each time we start a new session.
+
+Install:
+
+```{r, webr, eval=FALSE}
+install.packages(c("ggplot2", "dplyr"))
+```
+
+
+Then load them so we can use them
+
+```{r, webr, eval=FALSE}
+library(ggplot2)
+library(dplyr)
+```
+
+# Outline
+
+## Key learning objectives
+
+Intro, show how to 
+
+- run a linear regression in R
+- interpret the output of a linear regression
+  - summary
+  - parameters
+    - extract the confidence interval for the slope and intercept of the regression line from abaove
+  - report
+  - estimate_means
+- plot the data and the regression line
+  - add CI
+  - add by using output of estimate_means
+
+Examples
+
+- present 2 +examples of linear regression
+- for each, link the question being asked to statistcal method.
+- run the linear regression for each examples, relate the output to question being asked
+  - check can access various parts of output
+
+Example 1 - Isaac with leaves across climates.
+
+Example 2 - Palmer pengiuns - compare species sizes
+
+Example 3 - Lisa Schwanz sizes?
+
+
+## Example regression `
+
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
+```{r}
+data_towers <- readRDS("data/Towers2024.rds")
+
+fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
+
+summary(fit)
+
+parameters(fit)
+
+report(fit)
+
+means <- estimate_means(fit, by = "log10_rainfall")
+
+p_results <-
+  ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
+  geom_point(size = 2, col = "red", alpha = 0.2, stroke = 0) +
+  geom_ribbon(data = means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey") +
+  geom_line(data = means, aes(y = Mean), col = "#eb8240", size = 1) +
+  theme_classic() +
+  labs(
+    title = "Response of woody-plants to rainfall",
+    x = "log10 Rainfall",
+    y = "log10 Leaf Mass per Area"
+  ) 
+
+p_results
+```
+
+## Example Anova
+
+```{r}
+
+fit <- lm(y ~ x, data = data_iris_anova_3grp)
+
+summary(fit)
+
+means <- estimate_means(fit, by = "x")
+
+
+anova(fit)
+report(fit)
+
+estimate_contrasts(fit, contrast = "x")
+
+# Plot with raw data points
+pa1 <-
+  ggplot(means, aes(x = x, y = Mean)) +
+  geom_jitter(data = data_iris_anova_3grp, aes(x = x, y = y), color = "red", width = 0.1) + # Raw data
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3) + # Confidence intervals
+  geom_point(size = 5, color = "orange") + # Estimated means
+  theme_classic() + # Style plot
+  labs(y = "y")
+```
+
