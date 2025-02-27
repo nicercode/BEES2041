@@ -86,9 +86,9 @@ This is Davey Dor. Davey is a researcher in the School of Biological, Earth & En
 
 You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
 
-## Turlte challenge
+## Baby turtle's first challenge
 
-<h3>Turtle first challenge</h3>
+<h3>Baby turtle's first challenge</h3>
 
 The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. 
 
@@ -152,14 +152,17 @@ sd_1 <- 1
 mu_2 <- 2
 sd_2 <- 2
 
-# create a dataframe with the standard normal distribution
+# create a vector of x from -8 to 8, used to make our plot
 x <- seq(-8, 8, by = 0.01)
 
-data <-
-  bind_rows(
-    tibble(x, label = paste("N", mu_1, sd_1), density = dnorm(x, mean = mu_1, sd = sd_1)),
-    tibble(x, label = paste("N", mu_2, sd_2), density = dnorm(x, mean = mu_2, sd = sd_2))
-  )
+# Now create a dataframe with two normal distributions
+# Standard normal
+data_1 <- tibble(x, label = paste("N", mu_1, sd_1), density = dnorm(x, mean = mu_1, sd = sd_1))
+# Differernt normal
+data_2 <- tibble(x, label = paste("N", mu_2, sd_2), density = dnorm(x, mean = mu_2, sd = sd_2))
+
+# combine
+data <- bind_rows(data_1, data_2)
 
 # plot the normal distributions
 data |>
@@ -324,11 +327,11 @@ data |>
 
 The sampling distribution of the mean shows us that just by chance, your sample mean could be a lot higher or lower than the true population mean.
 
-OK, so what? Well, using some fancy mathematics, statisticians have shown that if for a variety of situations, the distribution of the sample means follows a normal distribution. This is the central limit theorem. Moreover, the standard deviation of the sample means is equal to the standard deviation of the population divided by the square root of the sample size. *This is really cool*, because it means that **we can estimate the range of possible values for the mean of the population, based on the mean and standard deviation of the population**.
+OK, so what? Well, using some fancy mathematics, statisticians have shown that the distribution of the sample means follows a normal distribution. This is the central limit theorem. Moreover, the standard deviation of the sample means is equal to the standard deviation of the population divided by the square root of the sample size. *This is really cool*, because it means that **we can estimate the range of possible values for the mean of the population, based on the mean and standard deviation of the population**.
 
 This is how confidence intervals are built. We estimate the mean of the sample, then add a dose of uncertainty, based on some assumptions about the distribution of the sample means.
 
-$$\bar{\mu_y} \pm \rm{Uncertainty}$$
+$$\hat{\mu_y} \pm \rm{Uncertainty}$$
 
 ## Enter The t-distribution
 
@@ -338,7 +341,7 @@ To estimate the uncertainty, we use the t-distribution. When the sample size is 
 
 So the equation above becomes
 
-$$\bar{\mu_y} \pm t_{0.05, n-1} \times SE$$
+$$\hat{\mu_y} \pm t_{0.05, n-1} \times SE$$
 
 where $t_{0.05, n-1}$ is the value of the t-distribution for a 95% confidence interval and n-1 degrees of freedom, and $SE$ is the standard error of the mean. The standard error of the mean is the standard deviation of the sample means, and is calculated as the standard deviation of the population divided by the square root of the sample size.
 
@@ -479,7 +482,7 @@ baby_turtles |>
 
 **Interpreting the confidence interval**
 
-From the data above, you can see the etsimate of the mean time it takes for baby turtles to reach the surface (19mins), and a confidence interval for the mean, ranging from 14.668-23.332 mins. As he used a 95% confidence interval, he can be 95% confident that the true mean time it takes for baby turtles to reach the surface is between 14.668 and 23.332 minutes.
+From the data above, you can see the estimate of the mean time it takes for baby turtles to reach the surface (70.1 hr), and a confidence interval for the mean (from 57.5-82.76 hrs). As he used a 95% confidence interval, there is a 95% chance that the true mean time it takes for baby turtles to reach the surface is between 57.5 and 82.76 hours.
 
 ## Asking questions using confidence intervals
 
@@ -487,19 +490,19 @@ From the data above, you can see the etsimate of the mean time it takes for baby
 
 Confidence intervals around the mean are a powerful tool in our analysis toolbox. For example, Davey could ask:
 
-**Question: What is the probability that the mean time it takes for baby turtles to reach the surface is less than or greater than some critical value, e.g. 20 minutes?**
+**Question: What is the probability that the mean time it takes for baby turtles to reach the surface is less than or greater than some critical value, e.g. 20 hrs?**
 
 To answer this, Davey can look at confidence intervals. The confidence interval tells us the range of possible values for the mean of the population. If the critical value is within the confidence interval, then the mean of the population is likely to be less than or greater than the critical value. If the critical value is outside the confidence interval, then the mean of the population is likely to be greater than or less than the critical value.
 
-As CI is XXX-XX, we can conclude that XXXX
+As the CI on the mean is 57.5-82.76, we can conclude that mean time it takes for baby turtles to reach the surface is likely to be greater than 20 mins.
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
-You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and pvalue are reported. These are the results of a t-test, comparing the estimated parameter to zero.
+You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and pvalue are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
 
 **Question: How likely is that two samples of baby turtles come from the same population?**
 
-This is equivalent to asking if the confidence intervals for the two samples overlap. If the confidence intervals overlap, then the means of the two samples may come from the same population. If the confidence intervals do not overlap, then the means of the two samples are unlikely to come from different populations.
+This is equivalent to asking if the confidence intervals for the two samples overlap. If the confidence intervals overlap, then the means of the two samples may come from the same population. If the confidence intervals do not overlap, then the means of the two samples are likely to come from different populations.
 
 **Question: How does the mean time it takes for baby turtles to reach the surface change with the size of the turtles?**
 
@@ -512,6 +515,9 @@ Often we may also be interested in how the mean of the population changes with s
 This test with confidence intervals is equivalent to running a two-sample t-test. You may have covered t-tests in MATH1041. In fact, estimating confidence intervals is closely related to t-tests; they use the same basic maths, and produce identical results.
 
 We can also use the `t.test` function in R to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface. Additionally, the `t.test` function can be used to test if the mean of the population is different to some critical value, by default zero.
+
+Let's run a t-test on the baby turtle data to see if the mean time it takes for baby turtles to reach the surface is different to zero.
+
 
 <div id=`r class_id()`><pre>
 t.test(baby_turtles$time_to_surface, alternative = "two.sided", mu = 0)
@@ -572,6 +578,8 @@ This is why sample size is so important in statistics. The more we sample, the b
 
 ## Your turn!
 
+<h3>Your turn!</h3>
+
 Let's use your new skills to estimate the mean and confidence interval for the following datasets.
 
 # Running tests on your laptop
@@ -591,13 +599,13 @@ library(parameters)
 
 <h3> Lead contamination in soils</h3>
 
-An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by local community. Safety guidelines dictate that lead concentrations in soil should not exceed 300mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with a X-ray Fluorescence (pXRF) spectrometer.
+An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by local community. Safety guidelines dictate that lead concentrations in soil should not exceed 400mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with a X-ray Fluorescence (pXRF) spectrometer.
 
 ![Collecting soil samples](https://media.news.climate.columbia.edu/wp-content/uploads/2018/09/soil-sampling-1300x975.avif){width=50%}
 
 The data obtained are in the folder `data/` in the file `lead_contamination.csv`. Load the data using `read_csv` from the `tidyverse`.
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 data <- read_csv("data/lead_contamination.csv")
 ```
 
@@ -611,18 +619,18 @@ And then calculate the 95% confidence intervals for the population mean. You sho
 
 ```
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 lm_lead <- lm(lead_concentration ~ 1, data = data)
 parameters(lm_lead)
 ```
 
 What are the mean and confidence intervals for the school garden soil lead concentration?
 
--   mean: `r cloze(272.70, tolerance = 0.1)`
--   lower CI: `r cloze(230.09, tolerance = 0.1)`
--   upper CI: `r cloze(315.31, tolerance = 0.1)`
+-   mean: `r cloze(272.70, tolerance = 1)`
+-   lower CI: `r cloze(230.09, tolerance = 1)`
+-   upper CI: `r cloze(315.31, tolerance = 1)`
 
-** Based on the CI, is there evidence that soils from this garden exceeded the safety guidelines? ** `r cloze("no", c("yes", "no"))`
+**Based on the CI, is there evidence that soils from this garden exceeded the safety guidelines?** `r cloze("no", c("yes", "no"))`
 
 ## Palmer penguins
 
@@ -659,7 +667,7 @@ Now calculate the mean and confidence intervals for the bill length of the Chins
 
 ```
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 lm_chinstrap <- lm(bill_length_mm ~ 1, data = data_chinstrap)
 parameters(lm_chinstrap)
@@ -683,7 +691,7 @@ Now what is the mean and confidence intervals for the bill length of the Adelie 
 
 ```
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 data_Adelie <- penguins |> filter(species == "Adelie")
 ```
@@ -694,7 +702,7 @@ Now calculate the mean and confidence intervals for the bill length of the Adeli
 
 ```
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 lm_Adelie <- lm(bill_length_mm ~ 1, data = data_Adelie)
 parameters(lm_Adelie)
@@ -720,7 +728,7 @@ Now what is the mean and confidence intervals for the bill length of the Gentoo 
 
 ```
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 data_Gentoo <- penguins |> filter(species == "Gentoo")
 ```
@@ -731,7 +739,7 @@ Now calculate the mean and confidence intervals for the bill length of the Gento
 
 ```
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 
 lm_Gentoo <- lm(bill_length_mm ~ 1, data = data_Gentoo)
 parameters(lm_Gentoo)
@@ -745,7 +753,7 @@ What are the mean and confidence intervals for the bill length of the Gentoo pen
 
 Based on the CIs, is there evidence that the bill length of the Gentoo penguins is different to the bill length of the Chinstrap penguins? `r cloze("oh, it's very close!", c("yes", "oh, it's very close!", "no"))`
 
-## finished
+## Final words and solutions
 
 <h3>Final words and solutions</h3>
 
