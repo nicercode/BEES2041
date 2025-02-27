@@ -151,8 +151,9 @@ Examples
   - check can access various parts of output
 
 Example 1 - Isaac with leaves across climates.
-
 Example 2 - Palmer pengiuns - compare species sizes
+
+Do it yourself examples
 
 Example 3 - Lisa Schwanz sizes?
 
@@ -195,13 +196,15 @@ p_results
 ## Example Anova
 
 ```{r}
+data_iris_anova_3grp <- iris |> select(x = Species, y = Sepal.Width)
 
 fit <- lm(y ~ x, data = data_iris_anova_3grp)
 
 summary(fit)
 
-means <- estimate_means(fit, by = "x")
+parameters(fit)
 
+means <- estimate_means(fit, by = "x")
 
 anova(fit)
 report(fit)
@@ -209,7 +212,6 @@ report(fit)
 estimate_contrasts(fit, contrast = "x")
 
 # Plot with raw data points
-pa1 <-
   ggplot(means, aes(x = x, y = Mean)) +
   geom_jitter(data = data_iris_anova_3grp, aes(x = x, y = y), color = "red", width = 0.1) + # Raw data
   geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3) + # Confidence intervals
