@@ -1,12 +1,12 @@
 ---
 title: "Week 3-1 linear models"
-output: 
-  moodlequiz::moodlequiz:
-    replicates: 1
-  html_document:
-    toc: true
-moodlequiz:
-  category: "Week 3-1 linear models""
+output: html_output
+#   moodlequiz::moodlequiz:
+#     replicates: 1
+#   html_document:
+#     toc: true
+# moodlequiz:
+#  category: "Week 3-1 linear models"
 editor_options:
   chunk_output_type: console
 ---
@@ -25,17 +25,16 @@ class_id <- function() {
 }
 ```
 
-# Introduction
+# Introduction to linear model
 
-<h3>Linear models</h3>
+Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand relationships between variables. 
 
-The natural world is variable. We can't measure everything, so we take samples. We use these samples to estimate the mean and variance of a quantity for the population. In future weeks we'll be looking at how the mean of a population changes with some predictor, x. 
+In this prac, we’ll explore how to fit and interpret,  using real data. By the end, you'll have a solid foundation for applying these models in your own work. 
 
-In today's practical we'll learn how to estimate the mean of a population, and the uncertainty in our estimate. 
+Let’s dive in! 🚀 
 
-You may have covered some of this material in MATH1041. Let's revise it again here, as these are core fundamentals underpinning most statistical analyses you'll undertake during your schooling and future work. 
-
-<!-- ![Artwork by @allison_horst](nice-R.png){width=70%} --> <br>
+![Artwork by @allison_horst](you-can-do-it.png){width=80%}
+<br>
 
 <h3>Setting up</h3>
 
@@ -46,63 +45,31 @@ Everything you need for this practical is on Moodle
 1.  Download the `Wk3-1-materials.zip` zip file from Moodle, from the course page
 2.  Extract the zip file into your `BEES2041/` folder
 3.  Unzip the file by:
-
--   MacOS: Double clicking the zip file
--   Windows: Right click on the zip file and click "Extract All"
-
+    - **MacOS:** Double clicking the zip file
+    - **Windows:** Right click on the zip file and click **"Extract All"**
 4.  Go into the folder `Wk3-1-materials` created by extracting the zip.
-5.  Click on the `Wk-3-1-Linear_models..Rproj` to open the RStudio project and you're in!!!
+5.  Click on the `Wk-3-1-linear-models.Rproj` to open the RStudio project and you're in!!!
 
 We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
-**Packages:**
+**Setting up: Packages:**
 
 We will also be working with packages from the `tidyverse` and `easystats`, building on skills from the first two weeks. You should have these already installed on your machines.
 
 ```{r, eval=FALSE}
-# Run only the lines below for packages you have not previously installed.
+# Uncomment and run only the lines below only if you have not previously installed these.
 # install.packages("tidyverse")
 # install.packages("easystats")
 ```
 
-And don't forget to load them
-
+Let's load the packages into R 
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
 library(easystats)
 ```
 
-
-## A motivating example
-
-<h3>A motivating example</h3>
-
-To get us started, let's consider a real question that a researcher might ask about a population mean.
-
-![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
-
-This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
-
-You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
-
-## Baby turtle's first challenge
-
-<h3>Baby turtle's first challenge</h3>
-
-The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. 
-
-Davey collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then burying the turtles again, as though they had just emerged from the nest.
-
-![Image: Davey Dor](pics/turtle.jpeg)
-
-Now he wants to know the average time it takes for baby turtles to reach the surface.
-
-Davey could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
-
-What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
-
-# MATH1041 refresher
+# A Refresher: Probability, Sampling and Confidence Intervals
 
 <h3>Distributions, probability and sampling</h3>
 
@@ -121,7 +88,7 @@ install.packages(c("ggplot2", "dplyr"))
 
 Then load them so we can use them
 
-```{r, webr, eval=FALSE}
+```{r, webr-1, eval=FALSE}
 library(ggplot2)
 library(dplyr)
 ```
@@ -166,7 +133,7 @@ library(easystats)
 ```
 
 ```{r}
-data_towers <- readRDS("data/Towers2024.rds")
+data_towers <- read.csv("data/towers-2024.csv")
 
 fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
@@ -220,3 +187,30 @@ estimate_contrasts(fit, contrast = "x")
   labs(y = "y")
 ```
 
+## A motivating example
+
+<h3>A motivating example</h3>
+
+To get us started, let's consider a real question that a researcher might ask about a population mean.
+
+![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
+
+This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
+
+You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
+
+## Baby turtle's first challenge
+
+<h3>Baby turtle's first challenge</h3>
+
+The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. 
+
+Davey collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then burying the turtles again, as though they had just emerged from the nest.
+
+![Image: Davey Dor](pics/turtle.jpeg)
+
+Now he wants to know the average time it takes for baby turtles to reach the surface.
+
+Davey could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
+
+What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
