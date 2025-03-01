@@ -19,6 +19,7 @@ library(moodlequiz)
 
 # For the prac
 library(tidyverse)
+library(easystats)
 library(palmerpengiuns)
 
 # Data for prac
@@ -161,6 +162,8 @@ To fit a linear model, we will be using the `lm()` function like so:
 towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 ```
 
+### Slope or the change in y with x
+
 Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
 
 ![](slope-explainer.png)
@@ -171,7 +174,7 @@ Let's inspect the results of your model use `summary(towers_fit)` and see how th
 summary(towers_fit)
 ```
 
-**Question:**
+**Questions:**
 
 1. Which coefficient corresponds to the slope in the output of `summary(towers_fit)`? 
 
@@ -179,15 +182,75 @@ The slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and
 
 2. What direction is slope coefficient, what does this tell us?
 
-The slope is 
+The slope is `r cloze("negative", c("negative", "positive"))`. This indications that the as `log10_rainfall` `r cloze("increases", c("decreases", "increases"))`, `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
+
+### The confidence interval
+
+For a nicer output you can also use `parameters(towers_fit)`. This function convienently, gives us the **95% confidence intervals** of our coefficients.  
+
+```{r}
+parameters(towers_fit)
+```
+
+**Question:**
+
+What does the 95% CI tell us here about the slope `log10_rainfall`?
+
+`[-0.56, -0.52]` provides a range of values within which we can be 95% confident that the `r cloze("true", c("sample", "true"))` population parameter coefficient lies. 
 
 
-parameters(fit)
+### Variation explained by the model (R^2 and F-statistic)
 
-report(fit)
+![](r2-and-f-value.png)
+> There are two metrics we are use to assess our model fit
 
-means <- estimate_means(fit, by = "log10_rainfall")
+The **R^2 value** describes how much variation is explained by your model:
 
+- Measures the **proportion of variance** in the y variable (`log10_leaf_mass_per_area`) explained by the x variable(s) (`log10_rainfall`).
+- A higher R^2 value indicates strong relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable(s) (`log10_rainfall`), but *importantly* it **does not imply causation**.
+
+The **F-statistic** compares the explained variance to the unexplained variance:
+
+- A **high F-statistic** suggests that at least one predictor (`log10_leaf_mass_per_area`) is significantly contributing to the model.
+
+- The **F-statistic's p-value** tells us whether our predictor variable explains a significant amount of variance in the response variable or not
+
+We can use the `report(towers_fit)` provides us with a written summary of our model output
+
+```{r}
+report(towers_fit)
+```
+
+**Question:**
+
+The `r cloze("R squared value", c("F-statistic", "R squared value", "P value"))` is a `r cloze("moderate", c("weak", "moderate", "strong"))` relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable (`log10_rainfall`). 
+
+The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains `r cloze("significant", c("non-significant", "non-significant"))` amount of variance in `log10_leaf_mass_per_area`.
+
+### P-values - how likely is it to get our results by chance?
+
+> The p-value is derived from the F-distribution
+
+![](f-value-p-value.png)
+The p-value and the F-statistic are closely related because the F-statistic is used to test whether the model explains a significant portion of variance, and the p-value tells us the probability of observing such an F-statistic under the null hypothesis.
+
+The p-value tells us how extreme the observed F-statistic is under the null hypothesis (which assumes the predictor has no effect).
+
+A smaller p-value means the observed F-statistic is unlikely to occur by chance, suggesting strong evidence against the null hypothesis.
+
+
+
+
+### Calculating and visualising predicted means 
+
+```{r}
+means <- estimate_means(towers_fit, by = "log10_rainfall")
+means
+```
+
+
+
+```{r}
 p_results <-
   ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
   geom_point(size = 2, col = "red", alpha = 0.2, stroke = 0) +
