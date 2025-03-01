@@ -303,16 +303,71 @@ Feel free to tinker with all these options to create a plot that helps us answer
 # Bringing back the Palmer penguins for allometry
 
 ![We can learn so much from these cuties. Image credit: @allison_horst](palmer_penguins.png)
+Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
 
+> We are want try answer the question: **How does bill length scale with body mass in Palmer Penguins?**
 
+Over to you - using the code from Isaac's study above, can you try: 
 
+- Run a linear model for `bill_length_mm` and `body_mass_g`
+- Generate the summary output for your model using `summary()`, `parameters()` and `report()`
+  - Make some interpretations from this output using the: 
+      - slope
+      - confidence interval of the slope
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()`
+- Create a data visualisation showing off the penguins data, your predicted means from your linear
+model
+  - Plot the raw data with `geom_point()`
+  - Add the confidence intervals with `geom_ribbon()`
+  - Add the predicted linear relationship with `geom_line()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
+
+```{r}
+library(tidyverse)
+library(easystats)
+library(palmerpengiuns)
+```
+
+```{r}
+penguins
+```
+
+```{r penguins-answer}
+penguins_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
+summary(penguins_fit)
+parameters(penguins_fit)
+report(penguins_fit)
+
+penguins_means <- estimate_means(penguins_fit, by = "body_mass_g")
+
+penguins_model_predictions <-
+  ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
+  geom_point(size = 2, col = "cornflowerblue", alpha = 0.5, stroke = 0) +
+  geom_ribbon(data = penguins_means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "azure2") +
+  geom_line(data = penguins_means, aes(y = Mean), col = "#EB8240", linewidth = 1) +
+  theme_classic() +
+  labs(
+    title = "Allometry of bill length with body mass in Palmer Penguins",
+    x = "Body mass (g)",
+    y = "Bill length (mm)"
+  ) 
+
+penguins_model_predictions
+```
 
 <!-- # Lisa and Lizard size -->
 
 <!-- TODO: Daniel can you share with me Lisa's data? -->
 
+# Our recovering Ozone
 
-# Air Quality
+![Different layer's of the Earth's atmosphere, Image credit: [ABC News](https://www.abc.net.au/btn/classroom/ozone-recovery/101917894)](ozone.png)
+
 ```{r}
 data(airquality)
 model <- lm(Ozone ~ Temp, data = airquality, na.action = na.omit) # Exclude missing data
