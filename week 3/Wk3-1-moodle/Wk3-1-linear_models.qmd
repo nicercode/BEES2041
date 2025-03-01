@@ -337,14 +337,23 @@ library(palmerpengiuns)
 penguins
 ```
 
-```{r penguins-answer}
+```{r penguins-answer, include=FALSE}
+# Fit the model
 penguins_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
+
+# Summary of model
 summary(penguins_fit)
-parameters(penguins_fit)
+
+# Clean, nice summary
+parameters(penguins_fit) confint(penguins_fit)
+
+# Text report of model
 report(penguins_fit)
 
+# Create model predictions
 penguins_means <- estimate_means(penguins_fit, by = "body_mass_g")
 
+# Make a scatterplot of raw data and model predictions
 penguins_model_predictions <-
   ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
   geom_point(size = 2, col = "cornflowerblue", alpha = 0.5, stroke = 0) +
@@ -359,6 +368,33 @@ penguins_model_predictions <-
 
 penguins_model_predictions
 ```
+
+Once you've done the above, use your outputs to answer the following questions
+
+**Questions: **
+
+1. What does the slope tell us? 
+
+- There is a postive/negative relationship between bill length and body mass
+
+2. Try interpretting the slope for us
+
+- A unit increase in body_mass_g corresponds to a 2.690e+01/4.051e-03/<2e-16 in bill length
+
+3. Yikes, looks like by rounding, the confidence intervals for the slope in the output of `parameters()` is not very helpful. Take a look at `report()` instead OR you can try `confint(penguins_fit)` to look at the unrounded values of the confidence intervals
+
+- What does the confidence intervals for the slope tell us? 
+
+The confidence intervals for the slope tells us that the true population mean for slope lies between
+24.402502194 and 29.395242653 / 0.003467795 and 0.004635038
+
+4. Let's get some meaning from the R^2 and F-statistic from your model. What are they telling us?
+
+The R^2 value suggests that there is a weak/moderate/strong relationship between bill length and body mass. 
+
+The F-statistic is relatively small/large, meaning that bill length/bill depth/flipper length 
+
+5. 
 
 <!-- # Lisa and Lizard size -->
 
