@@ -17,6 +17,14 @@ knitr::opts_chunk$set(echo = TRUE)
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
+# For the prac
+library(tidyverse)
+library(palmerpengiuns)
+
+# Data for prac
+data_towers <- read.csv("week 3/Wk3-1-moodle/data/towers-2024.csv")
+
+# webr counter
 reditor_count <- 1
 
 class_id <- function() {
@@ -25,18 +33,41 @@ class_id <- function() {
 }
 ```
 
-# Introduction to linear model
+<!-- Examples
+
+- present 2 +examples of linear regression
+- for each, link the question being asked to statistcal method.
+- run the linear regression for each examples, relate the output to question being asked
+  - check can access various parts of output
+
+-->
+
+# Introduction to linear models
 
 Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand relationships between variables. 
 
-In this prac, we’ll explore how to fit and interpret,  using real data. By the end, you'll have a solid foundation for applying these models in your own work. 
+In this prac, we’ll explore how to fit and interpret, using real data. By the end, you'll have a solid foundation for applying these models in your own work. 
+
+### Key learning objectives
+
+We've got quite to get through today, our learning objective today are:
+
+- **run** a **linear regression** in R using `lm()`
+- **interpret** the output of a **linear regression** using:
+  - `summary()`
+  - `parameters()`
+    - **extract** the **confidence interval** for the **slope** and **intercept** of the **regression** line
+  - `report()`
+  - `estimate_means()`
+- **plot** the data and the **regression** line
+  - add the **confidence interval** using output of `estimate_means()`
 
 Let’s dive in! 🚀 
 
 ![Artwork by @allison_horst](you-can-do-it.png){width=80%}
 <br>
 
-<h3>Setting up</h3>
+### Setting up
 
 **Materials:**
 
@@ -54,90 +85,102 @@ We will be working with real-world datasets collected by researched in the Schoo
 
 **Setting up: Packages:**
 
-We will also be working with packages from the `tidyverse` and `easystats`, building on skills from the first two weeks. You should have these already installed on your machines.
+We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
 
+**Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer
+
+In case you don't have them installed, here is code for you to do so:
 ```{r, eval=FALSE}
 # Uncomment and run only the lines below only if you have not previously installed these.
 # install.packages("tidyverse")
 # install.packages("easystats")
+# install.packages("palmerpenguins")
 ```
 
-Let's load the packages into R 
+> Remember to load the packages into R to use em! 
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
 library(easystats)
+library(palmerpengiuns)
 ```
 
-# A Refresher: Probability, Sampling and Confidence Intervals
+# A Refresher: Population means and sampling 
 
-<h3>Distributions, probability and sampling</h3>
+In the previous prac, we learned about population means and the process of sampling. Here is a quick visualisation to illustrate the key message: 
 
-Before looking at Davey's data, let's review some of the key concepts about probability, that underpin the estimation of confidence intervals.
-
-In MATH1041 (or equivalent), you learned about probability distributions, and how to calculate probabilities of observing a particular value. You also learned about sampling distributions, and how to calculate the probability of observing a particular sample mean.
-
-For this exercise we're going to use the following packages. Recall, when running R in the browser we need to install the packages each time we start a new session.
-
-Install:
-
-```{r, webr, eval=FALSE}
-install.packages(c("ggplot2", "dplyr"))
-```
-
-
-Then load them so we can use them
-
-```{r, webr-1, eval=FALSE}
-library(ggplot2)
-library(dplyr)
-```
-
-# Outline
-
-## Key learning objectives
-
-Intro, show how to 
-
-- run a linear regression in R
-- interpret the output of a linear regression
-  - summary
-  - parameters
-    - extract the confidence interval for the slope and intercept of the regression line from abaove
-  - report
-  - estimate_means
-- plot the data and the regression line
-  - add CI
-  - add by using output of estimate_means
-
-Examples
-
-- present 2 +examples of linear regression
-- for each, link the question being asked to statistcal method.
-- run the linear regression for each examples, relate the output to question being asked
-  - check can access various parts of output
-
-Example 1 - Isaac with leaves across climates.
-Example 2 - Palmer pengiuns - compare species sizes
-
-Do it yourself examples
-
-Example 3 - Lisa Schwanz sizes?
-
-
-## Example regression `
+> When we take a sample, our sample mean will always be taken with some error
 
 ```{r}
-library(tidyverse)
-library(easystats)
+# Set the true mean and sd for the population
+true_mean <- 5
+true_sd <- 2
+
+# Create a tibble with the population and sample means
+# Take a sample of 1000 observations from a population with mean 5 and standard deviation 2
+data1 <- tibble(
+  value = rnorm(1000, mean = true_mean, sd = true_sd),
+  type = "Population of 1000"
+)
+
+# take 1000 samples of 10 observations from a population with mean 5 and standard deviation 2
+data2 <- tibble(
+  value = replicate(1000, mean(rnorm(10, mean = true_mean, sd = true_sd))),
+  type = "Sample mean"
+)
+
+# combine the population and sample means
+data <- bind_rows(data1, data2)
+
+# plot the distribution of the population and sample means
+data |>
+  ggplot(aes(x = value, fill = type)) +
+  geom_histogram(binwidth = 0.5, color = "black", alpha = 0.5) +
+  facet_wrap(~type) +
+  labs(title = "Distribution of population and sample means", x = "Value", y = "Frequency")
 ```
 
-```{r}
+This is the nature of sampling and for this reason, we estimate **confidence intervals** to capture the uncertainty in our samples. Let's move on 
+
+# Isaac with leaves across climates
+
+![](isaac-plant-ecosystems.png){60%}
+From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478) We will be working with the data Isaac compiled for us. 
+
+Let's read in the Isaac's data. This is in your `"data/"` folder. 
+
+```{r, eval=FALSE}
 data_towers <- read.csv("data/towers-2024.csv")
+```
 
-fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
+To fit a linear model, we will be using the `lm()` function like so:
 
-summary(fit)
+**Note**: Remember to assign the output of `lm()` into an object so R can save it for you in your environment
+
+```{r}
+towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
+```
+
+Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
+
+![](slope-explainer.png)
+
+Let's inspect the results of your model use `summary(towers_fit)` and see how this corresponds to the image above
+
+```{r}
+summary(towers_fit)
+```
+
+**Question:**
+
+1. Which coefficient corresponds to the slope in the output of `summary(towers_fit)`? 
+
+The slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and the coefficient value is `r cloze("-0.543846", c("3.805973", "-0.543846", "<2e-16"))`
+
+2. What direction is slope coefficient, what does this tell us?
+
+The slope is 
+
 
 parameters(fit)
 
@@ -160,10 +203,45 @@ p_results <-
 p_results
 ```
 
-## Example Anova
+# Bringing the Palmer penguins back for allometry
+
+
+
+# Lisa and Lizard size
+
+
+# Air Quality
+```{r}
+data(airquality)
+model <- lm(Ozone ~ Temp, data = airquality, na.action = na.omit) # Exclude missing data
+summary(model)
+ggplot(airquality, aes(x = Temp, y = Ozone)) +
+  geom_point() +  # Scatter plot
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +  # Add linear regression line
+  labs(title = "Ozone vs Temperature with Linear Regression Line",
+       x = "Temperature (F)",
+       y = "Ozone Level (ppb)") +
+  theme_minimal()
+```
+
+# Introduction to ANOVA
+
+In this week's lectures, we learned that linear regression are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables. 
+
+Recall the differences between  **discrete** or **categorical** variables. 
+
+![A colourful example of  **continuous** and **discrete/categorical** variables](continuous-discrete.png){70%}
 
 ```{r}
-data_iris_anova_3grp <- iris |> select(x = Species, y = Sepal.Width)
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+```
+
+# Mean differences in Palmer Penguins
+
+```{r}
+penguins|> select(x = island, y = Sepal.Width)
 
 fit <- lm(y ~ x, data = data_iris_anova_3grp)
 
@@ -187,30 +265,22 @@ estimate_contrasts(fit, contrast = "x")
   labs(y = "y")
 ```
 
-## A motivating example
 
-<h3>A motivating example</h3>
+# Insecticides and crops
 
-To get us started, let's consider a real question that a researcher might ask about a population mean.
+```{r}
+# Load the dataset
+InsectSprays
 
-![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
+# Fit a linear model treating spray as a categorical predictor
+model <- lm(count ~ spray, data = InsectSprays)
 
-This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
+# Perform ANOVA
+anova_result <- anova(model)
 
-You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
+# Print results
+print(anova_result)
 
-## Baby turtle's first challenge
-
-<h3>Baby turtle's first challenge</h3>
-
-The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. 
-
-Davey collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then burying the turtles again, as though they had just emerged from the nest.
-
-![Image: Davey Dor](pics/turtle.jpeg)
-
-Now he wants to know the average time it takes for baby turtles to reach the surface.
-
-Davey could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
-
-What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
+# Check model summary
+summary(model)
+```
