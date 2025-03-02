@@ -489,7 +489,14 @@ library(palmerpenguins)
 ```
 
 ![We can use linear models to compare means between groups](lm-anova.png)
+<!-- TODO: -->
+<!-- - Fitting a lm to a categorical variable is actually a linear regression with multiple predictors -->
 
+<!-- - Intro to ANOVA -->
+<!--   - group slopes + contrasts -->
+<!--   - paramter estimates test -->
+<!--   - anova test -->
+<!--   - pairwise comparisons -->
 
 # Jasmine, fish, temperature and metabolism
 
@@ -497,7 +504,31 @@ library(palmerpenguins)
 ) using [{metadigitise}](https://github.com/daniel1noble/metaDigitise) time permitting
 -->
 
-# Species differences in Palmer Penguins
+# Island differences in Palmer Penguins
+
+![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png)
+
+Using the `penguins` data:
+
+- Run a linear model for `flipper_length_mm` and `island`
+- Perform an ANOVA on your linear model output
+- Estimate contrasts using `estimate_contrasts()` for `island`
+- Generate summary outputs for your model using `summary()`, `parameters()`
+  - Make some interpretations from this output using the: 
+      - intercept
+      - slopes for the group predictor variable (`island`)
+      - confidence interval of the group predictor variable (`island`)
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()` for `island`
+- Create a data visualisation showing off the `penguins` data, your predicted means for each group from your linear model
+  - Plot the raw data with `geom_jitter()`
+  - Add the confidence intervals with `geom_errorbar()`
+  - Add the predicted group means with `geom_point()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
 
 ```{r}
 # Fit a linear model
@@ -527,6 +558,14 @@ group_means_island <- estimate_means(fit_penguins, by = "island")
   theme_minimal()
 ```
 
+> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+
+**Questions:**
+
+1. 
+2.
+3. 
+
 # Insecticides and crops
 
 The `InsectSprays` dataset in R contains data on the effectiveness of six different insecticides in controlling pest insect populations.
@@ -535,6 +574,28 @@ The `InsectSprays` dataset in R contains data on the effectiveness of six differ
 - `Spray`: A categorical variable (A–F) representing six different insecticide treatments.
 
 > Which spray is the most effective in controlling insect pest counts? 
+
+Using the `InsectSprays` data:
+
+- Run a linear model for the relevant variables for our question
+- Perform an ANOVA on your linear model output
+- Estimate contrasts using `estimate_contrasts()`
+- Generate summary outputs for your model using `summary()`, `parameters()`
+  - Make some interpretations from this output using the: 
+      - intercept
+      - slopes for the group predictor variable
+      - confidence interval of the group predictor variable
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()`
+- Create a data visualisation showing off the `InsectSprays` data, your predicted means for each group from your linear model
+  - Plot the raw data with `geom_jitter()`
+  - Add the confidence intervals with `geom_errorbar()`
+  - Add the predicted group means with `geom_point()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
 
 ```{r}
 # Load the dataset
@@ -566,3 +627,11 @@ ggplot(group_means_spray, aes(x = spray, y = Mean)) +
        y = "Insect counts") +
   theme_minimal()
 ```
+
+> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+
+**Questions:**
+
+1. 
+2.
+3. 
