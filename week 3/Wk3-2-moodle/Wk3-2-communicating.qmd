@@ -1,0 +1,415 @@
+---
+title: "Week 3-2 Communicating results"
+output: html_output
+#   moodlequiz::moodlequiz:
+#     replicates: 1
+#   html_document:
+#     toc: true
+# moodlequiz:
+#  category: "Week 3-2 Communicating results"
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+
+# For the prac
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+
+# Data for prac
+data_towers <- read.csv("week 3/Wk3-2-moodle/data/towers-2024.csv")
+
+# webr counter
+reditor_count <- 1
+
+class_id <- function() {
+  reditor_count <<- reditor_count + 1
+  sprintf("r-editor-%d", reditor_count)
+}
+```
+
+
+# Commmunicating results
+
+It is worth reminding ourselves that we are learning statistics so that we can answer questions in the life and earth sciences. Unless you want to keep the answers to yourselves, we need to be able to communicate the results of statistical analyses to a broader audience. Given that statistics has a reputation for being able to trick and confuse people, simple and effective communication of results is a necessary skill for research scientists.
+
+ 
+<!-- A plot -->
+
+Communication of the results of statistical analyses is usually done by a combination of written text with reference to visual display of the results and the inclusion of test statistics to support the written statements.
+
+This practical gives you some examples of the ways in which analyses and graphs are used in results sections. These examples of effective (or maybe not so effective) communication should help in the presentation of your own results from the Independent data analysis and Maroubra field trip (needed for the second and third practical reports).
+
+These exercises use examples of work published by research students (Honours, Masters and PhD) in the School of Biological, Earth and Environmental Sciences.
+
+### Key learning objectives
+
+At the end of the exercise, you should be able to:
+
+- Read a research paper and identify the three ways in which results are communicated (text, figures and analyses).
+- Suggest what figures to use for data from different sampling or experimental designs.
+- Draft text, figures and results from the statistical tests learnt throughout the course in the preparation of results sections suitable for scientific reports.
+
+Let’s dive in! 🚀 
+
+![Image credit:  @allison_horst](you-can-do-it.png){width=80%}
+<br>
+
+### Setting up
+
+**Materials:**
+
+Everything you need for this practical is on Moodle
+
+1.  Download the `Wk3-2-materials.zip` zip file from Moodle, from the course page
+2.  Extract the zip file into your `BEES2041/` folder
+3.  Unzip the file by:
+    - **MacOS:** Double clicking the zip file
+    - **Windows:** Right click on the zip file and click **"Extract All"**
+4.  Go into the folder `Wk3-2-materials` created by extracting the zip.
+5.  Click on the `Wk3-2-linear-models.Rproj` to open the RStudio project and you're in!!!
+
+We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+
+**Setting up: Packages:**
+
+We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
+
+**Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer
+
+In case you don't have them installed, here is code for you to do so:
+```{r, eval=FALSE}
+# Uncomment and run only the lines below only if you have not previously installed these.
+# install.packages("tidyverse")
+# install.packages("easystats")
+# install.packages("palmerpenguins")
+```
+
+> Remember to load the packages into R to use em! 
+
+```{r, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+```
+
+# Examples from the literaure
+
+
+
+# Describing your own results
+
+## Written description of findings
+
+The results section must have a written description of the main findings of the research, not just figures and statistics.
+
+Things to aim for:
+
+- write as clearly and concisely as possible
+- enough information so that a reader would know the main findings without reference to the figures and tables.
+
+Things to avoid:
+
+- including any text that describes why the research was done (that should have happened in the Introduction)
+- including any text that describes how the research was done (that should have happened in the Methods)
+- including any text that begins to interpret what the results mean (that will happen in the Discussion) 
+- presenting the results twice. If a table has some summary statistics (e.g, means and standard deviations of some variables), then there is no need to include these also in the text - you can just refer to the table. Similarly, if you have a figure that displays the means of a variable, you normally don't need to mention those specifically in the results unless you wanted to highlight the actual values (e.g “ the mean abundance (± s.e.) in summer, 100.5 ± 4.1 m2, was almost twice as high as winter 52.7 ± 3.4 m2) - normally you can just let the reader use the figure to see the magnitude of the values and refer to the figure (e.g., the abundance was higher in winter than in summer (Fig. 1)).
+
+## Presenting the results of statistical tests
+
+Incorporating the results from statistical tests
+
+Adding support for your text statements in the Results section is usually done in one of two ways.
+
+1.  If it is a very simple test, then just include the results of that test in the text of the results section. For example (from the first practical):
+
+| The concentrations of soil nitrogen as measured by the new machine did not differ from those measured by the old machine (Fig.1, t = 1.8, df = 9, P = 0.093).
+
+The statistical test should include three components: 1) the value of the test statistic, 2) the degrees of freedom (df) or sample size (n), and 3) the probability associated with that test statistic.
+
+2. If it is a more complex test, then it is usually more efficient to present the results of that test in a table, and just refer that table in the text. For example (from the third linear models practical):
+
+The removal of predatory mink from islands in the Baltic Sea resulted in a significant increase in the abundance of voles (Fig.1, Table 1).
+
+Table 1 would then include the entire ANOVA table that resulted from the nested analysis of variance (MS, df, F and P values).
+
+
+## Introducing the `report` function
+
+Students often struggle with how to write up the results of a statistical analysis.
+
+The `report` function from the `report` package (which is part of `easystats`) to generate some template text to report the results of the linear models. This function helps you get started with the text you need to write up the results of your analysis. It can do this for a range of different types of models, including linear models, mixed models, and more.
+
+Here are some examples of how to use the `report` function. This example uses the `penguins` dataset from the `palmerpenguins` package.  As you will recall, the `penguins` dataset contains data on the size of penguins from three different species.
+
+**Linear model with continuous predictor:**
+
+After running this code, you will see some text that you can use to report the results of the linear model. You can copy and paste this text into your report, and then modify it as needed to fit the specifics of your analysis.
+
+```{r}
+library(report)
+
+fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
+report(fit)
+```
+
+This text is a good starting point for writing up the results of your analysis. However, you'd need to edit it slightly. For example, in you might
+
+- incde the proper names for vaiables
+- remove the adjusted R2 value if you don't think it's relevant
+- remove the intercept, as that's not of interest in this analysis
+
+
+Here is an example of how you might edit the text generated by the `report` function to include in your report:
+
+| We fit a linear model to predict bill length from body mass. The model explains a statistically significant and substantial proportion of variance (r² = 0.35, F(1, 340) = 186.44, p < .001). The effect of body mass was statistically significant and positive (beta = 4.05e-03, 95% CI [3.47e-03, 4.64e-03], t(340) = 13.65, p < .001). 95% Confidence Intervals (CIs) and p-values were computed using a Wald t-distribution approximation.
+
+**Linear model with categorical predictor:**
+
+Second example for a linear model with a categorical predictor. Again, we will use the `penguins` dataset from the `palmerpenguins` package. This time, we will use the `species` variable as the predictor.
+
+After running this code, you will see some text that you can use to report the results of the linear model. You can copy and paste this text into your report, and then modify it as needed to fit the specifics of your analysis.
+
+```{r}
+library(report)
+
+fit <- lm(bill_length_mm ~ species, data = penguins)
+
+summary(fit)
+```
+
+Running report directly on fit will give you a summary of the model, including the coefficients, standard errors, t-values, and p-values. Howerver, with a single catgeorcial predictor, epople tend to report result of ANOVA table. 
+
+Recall, we can run `anova(fit)` to get the ANOVA table for the model. This will give you the F-statistic and p-value for the overall model. 
+```{r}
+anova(fit)
+
+anova(fit) |> report()
+```
+
+The report function uses the term Eta2 to refer to the effect size.  In this model, this is the same as R-squared, which is the proportion of variance in the dependent variable that is explained by the independent variable(s).
+
+Here is an example of how you might edit the text generated by the `report` function to include in your report:
+
+| The result of the linear model suggests that the species differ considerably in their bill length (F(2, 339) = 410.60, p < .001). The effect size was large (r² = 0.71, 95% CI [0.67, 1.00]), indicating that 71% of the variance in bill length was explained species in this analysis.
+
+# Plotting the results
+
+## Graphical representation of findings
+
+Effective visual communication is one of the most useful things to learn as a scientist. Patterns and processes can usually be much more effectively communicated in visual form than by text (many readers will never actually read the Results section, but just look at the Figures and go straight to the Discussion).	
+
+
+Things to aim for:
+
+- a figure designed to display the answer to the question being addressed. For example, if your experiment was testing the effects of temperature on the growth rate of a fish, then arrange the graph so that the reader can easily see the contrast between temperature treatments (e.g, not with the low temperature data on one figure and the high temperature data on another).
+- axes labelled with the names and units of the variables
+- a clear and concise figure legend that describes what the figure is showing (look again at the examples from the published research)
+
+Things to avoid:
+
+- overly complex figures that can't be easily interpreted by the reader
+- just using what ever figure the statistical software program produces as its default - you nearly always need to tidy these up before they are ready for presentation.
+- missing axis labels
+- missing units on the axes
+- a title (text to describe the figure is held in the figure legend, below the figure). You can put brief titles to label figures if your figure has multiple panels, eg Fig 1a), Fig 1b) like the example above.
+- missing legend
+
+## Customising your plots
+
+The default plots in R usually need some work before we would want to include them in a report. There are many packages in R dedicated to higher level graphics, and we have used ggplot2 in the course so far. ggplots can be customised in very many ways and making many format changes can result in complex code pretty quickly. Luckily, the default plots are quite presentable and at this stage, you just need to learn a few things to make sure your plots have the necessary information.
+
+Have a play with several of the options for a simple X-Y scatterplot. First, import the test data set and create the default plot.
+
+```{r}
+TestPlot <- read_csv("TestPlot.csv")
+
+ggplot(TestPlot, aes(X,Y)) + 
+  geom_point()
+ Changing axis labels
+```
+
+Without further customising, the axis labels will just be the variable names. This is rarely what we want as we often use abbreviated variable names that have no information about the units of measurement. The axis labels are easily edited by adding the xlab and ylab arguments. This is always needed as the variable names in your data sets are rarely what you want.
+
+```{r}
+ggplot(TestPlot, aes(X, Y)) +
+  geom_point() +
+  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)")
+```
+
+**Changing limits on axes**
+
+The X and Y limits can be set with the xlim and xylim arguments.
+
+```{r}
+ggplot(TestPlot, aes(X, Y)) +
+  geom_point() +
+  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)") +
+  xlim(0, 30) +
+  ylim(0, 70)
+```
+
+**Changing the shape, size and colour of the plotting symbols**
+
+The plotting symbol can be customised by adding code to geom_point() For example, to get large, red squares, we would use: The numerical codes for symbols and further information on [Plotting with ggplot: colours and symbols](http://environmentalcomputing.net/plotting-with-ggplot-colours-and-symbols/) https://www.datanovia.com/en/blog/ggplot-point-shapes/).
+
+```{r}
+ggplot(TestPlot, aes(X, Y)) +
+  geom_point(color = "red", shape = 15, size = 10) +
+  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)") +
+  xlim(0, 30) +
+  ylim(0, 70)
+```
+
+**Adding a legend**
+
+If your points belong to two different treatments, then it is important to have a legend that that labels each data point by that categorical variable. ggplot does this automatically when that variable is part of the aes() code (i.e., one of the variables being plotted). The size, fonts, symbols of legends are all able to be customised if necessary (see [Plotting with ggplot: adding titles and axis names](http://environmentalcomputing.net/plotting-with-ggplot-adding-titles-and-axis-names/).
+
+```{r}
+ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
+  geom_point() +
+  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)") +
+  xlim(0, 30) +
+  ylim(0, 70)
+```
+
+Note that this type of legend is not to be confused with a figure legend - something you prepare in your word processing document to describe the figure. In this case it would look something like: Figure 1. Variation in the growth rate of fish (cm/yr) with temperature (°C) in two diet treatments (high and low nutrients).
+
+**Adding a title**
+
+Titles can be added with ggtitle but please don’t do this for your report. Scientific publications usually have the figure legend only to describe the contents.
+
+```{r}
+ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
+  geom_point() +
+  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)", main = "Growth vs Temperature") +
+  xlim(0, 30) +
+  ylim(0, 70)
+```
+
+You can see ggplot works by adding more and more lines to further customise plots. These can be combined into customised themes that you can reuse many times (see [ggplot: Altering the overall appearance](http://environmentalcomputing.net/plotting-with-ggplot-altering-the-overall-appearance/)) . Or, you can use some of the inbuilt themes that alter many options at once. theme_bw is a handy one that gets rid of the grey background.
+
+```{r}
+ggplot(TestPlot, aes(X,Y,colour=Treatment)) + 
+  geom_point() +
+  xlab("Temperature (°C)") + 
+  ylab("Growth rate (cm/yr)") +
+  xlim(0,30) + ylim(0,70) +
+  theme_classic()
+```
+
+## Presenting measures of variation when plotting categorical predictor variables
+
+Remember that you should always present measures of variation associated with the different levels of a categorical variables. You can do this with boxplots (median + quartiles) or with bar plots that display means +/- error bars (that show standard deviations or standard errors). Have a look at these two figures to understand why.
+
+![](example_se.png)
+ 
+Both have the exact same means, but differ in their variance. The one on the left has lower variation within groups relative to the variation between groups, would have a lower value of a test statistic used to contrast the two groups (t in a t-test or F in an ANOVA) and would be more likely to find a signficant difference between the groups (lower P value). Consequently, the interpretation of these two is very different, but it is only possible to get this understanding from the figure if the variation is also shown.
+
+Bar plots with error bars are commonly used but keep in mind that they have some limitations - in particular, they are unable to show the underlying distribution of the data very effectively. Error bars are presented as equal is size (+ or - from the mean) even when the underlying data are very skewed.
+
+## Combinign plots
+
+![](patchwork.png)
+
+You can combine plots in R using the patchwork package. This is a very powerful package that allows you to combine multiple plots into a single figure. You can combine plots that have been created using ggplot2, lattice, base R, or any other plotting package in R.
+
+Here is an example of how you might combine two plots using the patchwork package:
+
+<!-- Need better example -->
+
+```{r}
+library(patchwork)
+
+p1 <- ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
+  geom_point() +
+  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)") +
+  xlim(0, 30) +
+  ylim(0, 70)
+
+p2 <- ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)") +
+  xlim(0, 30) +
+  ylim(0, 70)
+
+p1 + p2
+```
+
+## Exporting your plots
+
+Saving and exporting the figure
+
+Assuming you have been creating the code for your figures in the notebooks as suggested, the plots turn up within the notebook (rather than in the plot panel to the bottom right in R Studio). You can change the settings on the notebook to have the output turn up in the console rather than within the notebook (click on the little gear symbol next to Preview, then tick Chunk Output in Console). New plots will turn up in the plot panel and you can use the the Export menu item to save the figure.
+
+To export them in a format that will import nicely into Microsoft Word for you report, we suggest a png file (you can also save to pdf, jpeg and other formats).
+
+You can also do all that more simply with a single line of code in your notebook. First asssign your plot to a new object (in this example, one called Figure1), then use ggsave to export that figure to the format of your choice
+
+```{r}
+Figure1 <-
+  ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
+  geom_point() +
+  xlab("Temperature (°C)") +
+  ylab("Growth rate (cm/yr)") +
+  xlim(0, 30) +
+  ylim(0, 70) +
+  theme_classic()
+
+ggsave("Figure1.png", Figure1)
+```
+
+**Different formats**
+
+You can also save the figure in multiple formats at once
+
+```{r}
+ggsave("Figure1.pdf", Figure1)
+ggsave("Figure1.jpg", Figure1)
+```
+
+**Customising the size of the figure**
+
+```{r}
+ggsave("Figure1.png", Figure1, width = 10, height = 10, units = "cm")
+```
+
+# Tables
+
+Tables are effective ways of summarising numerical results. They are commonly used to present summary statistics (e.g., means and standard deviations of variables, see Table 1 from Basham et al. 2010) or to present test statistics and their associated probabilities following analyses. They are especially good for simultaneously presenting the results of several tests (e.g., you can design a Table that holds the results of several analyses of variance and these can all be referred to in the text by the single Table number, see Table 2 from Perrett et al. 2006).
+
+Things to aim for:
+
+- a clear design that allows the reader to obtain the information quickly
+- a legend that describes the content of the table. For some weird reason, these are above the table while figure legends are presented below the figure.
+
+Things to avoid:
+
+- overly complex tables that can't be easily interpreted by the reader
+- missing legends
+- presenting data that could be easily handled in the text (e.g., no need for a table if you just have a single t-test)
+ 
+There are some handy hints for nicely formatting tables [here](https://imgur.com/gallery/how-to-make-tables-less-terrible-ZY8dKpA).
+
+## Creating tables in R
+
+XXX
+
+
+
+# Further reosuces
+
+In this course, we can touch on what is possible in R or other software, but you will want to develop your skills in visualising data as you progress as a scientist.
+
+There is an enormous amount of online help for creating graphs in R. We have introductory pages on [Environmental Computing](http://environmentalcomputing.net/graphics/).
+
+Also useful to get started is: Chang, W (2012) R Graphics cookbook. O’Reilly Media. - a guide to ggplot with quite a bit of help online here
+
+If you want to see what R can do if you really learn it, have a look at this gallery of data visualisations: <https://r-graph-gallery.com/>
