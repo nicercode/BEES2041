@@ -180,7 +180,9 @@ You can vary the mean and standard deviation in the code above to see how the di
 
 <h3>Probability of sampling a value</h3>
 
-If we know the mean and standard deviation of the population, we can calculate the probability of observing a particular value for an individual in our population of interest. For example, for the standard normal, the probability of observing a value \< 1.96 in a standard normal distribution is 0.975, and the probability of observing a value \> 1.96 is 0.025 (=1-0.975).
+If we know the mean and standard deviation of the population, we can calculate the probability of observing a particular value for an individual in our population of interest. 
+We do have to make the assumption that our population displays a normal distribution, which is true for lots of biological measurements.
+For example, for the standard normal, the probability of observing a value \< 1.96 in a standard normal distribution is 0.975, and the probability of observing a value \> 1.96 is 0.025 (=1-0.975).
 
 You may have looked up these values in a previous course using a Z table.
 
