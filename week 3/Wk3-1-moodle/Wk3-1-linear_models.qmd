@@ -23,7 +23,7 @@ library(easystats)
 library(palmerpenguins)
 
 # Data for prac
-data_towers <- read.csv("week 3/Wk3-1-moodle/data/towers-2024.csv")
+data_towers <- read_csv("data/towers-2024.csv")
 
 # webr counter
 reditor_count <- 1
@@ -229,7 +229,7 @@ report(towers_fit)
 
 The `r cloze("R squared value", c("F-statistic", "R squared value", "P value"))` is a `r cloze("moderate", c("weak", "moderate", "strong"))` relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable (`log10_rainfall`). 
 
-The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains `r cloze("significant", c("non-significant", "non-significant"))` amount of variance in `log10_leaf_mass_per_area`.
+The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains `r cloze("significant", c("non-significant", "significant"))` amount of variance in `log10_leaf_mass_per_area`.
 
 ### *F*-statistic and *P*-values - how likely is it to get our results by chance?
 
@@ -401,7 +401,7 @@ The confidence intervals for the slope tells us that the true population mean fo
 
 5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
 
-The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass.
+The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass.
 
 # What contributes to ground level Ozone?
 
@@ -418,8 +418,8 @@ library(easystats)
 airquality
 ```
 
-- Ozone (Ozone, ppb): Measures ground-level ozone concentration in parts per billion (ppb). High levels indicate poor air quality and can impact human health.
-- Temperature (Temp, °F): Records daily maximum temperature in degrees Fahrenheit. 
+- `Ozone` (Ozone, ppb): Measures ground-level ozone concentration in parts per billion (ppb). High levels indicate poor air quality and can impact human health.
+- `Temp` (Temperature, °F): Records daily maximum temperature in degrees Fahrenheit. 
 
 > We want to know whether higher temperatures can contribute to increased ozone levels due to photochemical reactions.
 
@@ -474,9 +474,9 @@ ozone_model_predictions
 2.
 3. 
 
-# Introduction to ANOVA
+# Introduction to ANOVA (Analysis of Variance)
 
-In this week's lectures, we learned that linear regression are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables. 
+In this week's lectures, we learned that linear regression are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
 
 > Recall the differences between  **discrete** or **categorical** variables. 
 
@@ -488,55 +488,81 @@ library(easystats)
 library(palmerpenguins)
 ```
 
+![We can use linear models to compare means between groups](lm-anova.png)
+
+
 # Jasmine, fish, temperature and metabolism
 
 <!-- TODO: @Daniel, would you ask Jasmine nicely for her MR data please? Thanks! I may be able to extract it from [Fig 3A](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in
 ) using [{metadigitise}](https://github.com/daniel1noble/metaDigitise) time permitting
 -->
 
-# Mean differences in Palmer Penguins
+# Species differences in Palmer Penguins
 
 ```{r}
-penguins|> select(x = island, y = Sepal.Width)
+# Fit a linear model
+fit_penguins <- lm(flipper_length_mm ~ island, data = penguins)
 
-fit <- lm(y ~ x, data = data_iris_anova_3grp)
+# Perform an ANOVA
+anova(fit_penguins)
 
-summary(fit)
+# Inspect the model outputs
+summary(fit_penguins)
+parameters(fit_penguins)
 
-parameters(fit)
+# Generate contrasts (differences between groups)
+group_constracts_island <- estimate_contrasts(fit_penguins, contrast = "island")
 
-means <- estimate_means(fit, by = "x")
-
-anova(fit)
-report(fit)
-
-estimate_contrasts(fit, contrast = "x")
+# Generate model predictions for each island
+group_means_island <- estimate_means(fit_penguins, by = "island")
 
 # Plot with raw data points
-  ggplot(means, aes(x = x, y = Mean)) +
-  geom_jitter(data = data_iris_anova_3grp, aes(x = x, y = y), color = "red", width = 0.1) + # Raw data
+  ggplot(group_means_island, aes(x = island, y = Mean)) +
+  geom_jitter(data = penguins, aes(x = island, y = flipper_length_mm), color = "red", width = 0.1) + # Raw data
   geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3) + # Confidence intervals
-  geom_point(size = 5, color = "orange") + # Estimated means
-  theme_classic() + # Style plot
-  labs(y = "y")
+  geom_point(size = 3, color = "orange") + # Estimated means
+  labs(title = "Island comparisons in flipper length in Palmer Penguins",
+       x = "Islands in Palmer Archipelago",
+       y = "Flipper length (mm)") +
+  theme_minimal()
 ```
 
-
 # Insecticides and crops
+
+The `InsectSprays` dataset in R contains data on the effectiveness of six different insecticides in controlling pest insect populations.
+
+- `Count`: The number of insects remaining after treatment, measuring the effectiveness of each spray.
+- `Spray`: A categorical variable (A–F) representing six different insecticide treatments.
+
+> Which spray is the most effective in controlling insect pest counts? 
 
 ```{r}
 # Load the dataset
 InsectSprays
 
-# Fit a linear model treating spray as a categorical predictor
-model <- lm(count ~ spray, data = InsectSprays)
+# Fit a linear model
+fit_insect <- lm(count ~ spray, data = InsectSprays)
 
-# Perform ANOVA
-anova_result <- anova(model)
+# Perform an ANOVA
+anova_insect <- anova(fit_insect)
 
-# Print results
-print(anova_result)
+# Inspect the model outputs
+summary(fit_insect)
+parameters(fit_insect)
 
-# Check model summary
-summary(model)
+# Generate contrasts (differences between groups)
+group_contrasts_spray <- estimate_contrasts(fit_insect, contrast = "spray")
+
+# Generate model predictions for each spray type
+group_means_spray <- estimate_means(fit_insect, by = "spray")
+
+# Plot with raw data points
+ggplot(group_means_spray, aes(x = spray, y = Mean)) +
+  geom_jitter(data = InsectSprays, aes(x = spray, y = count), color = "red", width = 0.1) + # Raw data
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3, alpha = 0.5) + # Confidence intervals
+  geom_point(size = 5, color = "orange") + # Estimated means
+  labs(title = "Comparisons between different insecticides in reducing insect counts",
+       x = "Insectide spray types",
+       y = "Insect counts") +
+  theme_minimal()
 ```
