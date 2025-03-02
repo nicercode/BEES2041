@@ -20,7 +20,7 @@ library(moodlequiz)
 # For the prac
 library(tidyverse)
 library(easystats)
-library(palmerpengiuns)
+library(palmerpenguins)
 
 # Data for prac
 data_towers <- read.csv("week 3/Wk3-1-moodle/data/towers-2024.csv")
@@ -103,7 +103,7 @@ In case you don't have them installed, here is code for you to do so:
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
 library(easystats)
-library(palmerpengiuns)
+library(palmerpenguins)
 ```
 
 # A Refresher: Population means and sampling 
@@ -334,7 +334,7 @@ model
 ```{r}
 library(tidyverse)
 library(easystats)
-library(palmerpengiuns)
+library(palmerpenguins)
 ```
 
 ```{r}
