@@ -737,7 +737,7 @@ TMB_fit4 <- glmmTMB::glmmTMB(mpg ~ as.factor(hp)*as.factor(gear), data = mtcars)
 
 # Examples
 
-## REgression - Towers 2024
+## Regression - Towers 2024
 
 ```{r}
 # data_towers <- readRDS("data/ignore/Towers_2024_woody_traits_climate.rds") |>
@@ -765,8 +765,6 @@ summary(fit)
 p_results <-
   ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
   geom_point(size = 2, col = "red", alpha = 0.2, stroke = 0) +
-  geom_ribbon(data = means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey") +
-  geom_line(data = means, aes(y = Mean), col = "#eb8240", size = 1) +
   theme_classic() +
   labs(
     title = "Response of woody-plants to rainfall",
@@ -782,7 +780,13 @@ p_results <-
     plot.title = element_text(size = 14, face = "bold") # Plot title
   )
 
-p_results
+p_results_lm <-
+  p_results +
+  geom_ribbon(data = means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey") +
+  geom_line(data = means, aes(y = Mean), col = "#eb8240", size = 1)
+
+ggsave("output/example_scatter.png", p_results, height = 4, width = 5, bg = "transparent")
+
 
 ggsave("output/example_lm.png", p_results, height = 4, width = 5, bg = "transparent")
 
