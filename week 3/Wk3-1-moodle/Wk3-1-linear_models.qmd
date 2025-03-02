@@ -166,7 +166,7 @@ towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
 ### Slope or the change in y with x
 
-Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
+> Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
 
 ![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png)
 
@@ -217,6 +217,8 @@ The **F-statistic** compares the explained variance to the unexplained variance:
 
 - The **F-statistic's p-value** tells us whether our predictor variable explains a significant amount of variance in the response variable or not
 
+<!-- TODO: @Daniel, here would be a nice spot to show off some simulated data for students to learn about the relationship between R^2 and F-statistic  -->
+
 We can use the `report(towers_fit)` provides us with a written summary of our model output
 
 ```{r}
@@ -243,6 +245,8 @@ The *p*-value tells us how extreme our *F*-statistic is under the null hypothesi
 - A smaller *p*-value means the observed *F*-statistic is **unlikely** to occur by chance, suggesting **strong evidence** against the null hypothesis. 
 
 > In other words, in our hypothetical world, finding an effect is REALLY rare - meaning in the real world there is something interesting happening in our model.
+
+<!-- TODO: @Daniel, here would be a nice spot to show off some simulated data for students to learn about the relationship between R^2, F-statistic AND p-values -->
 
 **Question:**
 
@@ -394,11 +398,7 @@ The R^2 value suggests that there is a weak/moderate/strong relationship between
 
 The F-statistic is relatively small/large, meaning that bill length/bill depth/flipper length 
 
-5. 
-
-<!-- # Lisa and Lizard size -->
-
-<!-- TODO: Daniel can you share with me Lisa's data? -->
+5. How likely is it to observe our result? Do we have evidence 
 
 # Our recovering Ozone
 
