@@ -322,7 +322,7 @@ Over to you - using the code from Isaac's study above, can you try:
       - F-statistic value
       - p-value
 - Generate some model predictions from your model using `estimate_means()`
-- Create a data visualisation showing off the penguins data, your predicted means from your linear
+- Create a data visualisation showing off the `penguins` data, your predicted means from your linear
 model
   - Plot the raw data with `geom_point()`
   - Add the confidence intervals with `geom_ribbon()`
@@ -349,7 +349,10 @@ penguins_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
 summary(penguins_fit)
 
 # Clean, nice summary
-parameters(penguins_fit) confint(penguins_fit)
+parameters(penguins_fit) 
+
+# Get full values for confidence intervals of coefficients
+confint(penguins_fit)
 
 # Text report of model
 report(penguins_fit)
@@ -373,55 +376,109 @@ penguins_model_predictions <-
 penguins_model_predictions
 ```
 
-Once you've done the above, use your outputs to answer the following questions
+> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
 
 **Questions: **
 
 1. What does the slope tell us? 
 
-- There is a postive/negative relationship between bill length and body mass
+There is a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass
 
-2. Try interpretting the slope for us
+2. Let's try interpret the slope. 
 
-- A unit increase in body_mass_g corresponds to a 2.690e+01/4.051e-03/<2e-16 in bill length
+- A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm)
 
-3. Yikes, looks like by rounding, the confidence intervals for the slope in the output of `parameters()` is not very helpful. Take a look at `report()` instead OR you can try `confint(penguins_fit)` to look at the unrounded values of the confidence intervals
-
-- What does the confidence intervals for the slope tell us? 
+3. Yikes, looks like by rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Take a look at `report()` instead OR you can try `confint(penguins_fit)` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
 
 The confidence intervals for the slope tells us that the true population mean for slope lies between
-24.402502194 and 29.395242653 / 0.003467795 and 0.004635038
+`r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
 
-4. Let's get some meaning from the R^2 and F-statistic from your model. What are they telling us?
+4. Let's try understand the *R^2* and *F*-statistic values from your model. What are they telling us?
 
-The R^2 value suggests that there is a weak/moderate/strong relationship between bill length and body mass. 
+- The *R^2* value suggests that there is a `r cloze("moderate", c("weak","moderate", "strong"))` relationship between bill length and body mass. 
 
-The F-statistic is relatively small/large, meaning that bill length/bill depth/flipper length 
+- The *F*-statistic is relatively small/large, meaning that bill length/bill depth/flipper length 
 
-5. How likely is it to observe our result? Do we have evidence 
+5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
 
-# Our recovering Ozone
+The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass.
 
-![Different layer's of the Earth's atmosphere, Image credit: [ABC News](https://www.abc.net.au/btn/classroom/ozone-recovery/101917894)](ozone.png)
+# What contributes to ground level Ozone?
+
+![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){50%}
+
+The `airquality` dataset in R contains daily measurements of air pollution and meteorological conditions in New York (May–September 1973).
 
 ```{r}
-data(airquality)
-model <- lm(Ozone ~ Temp, data = airquality, na.action = na.omit) # Exclude missing data
-summary(model)
-ggplot(airquality, aes(x = Temp, y = Ozone)) +
-  geom_point() +  # Scatter plot
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +  # Add linear regression line
+library(tidyverse)
+library(easystats)
+```
+
+```{r}
+airquality
+```
+
+- Ozone (Ozone, ppb): Measures ground-level ozone concentration in parts per billion (ppb). High levels indicate poor air quality and can impact human health.
+- Temperature (Temp, °F): Records daily maximum temperature in degrees Fahrenheit. 
+
+> We want to know whether higher temperatures can contribute to increased ozone levels due to photochemical reactions.
+
+Using the `airquality` dataset:
+
+- Run a linear model for the relevant variables for our question
+- Generate the summary output for your model using `summary()`, `parameters()` and `report()`
+  - Make some interpretations from this output using the: 
+      - slope
+      - confidence interval of the slope
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()`
+- Create a data visualisation showing off the `airquality` data, your predicted means from your linear
+model
+  - Plot the raw data with `geom_point()`
+  - Add the confidence intervals with `geom_ribbon()`
+  - Add the predicted linear relationship with `geom_line()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
+  
+> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+
+```{r}
+airquality
+
+ozone_fit <- lm(Ozone ~ Temp, data = airquality) 
+
+summary(ozone_fit)
+parameters(ozone_fit)
+report(ozone_fit)
+
+ozone_means <- estimate_means(ozone_fit, by = "Temp")
+
+ozone_model_predictions <- ggplot(airquality, aes(x = Temp, y = Ozone)) +
+  geom_point(size = 2, col = "darkgoldenrod1", stroke = 0) +
+  geom_ribbon(data = ozone_means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "darkorange", alpha = 0.5) +
+  geom_line(data = ozone_means, aes(y = Mean), col = "forestgreen", linewidth = 1) +
   labs(title = "Ozone vs Temperature with Linear Regression Line",
        x = "Temperature (F)",
        y = "Ozone Level (ppb)") +
   theme_minimal()
+
+ozone_model_predictions
 ```
+
+**Questions:**
+
+1. 
+2.
+3. 
 
 # Introduction to ANOVA
 
 In this week's lectures, we learned that linear regression are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables. 
 
-Recall the differences between  **discrete** or **categorical** variables. 
+> Recall the differences between  **discrete** or **categorical** variables. 
 
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){70%}
 
@@ -430,6 +487,12 @@ library(tidyverse)
 library(easystats)
 library(palmerpenguins)
 ```
+
+# Jasmine, fish, temperature and metabolism
+
+<!-- TODO: @Daniel, would you ask Jasmine nicely for her MR data please? Thanks! I may be able to extract it from [Fig 3A](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in
+) using [{metadigitise}](https://github.com/daniel1noble/metaDigitise) time permitting
+-->
 
 # Mean differences in Palmer Penguins
 
