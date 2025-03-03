@@ -510,13 +510,55 @@ We are primarily interested how `smr` - a continuous variable changes with `temp
 fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
 ```
 
-> How do I know whether there is a treatment group effect?
-
 ### Analysis of Variance (ANOVA)
 
-So does `temp_treatment` have an effect on `smr`? 
+> How do we know whether there is a treatment group effect?
+
+To statistically test for an overall effect of `temp_treatment`, we will enlist the help of the `anova()` function. 
+
+```{r}
+anova(fit_martino)
+```
+
+![Under the hood, maths behind an ANOVA](signal-to-noise.png)
+Let's talk through what's happening here: 
+
+- The `anova()` function splits up the total variation in our data into two main components: 
+    1. variation explained by our model predictors `temp_treatment`. Think of this as a signal for a treatment effect
+    2. unexplained variation `Residuals`. Think of this as noise in our data
+
+### Detecting an overall effect - some maths
+
+For both the predictor (`temp_treatment`) and `Residuals` we do some math shown (but we use R instead) to calculate: 
+- sum of squares (`Sum sq`)
+- mean square (`Mean sq`) 
+
+Once we have these values, we can calculate the `F-value` - a ratio between the `Mean sq` of the predictor (`temp_treatment`) and the `Mean sq` for the `Residuals`. 
+
+In other words, the `F-value` is ratio of signal to noise: 
+
+- larger values indicate a stronger signal
+- smaller values means that we have a noise in our data.
+
+From there, we use the *F*-statistic to retrieve the probability of observing our effect in a hypothetical (and boring) world where nothing is expected to happen - just like we did in earlier examples. 
+
+From the output in the `anova()` function, we can see that: 
+
+- The `F-value` is relatively large and *p*-value is very small. 
+
+**Question:** 
+
+What does this mean? 
+
+- This indicates that variation explained by our model is `r cloze("greater than", c("greater than", "less than"))` unexplained variation. 
+
+- In other words, there is `r cloze("strong", c("strong", "weak"))` signal for a treatment effect and it is very `r cloze("unlikely", c("not big deal", "unlikely"))` to observe this effect.  
 
 ### Estimate mean differences of each group
+
+> Okay cool, we have an effect... how big is this effect on our y variable `smr`?
+
+Similar to our earlier linear models, we use `estimate_means()` to calculate the mean `smr` for each `temp_treatment` group. 
 
 ```{r}
 estimate_means(fit_martino, by = "temp_treatment")
@@ -524,7 +566,7 @@ estimate_means(fit_martino, by = "temp_treatment")
 
 ### Slopes when x is a categorical variable
 
-Let's take a look at the `parameters()` output. Looks different huh? 
+Let's take a look at the `parameters()` / `summary()` output. Looks different huh? 
 
 ```{r}
 parameters(fit_martino)
