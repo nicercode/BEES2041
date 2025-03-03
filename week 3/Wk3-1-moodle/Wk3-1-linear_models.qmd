@@ -23,8 +23,8 @@ library(easystats)
 library(palmerpenguins)
 
 # Data for prac
-data_towers <- read_csv("week 3/Wk3-1-moodle/data/towers-2024.csv")
-data_martino <- read_csv("week 3/Wk3-1-moodle/data/martino-fish-smr.csv")
+data_towers <- read_csv("data/towers-2024.csv")
+data_martino <- read_csv("data/martino-fish-smr.csv")
 
 # webr counter
 reditor_count <- 1
@@ -46,11 +46,16 @@ class_id <- function() {
 
 # Introduction to linear models
 
-Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand relationships between variables. 
+Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand how y varies with some predictor x. 
 
-In this prac, we’ll explore how to fit and interpret, using real data. By the end, you'll have a solid foundation for applying these models in your own work. 
+In the previous prac, we learned about population means and how natural variation in the process of sampling creates uncertainty. Moreover, that we can estimate a confidence interval aorund the mean, within which we beleive the ture mean to occur. 
 
-### Key learning objectives
+Linear mdoels then allow us to test whether the true mean varies with another variable.
+
+In this prac, we’ll explore how to fit and interpret linear models, using real data. By the end, you'll have a solid foundation for applying these models in your own work. 
+
+
+## Key learning objectives
 
 We've got quite to get through today, our learning objective today are:
 
@@ -59,7 +64,6 @@ We've got quite to get through today, our learning objective today are:
   - `summary()`
   - `parameters()`
     - **extract** the **confidence interval** for the **slope** and **intercept** of the **regression** line
-  - `report()`
   - `estimate_means()`
 - **plot** the data and the **regression** line
   - add the **confidence interval** using output of `estimate_means()`
@@ -69,7 +73,7 @@ Let’s dive in! 🚀
 ![Image credit:  @allison_horst](you-can-do-it.png){width=80%}
 <br>
 
-### Setting up
+## Setting up
 
 **Materials:**
 
@@ -107,44 +111,9 @@ library(easystats)
 library(palmerpenguins)
 ```
 
-# A Refresher: Population means and sampling 
+# Linear model with continuous predictor (Leaves)
 
-In the previous prac, we learned about population means and the process of sampling. Here is a quick visualisation to illustrate the key message: 
-
-> When we take a sample, our sample mean will always be taken with some error
-
-```{r}
-# Set the true mean and sd for the population
-true_mean <- 5
-true_sd <- 2
-
-# Create a tibble with the population and sample means
-# Take a sample of 1000 observations from a population with mean 5 and standard deviation 2
-data1 <- tibble(
-  value = rnorm(1000, mean = true_mean, sd = true_sd),
-  type = "Population of 1000"
-)
-
-# take 1000 samples of 10 observations from a population with mean 5 and standard deviation 2
-data2 <- tibble(
-  value = replicate(1000, mean(rnorm(10, mean = true_mean, sd = true_sd))),
-  type = "Sample mean"
-)
-
-# combine the population and sample means
-data <- bind_rows(data1, data2)
-
-# plot the distribution of the population and sample means
-data |>
-  ggplot(aes(x = value, fill = type)) +
-  geom_histogram(binwidth = 0.5, color = "black", alpha = 0.5) +
-  facet_wrap(~type) +
-  labs(title = "Distribution of population and sample means", x = "Value", y = "Frequency")
-```
-
-This is the nature of sampling and for this reason, we estimate **confidence intervals** to capture the uncertainty in our samples. Let's move on 
-
-# Isaac with leaves across climates
+## Worked example - Isaac with leaves across climates
 
 ![Meet Dr. Isaac Towers! Image credit: Data Dan](isaac-plant-ecosystems.png){60%}
 From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478) We will be working with the data Isaac compiled for us. 
@@ -165,7 +134,7 @@ To fit a linear model, we will be using the `lm()` function like so:
 towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 ```
 
-### Slope or the change in y with x
+## Slope or the change in y with x
 
 > Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
 
@@ -187,7 +156,7 @@ The slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and
 
 The slope is `r cloze("negative", c("negative", "positive"))`. This indications that the as `log10_rainfall` `r cloze("increases", c("decreases", "increases"))`, `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
 
-### The confidence interval
+## The confidence interval
 
 For a nicer output you can also use `parameters(towers_fit)`. This function convienently, gives us the **95% confidence intervals** of our coefficients.  
 
@@ -202,7 +171,7 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 `[-0.56, -0.52]` provides a range of values within which we can be 95% confident that the `r cloze("true", c("sample", "true"))` population parameter coefficient lies. 
 
 
-### Variation explained by the model (R^2 and F-statistic)
+## Variation explained by the model (R^2 and F-statistic)
 
 ![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](r2-and-f-value.png)
 > There are two metrics we are use to assess our model fit
@@ -220,19 +189,13 @@ The **F-statistic** compares the explained variance to the unexplained variance:
 
 <!-- TODO: @Daniel, here would be a nice spot to show off some simulated data for students to learn about the relationship between R^2 and F-statistic  -->
 
-We can use the `report(towers_fit)` provides us with a written summary of our model output
-
-```{r}
-report(towers_fit)
-```
-
 **Question:**
 
 The `r cloze("R squared value", c("F-statistic", "R squared value", "P value"))` is a `r cloze("moderate", c("weak", "moderate", "strong"))` relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable (`log10_rainfall`). 
 
 The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains `r cloze("significant", c("non-significant", "significant"))` amount of variance in `log10_leaf_mass_per_area`.
 
-### *F*-statistic and *P*-values - how likely is it to get our results by chance?
+## *F*-statistic and *P*-values - how likely is it to get our results by chance?
 
 > The *p*-value is derived from the F-distribution
 
@@ -255,7 +218,7 @@ Generally, *F*-statistic increases with the `r cloze("p-value", c("the intercept
 
 > Try not to get overwhelmed by the details, all we want you to understand is the relationship between test statistics e.g. *F*-statistic and *p*-values. You got this!
 
-### Calculating and visualising predicted means 
+## Calculating and visualising predicted means 
 
 Okay thats enough theory for the day... let's have go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
 
@@ -305,7 +268,9 @@ Feel free to tinker with all these options to create a plot that helps us answer
 
 > Let's get you to try run a linear model, interpret the output and create a plot with a familar dataset! 
 
-### Bringing back the Palmer penguins for allometry
+# Linear model with continuous predictor (Penguins)
+
+## Example 2 - Bringing back the Palmer penguins for allometry
 
 ![We can learn so much from these cuties. Image credit: @allison_horst](palmer_penguins.png)
 Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
@@ -315,7 +280,7 @@ Allometry in biology is the study of how biological traits (such as bill depth, 
 Over to you - using the code from Isaac's study above, can you try: 
 
 - Run a linear model for `bill_length_mm` and `body_mass_g`
-- Generate the summary output for your model using `summary()`, `parameters()` and `report()`
+- Generate the summary output for your model using `summary()`, `parameters()`
   - Make some interpretations from this output using the: 
       - slope
       - confidence interval of the slope
@@ -350,13 +315,10 @@ penguins_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
 summary(penguins_fit)
 
 # Clean, nice summary
-parameters(penguins_fit) 
+parameters(penguins_fit) |> tibble() 
 
 # Get full values for confidence intervals of coefficients
 confint(penguins_fit)
-
-# Text report of model
-report(penguins_fit)
 
 # Create model predictions
 penguins_means <- estimate_means(penguins_fit, by = "body_mass_g")
@@ -377,7 +339,7 @@ penguins_model_predictions <-
 penguins_model_predictions
 ```
 
-> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+> Once you've run your analyses in your own RStudio, use your outputs to answer the relevant questions (Moodle).
 
 **Questions: **
 
@@ -389,7 +351,7 @@ There is a `r cloze("postive", c("postive","negative"))` relationship between bi
 
 - A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm)
 
-3. Yikes, looks like by rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Take a look at `report()` instead OR you can try `confint(penguins_fit)` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
+3. Yikes, looks like by rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
 
 The confidence intervals for the slope tells us that the true population mean for slope lies between
 `r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
@@ -404,7 +366,9 @@ The confidence intervals for the slope tells us that the true population mean fo
 
 The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass.
 
-### What contributes to ground level Ozone?
+# Linear model with continuous predictor (Ozone)
+
+## What contributes to ground level Ozone?
 
 ![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){50%}
 
@@ -416,7 +380,7 @@ library(easystats)
 ```
 
 ```{r}
-airquality
+head(airquality)
 ```
 
 - `Ozone` (Ozone, ppb): Measures ground-level ozone concentration in parts per billion (ppb). High levels indicate poor air quality and can impact human health.
@@ -427,7 +391,7 @@ airquality
 Using the `airquality` dataset:
 
 - Run a linear model for the relevant variables for our question
-- Generate the summary output for your model using `summary()`, `parameters()` and `report()`
+- Generate the summary output for your model using `summary()`, `parameters()` 
   - Make some interpretations from this output using the: 
       - slope
       - confidence interval of the slope
@@ -447,13 +411,12 @@ model
 > Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
 
 ```{r}
-airquality
+head(airquality)
 
 ozone_fit <- lm(Ozone ~ Temp, data = airquality) 
 
 summary(ozone_fit)
 parameters(ozone_fit)
-report(ozone_fit)
 
 ozone_means <- estimate_means(ozone_fit, by = "Temp")
 
@@ -475,8 +438,9 @@ ozone_model_predictions
 2.
 3. 
 
+# Linear model with categorical predictor (Fish)
 
-# Jasmine, fish and energetics in a warming world
+## Jasmine, fish and energetics in a warming world
 
 Linear regressions are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
 
@@ -491,7 +455,7 @@ From lectures, Data Dan walked us through an example of an ANOVA from a study co
 
 Let's read in the Jasmine's data. This is in your `"data/"` folder. 
 
-### Linear model with categorical predictor(s)
+## Loading the data
 
 ```{r}
 library(tidyverse)
@@ -510,7 +474,7 @@ We are primarily interested how `smr` - a continuous variable changes with `temp
 fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
 ```
 
-### Analysis of Variance (ANOVA)
+## Analysis of Variance (ANOVA)
 
 > How do we know whether there is a treatment group effect?
 
@@ -527,9 +491,10 @@ Let's talk through what's happening here:
     1. variation explained by our model predictors `temp_treatment`. Think of this as a signal for a treatment effect
     2. unexplained variation `Residuals`. Think of this as noise in our data
 
-### Detecting an overall effect - some maths
+## Detecting an overall effect - some maths
 
 For both the predictor (`temp_treatment`) and `Residuals` we do some math shown (but we use R instead) to calculate: 
+
 - sum of squares (`Sum sq`)
 - mean square (`Mean sq`) 
 
@@ -554,7 +519,7 @@ What does this mean?
 
 - In other words, there is `r cloze("strong", c("strong", "weak"))` signal for a treatment effect and it is very `r cloze("unlikely", c("not big deal", "unlikely"))` to observe this effect.  
 
-### Estimate mean differences of each group
+## Estimate means for each group
 
 > Okay cool, we have an effect... how big is this effect on our y variable `smr`?
 
@@ -564,7 +529,7 @@ Similar to our earlier linear models, we use `estimate_means()` to calculate the
 estimate_means(fit_martino, by = "temp_treatment")
 ```
 
-### Slopes when x is a categorical variable
+## Slopes when x is a categorical variable are less useful
 
 Let's take a look at the `parameters()` / `summary()` output. Looks different huh? 
 
@@ -587,16 +552,8 @@ data_martino$temp_treatment |>  unique()
 
 - The slope for `temp_treatment [28C]` represents the slope or **difference** in means between `temp_treatment [28C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
 
-> How does the linear model create slopes for mean differences? 
 
-### Encoding groups in a linear model
-
-![Encoding categorical data as binary (0/1) variables](contrasts.png)
-In a linear model with categorical variables, the slopes are always relative to the reference group in the `(Intercept)` or $\beta_0$ i.e. `temp_treatment [20C]`. In this example, The two addition predictor variables $x_1$ and $x_2$ are binary variables (a variable made one 1s and 0s). $x_1$ refers to whether a fish belonged to `temp_treatment [24C]` or not and $x_2$ indicates whether a fish belonged to `temp_treatment [28C]`. 
-
-> Okay, each slope is relative to the intercept `temp_treatment [20C]`, what if I want to compare between `temp_treatment [24C]` and `temp_treatment [28C]`
-
-### Estimate pairwise comparisons of group means (contrasts)
+## Estimate pairwise comparisons in mean differences (contrasts)
 
 ```{r}
 estimate_contrasts(fit_martino, contrast = "temp_treatment")
@@ -618,7 +575,7 @@ estimate_contrasts(fit_martino, contrast = "temp_treatment")
 
 
 
-# Island differences in Palmer Penguins
+# Linear model with categorical predictor (Penguins)
 
 ![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png)
 
@@ -680,7 +637,7 @@ group_means_island <- estimate_means(fit_penguins, by = "island")
 2.
 3. 
 
-# Insecticides and crops
+# Linear model with categorical predictor (Insecticides and crops)
 
 The `InsectSprays` dataset in R contains data on the effectiveness of six different insecticides in controlling pest insect populations.
 
