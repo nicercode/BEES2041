@@ -146,7 +146,7 @@ The slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and
 
 2. What direction is slope coefficient, what does this tell us?
 
-The slope is `r cloze("negative", c("negative", "positive"))`. This indications that the as `log10_rainfall` `r cloze("increases", c("decreases", "increases"))`, `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
+The slope is `r cloze("negative", c("negative", "positive"))`. This indicates that as `log10_rainfall` `r cloze("increases", c("decreases", "increases"))`, `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
 
 ## The confidence interval
 
@@ -355,7 +355,7 @@ The confidence intervals for the slope tells us that the true population mean fo
 
 - The *R^2* value suggests that there is a `r cloze("moderate", c("weak","moderate", "strong"))` relationship between bill length and body mass. 
 
-- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("a bill_length_mm","bill_depth_mm", "flipper_length_mm"))`
+- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("bill_length_mm","bill_depth_mm", "flipper_length_mm"))`
 
 5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
 
@@ -439,7 +439,7 @@ The R^2 value of 0.48 indicates that 48% of the variation in ground-level ozone 
 
 3. Where does the true mean estimate of the slope for `Temp` lie? 
 
-The true mean estimate of the slope exists somewhere between  `r cloze(1.97 and 2.89, c("-183.2 and -110.77", "1.97 and 2.89"))`.
+The true mean estimate of the slope exists somewhere between  `r cloze("1.97 and 2.89", c("-183.2 and -110.77", "1.97 and 2.89"))`.
 
 # Linear model with categorical predictor (Fish)
 
@@ -623,21 +623,21 @@ group_means_island <- estimate_means(fit_penguins, by = "island")
 
 **Questions:**
 
-1. What does the `F value` of the `anova()` output indicate? 
+1. What does the `F value` of the `anova()` output indicate?
 
-The `F value` is relatively `r cloze("large", c("small","large"))`. This means that our model is explaining a `r cloze("large", c("small","large"))` amount of variation in `r cloze("flipper_length_mm", c("a bill_length_mm","bill_depth_mm", "flipper_length_mm"))`.
+The `F value` is relatively `r cloze("large", c("small","large"))`. This means that our model is explaining a `r cloze("large", c("small","large"))` amount of variation in `r cloze("flipper_length_mm", c("bill_length_mm","bill_depth_mm", "flipper_length_mm"))`.
 
-2. What is the reference island for the `(Intercept)`? 
+2. What is the reference island for the `(Intercept)`?
 
-The reference island is `r cloze("Biscoe", sort(unique(penguins$island))`
+The reference island is `r cloze("Biscoe", c("Biscoe", "Dream", "Torgersen"))`
 
 3. Which two islands should the biggest mean difference in flipper length?
 
-The biggest mean difference was observed between `r cloze("Dream island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))` 
+The biggest mean difference was observed between `r cloze("Dream island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))`
 
-4. What does the p-value for the mean difference between Torgersen island and Dream island tell us? 
+4. What does the p-value for the mean difference between Torgersen island and Dream island tell us?
 
-The p-value of `r cloze("0.312", c("< .001", "0.312"))` tells us that there is a `r cloze("moderate", c("very low", "moderate", "very high"))` chance that we would observe the mean difference of -1.88 between Torgersen island and Dream island if there was `r cloze("no", c("no", "strong"))` in flipper length between islands. 
+The p-value of `r cloze("0.312", c("< .001", "0.312"))` tells us that there is a `r cloze("moderate", c("very low", "moderate", "very high"))` chance that we would observe the mean difference of -1.88 between Torgersen island and Dream island if there was `r cloze("no", c("no", "strong"))` differences in flipper length between islands.
 
 # Example 4 - Linear model with categorical predictor (Insecticides and crops)
 
