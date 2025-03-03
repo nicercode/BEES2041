@@ -23,7 +23,8 @@ library(easystats)
 library(palmerpenguins)
 
 # Data for prac
-data_towers <- read_csv("data/towers-2024.csv")
+data_towers <- read_csv("week 3/Wk3-1-moodle/data/towers-2024.csv")
+data_martino <- read_csv("week 3/Wk3-1-moodle/data/martino-fish-smr.csv")
 
 # webr counter
 reditor_count <- 1
@@ -475,25 +476,22 @@ ozone_model_predictions
 3. 
 
 
-# Introduction to ANOVA (Analysis of Variance)
+# Jasmine, fish and energetics in a warming world
 
-In this week's lectures, we learned that linear regression are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
+Linear regressions are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
 
 > Recall the differences between  **discrete** or **categorical** variables. 
 
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){70%}
-From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature can influence fish energetics and metabolism (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in) We will be working with the data Isaac compiled for us. 
-
-> Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall?
-
-Let's read in the Isaac's data. This is in your `"data/"` folder. 
-
-### Linear model with categorical predictor(s)
-
-
+From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperatures treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
 ![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png)
 
+> Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
+
+Let's read in the Jasmine's data. This is in your `"data/"` folder. 
+
+### Linear model with categorical predictor(s)
 
 ```{r}
 library(tidyverse)
@@ -501,10 +499,54 @@ library(easystats)
 library(palmerpenguins)
 ```
 
+```{r, eval=FALSE}
+data_martino <- read_csv("data/martino-fish-smr.csv")
+```
 
-
+We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is categorical variable.
 
 ![Using a linear model with categorial and continuous variables](lm-anova.png)
+```{r}
+fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
+```
+
+### Slopes when x is a categorical variable
+
+Let's take a look at the `parameters()` output. Looks different huh? 
+
+```{r}
+parameters(fit_martino)
+```
+
+Unlike previous examples, we have an extra row in the output! This is because our model is  fitting each `temp_treatment` group as x predictors.  
+
+![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png)
+Importantly: 
+
+- `(Intercept)` represents the **mean** of `temp_treatment [20C]`. By default, the `lm()` function sorts the categorical variable alphabetically and by increasing numeric order and then chooses the first value as `(Intercept)` like this:
+
+```{r}
+data_martino$temp_treatment |>  unique()
+```
+
+- The slope for `temp_treatment [24C]` represents the slope or **difference** in means between `temp_treatment [24C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
+
+- The slope for `temp_treatment [28C]` represents the slope or **difference** in means between `temp_treatment [28C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
+
+> How does the linear model create slopes for mean differences? 
+
+### Encoding groups in a linear model
+
+![Encoding categorical data as binary (0/1) variables](contrasts.png)
+In a linear model with categorical variables, the slopes are always relative to the reference group in the `(Intercept)` or $\beta_0$ i.e. `temp_treatment [20C]`. In this example, The two addition predictor variables $x_1$ and $x_2$ are binary variables (a variable made one 1s and 0s). $x_1$ refers to whether a fish belonged to `temp_treatment [24C]` or not and $x_2$ indicates whether a fish belonged to `temp_treatment [26C]`. 
+
+> How do I know whether there is a treatment group effect?
+
+### Analysis of Variance (ANOVA)
+
+Recall our
+
+
 <!-- TODO: -->
 <!-- - Fitting a lm to a categorical variable is actually a linear regression with multiple predictors -->
 <!-- - Intro to ANOVA -->

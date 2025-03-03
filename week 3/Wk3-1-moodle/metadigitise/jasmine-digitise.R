@@ -18,12 +18,11 @@ clean_data <- fig4_data |>
                                     group == 2 ~ "24C",
                                     group == 3 ~ "28C")
          ) |> 
-  group_by(temp_treatment) |> 
-  mutate(fish_id = paste("fish_", row_number())
+  mutate(fish_id = paste0("fish_", row_number())
          ) |> 
   rename(smr = x) |> 
   select(fish_id, temp_treatment, smr) |> 
   tibble()
 
-write_csv(clean_data, "week 3/Wk3-1-moodle/metadigitise/data/jasmine-fish-smr.csv")
-write_csv(clean_data, "week 3/Wk3-1-moodle/data/jasmine-fish-smr.csv")
+write_csv(clean_data, "week 3/Wk3-1-moodle/metadigitise/data/martino-fish-smr.csv")
+write_csv(clean_data, "week 3/Wk3-1-moodle/data/martino-fish-smr.csv")
