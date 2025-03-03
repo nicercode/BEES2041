@@ -510,6 +510,18 @@ We are primarily interested how `smr` - a continuous variable changes with `temp
 fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
 ```
 
+> How do I know whether there is a treatment group effect?
+
+### Analysis of Variance (ANOVA)
+
+So does `temp_treatment` have an effect on `smr`? 
+
+### Estimate mean differences of each group
+
+```{r}
+estimate_means(fit_martino, by = "temp_treatment")
+```
+
 ### Slopes when x is a categorical variable
 
 Let's take a look at the `parameters()` output. Looks different huh? 
@@ -538,13 +550,20 @@ data_martino$temp_treatment |>  unique()
 ### Encoding groups in a linear model
 
 ![Encoding categorical data as binary (0/1) variables](contrasts.png)
-In a linear model with categorical variables, the slopes are always relative to the reference group in the `(Intercept)` or $\beta_0$ i.e. `temp_treatment [20C]`. In this example, The two addition predictor variables $x_1$ and $x_2$ are binary variables (a variable made one 1s and 0s). $x_1$ refers to whether a fish belonged to `temp_treatment [24C]` or not and $x_2$ indicates whether a fish belonged to `temp_treatment [26C]`. 
+In a linear model with categorical variables, the slopes are always relative to the reference group in the `(Intercept)` or $\beta_0$ i.e. `temp_treatment [20C]`. In this example, The two addition predictor variables $x_1$ and $x_2$ are binary variables (a variable made one 1s and 0s). $x_1$ refers to whether a fish belonged to `temp_treatment [24C]` or not and $x_2$ indicates whether a fish belonged to `temp_treatment [28C]`. 
 
-> How do I know whether there is a treatment group effect?
+> Okay, each slope is relative to the intercept `temp_treatment [20C]`, what if I want to compare between `temp_treatment [24C]` and `temp_treatment [28C]`
 
-### Analysis of Variance (ANOVA)
+### Estimate pairwise comparisons of group means (contrasts)
 
-Recall our
+```{r}
+estimate_contrasts(fit_martino, contrast = "temp_treatment")
+```
+
+
+
+
+
 
 
 <!-- TODO: -->
