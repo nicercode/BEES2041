@@ -35,14 +35,6 @@ class_id <- function() {
 }
 ```
 
-<!-- Examples
-
-- present 2 +examples of linear regression
-- for each, link the question being asked to statistcal method.
-- run the linear regression for each examples, relate the output to question being asked
-  - check can access various parts of output
-
--->
 
 # Introduction to linear models
 
@@ -70,7 +62,7 @@ We've got quite to get through today, our learning objective today are:
 
 Let’s dive in! 🚀 
 
-![Image credit:  @allison_horst](you-can-do-it.png){width=80%}
+![Image credit:  @allison_horst](you-can-do-it.png){width=80%} <br>
 <br>
 
 ## Setting up
@@ -115,7 +107,7 @@ library(palmerpenguins)
 
 ## Worked example - Isaac with leaves across climates
 
-![Meet Dr. Isaac Towers! Image credit: Data Dan](isaac-plant-ecosystems.png){60%}
+![Meet Dr. Isaac Towers! Image credit: Data Dan](isaac-plant-ecosystems.png){width=60%} <br>
 From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478) We will be working with the data Isaac compiled for us. 
 
 > Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall?
@@ -138,7 +130,7 @@ towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
 > Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
 
-![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png)
+![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png) <br>
 
 Let's inspect the results of your model use `summary(towers_fit)` and see how this corresponds to the image above
 
@@ -174,6 +166,8 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 ## Variation explained by the model (R^2 and F-statistic)
 
 ![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](r2-and-f-value.png)
+
+<br>
 > There are two metrics we are use to assess our model fit
 
 The **R^2 value** describes how much variation is explained by your model:
@@ -200,6 +194,8 @@ The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` sug
 > The *p*-value is derived from the F-distribution
 
 ![Relationship between R^2, *F* and *P*, Image credit: Data Dan](f-value-p-value.png)
+<br>
+
 The *p*-value and the *F*-statistic are closely related. In the last prac, we learned to calculate **probability (p-value)** for a *t*-statistic from a standard normal distribution. We can do that same for our *F*-statistic from the *F*-distribution!
 
 The *p*-value tells us how extreme our *F*-statistic is under the null hypothesis (which assumes the predictor has no effect). I like to think about this as:
@@ -272,7 +268,9 @@ Feel free to tinker with all these options to create a plot that helps us answer
 
 ## Example 2 - Bringing back the Palmer penguins for allometry
 
-![We can learn so much from these cuties. Image credit: @allison_horst](palmer_penguins.png)
+![We can learn so much from these cuties. Image credit: @allison_horst](palmer_penguins.png){width=60%}
+<br>
+
 Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
 
 > We are want try answer the question: **How does bill length scale with body mass in Palmer Penguins?**
@@ -317,9 +315,6 @@ summary(penguins_fit)
 # Clean, nice summary
 parameters(penguins_fit) |> tibble() 
 
-# Get full values for confidence intervals of coefficients
-confint(penguins_fit)
-
 # Create model predictions
 penguins_means <- estimate_means(penguins_fit, by = "body_mass_g")
 
@@ -360,7 +355,7 @@ The confidence intervals for the slope tells us that the true population mean fo
 
 - The *R^2* value suggests that there is a `r cloze("moderate", c("weak","moderate", "strong"))` relationship between bill length and body mass. 
 
-- The *F*-statistic is relatively small/large, meaning that bill length/bill depth/flipper length 
+- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("a bill_length_mm","bill_depth_mm", "flipper_length_mm"))`
 
 5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
 
@@ -434,28 +429,36 @@ ozone_model_predictions
 
 **Questions:**
 
-1. 
-2.
-3. 
+1. What is the relationship between temperature and ground-level ozone? 
+
+- Ground-level ozone increases/decreases with temperature. For every 1Fº increase, ozone increases by `r cloze("2.43", c("2.43","147","0.23"))` parts per billion.
+
+2. Interpret the R^2 value. 
+
+The R^2 value of 0.48 indicates that 48% of the variation in ground-level ozone is explained by the `r cloze("model", c("p-value","residuals","model"))`.
+
+3. Where does the true mean estimate of the slope for `Temp` lie? 
+
+The true mean estimate of the slope exists somewhere between  `r cloze(1.97 and 2.89, c("-183.2 and -110.77", "1.97 and 2.89"))`.
 
 # Linear model with categorical predictor (Fish)
 
-## Jasmine, fish and energetics in a warming world
+## Worked example - Jasmine, fish and energetics in a warming world
 
 Linear regressions are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
 
 > Recall the differences between  **discrete** or **categorical** variables. 
 
-![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){70%}
+![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){width=60%} <br>
 From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperatures treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
-![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png)
+![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%}
 
 > Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
 
 Let's read in the Jasmine's data. This is in your `"data/"` folder. 
 
-## Loading the data
+## Setting up
 
 ```{r}
 library(tidyverse)
@@ -469,7 +472,7 @@ data_martino <- read_csv("data/martino-fish-smr.csv")
 
 We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is categorical variable.
 
-![Using a linear model with categorial and continuous variables](lm-anova.png)
+![Using a linear model with categorial and continuous variables](lm-anova.png) <br>
 ```{r}
 fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
 ```
@@ -484,7 +487,7 @@ To statistically test for an overall effect of `temp_treatment`, we will enlist 
 anova(fit_martino)
 ```
 
-![Under the hood, maths behind an ANOVA](signal-to-noise.png)
+![Under the hood, maths behind an ANOVA](signal-to-noise.png) <br>
 Let's talk through what's happening here: 
 
 - The `anova()` function splits up the total variation in our data into two main components: 
@@ -539,7 +542,7 @@ parameters(fit_martino)
 
 Unlike previous examples, we have an extra row in the output! This is because our model is  fitting each `temp_treatment` group as x predictors.  
 
-![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png)
+![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png) <br>
 Importantly: 
 
 - `(Intercept)` represents the **mean** of `temp_treatment [20C]`. By default, the `lm()` function sorts the categorical variable alphabetically and by increasing numeric order and then chooses the first value as `(Intercept)` like this:
@@ -552,30 +555,17 @@ data_martino$temp_treatment |>  unique()
 
 - The slope for `temp_treatment [28C]` represents the slope or **difference** in means between `temp_treatment [28C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
 
-
 ## Estimate pairwise comparisons in mean differences (contrasts)
+
+> What if we want to change the reference group from temp_treatment [20C] to temp_treatment [28C]? 
+
+We can use the `estimate_constrasts()` function to give us pairwise comparisons between all groups. Try it out
 
 ```{r}
 estimate_contrasts(fit_martino, contrast = "temp_treatment")
 ```
 
-
-
-
-
-
-
-<!-- TODO: -->
-<!-- - Fitting a lm to a categorical variable is actually a linear regression with multiple predictors -->
-<!-- - Intro to ANOVA -->
-<!--   - group slopes + contrasts -->
-<!--   - paramter estimates test -->
-<!--   - anova test -->
-<!--   - pairwise comparisons -->
-
-
-
-# Linear model with categorical predictor (Penguins)
+# Example 3 - Linear model with categorical predictor (Penguins)
 
 ![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png)
 
@@ -613,7 +603,7 @@ summary(fit_penguins)
 parameters(fit_penguins)
 
 # Generate contrasts (differences between groups)
-group_constracts_island <- estimate_contrasts(fit_penguins, contrast = "island")
+group_contrasts_island <- estimate_contrasts(fit_penguins, contrast = "island")
 
 # Generate model predictions for each island
 group_means_island <- estimate_means(fit_penguins, by = "island")
@@ -633,11 +623,23 @@ group_means_island <- estimate_means(fit_penguins, by = "island")
 
 **Questions:**
 
-1. 
-2.
-3. 
+1. What does the `F value` of the `anova()` output indicate? 
 
-# Linear model with categorical predictor (Insecticides and crops)
+The `F value` is relatively `r cloze("large", c("small","large"))`. This means that our model is explaining a `r cloze("large", c("small","large"))` amount of variation in `r cloze("flipper_length_mm", c("a bill_length_mm","bill_depth_mm", "flipper_length_mm"))`.
+
+2. What is the reference island for the `(Intercept)`? 
+
+The reference island is `r cloze("Biscoe", sort(unique(penguins$island))`
+
+3. Which two islands should the biggest mean difference in flipper length?
+
+The biggest mean difference was observed between `r cloze("Dream island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))` 
+
+4. What does the p-value for the mean difference between Torgersen island and Dream island tell us? 
+
+The p-value of `r cloze("0.312", c("< .001", "0.312"))` tells us that there is a `r cloze("moderate", c("very low", "moderate", "very high"))` chance that we would observe the mean difference of -1.88 between Torgersen island and Dream island if there was `r cloze("no", c("no", "strong"))` in flipper length between islands. 
+
+# Example 4 - Linear model with categorical predictor (Insecticides and crops)
 
 The `InsectSprays` dataset in R contains data on the effectiveness of six different insecticides in controlling pest insect populations.
 
