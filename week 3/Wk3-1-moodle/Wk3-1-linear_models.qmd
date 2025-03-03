@@ -17,7 +17,7 @@ library(moodlequiz)
 
 Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand how y varies with some predictor x.
 
-In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. Moreover, that we can estimate a confidence interval around the mean, within which we believe the ture mean to occur.
+In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. Moreover, that we can estimate a confidence interval around the mean, within which we believe the true mean to occur.
 
 Linear models then allow us to test whether the true mean varies with another variable.
 
@@ -111,7 +111,7 @@ towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
 ![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png){width=80%} <br>
 
-Let's inspect the results of your model use `summary(towers_fit)` and see how this corresponds to the image above
+Let's inspect the results of your model. Use `summary(towers_fit)` and see how this corresponds to the image above
 
 ```{r}
 summary(towers_fit)
@@ -125,7 +125,7 @@ The slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and
 
 2. What direction is slope coefficient, what does this tell us?
 
-The slope is `r cloze("negative", c("negative", "positive"))`. This indicates that as `log10_rainfall` `r cloze("increases", c("decreases", "increases"))`, `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
+The slope is `r cloze("negative", c("negative", "positive"))`. This indicates that as `log10_rainfall` increases `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
 
 ## The confidence interval
 
@@ -189,7 +189,7 @@ The *p*-value tells us how extreme our *F*-statistic is under the null hypothesi
 
 **Question:**
 
-Generally, *F*-statistic increases with the `r cloze("p-value", c("the intercept", "the slope", "p-value"))`. A large *F*-statistic means that it's `r cloze("unlikely", c("not big deal", "unlikely"))` in observing our effect. 
+Generally, as the *F*-statistic increases the `r cloze("p-value", c("the intercept", "the slope", "p-value"))` decreases. A large *F*-statistic means that it's `r cloze("unlikely", c("not big deal", "unlikely"))` to be sampled by chance. 
 
 > Try not to get overwhelmed by the details, all we want you to understand is the relationship between test statistics e.g. *F*-statistic and *p*-values. You got this!
 
@@ -443,7 +443,7 @@ library(easystats)
 data_martino <- read_csv("data/martino-fish-smr.csv")
 ```
 
-We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is categorical variable.
+We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is a categorical variable.
 
 ![Using a linear model with categorial and continuous variables](lm-anova.png){width=60%} <br>
 
@@ -480,10 +480,10 @@ For both the predictor (`temp_treatment`) and `Residuals` we can do some maths (
 
 Once we have these values, we can calculate the `F-value` - a ratio between the `Mean sq` of the predictor (`temp_treatment`) and the `Mean sq` for the `Residuals`. 
 
-In other words, the `F-value` is ratio of signal to noise: 
+In other words, the `F-value` is the ratio of signal to noise: 
 
 - **larger** values indicate a **stronger** signal
-- **smaller** values means that we have a **noise** in our data.
+- **smaller** values means that we have more **noise** in our data.
 
 From there, we use the *F*-statistic to retrieve the probability of observing our effect in a hypothetical (and boring) world where nothing is expected to happen - just like we did in earlier examples. 
 
@@ -497,7 +497,7 @@ What does this mean?
 
 - This indicates that variation explained by our model is `r cloze("greater than", c("greater than", "less than"))` unexplained variation. 
 
-- In other words, there is `r cloze("strong", c("strong", "weak"))` signal for a treatment effect and it is very `r cloze("unlikely", c("not big deal", "unlikely"))` to observe this effect.  
+- In other words, there is `r cloze("strong", c("strong", "weak"))` signal for a treatment effect and it is very `r cloze("likely", c("likely", "unlikely"))` to observe this effect.  
 
 ## Estimate means for each group
 
@@ -618,7 +618,7 @@ The reference island is `r cloze("Biscoe", c("Biscoe", "Dream", "Torgersen"))`
 
 3. Which two islands should the biggest mean difference in flipper length?
 
-The biggest mean difference was observed between `r cloze("Dream island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))`
+The biggest mean difference was observed between `r cloze("Torgersen island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))`
 
 4. What does the p-value for the mean difference between Torgersen island and Dream island tell us?
 
@@ -703,9 +703,9 @@ A relatively small value in our `F value` means that there relatively we have ha
 
 2. Interpret the intercept of your model. What does it represent?
 
-The intercept in our model represents the mean/standard deviation/mean square of spray A/B/C/D/E/F
+The intercept in our model represents the mean/standard deviation/mean square of spray `r cloze("A", c("A", "B", "C", "F", "D", "E", "F"))`
 
 3. Which spray type(s) would you recommend in reducing insect counts?
 
-From our pairwise comparisons, I would recommend to use spray(s) `r cloze("A, B or F", c("B", "C", "F", "C, D or E", "A, B or F"))`
+From our pairwise comparisons, I would recommend to use spray(s) `r cloze("C, D or E", c("B", "C", "F", "C, D or E", "A, B or F"))`
 
