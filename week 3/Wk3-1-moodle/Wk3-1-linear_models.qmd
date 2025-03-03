@@ -145,7 +145,7 @@ This is the nature of sampling and for this reason, we estimate **confidence int
 
 # Isaac with leaves across climates
 
-![Meet Isaac! Image credit: Data Dan](isaac-plant-ecosystems.png){60%}
+![Meet Dr. Isaac Towers! Image credit: Data Dan](isaac-plant-ecosystems.png){60%}
 From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478) We will be working with the data Isaac compiled for us. 
 
 > Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall?
@@ -304,7 +304,7 @@ Feel free to tinker with all these options to create a plot that helps us answer
 
 > Let's get you to try run a linear model, interpret the output and create a plot with a familar dataset! 
 
-# Bringing back the Palmer penguins for allometry
+### Bringing back the Palmer penguins for allometry
 
 ![We can learn so much from these cuties. Image credit: @allison_horst](palmer_penguins.png)
 Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
@@ -403,7 +403,7 @@ The confidence intervals for the slope tells us that the true population mean fo
 
 The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass.
 
-# What contributes to ground level Ozone?
+### What contributes to ground level Ozone?
 
 ![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){50%}
 
@@ -474,6 +474,7 @@ ozone_model_predictions
 2.
 3. 
 
+
 # Introduction to ANOVA (Analysis of Variance)
 
 In this week's lectures, we learned that linear regression are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
@@ -481,6 +482,18 @@ In this week's lectures, we learned that linear regression are incredibly flexib
 > Recall the differences between  **discrete** or **categorical** variables. 
 
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){70%}
+From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature can influence fish energetics and metabolism (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in) We will be working with the data Isaac compiled for us. 
+
+> Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall?
+
+Let's read in the Isaac's data. This is in your `"data/"` folder. 
+
+### Linear model with categorical predictor(s)
+
+
+
+![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png)
+
 
 ```{r}
 library(tidyverse)
@@ -488,21 +501,19 @@ library(easystats)
 library(palmerpenguins)
 ```
 
-![We can use linear models to compare means between groups](lm-anova.png)
+
+
+
+![Using a linear model with categorial and continuous variables](lm-anova.png)
 <!-- TODO: -->
 <!-- - Fitting a lm to a categorical variable is actually a linear regression with multiple predictors -->
-
 <!-- - Intro to ANOVA -->
 <!--   - group slopes + contrasts -->
 <!--   - paramter estimates test -->
 <!--   - anova test -->
 <!--   - pairwise comparisons -->
 
-# Jasmine, fish, temperature and metabolism
 
-<!-- TODO: @Daniel, would you ask Jasmine nicely for her MR data please? Thanks! I may be able to extract it from [Fig 3A](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in
-) using [{metadigitise}](https://github.com/daniel1noble/metaDigitise) time permitting
--->
 
 # Island differences in Palmer Penguins
 
