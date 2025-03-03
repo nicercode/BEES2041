@@ -705,6 +705,15 @@ ggplot(group_means_spray, aes(x = spray, y = Mean)) +
 
 **Questions:**
 
-1. 
-2.
-3. 
+1. Our `F value` of the `anova()` output is not very big (34.70), what might this mean? 
+
+A relatively small value in our `F value` means that there relatively we have have more `r cloze("noise relative to signal", c("noise relative to signal", "signal relative to noise"))` in our data. 
+
+2. Interpret the intercept of your model. What does it represent?
+
+The intercept in our model represents the mean/standard deviation/mean square of spray A/B/C/D/E/F
+
+3. Which spray type(s) would you recommend in reducing insect counts?
+
+From our pairwise comparisons, I would recommend to use spray(s) `r cloze("A, B or F", c("B", "C", "F", "C, D or E", "A, B or F"))`
+
