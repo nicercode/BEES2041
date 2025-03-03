@@ -450,7 +450,7 @@ Linear regressions are incredibly flexible. Not only can we use them to make inf
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){width=60%} <br>
 From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperatures treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
-![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%}
+![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%} <br>
 
 > Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
 
