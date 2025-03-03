@@ -130,7 +130,7 @@ towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
 > Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
 
-![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png) <br>
+![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png){width=60%} <br>
 
 Let's inspect the results of your model use `summary(towers_fit)` and see how this corresponds to the image above
 
@@ -165,7 +165,7 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 
 ## Variation explained by the model (R^2 and F-statistic)
 
-![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](r2-and-f-value.png)
+![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](r2-and-f-value.png){width=60%}
 
 <br>
 > There are two metrics we are use to assess our model fit
@@ -193,7 +193,7 @@ The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` sug
 
 > The *p*-value is derived from the F-distribution
 
-![Relationship between R^2, *F* and *P*, Image credit: Data Dan](f-value-p-value.png)
+![Relationship between R^2, *F* and *P*, Image credit: Data Dan](f-value-p-value.png){width=60%}
 <br>
 
 The *p*-value and the *F*-statistic are closely related. In the last prac, we learned to calculate **probability (p-value)** for a *t*-statistic from a standard normal distribution. We can do that same for our *F*-statistic from the *F*-distribution!
@@ -365,7 +365,7 @@ The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large
 
 ## What contributes to ground level Ozone?
 
-![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){width=50%}
+![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){width=70%}
 
 The `airquality` dataset in R contains daily measurements of air pollution and meteorological conditions in New York (May–September 1973).
 
@@ -470,7 +470,7 @@ data_martino <- read_csv("data/martino-fish-smr.csv")
 
 We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is categorical variable.
 
-![Using a linear model with categorial and continuous variables](lm-anova.png) <br>
+![Using a linear model with categorial and continuous variables](lm-anova.png){width=60%} <br>
 ```{r}
 fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
 ```
@@ -541,7 +541,7 @@ parameters(fit_martino)
 
 Unlike previous examples, we have an extra row in the output! This is because our model is  fitting each `temp_treatment` group as x predictors.  
 
-![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png) <br>
+![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png){width=60%} <br>
 Importantly: 
 
 - `(Intercept)` represents the **mean** of `temp_treatment [20C]`. By default, the `lm()` function sorts the categorical variable alphabetically and by increasing numeric order and then chooses the first value as `(Intercept)` like this:
@@ -566,7 +566,7 @@ estimate_contrasts(fit_martino, contrast = "temp_treatment")
 
 # Example 3 - Linear model with categorical predictor (Penguins)
 
-![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png)
+![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png){width=50%}
 
 Using the `penguins` data:
 
