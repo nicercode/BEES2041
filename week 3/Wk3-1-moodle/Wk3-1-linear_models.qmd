@@ -365,7 +365,7 @@ The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large
 
 ## What contributes to ground level Ozone?
 
-![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){50%}
+![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){width=50%}
 
 The `airquality` dataset in R contains daily measurements of air pollution and meteorological conditions in New York (May–September 1973).
 
@@ -375,7 +375,7 @@ library(easystats)
 ```
 
 ```{r}
-head(airquality)
+data_airquality <- airquality
 ```
 
 - `Ozone` (Ozone, ppb): Measures ground-level ozone concentration in parts per billion (ppb). High levels indicate poor air quality and can impact human health.
@@ -406,16 +406,14 @@ model
 > Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
 
 ```{r}
-head(airquality)
-
-ozone_fit <- lm(Ozone ~ Temp, data = airquality) 
+ozone_fit <- lm(Ozone ~ Temp, data = data_airquality) 
 
 summary(ozone_fit)
 parameters(ozone_fit)
 
 ozone_means <- estimate_means(ozone_fit, by = "Temp")
 
-ozone_model_predictions <- ggplot(airquality, aes(x = Temp, y = Ozone)) +
+ozone_model_predictions <- ggplot(data_airquality, aes(x = Temp, y = Ozone)) +
   geom_point(size = 2, col = "darkgoldenrod1", stroke = 0) +
   geom_ribbon(data = ozone_means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "darkorange", alpha = 0.5) +
   geom_line(data = ozone_means, aes(y = Mean), col = "forestgreen", linewidth = 1) +
@@ -431,7 +429,7 @@ ozone_model_predictions
 
 1. What is the relationship between temperature and ground-level ozone? 
 
-- Ground-level ozone increases/decreases with temperature. For every 1Fº increase, ozone increases by `r cloze("2.43", c("2.43","147","0.23"))` parts per billion.
+Ground-level ozone increases/decreases with temperature. For every 1 degree Fº increase, ozone increases by `r cloze("2.43", c("2.43","147","0.23"))` parts per billion.
 
 2. Interpret the R^2 value. 
 
@@ -487,7 +485,6 @@ To statistically test for an overall effect of `temp_treatment`, we will enlist 
 anova(fit_martino)
 ```
 
-![Under the hood, maths behind an ANOVA](signal-to-noise.png) <br>
 Let's talk through what's happening here: 
 
 - The `anova()` function splits up the total variation in our data into two main components: 
@@ -496,7 +493,9 @@ Let's talk through what's happening here:
 
 ## Detecting an overall effect - some maths
 
-For both the predictor (`temp_treatment`) and `Residuals` we do some math shown (but we use R instead) to calculate: 
+![Under the hood, maths behind an ANOVA](signal-to-noise.png){width=60%} <br>
+
+For both the predictor (`temp_treatment`) and `Residuals` we can do some maths (but we use R instead) to calculate: 
 
 - sum of squares (`Sum sq`)
 - mean square (`Mean sq`) 
@@ -505,8 +504,8 @@ Once we have these values, we can calculate the `F-value` - a ratio between the 
 
 In other words, the `F-value` is ratio of signal to noise: 
 
-- larger values indicate a stronger signal
-- smaller values means that we have a noise in our data.
+- **larger** values indicate a **stronger** signal
+- **smaller** values means that we have a **noise** in our data.
 
 From there, we use the *F*-statistic to retrieve the probability of observing our effect in a hypothetical (and boring) world where nothing is expected to happen - just like we did in earlier examples. 
 
@@ -669,13 +668,18 @@ Using the `InsectSprays` data:
   - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
   - Add a title
   - Add nice axes labels
-
+  
 ```{r}
 # Load the dataset
-InsectSprays
+data_insects <- InsectSprays
+```
+
+```{r solution}
+# Load the dataset
+data_insects <- InsectSprays
 
 # Fit a linear model
-fit_insect <- lm(count ~ spray, data = InsectSprays)
+fit_insect <- lm(count ~ spray, data = data_insects)
 
 # Perform an ANOVA
 anova_insect <- anova(fit_insect)
@@ -692,7 +696,7 @@ group_means_spray <- estimate_means(fit_insect, by = "spray")
 
 # Plot with raw data points
 ggplot(group_means_spray, aes(x = spray, y = Mean)) +
-  geom_jitter(data = InsectSprays, aes(x = spray, y = count), color = "red", width = 0.1) + # Raw data
+  geom_jitter(data = data_insects, aes(x = spray, y = count), color = "red", width = 0.1) + # Raw data
   geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3, alpha = 0.5) + # Confidence intervals
   geom_point(size = 5, color = "orange") + # Estimated means
   labs(title = "Comparisons between different insecticides in reducing insect counts",
