@@ -1,0 +1,482 @@
+---
+title: "Week 3-1 linear models"
+output: html_output
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(moodlequiz)
+```
+
+
+# LM continuous (Penguins)
+
+## Example 2 - Bringing back the Palmer penguins for allometry
+
+![We can learn so much from these cuties. Image credit: @allison_horst](palmer_penguins.png){width=60%}
+<br>
+
+Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
+
+> We are want try answer the question: **How does bill length scale with body mass in Palmer Penguins?**
+
+**Over to you - using the code from Isaac's study above, try to**: 
+
+- Run a linear model for `bill_length_mm` and `body_mass_g`
+- Generate the summary output for your model using `summary()`, `parameters()`
+  - Make some interpretations from this output using the: 
+      - slope
+      - confidence interval of the slope
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()`
+- Create a data visualisation showing off the `penguins` data, your predicted means from your linear
+model
+  - Plot the raw data with `geom_point()`
+  - Add the confidence intervals with `geom_ribbon()`
+  - Add the predicted linear relationship with `geom_line()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
+
+```{r}
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+```
+
+```{r}
+penguins
+```
+
+```{r penguins-answer, include=FALSE}
+# Fit the model
+penguins_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
+
+# Summary of model
+summary(penguins_fit)
+
+# Clean, nice summary
+parameters(penguins_fit) |> tibble() 
+
+# Create model predictions
+penguins_means <- estimate_means(penguins_fit, by = "body_mass_g")
+
+# Make a scatterplot of raw data and model predictions
+penguins_model_predictions <-
+  ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
+  geom_point(size = 2, col = "cornflowerblue", alpha = 0.5, stroke = 0) +
+  geom_ribbon(data = penguins_means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "azure2") +
+  geom_line(data = penguins_means, aes(y = Mean), col = "#EB8240", linewidth = 1) +
+  theme_classic() +
+  labs(
+    title = "Allometry of bill length with body mass in Palmer Penguins",
+    x = "Body mass (g)",
+    y = "Bill length (mm)"
+  ) 
+
+penguins_model_predictions
+```
+
+> Once you've run your analyses in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+
+**Questions: **
+
+1. What does the slope tell us? 
+
+There is a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass
+
+2. Let's try interpret the slope. 
+
+- A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm)
+
+3. Yikes, looks like by rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
+
+The confidence intervals for the slope tells us that the true population mean for slope lies between
+`r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
+
+4. Let's try understand the *R^2* and *F*-statistic values from your model. What are they telling us?
+
+- The *R^2* value suggests that there is a `r cloze("moderate", c("weak","moderate", "strong"))` relationship between bill length and body mass. 
+
+- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("bill_length_mm","bill_depth_mm", "flipper_length_mm"))`
+
+5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
+
+The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass.
+
+# LM continuous (Ozone)
+
+## What contributes to ground level Ozone?
+
+![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){width=70%}
+
+The `airquality` dataset in R contains daily measurements of air pollution and meteorological conditions in New York (May–September 1973).
+
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
+```{r}
+data_airquality <- airquality
+```
+
+- `Ozone` (Ozone, ppb): Measures ground-level ozone concentration in parts per billion (ppb). High levels indicate poor air quality and can impact human health.
+- `Temp` (Temperature, °F): Records daily maximum temperature in degrees Fahrenheit. 
+
+> We want to know whether higher temperatures can contribute to increased ozone levels due to photochemical reactions.
+
+Using the `airquality` dataset:
+
+- Run a linear model for the relevant variables for our question
+- Generate the summary output for your model using `summary()`, `parameters()` 
+  - Make some interpretations from this output using the: 
+      - slope
+      - confidence interval of the slope
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()`
+- Create a data visualisation showing off the `airquality` data, your predicted means from your linear
+model
+  - Plot the raw data with `geom_point()`
+  - Add the confidence intervals with `geom_ribbon()`
+  - Add the predicted linear relationship with `geom_line()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
+  
+> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+
+```{r solution1}
+ozone_fit <- lm(Ozone ~ Temp, data = data_airquality) 
+
+summary(ozone_fit)
+parameters(ozone_fit)
+
+ozone_means <- estimate_means(ozone_fit, by = "Temp")
+
+ozone_model_predictions <- ggplot(data_airquality, aes(x = Temp, y = Ozone)) +
+  geom_point(size = 2, col = "darkgoldenrod1", stroke = 0) +
+  geom_ribbon(data = ozone_means, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "darkorange", alpha = 0.5) +
+  geom_line(data = ozone_means, aes(y = Mean), col = "forestgreen", linewidth = 1) +
+  labs(title = "Ozone vs Temperature with Linear Regression Line",
+       x = "Temperature (F)",
+       y = "Ozone Level (ppb)") +
+  theme_minimal()
+
+ozone_model_predictions
+```
+
+**Questions:**
+
+1. What is the relationship between temperature and ground-level ozone? 
+
+Ground-level ozone increases/decreases with temperature. For every 1 degree Fº increase, ozone increases by `r cloze("2.43", c("2.43","147","0.23"))` parts per billion.
+
+2. Interpret the R^2 value. 
+
+The R^2 value of 0.48 indicates that 48% of the variation in ground-level ozone is explained by the `r cloze("model", c("p-value","residuals","model"))`.
+
+3. Where does the true mean estimate of the slope for `Temp` lie? 
+
+The true mean estimate of the slope exists somewhere between  `r cloze("1.97 and 2.89", c("-183.2 and -110.77", "1.97 and 2.89"))`.
+
+# LM categorical (Fish)
+
+## Worked example - Jasmine, fish and energetics in a warming world
+
+Linear regressions are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
+
+> Recall the differences between  **discrete** or **categorical** variables. 
+
+![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){width=60%} <br>
+From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperatures treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
+
+![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%} <br>
+
+> Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
+
+Let's read in the Jasmine's data. This is in your `"data/"` folder. 
+
+## Setting up
+
+```{r}
+library(tidyverse)
+library(easystats)
+```
+
+```{r, message=FALSE}
+data_martino <- read_csv("data/martino-fish-smr.csv")
+```
+
+We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is a categorical variable.
+
+![Using a linear model with categorial and continuous variables](lm-anova.png){width=60%} <br>
+
+Let's fit a model for `smr` using `temp_treatment` as a precitor:
+
+```{r}
+fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
+```
+
+## Analysis of Variance (ANOVA)
+
+> How do we know whether there is a treatment group effect?
+
+To statistically test for an overall effect of `temp_treatment`, we will enlist the help of the `anova()` function. 
+
+```{r}
+anova(fit_martino)
+```
+
+Let's talk through what's happening here: 
+
+- The `anova()` function splits up the total variation in our data into two main components: 
+    1. variation explained by our model predictors `temp_treatment`. Think of this as a signal for a treatment effect
+    2. unexplained variation `Residuals`. Think of this as noise in our data
+
+## Detecting an overall effect - some maths
+
+![Under the hood, maths behind an ANOVA](signal-to-noise.png){width=60%} <br>
+
+For both the predictor (`temp_treatment`) and `Residuals` we can do some maths (but we use R instead) to calculate: 
+
+- sum of squares (`Sum sq`)
+- mean square (`Mean sq`) 
+
+Once we have these values, we can calculate the `F-value` - a ratio between the `Mean sq` of the predictor (`temp_treatment`) and the `Mean sq` for the `Residuals`. 
+
+In other words, the `F-value` is the ratio of signal to noise: 
+
+- **larger** values indicate a **stronger** signal
+- **smaller** values means that we have more **noise** in our data.
+
+From there, we use the *F*-statistic to retrieve the probability of observing our effect in a hypothetical (and boring) world where nothing is expected to happen - just like we did in earlier examples. 
+
+From the output in the `anova()` function, we can see that: 
+
+- The `F-value` is relatively large and *p*-value is very small. 
+
+**Question:** 
+
+What does this mean? 
+
+- This indicates that variation explained by our model is `r cloze("greater than", c("greater than", "less than"))` unexplained variation. 
+
+- In other words, there is `r cloze("strong", c("strong", "weak"))` signal for a treatment effect and it is very `r cloze("likely", c("likely", "unlikely"))` to observe this effect.  
+
+## Estimate means for each group
+
+> Okay cool, we have an effect... how big is this effect on our y variable `smr`?
+
+Similar to our earlier linear models, we use `estimate_means()` to calculate the mean `smr` for each `temp_treatment` group. 
+
+```{r}
+estimate_means(fit_martino, by = "temp_treatment")
+```
+
+## Slopes when x is a categorical variable are less useful
+
+Let's take a look at the `parameters()` / `summary()` output. Looks different huh? 
+
+```{r}
+parameters(fit_martino)
+```
+
+Unlike previous examples, we have an extra row in the output! This is because our model is  fitting each `temp_treatment` group as x predictors.  
+
+![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png){width=80%} <br>
+Importantly: 
+
+- `(Intercept)` represents the **mean** of `temp_treatment [20C]`. By default, the `lm()` function sorts the categorical variable alphabetically and by increasing numeric order and then chooses the first value as `(Intercept)` like this:
+
+```{r}
+data_martino$temp_treatment |>  unique()
+```
+
+- The slope for `temp_treatment [24C]` represents the slope or **difference** in means between `temp_treatment [24C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
+
+- The slope for `temp_treatment [28C]` represents the slope or **difference** in means between `temp_treatment [28C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
+
+## Estimate pairwise comparisons in mean differences (contrasts)
+
+> What if we want to change the reference group from temp_treatment [20C] to temp_treatment [28C]? 
+
+We can use the `estimate_constrasts()` function to give us pairwise comparisons between all groups. Try it out
+
+```{r}
+estimate_contrasts(fit_martino, contrast = "temp_treatment")
+```
+
+# LM categorical (Penguins)
+
+## Do prenguins differ in their flipper length across islands?
+
+![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png){width=75%}
+
+Using the `penguins` data:
+
+- Run a linear model for `flipper_length_mm` and `island`
+- Perform an ANOVA on your linear model output
+- Estimate contrasts using `estimate_contrasts()` for `island`
+- Generate summary outputs for your model using `summary()`, `parameters()`
+  - Make some interpretations from this output using the: 
+      - intercept
+      - slopes for the group predictor variable (`island`)
+      - confidence interval of the group predictor variable (`island`)
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()` for `island`
+- Create a data visualisation showing off the `penguins` data, your predicted means for each group from your linear model
+  - Plot the raw data with `geom_jitter()`
+  - Add the confidence intervals with `geom_errorbar()`
+  - Add the predicted group means with `geom_point()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
+
+Recall, you can use the `palmerpenguins` package to load the `penguins` data
+```{r}
+library(palmerpenguins)
+penguins
+```
+
+```{r solution2}
+# Fit a linear model
+fit_penguins <- lm(flipper_length_mm ~ island, data = penguins)
+
+# Perform an ANOVA
+anova(fit_penguins)
+
+# Inspect the model outputs
+summary(fit_penguins)
+parameters(fit_penguins)
+
+# Generate contrasts (differences between groups)
+group_contrasts_island <- estimate_contrasts(fit_penguins, contrast = "island")
+
+# Generate model predictions for each island
+group_means_island <- estimate_means(fit_penguins, by = "island")
+
+# Plot with raw data points
+  ggplot(group_means_island, aes(x = island, y = Mean)) +
+  geom_jitter(data = penguins, aes(x = island, y = flipper_length_mm), color = "red", width = 0.1) + # Raw data
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3) + # Confidence intervals
+  geom_point(size = 3, color = "orange") + # Estimated means
+  labs(title = "Island comparisons in flipper length in Palmer Penguins",
+       x = "Islands in Palmer Archipelago",
+       y = "Flipper length (mm)") +
+  theme_minimal()
+```
+
+> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+
+**Questions:**
+
+1. What does the `F value` of the `anova()` output indicate?
+
+The `F value` is relatively `r cloze("large", c("small","large"))`. This means that our model is explaining a `r cloze("large", c("small","large"))` amount of variation in `r cloze("flipper_length_mm", c("bill_length_mm","bill_depth_mm", "flipper_length_mm"))`.
+
+2. What is the reference island for the `(Intercept)`?
+
+The reference island is `r cloze("Biscoe", c("Biscoe", "Dream", "Torgersen"))`
+
+3. Which two islands should the biggest mean difference in flipper length?
+
+The biggest mean difference was observed between `r cloze("Torgersen island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))`
+
+4. What does the p-value for the mean difference between Torgersen island and Dream island tell us?
+
+The p-value of `r cloze("0.312", c("< .001", "0.312"))` tells us that there is a `r cloze("moderate", c("very low", "moderate", "very high"))` chance that we would observe the mean difference of -1.88 between Torgersen island and Dream island if there was `r cloze("no", c("no", "strong"))` differences in flipper length between islands.
+
+# LM categorical (Crops)
+
+## Effect of insecticides on crop yields
+
+The `InsectSprays` dataset in R contains data on the effectiveness of six different insecticides in controlling pest insect populations.
+
+- `Count`: The number of insects remaining after treatment, measuring the effectiveness of each spray.
+- `Spray`: A categorical variable (A–F) representing six different insecticide treatments.
+
+> Which spray is the most effective in controlling insect pest counts? 
+
+Using the `InsectSprays` data:
+
+- Run a linear model for the relevant variables for our question
+- Perform an ANOVA on your linear model output
+- Estimate contrasts using `estimate_contrasts()`
+- Generate summary outputs for your model using `summary()`, `parameters()`
+  - Make some interpretations from this output using the: 
+      - intercept
+      - slopes for the group predictor variable
+      - confidence interval of the group predictor variable
+      - R^2 value
+      - F-statistic value
+      - p-value
+- Generate some model predictions from your model using `estimate_means()`
+- Create a data visualisation showing off the `InsectSprays` data, your predicted means for each group from your linear model
+  - Plot the raw data with `geom_jitter()`
+  - Add the confidence intervals with `geom_errorbar()`
+  - Add the predicted group means with `geom_point()`
+  - Choose some [fun colours](https://sites.stat.columbia.edu/tzheng/files/Rcolor.pdf) if you would like!
+  - Add a title
+  - Add nice axes labels
+  
+```{r}
+# Load the dataset
+data_insects <- InsectSprays
+```
+
+```{r solution3}
+# Load the dataset
+data_insects <- InsectSprays
+
+# Fit a linear model
+fit_insect <- lm(count ~ spray, data = data_insects)
+
+# Perform an ANOVA
+anova_insect <- anova(fit_insect)
+
+# Inspect the model outputs
+summary(fit_insect)
+parameters(fit_insect)
+
+# Generate contrasts (differences between groups)
+group_contrasts_spray <- estimate_contrasts(fit_insect, contrast = "spray")
+
+# Generate model predictions for each spray type
+group_means_spray <- estimate_means(fit_insect, by = "spray")
+
+# Plot with raw data points
+ggplot(group_means_spray, aes(x = spray, y = Mean)) +
+  geom_jitter(data = data_insects, aes(x = spray, y = count), color = "red", width = 0.1) + # Raw data
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3, alpha = 0.5) + # Confidence intervals
+  geom_point(size = 5, color = "orange") + # Estimated means
+  labs(title = "Comparisons between different insecticides in reducing insect counts",
+       x = "Insectide spray types",
+       y = "Insect counts") +
+  theme_minimal()
+```
+
+> Once you've done the above in your own RStudio, use your outputs to answer the relevant questions (Moodle).
+
+**Questions:**
+
+1. Our `F value` of the `anova()` output is not very big (34.70), what might this mean? 
+
+A relatively small value in our `F value` means that there relatively we have have more `r cloze("noise relative to signal", c("noise relative to signal", "signal relative to noise"))` in our data. 
+
+2. Interpret the intercept of your model. What does it represent?
+
+The intercept in our model represents the mean/standard deviation/mean square of spray `r cloze("A", c("A", "B", "C", "F", "D", "E", "F"))`
+
+3. Which spray type(s) would you recommend in reducing insect counts?
+
+From our pairwise comparisons, I would recommend to use spray(s) `r cloze("C, D or E", c("B", "C", "F", "C, D or E", "A, B or F"))`
+

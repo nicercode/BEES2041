@@ -1,0 +1,86 @@
+---
+title: "Making plots for linear rgression ppt"
+format: html
+---
+
+
+
+# Setup
+
+Path
+
+```{r}
+setwd("week 3/Wk3-slides")
+```
+
+Libraries
+```{r}
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(patchwork)
+
+library(easystats)
+```
+
+In the course so far, we've introduced
+
+- estimating the mean and confidence intervals around the mean for a population
+- How we can use linear mdoels to invetsigate whether the mean of a variable is varying with some predictor x, be it a continuous or categorical variable.
+- How to run linear models, including
+  - how to run model and access the results
+  - what various parts of the output mean
+  - how to interpret the results
+
+One of the most important things we can report on is strength of effect
+
+- Regression: slope, R2
+- ANOVA: F
+
+Confidence intervals tell us how uncertain we are
+
+Our inferences 
+
+Warton: "There are assumptions when making inferences—you need to know what they are and to what extent violations of them are important (to the validity and effiency of your inferences). Independence, mean, and variance assumptions tend to be important for validity, distributional assumptions not so much, but skew and outliers can reduce eﬃciency.
+
+Bias
+Effiency -- an efficient estimator provides more precise estimates of the parameter.
+
+sampling from the population of interest.
+
+independence assumption, an important assumption and one that is quite easily violated -- ortant assumption and one that is quite easily vi-
+olated. This is not something that is easy to check from the data; it is more about
+checking the study design
+
+
+ If
+the variance model is wrong, your standard errors will likely be wrong, and any
+subsequent inferences that are made from the statistic will not be valid (unless
+adjusted for, e.g. using resampling, as in Chap. 9). Violations of your variance model
+tend also to make your procedure less eﬃcient, so your estimates of the mean aren’t
+as good as they could have been
+
+
+So if you know your distributional assumptions
+are quite wrong (especially in terms of skewness and long-tailedness), you should
+try to do something about it, so that your inferences (tests, CIs) are more likely to
+pick up any signal in your data. One thing you could do is transform your data, as in
+the following section; another option is to use a diﬀerent analysis technique designed
+for data with your properties. 
+
+Key Point
+You don’t need to be too fussy when checking distributional assumptions on your model fit. Usually, we can use a model fitted to our data to construct a set of residuals that are supposed to be normally distributed if the model is correct. How carefully you check these residuals for normality depends on
+your sample size:
+
+- n <10 Be a bit fussy about the normality of residuals. They should look symmetric and not be long-tailed (i.e. on a normal quantile plot, points aren’t far above the line for large values and aren’t far below the line for small values).
+- 10 < n < 30 or big outliers/long-tailedness.
+- n >30 Don’t worry too much; just check you don’t have strong skew. You are pretty safe unless there is really strong skew or some quite large outliers.
+
+Why transform data? Usually, to change its shape, in particular, to get rid of strong skew and outliers.
+
+Fig 1.4
+
+
+
