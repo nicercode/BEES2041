@@ -528,7 +528,7 @@ What does this mean?
 Similar to our earlier linear models, we use `estimate_means()` to calculate the mean `smr` for each `temp_treatment` group. 
 
 ```{r}
-estimate_means(fit_martino, by = "temp_treatment")
+martino_means <- estimate_means(fit_martino, by = "temp_treatment")
 ```
 
 ## Slopes when x is a categorical variable are less useful
@@ -563,6 +563,43 @@ We can use the `estimate_constrasts()` function to give us pairwise comparisons 
 ```{r}
 estimate_contrasts(fit_martino, contrast = "temp_treatment")
 ```
+
+Let's visualise the means of each temp_treatment with `ggplot`
+
+**Notice** how we stored the output of our `ggplot` in `martiono_model_predictions`, this gives us the option to add to plot incrementally
+
+```{r}
+martino_model_predictions <-
+  ggplot(data_martino, aes(x = temp_treatment, y = smr)) +
+  geom_point(size = 2, col = "red", alpha = 0.2, stroke = 0) +
+  geom_point(data = martino_means, aes(y = Mean), col = "#EB8240", size = 3) + 
+  geom_errorbar(data = martino_means, aes(y = Mean, ymin = CI_low, ymax = CI_high), width = 0.2) + 
+  theme_classic() + 
+  labs(
+    title = "Metabolic Rate of Fish living in different temperature treatments",
+    x = "Temperature treatments",
+    y = "Standard Metabolic Rate"
+  ) 
+
+martino_model_predictions
+```
+
+Voilà!!! Let's talk through this code:
+
+- `ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area))` - here, we are visualising our y variable (`log10_leaf_mass_per_area`) and x variable (`log10_rainfall`)
+- `geom_point(size = 2, col = "red", alpha = 0.2, stroke = 5)` - plotting the raw data using points
+    - `size` controls the size of the points
+    - `col` sets the colour of the points
+    - `alpha` sets the transparency of the points, a low value makes them more transparent. This is good for overlapping points
+    - `stroke` controls the thickness of the border of the points
+- `geom_ribbon(data = means_towers, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey")` - create a ribbon to represent our confidence intervals
+    - `data = means_towers` we are plotting our model predictions
+    - `aes(ymin = CI_low, ymax = CI_high, y = Mean)`, setting the lower and upper bounds of our CI and our mean values for our y variable (`log10_leaf_mass_per_area`) 
+    - `fill = "grey"`, colour our ribbon in grey
+- `geom_line(data = means_towers, aes(y = Mean), col = "#EB8240", linewidth = 1)`, plot the line for our model predictions
+  - `aes(y = Mean)`, create the line using the mean values of our y variable (`log10_leaf_mass_per_area`) 
+  - `col = "#EB8240"`, set a custom colour using [hexademical (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ)
+  - `linewidth = 1` controls the thickness of the line
 
 # Example 3 - Linear model with categorical predictor (Penguins)
 
@@ -693,6 +730,25 @@ group_contrasts_spray <- estimate_contrasts(fit_insect, contrast = "spray")
 
 # Generate model predictions for each spray type
 group_means_spray <- estimate_means(fit_insect, by = "spray")
+
+group_means_spray |>  tibble()
+```
+
+
+```{r}
+ggplot(data = data_insects, aes(x = spray, y = count)) + 
+  geom_point() + 
+  geom_errorbar(data = group_means_spray, aes(y = Mean, ymin = CI_low, ymax = CI_high), width = 0.3) + 
+  geom_point(data = group_means_spray, aes(y = Mean, x = spray), colour = "green", size = 5) +
+  theme_minimal()
+  
+```
+
+
+```{r}
+
+```
+
 
 # Plot with raw data points
 ggplot(group_means_spray, aes(x = spray, y = Mean)) +

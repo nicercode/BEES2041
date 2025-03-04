@@ -1,0 +1,94 @@
+---
+title: "Wk3-2-communication"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+
+# For the prac
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+
+# Data for prac
+data_towers <- read_csv("week 3/Wk3-2-moodle/data/towers-2024.csv")
+
+# webr counter
+reditor_count <- 1
+
+class_id <- function() {
+  reditor_count <<- reditor_count + 1
+  sprintf("r-editor-%d", reditor_count)
+}
+```
+
+# Communication your results
+
+It is worth reminding ourselves that we are learning statistics so that we can answer questions in the life and earth sciences. Unless you want to keep the answers to yourselves, we need to be able to communicate the results of statistical analyses to a broader audience. Given that statistics has a reputation for being able to trick and confuse people, simple and effective communication of results is a necessary skill for research scientists.
+
+
+<!-- HADLEY WICKHAM PLOT -->
+
+Communication of the results of statistical analyses is usually done by a combination of written text with reference to visual display of the results and the inclusion of test statistics to support the written statements.
+
+This practical gives you some examples of the ways in which analyses and graphs are used in results sections. These examples of effective (or maybe not so effective) communication should help in the presentation of your own results from the Independent data analysis and Maroubra field trip (needed for the second and third practical reports).
+
+These exercises use examples of work published by research students (Honours, Masters and PhD) in the School of Biological, Earth and Environmental Sciences.
+
+### Key learning objectives
+
+At the end of the exercise, you should be able to:
+
+- Read a research paper and identify the three ways in which results are communicated (text, figures and analyses).
+- Suggest what figures to use for data from different sampling or experimental designs.
+- Draft text, figures and results from the statistical tests learnt throughout the course in the preparation of results sections suitable for scientific reports.
+
+Let’s dive in! 🚀 
+
+# Describing your results with text
+<!-- TODO:  -->
+<!-- - Report function -->
+<!-- - In-line literate programming `r results |> round` (ambitious) -->
+
+# Creating tables for your results
+
+<!-- TODO:  -->
+<!-- - Format a csv, create with tibble or dataframe or matrix and export with write_csv() to outputs/ -->
+<!-- - gt for nice tables in html (ambitious) -->
+
+# Creating plots for your results
+
+TODO:
+- ggplot thinking
+  - layers and using different data for each layer
+  - tweaking settings
+    - geom_point
+      - size
+      - shape
+    - geom_line/geom_boxplot/geom_ribbon/geom_violin
+      - linewidth 
+    - geom_errorbar 
+      - width 
+    - alpha
+    - color/fill
+      - discrete
+      - continuous
+    - palettes
+    - legends
+  - axes
+    - scale_x_log10 + scale_y_log10
+    - coord_flip
+    - breaks
+    - scales
+  - facet_wrap
+- patchwork constructing larger panels
+
+# Exercises
+- Make interpretations
+- Make a table
+- Make these figures nicer
+- Make a panel with nice figures
