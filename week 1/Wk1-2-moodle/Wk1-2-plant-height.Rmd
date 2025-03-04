@@ -91,8 +91,7 @@ WOAH there are a LOT of variables in this data set. Sometimes it's nice to selec
 
 **Question: Is `height` left skewed or right skewed?** 
 
-The data is `r cloze("left", c("left", "right"))` skewed. 
-
+The data is `r cloze("right", c("left", "right"))` skewed. (Right skew is where "The right tail is longer; the mass of the distribution is concentrated on the left of the figure" [Wikipedia](https://en.wikipedia.org/wiki/Skewness))
 <br><br>
 
 **Question: Which species is the extreme value? Is the extreme value a true outlier? (Do some research and see verify this value)**

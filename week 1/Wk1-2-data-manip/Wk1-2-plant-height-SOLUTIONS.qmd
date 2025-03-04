@@ -81,7 +81,7 @@ plant_height_subset |>
 
 **Question: Is `height` left skewed or right skewed?**
 
-The data is left skewed.
+The data is *right or positively skewed*. (Right skew is where "The right tail is longer; the mass of the distribution is concentrated on the left of the figure" [Wikipedia](https://en.wikipedia.org/wiki/Skewness))
 
 **Question: Which species is the extreme value? Is the extreme value a true outlier? (Do some research and see verify this value)**
 
