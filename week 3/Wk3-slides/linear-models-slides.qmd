@@ -55,12 +55,12 @@ generate_data_reg <- function(n, B0, B1, sigma, lab, seed) {
   )
 }
 
-# plots generated with seed = 10
+# plots generated with seed = 110
 data_gen_1_5 <- generate_data_reg(n, B0, B1, 1.1, "med", 110) |>
   mutate(y_bar = mean(y))
-# saveRDS(data, "output/data.rds")
+# saveRDS(data, "output/data_gen_1_5.rds")
 
-## Generate data for ANOVA 
+## Generate data for ANOVA
 generate_data_anova <- function(n, B0, B1, sigma, lab, seed) {
   set.seed(seed)
   tibble(

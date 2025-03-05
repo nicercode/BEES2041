@@ -10,22 +10,168 @@ format: html
 Path
 
 ```{r}
-setwd("week 3/Wk3-slides")
+setwd("week 4/Wk4-slides")
+
+data_gen_1_5 <- readRDS("../../week 3/Wk3-slides/output/data_gen_1_5.rds")
 ```
 
 Libraries
 ```{r}
-
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(purrr)
-library(patchwork)
-
+library(tidyverse)
 library(easystats)
+library(palmerpenguins)
 ```
 
-In the course so far, we've introduced
+# Checks for linear regression
+
+Generate data, same as week 3 opening lecture
+
+```{r}
+## Generate data for simple example on intro slides
+n <- 20
+B0 <- 2
+B1 <- 1.5
+
+generate_data_reg <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 + B1 * x,
+    y = y_hat + rnorm(n, sd = sigma),
+    error = lab
+  )
+}
+
+# plots generated with seed = 110
+data_gen_1_5 <- generate_data_reg(n, B0, B1, 1.1, "med", 110) |>
+  mutate(y_bar = mean(y))
+
+styling <- function(p) {
+  theme_classic() +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA), # Panel background
+    plot.background = element_rect(fill = "transparent", color = NA), # Plot background
+    axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+    axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+    axis.text = element_blank(), # Axis tick labels
+    axis.title = element_text(size = 18), # Axis titles
+    plot.title = element_text(size = 18, face = "bold") # Plot title
+  )
+}
+```
+
+
+
+```{r}
+fit <- lm(y ~ x, data = data_gen_1_5)
+
+# basic scatter
+p1 <- data_gen_1_5 |>
+  mutate(y_hat_lm = coef(fit)[1] + coef(fit)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  geom_smooth(method = "lm", se = FALSE, col = "#eb8240") +
+  styling()
+
+p1
+```
+
+make a function to set my own theme for the plots
+
+
+
+## Linearity
+
+Generate parabola data
+
+```{r}
+generate_data_reg_parabola <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 - B1 * (x - 2)^2,
+    y = y_hat + rnorm(n, sd = sigma),
+    error = lab
+  )
+}
+
+data_gen_1_5_parabola <- generate_data_reg_parabola(n, 6, B1, 1.1, "med", 110)
+
+fit_bad <- lm(y ~ x, data = data_gen_1_5_parabola)
+
+p2_resid <-
+  data_gen_1_5_parabola |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  # geom_point(data = data_gen_1_5_parabola, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed") +
+  geom_line(aes(y = y_hat), col = "#eb8240", linetype = "dashed") +
+  styling()
+
+check_fit_good <- check_model(fit, check = "linearity", size_title = 0, theme = "ggplot2::theme_minimal")
+
+check_fit_bad <- check_model(fit_bad, check = "linearity", size_title = 0, theme = "ggplot2::theme_minimal")
+
+p1_resid <- p1 +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed")
+
+ggsave("output/scatter_lm.png", p1, height = 2, width = 3, bg = "transparent")
+
+ggsave("output/scatter_lm_non_linear.png", p2, height = 2, width = 3, bg = "transparent")
+
+ggsave("output/scatter_lm_non_linear.png", p2_resid, height = 2, width = 3, bg = "transparent")
+
+ggsave("output/scatter_lm_resid.png", p1_resid, height = 2, width = 3, bg = "transparent")
+
+
+png("output/check_model_linearity_good.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_good
+dev.off()
+
+png("output/check_model_linearity_bad.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_bad
+dev.off()
+
+```
+
+```{r}
+# residuals
+check_model(fit)
+check_model(fit, check = "qq")
+check_model(fit, check = "linearity")
+check_model(fit, check = "homogeneity")
+check_model(fit, check = "outliers")
+```
+
+# Check assumptions - two methods
+
+```{r}
+fit <- lm(bill_length_mm ~ body_mass_g,
+  data =
+    penguins
+)
+```
+
+Base R
+```{r}
+par(mfrow = c(2, 2))
+
+for(i in 1:4)
+plot(fit, i)
+```
+
+Easystats
+```{r}
+png("output/check_model.png", height = 12, width = 10, units = "in", res = 120)
+check_model(fit)
+dev.off()
+```
+
+
+----------------
+In the co`urse so far, we've introduced
 
 - estimating the mean and confidence intervals around the mean for a population
 - How we can use linear mdoels to invetsigate whether the mean of a variable is varying with some predictor x, be it a continuous or categorical variable.
