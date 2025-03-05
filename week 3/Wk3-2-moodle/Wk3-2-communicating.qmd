@@ -22,9 +22,6 @@ library(tidyverse)
 library(easystats)
 library(palmerpenguins)
 
-# Data for prac
-data_towers <- read_csv("week 3/Wk3-2-moodle/data/towers-2024.csv")
-
 # webr counter
 reditor_count <- 1
 
@@ -262,7 +259,7 @@ The plotting symbol can be customised by adding code to `geom_point()`. For exam
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(color = "purple", shape = 15, size = 6, alpha = 0.6) +
   theme_classic()
-  labs(x = "Body mass (grams)", y = "Bill length (mm)") + 
+  labs(x = "Body mass (grams)", y = "Bill length (mm)")
 ```
 
 **Change symbol by group and adding a legend**
@@ -273,8 +270,7 @@ We can use symbols to convey more information in a plot. For example here, we ar
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
   theme_classic() +
-  labs(x = "Body mass (grams)", y = "Bill length (mm)", 
-       colour -) 
+  labs(x = "Body mass (grams)", y = "Bill length (mm)") 
 ```
 
 We can make the legend nicer for a format report with further tweaking using the `colour` and `shapes` argument. We have to specify the title for both colour and shapes because those are the settings we set to vary by `island`
@@ -524,6 +520,8 @@ penguin_fit |>
 For MS Excel, you can edit the style of your table more freely, adding borders, or bolding text however you like! To put it in a MS Word document, it is a matter of highlighting the parts you want and copying and pasting into your document.
 
 # Over to you
+
+In your own RStudio complete the following and stretch those data communication muscles!
 
 **Exercise:**
 
