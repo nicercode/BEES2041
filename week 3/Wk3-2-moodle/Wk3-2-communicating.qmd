@@ -89,7 +89,6 @@ There are a few extra packages we will be introducing today:
 
 - `report`
 - `patchwork`
-- `broom`
 - `kableExtra`
 
 You will also need to install these, remember you only need to install these once!
@@ -98,7 +97,6 @@ You will also need to install these, remember you only need to install these onc
 # Uncomment and install these new packages
 # install.packages("report")
 # install.packages("patchwork")
-# install.packages("broom")
 # install.packages("kableExtra")
 ```
 
@@ -111,7 +109,6 @@ library(easystats)
 library(palmerpenguins)
 library(report)
 library(patchwork)
-library(broom)
 library(kableExtra)
 ```
 
@@ -171,7 +168,10 @@ After running this code, you will see some text that you can use to report the r
 ```{r}
 library(report)
 
+# fit the model
 penguin_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
+
+# generate report
 report(penguin_fit)
 ```
 
@@ -192,8 +192,7 @@ Second example for a linear model with a categorical predictor. Again, we will u
 After running this code, you will see some text that you can use to report the results of the linear model. You can copy and paste this text into your report, and then modify it as needed to fit the specifics of your analysis.
 
 ```{r}
-library(report)
-
+# fit the model
 penguin_species_fit <- lm(bill_length_mm ~ species, data = penguins)
 
 summary(penguin_species_fit)
@@ -203,9 +202,13 @@ Running `report` directly on fit will give you a summary of the model, including
 
 Recall, we can run `anova(fit)` to get the ANOVA table for the model. This will give you the F-statistic and p-value for the overall model. 
 ```{r}
-anova(penguin_species_fit)
+fit_anova <- anova(penguin_species_fit)
+fit_anova
+```
 
-anova(penguin_species_fit) |> report()
+```{r}
+# generate report
+report(fit_anova)
 ```
 
 The `report` function uses the term `Eta2` to refer to the effect size.  In this model, this is the same as R-squared, which is the proportion of variance in the dependent variable that is explained by the independent variable(s).
@@ -242,11 +245,12 @@ The default plots in R usually need some work before we would want to include th
 Have a play with several of the options for a simple X-Y scatterplot. Let's use `penguins` here again
 
 ```{r}
-library(ggplot2)
+library(tidyverse)
 library(palmerpenguins)
 
-penguins_base_plot <- ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
-  geom_point() + 
+penguins_base_plot <-
+  ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
+  geom_point() +
   theme_classic()
 ```
 
@@ -410,7 +414,8 @@ ggplot(penguins, aes(x = species, y = bill_length_mm)) +
 Let's adjust the arms of the errorbars and colour and make this look nicer 
 
 ```{r}
-species_bill_length <- ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
+species_bill_length <- 
+  ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
   geom_jitter() + 
   geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
   geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high),
@@ -434,7 +439,8 @@ Here is an example of how you might combine two plots using the patchwork packag
 # install.packages("patchwork")
 library(patchwork)
 
-bill_length_by_sex <- penguins |> 
+bill_length_by_sex <-
+  penguins |> 
   drop_na(sex) |> 
   ggplot(aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
@@ -447,7 +453,8 @@ bill_length_by_sex <- penguins |>
 
 bill_length_by_sex
 
-species_bill_length <- ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
+species_bill_length <- 
+  ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
   geom_jitter() + 
   geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
   geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high),
@@ -472,7 +479,7 @@ You can also do all that more simply with a single line of code in your notebook
 Its good practice to save your plots into an `output/` folder. Create one in your prac folder by clicking "New Folder" and name it "output"
 
 ```{r, eval=FALSE}
-Figure1 <-species_bill_length + bill_length_by_sex
+Figure1 <- species_bill_length + bill_length_by_sex
 
 ggsave("output/Figure1.png", Figure1)
 ```
@@ -518,16 +525,12 @@ There are some handy hints for nicely formatting tables [here](https://imgur.com
 
 **Inside your Quarto notebook**
 
-If you want your table output to print nicely in your notebook, we can enlist two extra packages `kableExtra` and `broom`. `broom` tidies our model output and `kableExtra` decorates your table so it looks nice in the end. You will need to install these packages if you want to do the following. 
+If you want your table output to print nicely in your notebook, we can enlist two extra packages `kableExtra`. We'll use `parameters` to tidy our model output and `kableExtra`to  decorate your table so it looks nice in the end. You will need to install `kableExtra` if you want to do the following. 
 
 ```{r}
-# install.packages(c("kableExtra", "broom"))
-library(kableExtra)
-library(broom)
-
-penguin_fit |> 
-  tidy() |> 
-  kable(digits = 2) |> 
+penguin_fit |>
+  parameters() |>
+  kable(digits = 2) |>
   kable_classic()
 ```
 
@@ -537,8 +540,8 @@ In most cases if you are writing your report in MS Word, you want to export your
 
 ```{r, eval=FALSE}
 penguin_fit |> 
-  tidy() |> 
-  write_csv("output/Table1.csv")
+  parameters() |> 
+  write_csv("output/Table1.csv", )
 ```
 
 For MS Excel, you can edit the style of your table more freely, adding borders, or bolding text however you like! To put it in a MS Word document, it is a matter of highlighting the parts you want and copying and pasting into your document.
