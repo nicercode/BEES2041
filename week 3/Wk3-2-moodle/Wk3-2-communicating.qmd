@@ -54,7 +54,7 @@ At the end of the exercise, you should be able to:
 
 Let’s dive in! 🚀 
 
-![Image credit:  @allison_horst](nice-R.png.png){width=80%}
+![Image credit:  @allison_horst](images/nice-R.png){width=80%}
 <br>
 
 ### Setting up
