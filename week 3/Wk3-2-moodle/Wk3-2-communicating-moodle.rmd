@@ -1,36 +1,19 @@
 ---
 title: "Week 3-2 Communicating results"
-output: html_output
+output:
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: Week 3-2 Communicating results
 editor_options:
   chunk_output_type: console
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
-
-# remotes::install_github("numbats/moodlequiz")
-library(moodlequiz)
-
-# For the prac
-library(tidyverse)
-library(easystats)
-library(palmerpenguins)
-
-# webr counter
-reditor_count <- 1
-
-class_id <- function() {
-  reditor_count <<- reditor_count + 1
-  sprintf("r-editor-%d", reditor_count)
-}
-```
-
 
 # Commmunicating results
 
 It is worth reminding ourselves that we are learning statistics so that we can answer questions in the life and earth sciences. Unless you want to keep the answers to yourselves, we need to be able to communicate the results of statistical analyses to a broader audience. Given that statistics has a reputation for being able to trick and confuse people, simple and effective communication of results is a necessary skill for research scientists.
 
-![Image credit: Hadley Wickham [R 4 Data Science](https://r4ds.hadley.nz/)](images/the-whole-game-communicate.png) <br>
+![Image credit: Hadley Wickham [R 4 Data Science](https://r4ds.hadley.nz/)](images/the-whole-game-communicate.png){width = 60%} <br>
 
 Communication of the results of statistical analyses is usually done by a combination of written text with reference to visual display of the results and the inclusion of test statistics to support the written statements.
 
@@ -39,6 +22,10 @@ This practical gives you some examples of the ways in which analyses and graphs 
 These exercises use examples of work published by research students (Honours, Masters and PhD) in the School of Biological, Earth and Environmental Sciences.
 
 ## Key learning objectives
+
+<h3>Key learning objectives</h3>
+
+
 
 At the end of the exercise, you should be able to:
 
@@ -52,6 +39,10 @@ Let’s dive in! 🚀
 <br>
 
 ## Setting up
+
+<h3>Setting up</h3>
+
+
 
 **Materials:**
 
@@ -74,7 +65,8 @@ We will continue working with packages from the `tidyverse` and `easystats` coll
 You should have these already installed on your machines.
 
 In case you don't have them installed, here is code for you to do so:
-```{r, eval=FALSE}
+
+```{r}
 # Uncomment and run only the lines below only if you have not previously installed these.
 # install.packages("tidyverse")
 # install.packages("easystats")
@@ -86,33 +78,30 @@ There are a few extra packages we will be introducing today:
 - `patchwork`
 - `kableExtra`
 
-You may need to install these, remember you only need to install these once!
-
 ```{r}
-# Uncomment and install these new packages
+# Uncomment and run only the lines below only if you have not previously installed these.
 # install.packages("patchwork")
 # install.packages("kableExtra")
-
 ```
-
 
 > Remember to load the packages into R to use em! 
 
-```{r, results='hide', warning=FALSE, message=FALSE}
-library(tidyverse)
-library(easystats)
+<div id=`r class_id()`><pre>
+# load packages from the tidyverse (without loading the whole thing)
+library(dplyr)
+library(readr)
 library(palmerpenguins)
-library(patchwork)
-library(kableExtra)
-```
+</pre></div>
 
 # Examples from the literaure
-
-
 
 # Describing your own results
 
 ## Written description of findings
+
+<h3>Written description of findings</h3>
+
+
 
 The results section must have a written description of the main findings of the research, not just figures and statistics.
 
@@ -129,6 +118,10 @@ Things to avoid:
 - presenting the results twice. If a table has some summary statistics (e.g, means and standard deviations of some variables), then there is no need to include these also in the text - you can just refer to the table. Similarly, if you have a figure that displays the means of a variable, you normally don't need to mention those specifically in the results unless you wanted to highlight the actual values (e.g “ the mean abundance (± s.e.) in summer, 100.5 ± 4.1 m2, was almost twice as high as winter 52.7 ± 3.4 m2) - normally you can just let the reader use the figure to see the magnitude of the values and refer to the figure (e.g., the abundance was higher in winter than in summer (Fig. 1)).
 
 ## Presenting the results of statistical tests
+
+<h3>Presenting the results of statistical tests</h3>
+
+
 
 Incorporating the results from statistical tests
 
@@ -149,23 +142,33 @@ Table 1 would then include the entire ANOVA table that resulted from the nested 
 
 ## Introducing the `report` function
 
+<h3>Introducing the `report` function</h3>
+
+
+
 Students often struggle with how to write up the results of a statistical analysis.
 
 The `report` function from the `easystats` can generate some template text to report the results of the linear models. This function helps you get started with the text you need to write up the results of your analysis. It can do this for a range of different types of models, including linear models, mixed models, and more.
 
 Here are some examples of how to use the `report` function. This example uses the `penguins` dataset from the `palmerpenguins` package.  As you will recall, the `penguins` dataset contains data on the size of penguins from three different species.
 
+<div id=`r class_id()`><pre>
+library(report)
+</pre></div>
+
+
 **Linear model with continuous predictor:**
 
 After running this code, you will see some text that you can use to report the results of the linear model. You can copy and paste this text into your report, and then modify it as needed to fit the specifics of your analysis.
 
-```{r}
+
+<div id=`r class_id()`><pre>
 # fit a model
 penguin_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
 
 # generate report
 report(penguin_fit)
-```
+</pre></div>
 
 This text is a good starting point for writing up the results of your analysis. However, you'd need to edit it slightly. For example, in you might
 
@@ -183,26 +186,26 @@ Second example for a linear model with a categorical predictor. Again, we will u
 
 After running this code, you will see some text that you can use to report the results of the linear model. You can copy and paste this text into your report, and then modify it as needed to fit the specifics of your analysis.
 
-```{r}
+<div id=`r class_id()`><pre>
 # fit the model
 penguin_species_fit <- lm(bill_length_mm ~ species, data = penguins)
 
 summary(penguin_species_fit)
-```
+</pre></div>
 
 Running `report` directly on fit will give you a summary of the model, including the coefficients, standard errors, t-values, and p-values. Howerver, with a single catgeorcial predictor, people tend to report result of ANOVA table. 
 
 Recall, we can run `anova(fit)` to get the ANOVA table for the model. This will give you the F-statistic and p-value for the overall model. 
-```{r}
+<div id=`r class_id()`><pre>
 fit_anova <- anova(penguin_species_fit)
 
 fit_anova
-```
+</pre></div>
 
-```{r}
+<div id=`r class_id()`><pre>
 # generate report
 report(fit_anova)
-```
+</pre></div>
 
 The `report` function uses the term `Eta2` to refer to the effect size.  In this model, this is the same as R-squared, which is the proportion of variance in the dependent variable that is explained by the independent variable(s).
 
@@ -214,18 +217,20 @@ Here is an example of how you might edit the text generated by the `report` func
 
 ##  Display items in the results section
 
+<h3> Display items in the results section</h3>
+
 The results section of a scientific report is where you present the findings of your research. This is where you describe the results of your statistical analyses, and present any figures or tables that help to illustrate your findings.
 
 Let's reload the libraries we need for this page.
-```{r}
-library(tidyverse)
-library(palmerpenguins)
-library(easystats)
-library(kableExtra)
-library(patchwork)
-```
+<div id=`r class_id()`><pre>
+library(ggplot2)
+</pre></div>
 
 ## Graphical representation of findings
+
+<h3>Graphical representation of findings</h3>
+
+
 
 Effective visual communication is one of the most useful things to learn as a scientist. Patterns and processes can usually be much more effectively communicated in visual form than by text (many readers will never actually read the Results section, but just look at the Figures and go straight to the Discussion).	
 
@@ -246,69 +251,73 @@ Things to avoid:
 
 ## Customising your plots
 
+<h3>Customising your plots</h3>
+
+
+
 The default plots in R usually need some work before we would want to include them in a report. There are many packages in R dedicated to higher level graphics, and we have used `ggplot2` in the course so far. `ggplots` can be customised in very many ways and making many format changes can result in complex code pretty quickly. Luckily, the default plots are quite presentable and at this stage, you just need to learn a few things to make sure your plots have the necessary information.
 
 Have a play with several of the options for a simple X-Y scatterplot. Let's use `penguins` here again
 
-```{r}
+<div id=`r class_id()`><pre>
 penguins_base_plot <-
   ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
   geom_point() +
   theme_classic()
-```
+</pre></div>
 
 **Changing axis labels**
 
 Without further customising, the axis labels will just be the variable names. This is rarely what we want as we often use abbreviated variable names that have no information about the units of measurement. The axis labels are easily edited by adding the xlab and ylab arguments. This is always needed as the variable names in your data sets are rarely what you want.
 
-```{r}
+<div id=`r class_id()`><pre>
 penguins_base_plot +
   labs(x = "Body mass (grams)", y = "Bill length (mm)")
-```
+</pre></div>
 
 **Changing limits on axes**
 
 The X and Y limits can be set with the `xlim` and `ylim` functions
 
-```{r}
+<div id=`r class_id()`><pre>
 penguins_base_plot +
   labs(x = "Body mass (grams)", y = "Bill length (mm)") +
   xlim(0, 7000) +
   ylim(0, 60)
-```
+</pre></div>
 
 **Changing the shape, size, transparency and colour of the plotting symbols**
 
 The plotting symbol can be customised by adding code to `geom_point()`. For example, to get large, purple squares, we would use: Check out the [codes for symbols](https://www.datanovia.com/en/blog/ggplot-point-shapes/) and further information on [Plotting with ggplot: colours and symbols](http://environmentalcomputing.net/plotting-with-ggplot-colours-and-symbols/).
 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(color = "purple", shape = 15, size = 6, alpha = 0.6) +
   theme_classic()
   labs(x = "Body mass (grams)", y = "Bill length (mm)")
-```
+</pre></div>
 
 **Change symbol by group and adding a legend**
 
 We can use symbols to convey more information in a plot. For example here, we are representing penguins from different islands using symbols and colours. `ggplot` conveniently creates a legend for the reader. 
 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
   theme_classic() +
   labs(x = "Body mass (grams)", y = "Bill length (mm)") 
-```
+</pre></div>
 
 We can make the legend nicer for a format report with further tweaking using the `colour` and `shapes` argument. We have to specify the title for both colour and shapes because those are the settings we set to vary by `island`
 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
   theme_classic() +
   labs(x = "Body mass (grams)", y = "Bill length (mm)",
        color = "Islands",
        shape = "Islands")
-```
+</pre></div>
 
 The size, fonts, symbols of legends are all able to be customised if necessary (see [Plotting with ggplot: adding titles and axis names](http://environmentalcomputing.net/plotting-with-ggplot-adding-titles-and-axis-names/).
 
@@ -316,7 +325,7 @@ The size, fonts, symbols of legends are all able to be customised if necessary (
 
 Typically in scientific publications usually have the figure legend only to describe the contents so adding a title is not neccessary, but if you would like, you can create it with the `title` argument
 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
   theme_classic() +
@@ -324,11 +333,11 @@ ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
        color = "Islands",
        shape = "Islands", 
        title = "Allometry of bill length in Palmer Penguins")
-```
+</pre></div>
 
 You can see `ggplot` works by adding more and more layers to further customise plots. These can be combined into customised themes that you can reuse many times (see [ggplot: Altering the overall appearance](http://environmentalcomputing.net/plotting-with-ggplot-altering-the-overall-appearance/)) . Or, you can use some of the inbuilt themes that alter many options at once. `theme_bw()` is a handy one that gets rid of the grey background.
 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
   theme_classic() +
@@ -337,12 +346,12 @@ ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
        shape = "Islands", 
        title = "Allometry of bill length in Palmer Penguins") +
   theme_bw()
-```
+</pre></div>
 
 **Facetting/gridding**
 
 Facetting is a really powerful tool to create the same plot for different groups, let's say we want to compare between different sexes of penguins here. We will use `facet_wrap()` for this! Remember to tell ggplot what you want to facet by using `~sex`. 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
   labs(x = "Body mass (grams)", y = "Bill length (mm)",
@@ -351,11 +360,11 @@ ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
        title = "Allometry of bill length in Palmer Penguins") +
   theme_bw() + 
   facet_wrap(~sex)
-```
+</pre></div>
 
 We can filter the NA penguins out using `filter()`. We can also change the labels for the `facet_wrap` using `labeller`
 
-```{r}
+<div id=`r class_id()`><pre>
 bill_length_by_sex <- penguins |> 
   drop_na(sex) |> 
   ggplot(aes(x = body_mass_g, y = bill_length_mm)) + 
@@ -368,9 +377,13 @@ bill_length_by_sex <- penguins |>
   facet_wrap(~sex, labeller = labeller(sex = c(`female` = "Female", `male` = "Male")))
 
 bill_length_by_sex
-```
+</pre></div>
 
 ## Presenting measures of variation when plotting categorical predictor variables
+
+<h3>Presenting measures of variation when plotting categorical predictor variables</h3>
+
+
 
 Remember that you should always present measures of variation associated with the different levels of a categorical variables. You can do this with boxplots (median + quartiles) or with bar plots that display means +/- error bars (that show standard deviations or standard errors). Have a look at these two figures to understand why.
 
@@ -386,21 +399,28 @@ Let's create error bars for different different species in bill length
 
 First we need to get some species means first. We can do this from our model we fitted earlier 
 
-```{r}
+<div id=`r class_id()`><pre>
 penguin_species_fit <- lm(bill_length_mm ~ species, data = penguins)
-```
+</pre></div>
 
-To compute means and their relative CI we will use `estimate_means()`, here we are piping into `tibble()` to get the full output where we can see the columns for the lower and upper bounds of the CI
+To compute means and their relative CI we will use `estimate_means()`. This is loaded as of the `easystats` package, but here we will just laod a component of `easystats`.
 
-```{r}
+<div id=`r class_id()`><pre>
+library(modelbased)
+library(emmeans)
+</pre></div>
+
+Now let's run it!
+
+<div id=`r class_id()`><pre>
 penguin_means <- estimate_means(penguin_species_fit, by = "species") |> tibble()
 
 penguin_means
-```
+</pre></div>
 
 We will use `geom_jitter` for the raw data and plot the mean for each species using `geom_point`. We will use `penguin_means` inside `geom_errorbar` and tell it to use the `Mean`, `CI_low` and `CI_high`
 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
   geom_jitter() + 
   geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
@@ -408,11 +428,11 @@ ggplot(penguins, aes(x = species, y = bill_length_mm)) +
   labs(x = "Species", y = "Bill length (mm)",
        title = "Bill length in Palmer Penguins") +
   theme_bw() 
-```
+</pre></div>
 
 Let's adjust the arms of the errorbars and colour and make this look nicer 
 
-```{r}
+<div id=`r class_id()`><pre>
 species_bill_length <- 
   ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
   geom_jitter() + 
@@ -424,20 +444,29 @@ species_bill_length <-
   theme_bw() 
 
 species_bill_length
-```
+</pre></div>
 
 ## Creating a panel of plots
+
+<h3>Creating a panel of plots</h3>
+
+
 
 ![](images/patchwork.png){width=60%}
 
 You can combine plots in R using the `patchwork` package. This is a very powerful package that allows you to combine multiple plots into a single figure. You can combine plots that have been created using `ggplot2`, `lattice`, base R, or any other plotting package in R.
 
+<div id=`r class_id()`><pre>
+library(patchwork)
+</pre></div>
+
+
 Here is an example of how you might combine two plots using the patchwork package:
 
-```{r}
+<div id=`r class_id()`><pre>
 bill_length_by_sex <-
   penguins |> 
-  drop_na(sex) |> 
+  filter(!is.na(sex)) |> 
   ggplot(aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point(aes(shape = island, color = island)) +
   labs(x = "Body mass (grams)", y = "Bill length (mm)",
@@ -462,9 +491,13 @@ species_bill_length <-
 species_bill_length
 
 species_bill_length + bill_length_by_sex
-```
+</pre></div>
 
 ## Exporting your plots
+
+<h3>Exporting your plots</h3>
+
+
 
 Assuming you have been creating the code for your figures in the notebooks, the plots turn up within the notebook (rather than in the plot panel to the bottom right in R Studio). You can change the settings on the notebook to have the output turn up in the console rather than within the notebook (click on the little gear symbol next to Preview, then tick Chunk Output in Console). New plots will turn up in the plot panel and you can use the the Export menu item to save the figure.
 
@@ -502,6 +535,10 @@ ggsave("output/Figure1.png", Figure1, width = 10, height = 10, units = "cm")
 
 ## Tables
 
+<h3>Tables</h3>
+
+
+
 Tables are effective ways of summarising numerical results. They are commonly used to present summary statistics (e.g., means and standard deviations of variables, see Table 1 from Basham et al. 2010) or to present test statistics and their associated probabilities following analyses. They are especially good for simultaneously presenting the results of several tests (e.g., you can design a Table that holds the results of several analyses of variance and these can all be referred to in the text by the single Table number, see Table 2 from Perrett et al. 2006).
 
 Things to aim for:
@@ -519,16 +556,25 @@ There are some handy hints for nicely formatting tables [here](https://imgur.com
 
 ## Creating tables in R
 
+<h3>Creating tables in R</h3>
+
+
+
 **Inside your Quarto notebook**
 
 If you want your table output to print nicely in your notebook, we can enlist two extra packages `kableExtra`. We'll use `parameters` to tidy our model output and `kableExtra`to  decorate your table so it looks nice in the end. You will need to install `kableExtra` if you want to do the following. 
 
-```{r}
+<div id=`r class_id()`><pre>
+library(parameters)
+library(kableExtra)
+</pre></div>
+
+<div id=`r class_id()`><pre>
 penguin_fit |>
   parameters() |>
   kable(digits = 2) |>
   kable_classic()
-```
+</pre></div>
 
 **Exporting your table for a word document**
 
@@ -543,6 +589,10 @@ penguin_fit |>
 For MS Excel, you can edit the style of your table more freely, adding borders, or bolding text however you like! To put it in a MS Word document, it is a matter of highlighting the parts you want and copying and pasting into your document.
 
 ## Over to you
+
+<h3>Over to you</h3>
+
+
 
 In your own RStudio complete the following and stretch those data communication muscles!
 
@@ -562,6 +612,10 @@ In your own RStudio complete the following and stretch those data communication 
 12. Combine your figures from 1., 5. and 11 in one panel and export this as a .pdf
 
 ## Further resources
+
+<h3>Further resources</h3>
+
+
 
 In this course, we can touch on what is possible in R or other software, but you will want to develop your skills in visualising data as you progress as a scientist.
 
