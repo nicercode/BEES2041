@@ -12,7 +12,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
@@ -36,8 +36,7 @@ class_id <- function() {
 
 It is worth reminding ourselves that we are learning statistics so that we can answer questions in the life and earth sciences. Unless you want to keep the answers to yourselves, we need to be able to communicate the results of statistical analyses to a broader audience. Given that statistics has a reputation for being able to trick and confuse people, simple and effective communication of results is a necessary skill for research scientists.
 
- 
-<!-- A plot -->
+![Image credit: Hadley Wickham [R 4 Data Science](https://r4ds.hadley.nz/)](images/the-whole-game-communicate.png) <br>
 
 Communication of the results of statistical analyses is usually done by a combination of written text with reference to visual display of the results and the inclusion of test statistics to support the written statements.
 
@@ -55,7 +54,7 @@ At the end of the exercise, you should be able to:
 
 Let’s dive in! 🚀 
 
-![Image credit:  @allison_horst](you-can-do-it.png){width=80%}
+![Image credit:  @allison_horst](nice-R.png.png){width=80%}
 <br>
 
 ### Setting up
@@ -72,13 +71,11 @@ Everything you need for this practical is on Moodle
 4.  Go into the folder `Wk3-2-materials` created by extracting the zip.
 5.  Click on the `Wk3-2-linear-models.Rproj` to open the RStudio project and you're in!!!
 
-We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+We will be working with the `palmerpenguins` again!
 
 **Setting up: Packages:**
 
 We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
-
-**Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer
 
 In case you don't have them installed, here is code for you to do so:
 ```{r, eval=FALSE}
@@ -88,12 +85,34 @@ In case you don't have them installed, here is code for you to do so:
 # install.packages("palmerpenguins")
 ```
 
+There are a few extra packages we will be introducing today: 
+
+- `report`
+- `patchwork`
+- `broom`
+- `kableExtra`
+
+You will also need to install these, remember you only need to install these once!
+
+```{r}
+# Uncomment and install these new packages
+# install.packages("report")
+# install.packages("patchwork")
+# install.packages("broom")
+# install.packages("kableExtra")
+```
+
+
 > Remember to load the packages into R to use em! 
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
 library(easystats)
 library(palmerpenguins)
+library(report)
+library(patchwork)
+library(broom)
+library(kableExtra)
 ```
 
 # Examples from the literaure
@@ -350,7 +369,7 @@ bill_length_by_sex
 
 Remember that you should always present measures of variation associated with the different levels of a categorical variables. You can do this with boxplots (median + quartiles) or with bar plots that display means +/- error bars (that show standard deviations or standard errors). Have a look at these two figures to understand why.
 
-![](example_se.png)
+![](images/example_se.png) <br>
  
 Both have the exact same means, but differ in their variance. The one on the left has lower variation within groups relative to the variation between groups, would have a lower value of a test statistic used to contrast the two groups (t in a t-test or F in an ANOVA) and would be more likely to find a signficant difference between the groups (lower P value). Consequently, the interpretation of these two is very different, but it is only possible to get this understanding from the figure if the variation is also shown.
 
