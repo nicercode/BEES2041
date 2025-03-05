@@ -49,16 +49,35 @@ At the end of the exercise, you should be able to:
 
 Let’s dive in! 🚀 
 
+# Introduce the two studies
+
+[Basham et al](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2010.02202.x)
+[Buswell et al](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2745.2010.01759.x)
+
+- Core research question
+- Get to know sampling design
+- Key analyses
+
 # Describing your results with text
-<!-- TODO:  -->
-<!-- - Report function -->
-<!-- - In-line literate programming `r results |> round` (ambitious) -->
+TODO:
+- Report function
+- In-line literate programming `r results |> round` (ambitious)
+
+## Exercises
+- Look at [Basham et al](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2010.02202.x), how did they make a text interpretation for X 
+- Look at [Buswell et al](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2745.2010.01759.x) how did they make a text interpretation for X
+- Make interpretations for towers and martino or palmer penguins
 
 # Creating tables for your results
 
-<!-- TODO:  -->
-<!-- - Format a csv, create with tibble or dataframe or matrix and export with write_csv() to outputs/ -->
-<!-- - gt for nice tables in html (ambitious) -->
+TODO:
+- Format a csv, create with tibble or dataframe or matrix and export with write_csv() to outputs/
+- gt for nice tables in html (ambitious)
+
+## Exercises
+- Look at [Basham et al](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2010.02202.x), how did they make a tablular result for X 
+- Look at [Buswell et al](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2745.2010.01759.x) how did they make a tablular resul for X
+- Make useful model output tables for towers and martino or palmer penguins
 
 # Creating plots for your results
 
@@ -85,10 +104,20 @@ TODO:
     - breaks
     - scales
   - facet_wrap
-- patchwork constructing larger panels
+
+# Exercises  
+
+- Look at [Basham et al](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2010.02202.x), how did they make a graphical result for X 
+- Look at [Buswell et al](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2745.2010.01759.x) how did they make a graphical result for X
+- Make these figures nicer for towers, martion and palmers
+  
+## Constructing larger panels figures for research
+- patchwork 
+- figure descriptions
 
 # Exercises
-- Make interpretations
-- Make a table
-- Make these figures nicer
-- Make a panel with nice figures
+- Look at [Basham et al](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2010.02202.x), how did they make a panel result for X 
+- Look at [Buswell et al](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2745.2010.01759.x) how did they make a paenl result for X
+- Make a panel with nice figures towers, martino, palmer
+
+
