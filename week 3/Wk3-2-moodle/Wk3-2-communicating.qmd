@@ -226,6 +226,9 @@ The default plots in R usually need some work before we would want to include th
 Have a play with several of the options for a simple X-Y scatterplot. Let's use `penguins` here again
 
 ```{r}
+library(ggplot2)
+library(palmerpenguins)
+
 penguins_base_plot <- ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
   geom_point() + 
   theme_classic()
@@ -314,6 +317,39 @@ ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
   theme_bw()
 ```
 
+**Facetting/gridding**
+
+Facetting is a really powerful tool to create the same plot for different groups, let's say we want to compare between different sexes of penguins here. We will use `facet_wrap()` for this! Remember to tell ggplot what you want to facet by using `~sex`. 
+```{r}
+ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
+  geom_point(aes(shape = island, color = island)) +
+  labs(x = "Body mass (grams)", y = "Bill length (mm)",
+       color = "Islands",
+       shape = "Islands", 
+       title = "Allometry of bill length in Palmer Penguins") +
+  theme_bw() + 
+  facet_wrap(~sex)
+```
+
+We can filter the NA penguins out using `filter()`. We can also change the labels for the `facet_wrap` using `labeller`
+
+```{r}
+library(tidyverse)
+
+bill_length_by_sex <- penguins |> 
+  drop_na(sex) |> 
+  ggplot(aes(x = body_mass_g, y = bill_length_mm)) + 
+  geom_point(aes(shape = island, color = island)) +
+  labs(x = "Body mass (grams)", y = "Bill length (mm)",
+       color = "Islands",
+       shape = "Islands", 
+       title = "Allometry of bill length in Palmer Penguins") +
+  theme_bw() + 
+  facet_wrap(~sex, labeller = labeller(sex = c(`female` = "Female", `male` = "Male")))
+
+bill_length_by_sex
+```
+
 ## Presenting measures of variation when plotting categorical predictor variables
 
 Remember that you should always present measures of variation associated with the different levels of a categorical variables. You can do this with boxplots (median + quartiles) or with bar plots that display means +/- error bars (that show standard deviations or standard errors). Have a look at these two figures to understand why.
@@ -324,6 +360,53 @@ Both have the exact same means, but differ in their variance. The one on the lef
 
 Bar plots with error bars are commonly used but keep in mind that they have some limitations - in particular, they are unable to show the underlying distribution of the data very effectively. Error bars are presented as equal is size (+ or - from the mean) even when the underlying data are very skewed.
 
+**Create error bars**
+
+Let's create error bars for different different species in bill length
+
+First we need to get some species means first. We can do this from our model we fitted earlier 
+
+```{r}
+penguin_species_fit <- lm(bill_length_mm ~ species, data = penguins)
+```
+
+To compute means and their relative CI we will use `estimate_means()`, here we are piping into `tibble()` to get the full output where we can see the columns for the lower and upper bounds of the CI
+
+```{r}
+library(easystats)
+
+penguin_means <- estimate_means(penguin_species_fit, by = "species") |> tibble()
+
+penguin_means
+```
+
+We will use `geom_jitter` for the raw data and plot the mean for each species using `geom_point`. We will use `penguin_means` inside `geom_errorbar` and tell it to use the `Mean`, `CI_low` and `CI_high`
+
+```{r}
+ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
+  geom_jitter() + 
+  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
+  geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high)) +
+  labs(x = "Species", y = "Bill length (mm)",
+       title = "Bill length in Palmer Penguins") +
+  theme_bw() 
+```
+
+Let's adjust the arms of the errorbars and colour and make this look nicer 
+
+```{r}
+species_bill_length <- ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
+  geom_jitter() + 
+  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
+  geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high),
+                width = 0.5, colour = "blue") +
+  labs(x = "Species", y = "Bill length (mm)",
+       title = "Bill length in Palmer Penguins") +
+  theme_bw() 
+
+species_bill_length
+```
+
 ## Creating a panel of plots
 
 ![](images/patchwork.png){width=60%}
@@ -332,25 +415,35 @@ You can combine plots in R using the `patchwork` package. This is a very powerfu
 
 Here is an example of how you might combine two plots using the patchwork package:
 
-<!-- Need better example -->
-
 ```{r}
+# install.packages("patchwork")
 library(patchwork)
 
-p1 <- ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
-  geom_point() +
-  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)") +
-  xlim(0, 30) +
-  ylim(0, 70)
+bill_length_by_sex <- penguins |> 
+  drop_na(sex) |> 
+  ggplot(aes(x = body_mass_g, y = bill_length_mm)) + 
+  geom_point(aes(shape = island, color = island)) +
+  labs(x = "Body mass (grams)", y = "Bill length (mm)",
+       color = "Islands",
+       shape = "Islands", 
+       title = "Allometry of bill length in Palmer Penguins") +
+  theme_bw() + 
+  facet_wrap(~sex, labeller = labeller(sex = c(`female` = "Female", `male` = "Male")))
 
-p2 <- ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "Temperature (°C)", y = "Growth rate (cm/yr)") +
-  xlim(0, 30) +
-  ylim(0, 70)
+bill_length_by_sex
 
-p1 + p2
+species_bill_length <- ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
+  geom_jitter() + 
+  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
+  geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high),
+                width = 0.5, colour = "blue") +
+  labs(x = "Species", y = "Bill length (mm)",
+       title = "Bill length in Palmer Penguins") +
+  theme_bw() 
+
+species_bill_length
+
+species_bill_length + bill_length_by_sex
 ```
 
 ## Exporting your plots
@@ -361,32 +454,27 @@ To export them in a format that will import nicely into Microsoft Word for you r
 
 You can also do all that more simply with a single line of code in your notebook. First assign your plot to a new object (in this example, one called Figure1), then use `ggsave()` to export that figure to the format of your choice
 
-```{r}
-Figure1 <-
-  ggplot(TestPlot, aes(X, Y, colour = Treatment)) +
-  geom_point() +
-  xlab("Temperature (°C)") +
-  ylab("Growth rate (cm/yr)") +
-  xlim(0, 30) +
-  ylim(0, 70) +
-  theme_classic()
+Its good practice to save your plots into an `output/` folder. Create one in your prac folder by clicking "New Folder" and name it "output"
 
-ggsave("Figure1.png", Figure1)
+```{r, eval=FALSE}
+Figure1 <-species_bill_length + bill_length_by_sex
+
+ggsave("output/Figure1.png", Figure1)
 ```
 
 **Different formats**
 
 You can also save the figure in multiple formats at once
 
-```{r}
-ggsave("Figure1.pdf", Figure1)
-ggsave("Figure1.jpg", Figure1)
+```{r, eval=FALSE}
+ggsave("output/Figure1.pdf", Figure1)
+ggsave("output/Figure1.jpg", Figure1)
 ```
 
 **Customising the size of the figure**
 
-```{r}
-ggsave("Figure1.png", Figure1, width = 10, height = 10, units = "cm")
+```{r, eval=FALSE}
+ggsave("output/Figure1.png", Figure1, width = 10, height = 10, units = "cm")
 ```
 
 # Tables
@@ -408,9 +496,49 @@ There are some handy hints for nicely formatting tables [here](https://imgur.com
 
 ## Creating tables in R
 
-XXX
+**Inside your Quarto notebook**
 
+If you want your table output to print nicely in your notebook, we can enlist two extra packages `kableExtra` and `broom`. `broom` tidies our model output and `kableExtra` decorates your table so it looks nice in the end. You will need to install these packages if you want to do the following. 
 
+```{r}
+# install.packages(c("kableExtra", "broom"))
+library(kableExtra)
+library(broom)
+
+penguin_fit |> 
+  tidy() |> 
+  kable(digits = 2) |> 
+  kable_classic()
+```
+
+**Exporting your table for a word document**
+
+In most cases if you are writing your report in MS Word, you want to export your table and edit it in MS Excel. We will use `write_csv` to do this. We will save the table in the `output/` folder you created earlier
+
+```{r, eval=FALSE}
+penguin_fit |> 
+  tidy() |> 
+  write_csv("output/Table1.csv")
+```
+
+For MS Excel, you can edit the style of your table more freely, adding borders, or bolding text however you like! To put it in a MS Word document, it is a matter of highlighting the parts you want and copying and pasting into your document.
+
+# Over to you
+
+**Exercise:**
+
+1. Create histograms for bill depth showing the distribution across islands
+2. Fit a linear model for bill depth and body mass
+3. Write a text interpretation for this model
+4. Create a table for this model and export this as a .csv
+5. Create a scatterplot for bill depth and body mass by island
+6. Fit a linear model and ANOVA for bill depth and species
+7. Create a table for the ANOVA and export this as a .csv
+8. Write a text interpretation for this model
+9. Calculate the means and CI for bill depth for each species
+10. Create a table for the means and export this as a .csv
+11. Create a plot to show the distribution, mean and CI of bill depth for each species
+12. Combine your figures from 1., 5. and 11 in one panel and export this as a .pdf
 
 # Further resources
 
