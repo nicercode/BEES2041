@@ -369,7 +369,7 @@ bill_length_by_sex
 
 Remember that you should always present measures of variation associated with the different levels of a categorical variables. You can do this with boxplots (median + quartiles) or with bar plots that display means +/- error bars (that show standard deviations or standard errors). Have a look at these two figures to understand why.
 
-![](images/example_se.png) <br>
+![](images/example_se.png){width=60%} <br>
  
 Both have the exact same means, but differ in their variance. The one on the left has lower variation within groups relative to the variation between groups, would have a lower value of a test statistic used to contrast the two groups (t in a t-test or F in an ANOVA) and would be more likely to find a signficant difference between the groups (lower P value). Consequently, the interpretation of these two is very different, but it is only possible to get this understanding from the figure if the variation is also shown.
 
@@ -492,6 +492,11 @@ ggsave("output/Figure1.jpg", Figure1)
 ggsave("output/Figure1.png", Figure1, width = 10, height = 10, units = "cm")
 ```
 
+
+> Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
+
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](images/ggplot2-cheatsheet.png)
+
 # Tables
 
 Tables are effective ways of summarising numerical results. They are commonly used to present summary statistics (e.g., means and standard deviations of variables, see Table 1 from Basham et al. 2010) or to present test statistics and their associated probabilities following analyses. They are especially good for simultaneously presenting the results of several tests (e.g., you can design a Table that holds the results of several analyses of variance and these can all be referred to in the text by the single Table number, see Table 2 from Perrett et al. 2006).
@@ -566,3 +571,7 @@ There is an enormous amount of online help for creating graphs in R. We have int
 Also useful to get started is: Chang, W (2012) R Graphics cookbook. O’Reilly Media. - a guide to ggplot with quite a bit of help online here
 
 If you want to see what R can do if you really learn it, have a look at this gallery of data visualisations: <https://r-graph-gallery.com/>
+
+> Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
+
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](images/ggplot2-cheatsheet.png)
