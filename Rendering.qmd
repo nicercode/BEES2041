@@ -6,24 +6,20 @@ library(quarto)
 library(rmarkdown)
 library(tidyverse)
 
+source("R/remove_solutions.R")
+source("R/generate_moodle_quiz.R")
+
 file <- "week 3/Wk3-2-moodle/Wk3-2-communicating.qmd"
-```
 
 ## Rendering as html
-
-```{r}
 quarto::quarto_render(file)
-```
 
 ## Student copy
-
-```{r}
 file_student <- str_replace(file, ".qmd", "-student.qmd")
-
 lines <- readLines(file)
 
 # Remove solutions
-source("R/remove_solutions.R")
+
 lines |>
   remove_solutions() |>
   remove_cloze() |>
@@ -40,7 +36,7 @@ quarto::quarto_render(file_student)
 
 ## Render as moodle quiz
 ```{r}
-source("R/generate_moodle_quiz.R")
+
 
 # file_moodle_quiz <- generate_moodle_quiz(file, webr = TRUE)
 rmarkdown::render(file_moodle_quiz)
