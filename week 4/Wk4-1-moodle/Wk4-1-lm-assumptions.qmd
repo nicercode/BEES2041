@@ -23,6 +23,9 @@ library(easystats)
 # data_hooker <- read_csv("week 4/Wk4-1-moodle/data/Hooker.csv")
 # data_growthrate <- read_csv("week 4/Wk4-1-moodle/data/GrowthRate.csv")
 #data_brains <- read_csv("week 4/Wk4-1-moodle/data/Brain.csv")
+# data_amphipods <- read_csv("week 4/Wk4-1-moodle/data/Amphipod_fecundity.csv")
+# data_riverflow <- read_csv("week 4/Wk4-1-moodle/data/riverflow.csv")
+# data_koalas <- read_csv("week 4/Wk4-1-moodle/data/koalas.csv")
 ```
 
 # Introduction to linear models
@@ -220,6 +223,9 @@ Use R to:
 - evaluate whether your model fit is in line with the assumptions of a linear model using `check_model()`
 
 ```{r}
+library(tidyverse)
+library(easystats)
+
 # Read in data
 data_growthrate <- read_csv("data/GrowthRate.csv")
 
@@ -272,10 +278,12 @@ The data file `data/Brain.csv` contains data on average brain weight for 62 spec
 - Note down on any problem you see in fitting a linear model to these data.
 
 ```{r}
+library(tidyverse)
+library(easystats)
+
 # Read in data
 data_brains <- read_csv("data/Brain.csv")
 
-# Plot raw data
 # Plot raw data
 ggplot(data_brains, aes(x = BodyWt, y = BrainWt)) +
   geom_point() # Data is widespread and should be log10 transformed
@@ -431,9 +439,44 @@ An evolutionary biologist was interested in body size-fecundity relationships in
 
 Many crustaceans have indeterminate growth, which means they just keep on moulting and getting bigger until something kills them. Consequently, older and larger females can have many more offspring per reproductive event than smaller individuals. Amphipods are crustaceans that do not release their eggs into the plankton, but look after them in a brood pouch between their legs.
 
-To explore how fecundity varied with body size, the biologist collected 40 females that were brooding eggs, measured their body length (mm) and the number of eggs in their brood pouch.
+To explore how fecundity varied with body size, the biologist collected 40 females that were brooding eggs, measured their body length `Length` (mm) and the number of eggs `Eggs` in their brood pouch.
 
-Load the data file `data/Amphipod.fecundity.csv` and choose a plot to visualise egg number per brood.
+Load the data file `data/Amphipod.fecundity.csv` and choose a plot to visualise egg number per brood, you may want to label each point as the row number again.
+
+```{r}
+library(tidyverse)
+library(easystats)
+
+# Read in data
+data_amphipods <- read_csv("data/Amphipod_fecundity.csv")
+
+# Plot raw data
+data_amphipods |>
+  mutate(obs_id = row_number()) |>  # Create a temporary variable that denotes the row number of each observation
+ggplot(aes(x = Length, y = Eggs)) + 
+  geom_text(aes(label = obs_id)) +
+  theme_classic()
+
+# Fit the model with all data
+amphipods_fit <- lm(Eggs ~ Length, data = data_amphipods)
+
+# Check model
+check_model(amphipods_fit)
+
+# Exclude potential outlier
+data_amphipods_norow40 <- data_amphipods |> 
+   slice(-40)
+
+# Fit the model with all data
+amphipods_norow40_fit <- lm(Eggs ~ Length, data = data_amphipods_norow40) 
+
+# Check model
+check_model(amphipods_norow40_fit) # Looks pretty good!
+
+# Interpret model output
+parameters(amphipods_norow40_fit)
+summary(amphipods_norow40_fit)
+```
 
 **Questions**
 
@@ -456,7 +499,29 @@ Run the suitable analysis. Check your model assumptions and make any data adjust
 
 River managers want to know if there is an difference in the numbers of fish recruiting under different environmental flow practices. They go out to a number of different locations along a river of interest and measure the density of larval fishes and water flow rate (velocity m/s) at each site.
 
-Load the data file `data/riverflow.csv` and choose a plot to visualise the relationship between density of fish larvae.
+Load the data file `data/riverflow.csv` and choose a plot to visualise the relationship between flow rate `Flow.rate` and density of fish larvae `Larvae.density`.
+
+```{r}
+library(tidyverse)
+library(easystats)
+
+# Read in data
+data_riverflow <- read_csv("data/riverflow.csv")
+
+# Plot raw data
+ggplot(data_riverflow, aes(x = Flow.rate, y = Larvae.density)) +
+  geom_point() 
+
+# Fit a linear model
+riverflow_fit <- lm(Flow.rate ~ Larvae.density, data = data_riverflow)
+
+# Check model
+check_model(riverflow_fit) # Not bad!
+
+# Inspect model summmaries
+parameters(riverflow_fit)
+summary(riverflow_fit)
+```
 
 **Questions**
 
@@ -473,13 +538,37 @@ Run the suitable analysis. Check your model assumptions and make any data adjust
 5. What does this mean?
 
 6. What percentage of the variance in larvae fish density is explained by your relationship?
+
 # Example 6: Koalas and fire regimes
 
 ![](images/koala-fires.jpeg){60%}
 
 A group of forest managers want to know if there is any difference in the numbers of koalas under control fire practices. To do this, they surveyed the number of koalas from mixed Eucalyptus forest with varying species composition due to fire history. They then found records of the most recent fire at each survey site to use as a measure of fire disturbance.
 
-Load the data file `data/koalas.csv` and choose a plot to visualise the number of koalas observed and years since fire.
+Load the data file `data/koalas.csv` and choose a plot to visualise the number of koalas observed `Koalas` and years since fire `Year.last.fire`.
+
+```{r}
+library(tidyverse)
+library(easystats)
+
+# Read in data
+data_koalas <- read_csv("data/koalas.csv")
+
+# Plot raw data
+ggplot(data_koalas, aes(x = Year.last.fire, y = Koalas)) +
+  geom_point() 
+
+# Fit a linear model
+koalas_fit <- lm(Koalas ~ Year.last.fire, data = data_koalas)
+
+# Check model
+check_model(koalas_fit) # Not bad!
+
+# Inspect model summmaries
+parameters(koalas_fit)
+summary(koalas_fit)
+```
+
 
 **Questions**
 
