@@ -439,7 +439,7 @@ Load the data file `data/Amphipod.fecundity.csv` and choose a plot to visualise 
 
 1. What analysis would you use to describe the relationship between body length and egg number per brood?
 
-Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following
+Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
 2.  What is the probability that there is no relationship between body size and body length?
 
@@ -462,7 +462,7 @@ Load the data file `data/riverflow.csv` and choose a plot to visualise the relat
 
 1. What analysis would you use to describe the relationship between flow velocity and fish larvae density?
 
-Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following
+Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
 2. What is the probability that there is no relationship between fish larvae density and water flow velocity?
 
@@ -475,6 +475,24 @@ Run the suitable analysis. Check your model assumptions and make any data adjust
 6. What percentage of the variance in larvae fish density is explained by your relationship?
 # Example 6: Koalas and fire regimes
 
+![](images/koala-fires.jpeg){60%}
+
+A group of forest managers want to know if there is any difference in the numbers of koalas under control fire practices. To do this, they surveyed the number of koalas from mixed Eucalyptus forest with varying species composition due to fire history. They then found records of the most recent fire at each survey site to use as a measure of fire disturbance.
+
+Load the data file `data/koalas.csv` and choose a plot to visualise the number of koalas observed and years since fire.
+
 **Questions**
 
+1. What analysis would you use to describe the relationship between the number of koalas observed and the year of the most recent fire?
 
+Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
+
+2. What is the slope of our model?
+
+3. What is the sign of the slope?
+
+4. What does this mean?
+
+5. What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?
+
+6. What percentage of the variance in koala numbers is explained by the year of the most recent fire?
