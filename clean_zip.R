@@ -16,15 +16,15 @@ setwd(path) # Change to new working directory
 files <- 
   list.files(".", full.names = TRUE, recursive = TRUE, all.files = TRUE)
 
-unwanted <- c("TODO", ".DS_", "Rproj.user", "WIP/", "X_setup", "solutions", "ignore", ".Rhistory", ".git", "output", ".key")
+unwanted <- c("TODO", ".DS_", "Rproj.user", "WIP/", "X_setup", "solutions", "ignore", ".Rhistory", ".git", ".key")
 
 for(f in unwanted)
   files <- files[!grepl(tolower(f), tolower(files), fixed = TRUE)]
 
-# deafult flags. 
-# X excludes specieal mac files
-# 9 max compression
-# r recursive
+# flags:
+# - X excludes specieal mac files
+# - 9 max compression
+# - r recursive
 filename <- paste0(original_wd, "/", basename(path), ".zip")
 
 message(sprintf("Creating file %s\n", filename))
