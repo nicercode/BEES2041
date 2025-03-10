@@ -90,36 +90,24 @@ library(easystats)
 ![Remember Dr. Isaac Towers?! Image credit: Data Dan](images/isaac-plant-ecosystems.png){width=60%} <br>
 We will be working with an example from Dr. Isaac Towers - a postdoc in the School of Biological, Earth & Environmental Sciences. Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall? His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478). We will be working with the data Isaac compiled for us.  Recall, last week we ran a linear model using `log10_leaf_mass_per_area`, `log10_rainfall`, let's try run the same linear model again but with the raw, untransformed data.
 
-### Read in data from a URL link
+## Read in data from a URL link
 
 ```{r}
 # The link the contains our data
 url <- "https://raw.githubusercontent.com/nicercode/BEES2041/refs/heads/main/week%203/Wk3-1-Linear-models/data/towers-2024.csv" 
 
 # Read in the data, drop columns where their names start with `log10`
-data_towers <- read_csv(url) #|> 
-  #select(-starts_with("log10"))
+data_towers <- read_csv(url) |> 
+  select(-starts_with("log10"))
 ```
 
-
-```{r}
-
-
-parameters(towers_fit)
-summary(towers_fit)
-means_towers <- estimate_means(towers_fit, by = "log10_rainfall")
-means_towers
-```
-
-
-### Fit model
+## Fit model
 
 ```{r}
 towers_og_fit <- lm(leaf_mass_per_area ~ rainfall, data = data_towers)
-
 ```
 
-### Check model assumptions
+## Check model assumptions
 
 Recall from lectures this week that the assumptions of a linear model assumes:
 
@@ -132,31 +120,34 @@ Recall from lectures this week that the assumptions of a linear model assumes:
 
 The last two assumptions has two do with the sampling design. You can only check the validity of these by carefully considering the how data was collection. The remaining assumptions we can check using the the outputs of `check_model()`.
 
-> Note, you may need to click on "Zoom" to give the diagnostic plots some room to breathe
+> Note, you may need to click on "Zoom" to give the plots some room to breathe
 
 ```{r}
 check_model(towers_og_fit)
 ```
 
-In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Data Data goes through the four main plots neccessary for checking the assumptions of a liner model: 
+In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Data Data goes through how to use the four main plots neccessary for checking the assumptions of a liner model: 
 
-- Linearity
+1. Linearity
+    - Check the relationship between fitted values and residuals
+        - Should see no structure or patterns/curvature
 
+2. Normality of Residual
+    - Check the Quantile-Quantile plot
+        - Sample points should fall along the line
 
-- Homogeneity of Variance
+3. Homogeneity of Variance
+    - Check the relationship between fitted values and square root of standardised residuals
+        - Line should be flat and horizontal
+        - No clear pattern in points e.g. fanning out or grouping
 
-
-- Influential Observations
-
-
-- Normality of Residual
-
-> In your own time, revisit this weeks lectures to learn about what to look for each core model assumption in each plot.
+4. Influential Observations
+    - Check the leverage of each point
+      - Points should fall within dashed lines
 
 **How to report on your model checks**
 
-
-> Model checks are not exciting
+Generally speaking, model checks are pretty standard and not very exciting. Typically
 
 > Usually we don't include these in a publication or final report. Could include in eSupp. We just need to say and explain what checks were done and how you amended your data if neccessary to improve fit
 
@@ -165,7 +156,11 @@ In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Dat
 There are two ways we can improve the model fit for a linear model: 
 
 - apply a transformation on the raw data
+  - log, typically, log 10 `log10(var)` 
+  - square root `sqrt(var)`
 - if any, remove outliers 
+
+Here we will focus on applying a `log10` transformation to two relevant variables `leaf_mass_per_area` and `rainfall`. We will be creating a new variable using `mutate()` and will be assigning these new changes to `data_towers` into a new data object called `data_towers_transformed`
 
 ```{r}
 data_towers_transformed <- data_towers |>  # Assign changes in data_towers into a new dataset
@@ -174,15 +169,43 @@ data_towers_transformed <- data_towers |>  # Assign changes in data_towers into 
 ```
 
 ## Fit model again
+
+Let's try fit out model again using our transformed variables
 ```{r}
-towerst_transformed_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
+towers_transformed_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers_transformed)
 ```
 
 ## Check model assumptions again
 
+Use `check_model()` on our new model fit using transformed data. How does it look?! 
+
 ```{r}
-check_model(towers_fit)
+check_model(towers_transformed_fit)
 ```
 
+# Over to you
+
+For the remainder of the practical, we will get you to: 
+
+- fit various linear models
+- check their assumptions
+- make changes to the data to improve the model fit and adherance to assumptions
+- make some interpretations on the results of the model
+
+We have not provided the step-by-step instructions / R code for you to complete these exercises. Use the knowledge you've gained so far and apply them here. Make use of your saved code from the previous pracs and the worked example above if you need some guidance. 
+
+> Check out the dplyr data transformation/manipulation cheatsheet [here](https://rstudio.github.io/cheatsheets/data-transformation.pdf)
+
+![](images/data-transformation-cheatsheet-thumbs.png){60%}
+
+# Example 1: Boiling point of water vs. air pressure
+
+
+
+# Example 2: Growth rates vs. individual size
+# Example 3: Brain weight vs. body size
+# Example 4: Body size vs fecundity
+# Example 5: River flow and density of larval fish
+# Example 6: Koalas and fire regimes
 
 
