@@ -128,20 +128,20 @@ check_model(towers_og_fit)
 
 In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Data Data goes through how to use the four main plots neccessary for checking the assumptions of a liner model: 
 
-1. Linearity
+1. **Linearity**
     - Check the relationship between fitted values and residuals
         - Should see no structure or patterns/curvature
 
-2. Normality of Residual
+2. **Normality of Residual**
     - Check the Quantile-Quantile plot
         - Sample points should fall along the line
 
-3. Homogeneity of Variance
+3. **Homogeneity of Variance**
     - Check the relationship between fitted values and square root of standardised residuals
         - Line should be flat and horizontal
         - No clear pattern in points e.g. fanning out or grouping
 
-4. Influential Observations
+4. **Influential Observations**
     - Check the leverage of each point
       - Points should fall within dashed lines
 
@@ -200,9 +200,106 @@ We have not provided the step-by-step instructions / R code for you to complete 
 
 # Example 1: Boiling point of water vs. air pressure
 
+![Ever notice that water boils quicker at high altitudes? Image credit: Slower Hiking](images/boiling-water-at-elevation.jpg){60%}
 
+In the 1840's, the Scottish physicist Dr James Forbes travelled to the Swiss Alps and made many measurements of how the boiling point of water varied with air pressure (which decreases with altitude). In his research paper , Forbes also presented data collected on the measures of the same two quantities by Dr Joseph Hooker (famous botanist, explorer, friend of Charles Darwin). Unlike Forbes, however, Hooker took his measurements in the Himalayan Mountains, generally at higher altitudes.
+
+The data we will explore here are a subset of Hooker's data containg 31 observations:
+- `Temperature` at boiling point of water (degrees Fahrenheit)
+- `Pressure`, the corrected barometric pressure (inches of mercury). 
+
+> We want to know whether changes in pressure (which decreases with altitude) affects the boiling point of water. 
+
+Start by reading the data  `data/Hooker.csv` into R.
+**Exercise:**
+
+Use R to:
+- plot a graph of Temperature versus Pressure with `ggplot2`
+  - consider labelling your points with the row number of each value
+- conduct the linear regression analysis using `lm()` (Temperature = a + b*Pressure)
+- evaluate whether your model fit is in line with the assumptions of a linear model using `check_model()`
+
+```{r}
+library(tidyverse)
+library(easystats)
+
+# Read in data
+data_hooker <- read_csv("week 4/Wk4-1-moodle/data/Hooker.csv")
+
+# Plot raw data
+data_hooker |> 
+  mutate(obs_id = row_number()) |>  # Create a temporary variable that denotes the row number of each observation
+ggplot(aes(x = Pressure, y = Temperature)) + 
+  geom_text(aes(label = obs_id)) # A scatterplot where each point is the observation number
+  theme_classic()
+
+# Fit the model with all data
+hooker_fit <- lm(Temperature ~ Pressure, data = data_hooker)
+
+# Check model
+check_model(hooker_fit)
+
+# Exclude potential outlier
+data_hooker_norow7 <- data_hooker |> 
+   slice(-7)
+
+# Fit the model with all data
+hooker_norow7_fit <- lm(Temperature ~ Pressure, data = data_hooker_norow7)
+
+# Check model
+check_model(hooker_norow7_fit) # Not really improve things..
+
+# Transform data instead
+data_hooker_transformed <- data_hooker |> 
+  mutate(log10_temp = log10(Temperature),
+         log10_pressure = log10(Pressure))
+
+# Fit the model with all data
+hooker_transformed_fit <- lm(log10_temp ~ log10_pressure, data = data_hooker_transformed)
+
+# Check model
+check_model(hooker_transformed_fit) # There is an improvement but probably good to remove outlier
+
+# Remove outlier in transformed data
+data_hooker_transformed_norow7  <- data_hooker_transformed |> 
+   slice(-7)
+
+# Fit the model with all data
+hooker_transformed_norow7_fit <- lm(log10_temp ~ log10_pressure, data = data_hooker_transformed_norow7)
+
+# Check model
+check_model(hooker_transformed_norow7_fit) # Heaps better!
+```
+
+**Questions**
+1. Is there evidence of violating assumptions, through outliers, non-linearity or non-constant error variance?
+
+2. You notice that point 7 looks a bit out of place an.After some investigation, it turns out there were machinery issues when the data was recorded. You decide that's sufficient reason to exclude the point as an outlier. 
+
+In `dplyr`, the function `slice` gives us a subset of rows by row number. Placing a minus `-` sign in front of that number will give us all rows **except** that one listed. To remove row 7, we would use:
+
+```{r}
+data_hooker_norow7 <-  data_hooker |> slice(-7)
+```
+
+Did removing the outliers improve any problems with this dataset?
+
+Rerun your linear model with your new dataset and check your model again
+
+3. Removing the outlier didn't really help... let's try transforming the data. `log10` transform your x and y variable and rerun the linear model analysis and model checks
+
+Recall to use `mutate()` to create a new variable containing your transformed data.
+
+- Write down the fitted equation: log10(Temp) = XX + XX * log10(Pressure)
+- What is the F-value
+- What is the P-value
+
+4. What data adjustments would you recommend for a linear model for the Hooker dataset? 
 
 # Example 2: Growth rates vs. individual size
+
+
+
 # Example 3: Brain weight vs. body size
 # Example 4: Body size vs fecundity
 # Example 5: River flow and density of larval fish
