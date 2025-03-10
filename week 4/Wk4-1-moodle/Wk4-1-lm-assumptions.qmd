@@ -15,7 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
+# Libraries for prac
 library(tidyverse)
+library(easystats)
+
+# Data files for prac
+# data_hooker <- read_csv("week 4/Wk4-1-moodle/data/Hooker.csv")
+# data_growthrate <- read_csv("week 4/Wk4-1-moodle/data/GrowthRate.csv")
+#data_brains <- read_csv("week 4/Wk4-1-moodle/data/Brain.csv")
 ```
 
 # Introduction to linear models
@@ -198,7 +205,124 @@ We have not provided the step-by-step instructions / R code for you to complete 
 
 ![](images/data-transformation-cheatsheet-thumbs.png){60%}
 
-# Example 1: Boiling point of water vs. air pressure
+# Example 1: Growth rates vs. individual size
+
+The file `data/GrowthRate.csv` contains 138 observations on the relationship between individual growth rate `GrowthRate` of a wide range of organisms and average individual weight `BodyWt` . The dataset contains species whose size varies over 14 orders of magnitude from approximately 10-9 to 106 g. 
+
+> We want to know whether body weight affects growth rate in these species. 
+
+**Exercise:**
+
+Use R to:
+- plot a graph of `GrowthRate` versus `BodyWt` with `ggplot2`
+- make adjustments to your data, you may want to plot again to check whether your adjustments helped 
+- conduct the linear regression analysis using `lm()` 
+- evaluate whether your model fit is in line with the assumptions of a linear model using `check_model()`
+
+```{r}
+# Read in data
+data_growthrate <- read_csv("data/GrowthRate.csv")
+
+# Plot raw data
+ggplot(data_growthrate, aes(x = BodyWt, y = GrowthRate)) +
+  geom_point() # Data is widespread and should be log10 transformed
+
+# Fit a linear model
+growth_bodywt_fit <- lm(GrowthRate ~ BodyWt, data = data_growthrate)
+
+# Check model
+check_model(growth_bodywt_fit)
+
+# Transform data
+data_growthrate_transformed <- data_growthrate |> 
+  mutate(log10_bodywt = log10(BodyWt),
+         log10_growthrate = log10(GrowthRate))
+
+# Plot transformed data
+ggplot(data_growthrate_transformed, aes(x = log10_bodywt, y = log10_growthrate)) +
+  geom_point() 
+
+# Fit a linear model
+growth_bodywt_transformed_fit <- lm(log10_growthrate ~ log10_bodywt, data = data_growthrate_transformed)
+
+# Check model
+check_model(growth_bodywt_transformed_fit)
+```
+
+**Questions**
+1. What is the equation for the linear model you are considering here?
+
+2. Based on you plot of the raw data, comment on any problems you see in fitting this linear model to these data.
+
+3. What transformation do you recommend for this dataset
+
+4. How did the transformation change the "Linearity" `check_model()` plot?
+
+# Example 2: Brain weight vs. body size
+
+![](images/brains.png)
+
+The data file `data/Brain.csv` contains data on average brain weight for 62 species of mammals. The file presents body weight (kg) `BodyWt` and brain weight (g) `BrainWt` for each species.
+
+> We wish to consider the problem of modelling brain weight (y response) as a function of body weight (x predictor). 
+
+**Exercises:**
+
+- Use R to draw a scatter plot of Brain weight versus Body weight. 
+- Note down on any problem you see in fitting a linear model to these data.
+
+```{r}
+# Read in data
+data_brains <- read_csv("data/Brain.csv")
+
+# Plot raw data
+# Plot raw data
+ggplot(data_brains, aes(x = BodyWt, y = BrainWt)) +
+  geom_point() # Data is widespread and should be log10 transformed
+
+# Fit a linear model
+brains_bodywt_fit <- lm(BrainWt ~ BodyWt, data = data_brains)
+
+# Check model
+check_model(brains_bodywt_fit)
+
+# Apply transformations
+data_brains_transformed <- data_brains |> 
+  mutate(log10_bodywt = log10(BodyWt),
+         log10_brainwt = log10(BrainWt))
+
+# Plot transformed data
+ggplot(data_brains_transformed, aes(x = log10_bodywt, y = log10_brainwt)) +
+  geom_point() 
+
+# Refit model 
+brains_bodywt_transformed_fit <- lm(log10_brainwt ~ log10_bodywt, data = data_brains_transformed)
+
+# Check model
+check_model(brains_bodywt_transformed_fit)
+
+# Inspect model summmaries
+```
+
+**Questions**
+
+1.Find transformations of one or both variables so that on the transformed scale the regression is linear. Fit an appropriate linear regression model to the transformed data.
+
+What transformations help this data make a linear relationship?
+
+2. Now, create a linear model with your transformed data. 
+
+Examine the graph of residuals from your model versus fitted values. Comment on your residual plot comparing the linear model with untransformed data to the linear model with transformed data.
+
+3. Humans are considered to be a big brained species. Is there evidence from the analysis to suggest that humans are an unusual species relative to the others? Could we consider it as an 'outlier'?
+
+> Hint: Use residuals plot to check for outliers
+
+# Example 3: Body size vs fecundity
+
+**Questions**
+
+# Example 4: Boiling point of water vs. air pressure
 
 ![Ever notice that water boils quicker at high altitudes? Image credit: Slower Hiking](images/boiling-water-at-elevation.jpg){60%}
 
@@ -211,6 +335,7 @@ The data we will explore here are a subset of Hooker's data containg 31 observat
 > We want to know whether changes in pressure (which decreases with altitude) affects the boiling point of water. 
 
 Start by reading the data  `data/Hooker.csv` into R.
+
 **Exercise:**
 
 Use R to:
@@ -224,7 +349,7 @@ library(tidyverse)
 library(easystats)
 
 # Read in data
-data_hooker <- read_csv("week 4/Wk4-1-moodle/data/Hooker.csv")
+data_hooker <- read_csv("data/Hooker.csv")
 
 # Plot raw data
 data_hooker |> 
@@ -294,15 +419,20 @@ Recall to use `mutate()` to create a new variable containing your transformed da
 - What is the F-value
 - What is the P-value
 
-4. What data adjustments would you recommend for a linear model for the Hooker dataset? 
+4.  Look at the the residual plots from `check_model(my_model)` and compare it between: 
 
-# Example 2: Growth rates vs. individual size
+- a model with row 7
+- a model without row 7
+- a model with log transformed data with row 7
+
+Can you see any evidence of outliers in the log-transformed data? What data adjustments would you recommend for a linear model for the Hooker dataset? 
 
 
-
-# Example 3: Brain weight vs. body size
-# Example 4: Body size vs fecundity
 # Example 5: River flow and density of larval fish
+
+**Questions**
 # Example 6: Koalas and fire regimes
+
+**Questions**
 
 
