@@ -527,16 +527,34 @@ summary(amphipods_norow40_fit)
 
 1. What analysis would you use to describe the relationship between body length and egg number per brood?
 
+```{r, include=FALSE}
+possible_analyses <- c("linear regression",
+                       "independent samples t-test", "goodness of fit test", "paired t-test")
+```
+
+The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
+
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
 2.  What is the probability that there is no relationship between body size and body length?
 
+The probability that there is no relationship between body size and body length is `r cloze("< .001", c("0.05", "0.01", "< .001"))`
+
 3. How many more eggs are produced per brood for every 1 mm increase in body length?
+
+For every 1 mm increase in body length in an amphipod, we see an average `r cloze("increase", c("increase", "decrease"))` of `r cloze("6.34", c("6.34", "31.02"))` eggs. 
 
 4. How many eggs would you predict that a 10 mm female would have?
 
+The fitted equation of our model is:
+
+`r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` = `r cloze("-31.02", c("6.34", -31.02"))` +  `r cloze("6.34", c("6.34", -31.02"))` * `r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))`
+
+Substituting 10mm in place of `r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` in the fitted equation will give us `r cloze("32.38", c("32.38", "-1966.668", "-94.42"))` eggs
+
 5. What percentage of the variance in egg number per brood is explained by your relationship?
 
+The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("76%", c("24%", "58%", "76%"))`
 
 # Example 5: River flow and density of larval fish
 
@@ -572,9 +590,13 @@ summary(riverflow_fit)
 
 1. What analysis would you use to describe the relationship between flow velocity and fish larvae density?
 
+The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
+
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
 2. What is the probability that there is no relationship between fish larvae density and water flow velocity?
+
+The probability that there is no relationship between fish larvae density and bwater flow velocity is `r cloze("0.023", c("0.05", "0.023", "< .001"))`
 
 3. How many more fish larvae are present for every unit increase in flow velocity?
 
@@ -619,14 +641,17 @@ summary(koalas_fit)
 
 1. What analysis would you use to describe the relationship between the number of koalas observed and the year of the most recent fire?
 
+The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
+
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
-2. What is the slope of our model?
+2. What is the sign and value of the slope from our model?
 
-3. What is the sign of the slope?
-
-4. What does this mean?
+3. How do you interpret the the sign and slope of our model?
 
 5. What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?
+
+The probability that there is no relationship between the year of the most recent fire and the number of koalas is `r cloze("< .001", c("0.05", "0.023", "< .001"))`
+
 
 6. What percentage of the variance in koala numbers is explained by the year of the most recent fire?
