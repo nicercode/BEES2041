@@ -1,20 +1,29 @@
 ---
 title: "Week 4-1 Linear model assumptions"
-output: html_document
+output:
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: Week 4-1 Linear model assumptions
 editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-# remotes::install_github("numbats/moodlequiz")
+```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+# webr counter
+source('../../R/webr-counter.R')
 library(moodlequiz)
+knitr::opts_chunk$set(echo = TRUE)
 ```
+
 
 # Introduction to linear models
 
 ## Introduction
+
+<h3>Introduction</h3>
+
+
 
 In the previous practical, we learned about using linear models to understand how `y` varies with a continuous `x` variable and a discrete `x` variable ...but how do we know our models are any good? Can we evaluate the validity of our linears models? 
 
@@ -28,6 +37,10 @@ Throughout we will work with various real-world datasets. By the end of today, y
 
 ## Key learning objectives
 
+<h3>Key learning objectives</h3>
+
+
+
 Our learning objective today are:
 
 - **run** a **linear regression** in R using `lm()`
@@ -39,6 +52,10 @@ Let’s dive in! 🚀
 ![Image credit:  @allison_horst](images/r-learners.png){width=80%} <br>
 
 ## Setting up
+
+<h3>Setting up</h3>
+
+
 
 **Materials:**
 
@@ -60,19 +77,15 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines. The packages listed below are part of the `tidyverse` and `easystats` suite of packages.
 
 In case you don't have them installed, here is code for you to do so:
-```{r, eval=FALSE}
+<div id=`r class_id()`><pre>
 # Uncomment and run only the lines below only if you have not previously installed these.
 # install.packages("tidyverse")
 # install.packages("easystats")
-```
-
-# Worked example 
-
-## Loading packages
+</pre></div>
 
 > **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` and `easystats` we need for this prac.
 
-```{r, eval=FALSE}
+<div id=`r class_id()`><pre>
 install.packages("dplyr")
 install.packages("readr")
 install.packages("ggplot2")
@@ -80,46 +93,63 @@ install.packages("performance")
 install.packages("modelbased")
 install.packages("see")
 install.packages("emmeans")
-```
+</pre></div>
 
 > Remember to load the packages into R to use em!
 
-```{r, results='hide', warning=FALSE, message=FALSE}
+<div id=`r class_id()`><pre>
 library(dplyr)
 library(readr)
 library(ggplot2)
 library(performance)
 library(modelbased)
-```
+</pre></div>
 
+# Worked example 
 
 ## Worked example - Isaac with leaves across climates
+
+<h3>Worked example - Isaac with leaves across climates</h3>
+
+
 
 ![Remember Dr. Isaac Towers?! Image credit: Data Dan](images/isaac-plant-ecosystems.png){width=60%} <br>
 We will be working with an example from Dr. Isaac Towers - a postdoc in the School of Biological, Earth & Environmental Sciences. Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall? His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478). We will be working with the data Isaac compiled for us.  Recall, last week we ran a linear model using `log10_leaf_mass_per_area`, `log10_rainfall`, let's try run the same linear model again but with the raw, untransformed data.
 
 ## Read in data from a URL link
 
-```{r}
+<h3>Read in data from a URL link</h3>
+
+
+
+<div id=`r class_id()`><pre>
 # The link the contains our data
-url <- "https://raw.githubusercontent.com/nicercode/BEES2041/refs/heads/main/week%203/Wk3-1-Linear-models/data/towers-2024.csv"
+url <- "https://raw.githubusercontent.com/nicercode/BEES2041/refs/heads/main/week%203/Wk3-1-Linear-models/data/towers-2024.csv" 
 
 # Read in the data, drop columns where their names start with `log10`
-data_towers <- read_csv(url) |>
+data_towers <- read_csv(url) |> 
   select(-starts_with("log10"))
 
 data_towers
-```
+</pre></div>
 
 ## Fit model
 
-```{r}
+<h3>Fit model</h3>
+
+
+
+<div id=`r class_id()`><pre>
 towers_og_fit <- lm(leaf_mass_per_area ~ rainfall, data = data_towers)
 
 summary(towers_og_fit)
-```
+</pre></div>
 
 ## Check model assumptions
+
+<h3>Check model assumptions</h3>
+
+
 
 Recall from lectures this week that the assumptions of a linear model assumes:
 
@@ -136,9 +166,9 @@ We can check the remaining assumptions (1-4) using the the outputs of `check_mod
 
 > Note, you may need to click on "Zoom" to give the plots some room to breathe
 
-```{r}
+<div id=`r class_id()`><pre>
 check_model(towers_og_fit)
-```
+</pre></div>
 
 In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Data Data goes through how to use the four main plots neccessary for checking the assumptions of a liner model: 
 
@@ -167,6 +197,10 @@ Generally speaking, model checks are pretty standard and not very exciting. Typi
 
 ## Make some adjustments to improve model fit
 
+<h3>Make some adjustments to improve model fit</h3>
+
+
+
 There are two ways we can improve the model fit for a linear model: 
 
 - apply a transformation on the raw data
@@ -176,7 +210,7 @@ There are two ways we can improve the model fit for a linear model:
 
 Here we will focus on applying a `log10` transformation to the two relevant variables `leaf_mass_per_area` and `rainfall`. We will be creating a new variable using `mutate()` and will be assigning these new changes to `data_towers` into a new data object called `data_towers_transformed`.
 
-```{r}
+<div id=`r class_id()`><pre>
 data_towers_transformed <- # Assign changes into a new dataset
   data_towers |> # start with data_towers
   mutate(
@@ -184,36 +218,46 @@ data_towers_transformed <- # Assign changes into a new dataset
     log10_leaf_mass_per_area = log10(leaf_mass_per_area),
     # Create a new log10 transformed rainfall
     log10_rainfall = log10(rainfall)
-  )
-
-data_towers_transformed
-```
+  ) 
+</pre></div>
 
 ## Fit model again
 
+<h3>Fit model again</h3>
+
+
+
 Let's try fit out model again using our transformed variables.
 
-```{r}
+<div id=`r class_id()`><pre>
 towers_transformed_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers_transformed)
-```
+</pre></div>
 
 ## Check model assumptions again
 
+<h3>Check model assumptions again</h3>
+
+
+
 Use `check_model()` on our new model fit using transformed data. How does it look?! 
 
-```{r}
+<div id=`r class_id()`><pre>
 check_model(towers_transformed_fit)
-```
+</pre></div>
 
 By now it should be clear which is the better model fit.
 
 ## Let's compare the two models fitted to data
 
+<h3>Let's compare the two models fitted to data</h3>
+
+
+
 We will plot the data and the fitted models for both the original and transformed data. One of these models will be a better fit than the other. Hopefully you see why we transformed the data!
 
 **Plot of original data**
 
-```{r}
+<div id=`r class_id()`><pre>
 # Estimate means and confidence intervals
 means_towers <- estimate_means(towers_og_fit, by = "rainfall")
 
@@ -228,7 +272,7 @@ ggplot(data_towers, aes(x = rainfall, y = leaf_mass_per_area)) +
     x = "Rainfall",
     y = "Leaf Mass per Area"
   )
-```
+</pre></div>
 
 Here we can see the issues identified by the mdoel checks in the plot:
 
@@ -240,9 +284,13 @@ Here we can see the issues identified by the mdoel checks in the plot:
 
 ## Plot of transformed data
 
+<h3>Plot of transformed data</h3>
+
+
+
 Here's a plot of the fitted model using the transformed data. Wow, what a difference! You can see the difference in the fit. The irmpoved fit of the model and meeting of asusmptions mean we can more condiently make interpretations on the relationship between rainfall and leaf mass per area based aropund the fitted model.
 
-```{r}
+<div id=`r class_id()`><pre>
 # Estimate means and confidence intervals
 means_towers_transformed <- estimate_means(towers_transformed_fit, by = "log10_rainfall")
 
@@ -257,10 +305,14 @@ ggplot(data_towers_transformed, aes(x = log10_rainfall, y = log10_leaf_mass_per_
     x = "log10 Rainfall",
     y = "log10 Leaf Mass per Area"
   )
-```
+</pre></div>
 
 
 ## Over to you
+
+<h3>Over to you</h3>
+
+
 
 For the remainder of the practical, we will get you to: 
 
@@ -280,6 +332,10 @@ We have not provided the step-by-step instructions / R code for you to complete 
 
 ## Example 1: Growth rates vs. individual size
 
+<h3>Example 1: Growth rates vs. individual size</h3>
+
+
+
 The file `data/GrowthRate.csv` contains 138 observations on the relationship between individual growth rate `GrowthRate` of a wide range of organisms and average individual weight `BodyWt` . The dataset contains species whose size varies over 14 orders of magnitude from approximately 10-9 to 106 g. 
 
 > We want to know whether body weight affects growth rate in these species. 
@@ -297,50 +353,22 @@ Don't forget to load the packages you'll need to complete this exercise!
 
 On your machine, you can load everything you need by running the following code:
 
-```{r}
+<div id=`r class_id()`><pre>
 library(tidyverse)
 library(easystats)
-```
+</pre></div>
 
 
-```{r solution1}
+```{r}
 
-# Read in data
-data_growthrate <- read_csv("data/GrowthRate.csv")
-
-# Plot raw data
-ggplot(data_growthrate, aes(x = BodyWt, y = GrowthRate)) +
-  geom_point() # Data is widespread and should be log10 transformed
-
-# Fit a linear model
-growth_bodywt_fit <- lm(GrowthRate ~ BodyWt, data = data_growthrate)
-
-# Check model
-check_model(growth_bodywt_fit)
-
-# Transform data
-data_growthrate_transformed <- data_growthrate |> 
-  mutate(log10_bodywt = log10(BodyWt),
-         log10_growthrate = log10(GrowthRate))
-
-# Plot transformed data
-ggplot(data_growthrate_transformed, aes(x = log10_bodywt, y = log10_growthrate)) +
-  geom_point() 
-
-# Fit a linear model
-growth_bodywt_transformed_fit <- lm(log10_growthrate ~ log10_bodywt, data = data_growthrate_transformed)
-
-# Check model
-check_model(growth_bodywt_transformed_fit)
 ```
 
 **Questions**
-1. What is the equation for the linear model you are considering here?
+1. **What is the equation for the linear model you are considering here?**
 
 `r cloze("GrowthRate = b0 + b1 * BodyWt", c("BodyWt = b0 + b1 * GrowthRate", "BodyWt = b0 + b1 + GrowthRate","GrowthRate = b0 + b1 * BodyWt", "GrowthRate = b0 + b1 + BodyWt"))`
 
-2. Based on your plot of the raw data, what are some potential problems you see in fitting this linear model to these data? Select all that applies: 
-
+2. **Based on your plot of the raw data, what are some potential problems you see in fitting this linear model to these data?** Select all that applies: 
 ```{r, echo=FALSE}
 possible_assumption_issues <- c("high variance in larger values", 
                                 "there may be some outliers, but hard to tell because the data has a massive spread",
@@ -352,7 +380,7 @@ possible_assumption_issues <- c("high variance in larger values",
 The potential issues with fitting a linear model to this data include: 
 `r cloze(c("high variance in larger values", "x and y may not follow a linear relationship", "there may be some outliers, but hard to tell because the data has a massive spread"), possible_assumption_issues)`
 
-3. What transformation do you recommend for this dataset?
+3. **What transformation do you recommend for this dataset?**
 
 ```{r, echo=FALSE}
 possible_transformations <- c("log 10", "natural log", "square root", "log 10 (var + 0.1)")
@@ -360,11 +388,13 @@ possible_transformations <- c("log 10", "natural log", "square root", "log 10 (v
 
 A `r cloze("log 10", possible_transformations)` transformation is suited for this dataset because observation values vary by orders of magnitude. 
 
-4. How did the transformation change the "Linearity" `check_model()` plot?
+4. **How did the transformation change the "Linearity" `check_model()` plot?**
 
 The log 10 transformation `r cloze("put the fitted and residual values on a similar scale so we can see them spread out", c("removed the outliers", "put the fitted and residual values on a similar scale so we can see them spread out", "made the results non-significant"))`
 
-# Example 2: Brain weight vs. body size
+## Example 2: Brain weight vs. body size
+
+<h3>Example 2: Brain weight vs. body size</h3>
 
 ![](images/brains.png)
 
@@ -377,59 +407,33 @@ The data file `data/Brain.csv` contains data on average brain weight for 62 spec
 - Use R to draw a scatter plot of Brain weight versus Body weight. 
 - Note down on any problem you see in fitting a linear model to these data.
 
-```{r solution2}
-# Read in data
-data_brains <- read_csv("data/Brain.csv")
+```{r}
 
-# Plot raw data
-ggplot(data_brains, aes(x = BodyWt, y = BrainWt)) +
-  geom_point() # Data is widespread and should be log10 transformed
-
-# Fit a linear model
-brains_bodywt_fit <- lm(BrainWt ~ BodyWt, data = data_brains)
-
-# Check model
-check_model(brains_bodywt_fit)
-
-# Apply transformations
-data_brains_transformed <- data_brains |> 
-  mutate(log10_bodywt = log10(BodyWt),
-         log10_brainwt = log10(BrainWt))
-
-# Plot transformed data
-ggplot(data_brains_transformed, aes(x = log10_bodywt, y = log10_brainwt)) +
-  geom_point() 
-
-# Refit model 
-brains_bodywt_transformed_fit <- lm(log10_brainwt ~ log10_bodywt, data = data_brains_transformed)
-
-# Check model
-check_model(brains_bodywt_transformed_fit)
-
-# Plot for Question 3.
-ggplot(data_brains_transformed, aes(x = log10_bodywt, y = log10_brainwt)) +
-  geom_text(aes(label = Species)) 
 ```
 
 **Questions**
 
 Find transformations of one or both variables so that on the transformed scale the regression is linear. 
 
-1. Which transformation help create a more linear relationship? between x and y?
+1. **Which transformation help create a more linear relationship? between x and y?**
 
 A `r cloze("log 10", possible_transformations)` transformation is suited for this dataset because observation values vary by orders of magnitude and the raw data appears `r cloze("somewhat non-linear", c("very linear", "somewhat non-linear"))`. 
 
-2. Now, create a linear model with your transformed data. 
+2. **Now, create a linear model with your transformed data.** 
 
 Examine the graph of residuals from your model versus fitted values. Comment on your residual plot comparing the linear model with untransformed data to the linear model with transformed data.
 
 The normality of the residuals from our linear model `r cloze("increased", c("increased", "decreased"))` after performing a log 10 transformation. 
 
-3. Humans are considered to be a big brained species. Is there evidence from the analysis to suggest that humans are an unusual species relative to the others? Could we consider it as an 'outlier'? You may need to create plot and use some clever labelling of points to answer this question
+3. **Humans are considered to be a big brained species. Is there evidence from the analysis to suggest that humans are an unusual species relative to the others?** Could we consider it as an 'outlier'? You may need to create plot and use some clever labelling of points to answer this question
 
 Looking at a plot of transformed data, the brain and body weight for Humans do appear to stand out. Based on our `r cloze("influential observations plot", c("qq-plot", "fitted vs residuals plot", "influential observations plot"))` of our `r cloze("transformed", c("transformed", "untransformed"))` data, Humans `r cloze("are not considered an outlier", c("are not considered an outlier", "is considered as an influential point and should be excluded"))`
 
 ## Example 3: Boiling point of water vs. air pressure
+
+<h3>Example 3: Boiling point of water vs. air pressure</h3>
+
+
 
 ![Ever notice that water boils quicker at high altitudes? Image credit: Slower Hiking](images/boiling-water-at-elevation.jpg){60%}
 
@@ -452,59 +456,13 @@ Use R to:
 - conduct the linear regression analysis using `lm()` (Temperature = a + b*Pressure)
 - evaluate whether your model fit is in line with the assumptions of a linear model using `check_model()`
 
-```{r solution3}
+```{r}
 
-# Read in data
-data_hooker <- read_csv("data/Hooker.csv")
-
-# Plot raw data
-data_hooker |> 
-  mutate(obs_id = row_number()) |>  # Create a temporary variable that denotes the row number of each observation
-
-ggplot(aes(x = Pressure, y = Temperature)) + 
-  geom_text(aes(label = obs_id)) + # A scatterplot where each point is the observation number
-  theme_classic()
-
-# Fit the model with all data
-hooker_fit <- lm(Temperature ~ Pressure, data = data_hooker)
-
-# Check model
-check_model(hooker_fit)
-
-# Exclude potential outlier
-data_hooker_norow7 <- data_hooker |> 
-   slice(-7)
-
-# Fit the model with all data
-hooker_norow7_fit <- lm(Temperature ~ Pressure, data = data_hooker_norow7)
-
-# Check model
-check_model(hooker_norow7_fit) # Not really improve things..
-
-# Transform data instead
-data_hooker_transformed <- data_hooker |> 
-  mutate(log10_temp = log10(Temperature),
-         log10_pressure = log10(Pressure))
-
-# Fit the model with all data
-hooker_transformed_fit <- lm(log10_temp ~ log10_pressure, data = data_hooker_transformed)
-
-# Check model
-check_model(hooker_transformed_fit) # There is an improvement but probably good to remove outlier
-
-# Remove outlier in transformed data
-data_hooker_transformed_norow7  <- data_hooker_transformed |> 
-   slice(-7)
-
-# Fit the model with all data
-hooker_transformed_norow7_fit <- lm(log10_temp ~ log10_pressure, data = data_hooker_transformed_norow7)
-
-# Check model
-check_model(hooker_transformed_norow7_fit) # Heaps better!
 ```
 
 **Questions**
-1. When fitting a linear model on the raw data, which assumptions are violated? Select all that applies
+
+1. **When fitting a linear model on the raw data, which assumptions are violated? Select all that applies**
 
 ```{r, echo=FALSE}
 possible_violations <- c("there are potential outliers", 
@@ -517,7 +475,7 @@ possible_violations <- c("there are potential outliers",
 
 `r cloze(c("there are potential outliers", "non-linear relationship present", "non-constant residual variance") , possible_violations)`
 
-2. You notice that point 7 looks a bit out of place. After some investigation, it turns out there were machinery issues when the data was recorded. You decide that's sufficient reason to exclude the point as an outlier. 
+2. **You notice that point 7 looks a bit out of place. After some investigation, it turns out there were machinery issues when the data was recorded. You decide that's sufficient reason to exclude the point as an outlier.** 
 
 METHODS TO REMOVE ROWS OF A DATAFRAME
 
@@ -531,7 +489,7 @@ Another way to remove rows is to use the `filter()` function. To remove row 7, w
 
 ```{r, eval=FALSE}
 data_hooker_norow7 <- data_hooker |> filter(row_number() != 7)
-``` 
+```
 
 
 What did removing the outliers do with adhering to model assumptions? 
@@ -540,7 +498,7 @@ Removing the outlier `r cloze("didn't improve very much", c("didn't improve very
 
 Rerun your linear model with your new dataset and check your model again
 
-3. Removing the outlier didn't really help... let's try transforming the data. `log10` transform your x and y variable and rerun the linear model analysis and model checks
+3. **Removing the outlier didn't really help... let's try transforming the data. `log10` transform your x and y variable and rerun the linear model analysis and model checks**
 
 Recall to use `mutate()` to create a new variable containing your transformed data.
 
@@ -549,7 +507,7 @@ What is the fitted equation for this mode?
 The fitted equation for this model is:
 log10(Temp) = `r cloze("1.9681",c("1.9681", "0.242507", "<2e-16"))`+ `r cloze("0.242507",c("1.9681", "0.242507", "<2e-16"))` * log10(Pressure)
 
-4.  Look at the the residual plots from `check_model()` and compare it between: 
+4. **Look at the the residual plots from `check_model()` and compare it between:** 
 
 - a model with row 7
 - a model without row 7
@@ -563,6 +521,10 @@ Based on the influential observations plot, I recommend:
 
 ## Example 4 Body size vs fecundity
 
+<h3>Example 4 Body size vs fecundity</h3>
+
+
+
 ![](images/amphipods.jpeg){60%}
 
 An evolutionary biologist was interested in body size-fecundity relationships in marine invertebrates. For most animals, larger females are able to produce more offspring per reproductive event. This is due to the levels of resources available for allocation to reproduction, and for species that brood their offspring, the physical constraints of housing the developing eggs or embryos.
@@ -573,42 +535,13 @@ To explore how fecundity varied with body size, the biologist collected 40 femal
 
 Load the data file `data/Amphipod.fecundity.csv` and choose a plot to visualise egg number per brood, you may want to label each point as the row number again.
 
-```{r solution4}
+```{r}
 
-# Read in data
-data_amphipods <- read_csv("data/Amphipod_fecundity.csv")
-
-# Plot raw data
-data_amphipods |>
-  mutate(obs_id = row_number()) |>  # Create a temporary variable that denotes the row number of each observation
-ggplot(aes(x = Length, y = Eggs)) + 
-  geom_text(aes(label = obs_id)) +
-  theme_classic()
-
-# Fit the model with all data
-amphipods_fit <- lm(Eggs ~ Length, data = data_amphipods)
-
-# Check model
-check_model(amphipods_fit)
-
-# Exclude potential outlier
-data_amphipods_norow40 <- data_amphipods |> 
-   slice(-40)
-
-# Fit the model with all data
-amphipods_norow40_fit <- lm(Eggs ~ Length, data = data_amphipods_norow40) 
-
-# Check model
-check_model(amphipods_norow40_fit) # Looks pretty good!
-
-# Interpret model output
-parameters(amphipods_norow40_fit)
-summary(amphipods_norow40_fit)
 ```
 
 **Questions**
 
-1. What analysis would you use to describe the relationship between body length and egg number per brood?
+1. **What analysis would you use to describe the relationship between body length and egg number per brood?**
 
 ```{r, echo=FALSE}
 possible_analyses <- c("linear regression",
@@ -619,15 +552,15 @@ The suitable analysis would be `r cloze("linear regression" ,possible_analyses)`
 
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
-2.  What is the probability that there is no relationship between body size and body length?
+2.  **What is the probability that there is no relationship between body size and body length?**
 
 The probability that there is no relationship between body size and body length is `r cloze("< .001", c("0.05", "0.01", "< .001"))`
 
-3. How many more eggs are produced per brood for every 1 mm increase in body length?
+3. **How many more eggs are produced per brood for every 1 mm increase in body length?**
 
 For every 1 mm increase in body length in an amphipod, we see an average `r cloze("increase", c("increase", "decrease"))` of `r cloze("6.34", c("6.34", "31.02"))` eggs. 
 
-4. How many eggs would you predict that a 10 mm female would have?
+4. **How many eggs would you predict that a 10 mm female would have?**
 
 The fitted equation of our model is:
 
@@ -635,11 +568,15 @@ The fitted equation of our model is:
 
 Substituting 10mm in place of `r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` in the fitted equation will give us `r cloze("32.38", c("32.38", "-1966.668", "-94.42"))` eggs
 
-5. What percentage of the variance in egg number per brood is explained by your relationship?
+5. **What percentage of the variance in egg number per brood is explained by your relationship?**
 
 The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("76%", c("24%", "58%", "76%"))`
 
 ## Example 5: River flow and density of larval fish
+
+<h3>Example 5: River flow and density of larval fish</h3>
+
+
 
 ![](images/retropinna-semoni-cropped.jpg) <br>
 
@@ -647,47 +584,35 @@ River managers want to know if there is an difference in the numbers of fish rec
 
 Load the data file `data/riverflow.csv` and choose a plot to visualise the relationship between flow rate `Flow.rate` and density of fish larvae `Larvae.density`.
 
-```{r solution5}
+```{r}
 
-# Read in data
-data_riverflow <- read_csv("data/riverflow.csv")
-
-# Plot raw data
-ggplot(data_riverflow, aes(x = Flow.rate, y = Larvae.density)) +
-  geom_point() 
-
-# Fit a linear model
-riverflow_fit <- lm(Larvae.density ~ Flow.rate, data = data_riverflow)
-
-# Check model
-check_model(riverflow_fit) # Not bad!
-
-# Inspect model summmaries
-parameters(riverflow_fit)
-summary(riverflow_fit)
 ```
 
 **Questions**
 
-1. What analysis would you use to describe the relationship between flow velocity and fish larvae density?
+1. **What analysis would you use to describe the relationship between flow velocity and fish larvae density?**
 
 The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
 
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
-2. What is the probability that there is no relationship between fish larvae density and water flow velocity?
+2. **What is the probability that there is no relationship between fish larvae density and water flow velocity?**
 
 The probability that there is no relationship between fish larvae density and bwater flow velocity is `r cloze("0.023", c("0.05", "0.023", "< .001"))`
 
-3. How many more fish larvae are present for every unit increase in flow velocity?
+3. **How many more fish larvae are present for every unit increase in flow velocity?**
 
 Our model suggests that larvae density `r cloze("decreased", c("increased", "decreased"))` by `r cloze("3.13", c("3.13", "7.49"))` units for every unit increase in flow velocity.
 
-4. What percentage of the variance in larvae fish density is explained by your relationship?
+4. **What percentage of the variance in larvae fish density is explained by your relationship?**
 
 The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("15%", c("15%", "12%", "76%"))`
 
 ## Example 6: Koalas and fire regimes
+
+<h3>Example 6: Koalas and fire regimes</h3>
+
+
 
 ![](images/koala-fires.jpeg){60%}
 
@@ -695,47 +620,32 @@ A group of forest managers want to know if there is any difference in the number
 
 Load the data file `data/koalas.csv` and choose a plot to visualise the number of koalas observed `Koalas` and years since fire `Year.last.fire`.
 
-```{r solution6}
+```{r}
 
-# Read in data
-data_koalas <- read_csv("data/koalas.csv")
-
-# Plot raw data
-ggplot(data_koalas, aes(x = Year.last.fire, y = Koalas)) +
-  geom_point() 
-
-# Fit a linear model
-koalas_fit <- lm(Koalas ~ Year.last.fire, data = data_koalas)
-
-# Check model
-check_model(koalas_fit) # Not bad!
-
-# Inspect model summmaries
-parameters(koalas_fit)
-summary(koalas_fit)
 ```
 
 
 **Questions**
 
-1. What analysis would you use to describe the relationship between the number of koalas observed and the year of the most recent fire?
+1. **What analysis would you use to describe the relationship between the number of koalas observed and the year of the most recent fire?**
 
 The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
 
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
-2. What is the sign and value of the slope from our model?
+2. **What is the sign and value of the slope from our model?**
 
 The slope from our model is `r cloze("negative", c("negative", "positive"))` and its value is `r cloze("0.21", c("0.21", "0.03", "0.001", "424.82"))`.
 
-3. How do you interpret the the sign and slope of our model?
+3. **How do you interpret the the sign and slope of our model?**
 
 For every year since a bushfire, the number of koalas `r cloze("decreased", c("increased", "decreased"))` by 0.21. 
-5. What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?
+
+4. **What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?**
 
 The probability that there is no relationship between the year of the most recent fire and the number of koalas is `r cloze("< .001", c("0.05", "0.023", "< .001"))`
 
-6. What percentage of the variance in koala numbers is explained by the year of the most recent fire?
+5. **What percentage of the variance in koala numbers is explained by the year of the most recent fire?**
 
 The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("34%", c("15%", "34%", "76%"))`
 
