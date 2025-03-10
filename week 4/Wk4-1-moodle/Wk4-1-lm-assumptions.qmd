@@ -576,7 +576,7 @@ ggplot(data_riverflow, aes(x = Flow.rate, y = Larvae.density)) +
   geom_point() 
 
 # Fit a linear model
-riverflow_fit <- lm(Flow.rate ~ Larvae.density, data = data_riverflow)
+riverflow_fit <- lm(Larvae.density ~ Flow.rate, data = data_riverflow)
 
 # Check model
 check_model(riverflow_fit) # Not bad!
@@ -600,11 +600,11 @@ The probability that there is no relationship between fish larvae density and bw
 
 3. How many more fish larvae are present for every unit increase in flow velocity?
 
-4. What is the sign of the slope?
+Our model suggests that larvae density `r cloze("decreased", c("increased", "decreased"))` by `r cloze("3.13", c("3.13", "7.49"))` units for every unit increase in flow velocity.
 
-5. What does this mean?
+4. What percentage of the variance in larvae fish density is explained by your relationship?
 
-6. What percentage of the variance in larvae fish density is explained by your relationship?
+The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("15%", c("15%", "12%", "76%"))`
 
 # Example 6: Koalas and fire regimes
 
