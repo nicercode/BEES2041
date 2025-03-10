@@ -318,11 +318,7 @@ Examine the graph of residuals from your model versus fitted values. Comment on 
 
 > Hint: Use residuals plot to check for outliers
 
-# Example 3: Body size vs fecundity
-
-**Questions**
-
-# Example 4: Boiling point of water vs. air pressure
+# Example 3: Boiling point of water vs. air pressure
 
 ![Ever notice that water boils quicker at high altitudes? Image credit: Slower Hiking](images/boiling-water-at-elevation.jpg){60%}
 
@@ -427,10 +423,56 @@ Recall to use `mutate()` to create a new variable containing your transformed da
 
 Can you see any evidence of outliers in the log-transformed data? What data adjustments would you recommend for a linear model for the Hooker dataset? 
 
+# Example 4: Body size vs fecundity
+
+![](images/amphipods.jpeg){60%}
+
+An evolutionary biologist was interested in body size-fecundity relationships in marine invertebrates. For most animals, larger females are able to produce more offspring per reproductive event. This is due to the levels of resources available for allocation to reproduction, and for species that brood their offspring, the physical constraints of housing the developing eggs or embryos.
+
+Many crustaceans have indeterminate growth, which means they just keep on moulting and getting bigger until something kills them. Consequently, older and larger females can have many more offspring per reproductive event than smaller individuals. Amphipods are crustaceans that do not release their eggs into the plankton, but look after them in a brood pouch between their legs.
+
+To explore how fecundity varied with body size, the biologist collected 40 females that were brooding eggs, measured their body length (mm) and the number of eggs in their brood pouch.
+
+Load the data file `data/Amphipod.fecundity.csv` and choose a plot to visualise egg number per brood.
+
+**Questions**
+
+1. What analysis would you use to describe the relationship between body length and egg number per brood?
+
+Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following
+
+2.  What is the probability that there is no relationship between body size and body length?
+
+3. How many more eggs are produced per brood for every 1 mm increase in body length?
+
+4. How many eggs would you predict that a 10 mm female would have?
+
+5. What percentage of the variance in egg number per brood is explained by your relationship?
+
 
 # Example 5: River flow and density of larval fish
 
+![](images/retropinna-semoni-cropped.jpg) <br>
+
+River managers want to know if there is an difference in the numbers of fish recruiting under different environmental flow practices. They go out to a number of different locations along a river of interest and measure the density of larval fishes and water flow rate (velocity m/s) at each site.
+
+Load the data file `data/riverflow.csv` and choose a plot to visualise the relationship between density of fish larvae.
+
 **Questions**
+
+1. What analysis would you use to describe the relationship between flow velocity and fish larvae density?
+
+Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following
+
+2. What is the probability that there is no relationship between fish larvae density and water flow velocity?
+
+3. How many more fish larvae are present for every unit increase in flow velocity?
+
+4. What is the sign of the slope?
+
+5. What does this mean?
+
+6. What percentage of the variance in larvae fish density is explained by your relationship?
 # Example 6: Koalas and fire regimes
 
 **Questions**
