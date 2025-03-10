@@ -330,22 +330,28 @@ brains_bodywt_transformed_fit <- lm(log10_brainwt ~ log10_bodywt, data = data_br
 # Check model
 check_model(brains_bodywt_transformed_fit)
 
-# Inspect model summmaries
+# Plot for Question 3.
+ggplot(data_brains_transformed, aes(x = log10_bodywt, y = log10_brainwt)) +
+  geom_text(aes(label = Species)) 
 ```
 
 **Questions**
 
-1. Find transformations of one or both variables so that on the transformed scale the regression is linear. Fit an appropriate linear regression model to the transformed data.
+Find transformations of one or both variables so that on the transformed scale the regression is linear. 
 
-What transformations help this data make a linear relationship?
+1. Which transformation help create a more linear relationship? between x and y?
+
+A `r cloze("log 10", possible_transformations)` transformation is suited for this dataset because observation values vary by orders of magnitude and the raw data appears `r cloze("somewhat non-linear", c("very linear", "somewhat non-linear"))`. 
 
 2. Now, create a linear model with your transformed data. 
 
 Examine the graph of residuals from your model versus fitted values. Comment on your residual plot comparing the linear model with untransformed data to the linear model with transformed data.
 
-3. Humans are considered to be a big brained species. Is there evidence from the analysis to suggest that humans are an unusual species relative to the others? Could we consider it as an 'outlier'?
+The normality of the residuals from our linear model `r cloze("increased", c("increased", "decreased"))` after performing a log 10 transformation. 
 
-> Hint: Use residuals plot to check for outliers
+3. Humans are considered to be a big brained species. Is there evidence from the analysis to suggest that humans are an unusual species relative to the others? Could we consider it as an 'outlier'? You may need to create plot and use some clever labelling of points to answer this question
+
+Looking at a plot of transformed data, the brain and body weight for Humans do appear to stand out. Based on our `r cloze("influential observations plot", c("qq-plot", "fitted vs residuals plot", "influential observations plot"))` of our `r cloze("transformed", c("transformed", "untransformed"))` data, Humans `r cloze("are not considered an outlier", c("are not considered an outlier", "is considered as an influential point and should be excluded"))`
 
 # Example 3: Boiling point of water vs. air pressure
 
@@ -380,7 +386,7 @@ data_hooker <- read_csv("data/Hooker.csv")
 data_hooker |> 
   mutate(obs_id = row_number()) |>  # Create a temporary variable that denotes the row number of each observation
 ggplot(aes(x = Pressure, y = Temperature)) + 
-  geom_text(aes(label = obs_id)) # A scatterplot where each point is the observation number
+  geom_text(aes(label = obs_id)) + # A scatterplot where each point is the observation number
   theme_classic()
 
 # Fit the model with all data
@@ -422,9 +428,20 @@ check_model(hooker_transformed_norow7_fit) # Heaps better!
 ```
 
 **Questions**
-1. Is there evidence of violating assumptions, through outliers, non-linearity or non-constant error variance?
+1. When fitting a linear model on the raw data, which assumptions are violated? Select all that applies
 
-2. You notice that point 7 looks a bit out of place an.After some investigation, it turns out there were machinery issues when the data was recorded. You decide that's sufficient reason to exclude the point as an outlier. 
+```{r, include=FALSE}
+possible_violations <- c("there are potential outliers", 
+                         "non-linear relationship present", 
+                         "non-constant residual variance", 
+                         "residuals are non-normal", 
+                         "values are not independent", 
+                         "values do not represent the population")
+```
+
+`r cloze(c("there are potential outliers", "non-linear relationship present", "non-constant residual variance") , possible_violations)`
+
+2. You notice that point 7 looks a bit out of place. After some investigation, it turns out there were machinery issues when the data was recorded. You decide that's sufficient reason to exclude the point as an outlier. 
 
 In `dplyr`, the function `slice` gives us a subset of rows by row number. Placing a minus `-` sign in front of that number will give us all rows **except** that one listed. To remove row 7, we would use:
 
@@ -432,7 +449,9 @@ In `dplyr`, the function `slice` gives us a subset of rows by row number. Placin
 data_hooker_norow7 <-  data_hooker |> slice(-7)
 ```
 
-Did removing the outliers improve any problems with this dataset?
+What did removing the outliers do with adhering to model assumptions? 
+
+Removing the outlier `r cloze("didn't improve very much", c("didn't improve very much", "drastically improved adherance to all model assumptions"))`
 
 Rerun your linear model with your new dataset and check your model again
 
@@ -440,17 +459,22 @@ Rerun your linear model with your new dataset and check your model again
 
 Recall to use `mutate()` to create a new variable containing your transformed data.
 
-- Write down the fitted equation: log10(Temp) = XX + XX * log10(Pressure)
-- What is the F-value
-- What is the P-value
+What is the fitted equation for this mode? 
 
-4.  Look at the the residual plots from `check_model(my_model)` and compare it between: 
+The fitted equation for this model is:
+log10(Temp) = `r cloze("1.9681",c("1.9681", "0.242507", "<2e-16"))`+ `r cloze("0.242507",c("1.9681", "0.242507", "<2e-16"))` * log10(Pressure)
+
+4.  Look at the the residual plots from `check_model()` and compare it between: 
 
 - a model with row 7
 - a model without row 7
 - a model with log transformed data with row 7
 
 Can you see any evidence of outliers in the log-transformed data? What data adjustments would you recommend for a linear model for the Hooker dataset? 
+
+Based on the influential observations plot, I recommend: 
+- `r cloze("removing row 7", c("removing row 7", "retaining row 7", "remove row 1"))`
+- apply a  `r cloze("log 10", possible_transformations)` transformation.
 
 # Example 4: Body size vs fecundity
 
