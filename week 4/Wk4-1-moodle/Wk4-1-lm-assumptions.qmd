@@ -548,7 +548,7 @@ For every 1 mm increase in body length in an amphipod, we see an average `r cloz
 
 The fitted equation of our model is:
 
-`r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` = `r cloze("-31.02", c("6.34", -31.02"))` +  `r cloze("6.34", c("6.34", -31.02"))` * `r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))`
+`r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` = `r cloze("-31.02", c("6.34", "-31.02"))` +  `r cloze("6.34", c("6.34", "-31.02"))` * `r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))`
 
 Substituting 10mm in place of `r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` in the fitted equation will give us `r cloze("32.38", c("32.38", "-1966.668", "-94.42"))` eggs
 
