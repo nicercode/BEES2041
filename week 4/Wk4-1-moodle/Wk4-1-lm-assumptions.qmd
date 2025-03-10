@@ -647,11 +647,16 @@ Run the suitable analysis. Check your model assumptions and make any data adjust
 
 2. What is the sign and value of the slope from our model?
 
+The slope from our model is `r cloze("negative", c("negative", "positive"))` and its value is `r cloze("0.21", c("0.21", "0.03", "0.001", "424.82"))`.
+
 3. How do you interpret the the sign and slope of our model?
 
+For every year since a bushfire, the number of koalas `r cloze("decreased", c("increased", "decreased"))` by 0.21. 
 5. What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?
 
 The probability that there is no relationship between the year of the most recent fire and the number of koalas is `r cloze("< .001", c("0.05", "0.023", "< .001"))`
 
-
 6. What percentage of the variance in koala numbers is explained by the year of the most recent fire?
+
+The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("34%", c("15%", "34%", "76%"))`
+
