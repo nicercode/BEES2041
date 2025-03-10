@@ -258,11 +258,32 @@ check_model(growth_bodywt_transformed_fit)
 **Questions**
 1. What is the equation for the linear model you are considering here?
 
-2. Based on you plot of the raw data, comment on any problems you see in fitting this linear model to these data.
+`r cloze("GrowthRate = b0 + b1 * BodyWt", c("BodyWt = b0 + b1 * GrowthRate", "BodyWt = b0 + b1 + GrowthRate","GrowthRate = b0 + b1 * BodyWt", "GrowthRate = b0 + b1 + BodyWt"))`
 
-3. What transformation do you recommend for this dataset
+2. Based on your plot of the raw data, what are some potential problems you see in fitting this linear model to these data? Select all that applies: 
+
+```{r, include=FALSE}
+possible_assumption_issues <- c("high variance in larger values", 
+                                "there may be some outliers, but hard to tell because the data has a massive spread",
+                                "the variables are non-normal",
+                                "x and y may not follow a linear relationship", 
+                                "All looks good to me")
+```
+
+The potential issues with fitting a linear model to this data include: 
+`r cloze(c("high variance in larger values", "x and y may not follow a linear relationship", "there may be some outliers, but hard to tell because the data has a massive spread"), possible_assumption_issues)`
+
+3. What transformation do you recommend for this dataset?
+
+```{r, include=FALSE}
+possible_transformations <- c("log 10", "natural log", "square root", "log 10 (var + 0.1)")
+```
+
+A `r cloze("log 10", possible_transformations)` transformation is suited for this dataset because observation values vary by orders of magnitude. 
 
 4. How did the transformation change the "Linearity" `check_model()` plot?
+
+The log 10 transformation `r cloze("put the fitted and residual values on a similar scale so we can see them spread out", c("removed the outliers", "put the fitted and residual values on a similar scale so we can see them spread out", "made the results non-significant"))`
 
 # Example 2: Brain weight vs. body size
 
@@ -314,7 +335,7 @@ check_model(brains_bodywt_transformed_fit)
 
 **Questions**
 
-1.Find transformations of one or both variables so that on the transformed scale the regression is linear. Fit an appropriate linear regression model to the transformed data.
+1. Find transformations of one or both variables so that on the transformed scale the regression is linear. Fit an appropriate linear regression model to the transformed data.
 
 What transformations help this data make a linear relationship?
 
