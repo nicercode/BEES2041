@@ -34,7 +34,7 @@ In this session, we’ll explore **G**eneralized **L**inear **M**odels (*GLMs*),
 
 We’ll focus on two key types of data:
 
-- **Binomial** data – useful for modeling **probabilities**, like whether an event happens or not (e.g., predicting invasive species presence/absence).
+- **Binomial** data – useful for modeling **probabilities**, like whether an event happens or not (e.g., predicting invasive species presence/absence, or organism surival).
 - **Count** data – great for modeling things that happen a certain number of times, like the number of visits to a nesting site or the number of species in a sample.
 
 We’ll learn how to choose the right model, check if our models fit well, interpret results, . By the end, you’ll be equipped to apply GLMs to your own data!
@@ -46,6 +46,8 @@ We’ll learn how to choose the right model, check if our models fit well, inter
 
 Our learning objective today are:
 
+- **understand** different probaility distributions
+- **understand the concept of a link function**
 - **run** a **generalised linear regression** in R using `glm()`
 - **run diagnostic checks** on your  model output using `check_model()` to assess whether it meets the assumptions of a linear model.
 - **interpret** the output of a **generalised linear regression** using:
@@ -93,7 +95,234 @@ In case you don't have them installed, here is code for you to do so:
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
 library(easystats)
+library(patchwork)
 ```
+# GLM Theory
+
+
+
+## Probablity distributions
+
+Before thinking about GLMs, let's refresh our understanding of probability distributions.
+
+We assume that the response variable follows a probability distribution. The choice of distribution depends on the nature of the response variable.
+
+For example, 
+
+- if the response variable is continuous, we might use a normal distribution.
+- If the response variable is binary (e.g., presence/absence), we might use a binomial distribution.
+- If the response variable is a count (e.g., number of species), we might use a Poisson distribution.
+
+
+
+## Binomial distribution
+
+The binomial distribution is used to model the number of successes in a fixed number of trials. The distribution has two parameters: the number of trials $n$ and the probability of success $p$. It generates a series of 0s and 1s, where 1 represents a success.
+
+For exmaple, we can simulate 10 trials with a probability of success of 0.9:
+
+```{r}
+rbinom(n = 10, size = 1, prob = 0.9)
+```
+
+
+## Poisson distribution
+
+
+The Poisson distribution is used to model a count of events per unit of sampling (usually time, space or volume). The distribution has one parameter $\lambda$, which is the mean number of events per unit of sampling.
+
+It generates a series of integers, starting at 0, representing the number of events.
+
+For exmaple, we can the number of events in 10 sampling events, 
+
+```{r}
+rpois(n = 10, lambda = 1.5)
+```
+
+
+## Link functions
+
+A key concept in GLMs is the link function.
+
+A link function provides the relationship between the linear predictor and the mean of the distribution function.  We often denote the linear predictor as $\eta$, where $\eta$ is our usual linear model given by
+
+$$\eta = B0 + B1 * x.$$
+As usual,  $B0$ is the intercept and $B1$ is the slope of the model. (This is the same as the standard linear model you already know.)
+
+A key assumption of GLMs is that $\eta$ is related to the mean of the response variable by a link function, $g$, such that 
+$$g(\mu) = \eta$$
+where $\mu$ is the mean of the response distribution. 
+
+For example, with a bionomial response, the link function $g$ is the logit function:
+
+$$g(\mu) = \log\left(\frac{\mu}{1-\mu}\right)$$
+
+Setting $g(\mu) = \eta$ and rearranging gives
+
+$$\mu = \frac{e^{\eta}}{1+e^{\eta}}$$
+
+So our mean repsonse is a transformation of the linear predictor, creating a non-linear model. 
+
+## Link function for a binomial response
+Plotting the function shows the relationship between the linear predictor and the mean of the response variable.
+
+```{r}
+# Create a sequence of linear predictors
+B0 <- 0 # intercept
+B1 <- 2 # slope
+
+data <- tibble(
+  x = seq(-5, 5, 0.1)
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
+  )
+
+# Plot the relationship
+p1 <- data |>
+  ggplot(aes(x = x, y = eta)) +
+  geom_line() +
+  labs(
+    x = "Linear predictor",
+    y = "Linear predictor",
+    title = "Linear predictor"
+  )
+
+p2 <- data |>
+  ggplot(aes(x = x, y = mu)) +
+  geom_line() +
+  labs(
+    x = "Linear predictor",
+    y = "Mean of the response variable",
+    title = "Link function for a binomial response"
+  )
+
+p1 + p2
+```
+
+## Response distribution
+
+Now imagine drawing random numbers, where the probability of success is given by the mean of the response variable, $\mu$. This is the essence of a GLM.
+
+For the example above, we can simulate data from a binomial distribution with a mean of $\mu$:
+
+```{r}
+# Simulate data
+set.seed(123) # set seed for reproducibility
+
+data_y <- tibble(
+          x = rnorm(40, 1, 2)) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) / (1 + exp(eta)),  # mean of the response variable
+    y = rbinom(n = n(), size = 1, prob = mu) # simulate data
+  )
+
+# Plot the data
+p3 <-
+  data_y |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  labs(
+    x = "x",
+    y = "y",
+    title = "Simulated data"
+  ) +
+  theme_minimal() +
+  # add data from the link function
+  geom_line(data = data, aes(x = x, y = mu), color = "black", linetype = "dashed")
+
+p3
+```
+
+Now let's fit a GLM to this data.
+
+```{r}
+# Fit the model
+model <- glm(y ~ x, data = data_y, family = "binomial") 
+
+# Estimate the means
+means <- estimate_means(model, by = "x", length = 100)
+
+# add to plot above
+p3 + 
+  geom_line(data = means, aes(x = x, y = Probability), color = "red")
+```
+
+## Varying the slope and intercept of the model
+
+Like a linear model, the slope of the model determines the relationship between the linear predictor and the mean of the response variable.
+
+The intercept of the model determines the mean of the response variable when the linear predictor is zero.
+
+We can extract the slope of the fitted model above using the `parameters()` function:
+```{r}
+parameters(model)
+```
+
+Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
+
+Varying the slope of model will make the logistic function steeper or shallower.
+
+```{r}
+# Create a sequence of linear predictors
+B0 <- 0 # intercept
+B1 <- c(0, 0.1, 1, 5) # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B1))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = "Mean of the response variable",
+    title = "Link function for a binomial response"
+  ) +
+  theme_classic() +
+  scale_color_discrete(name = "Slope")
+```
+
+## Varying the intercept of the model
+
+```{r}
+# Create a sequence of linear predictors
+B0 <- c(-2, 0, 2) # intercept
+B1 <- 2 # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B0))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = "Mean of the response variable",
+    title = "Link function for a binomial response"
+  ) +
+  theme_classic() +
+  scale_color_discrete(name = "Intercept")
+```
+
 
 # GLM Binomial
 ## Worked Example: Binomial data
