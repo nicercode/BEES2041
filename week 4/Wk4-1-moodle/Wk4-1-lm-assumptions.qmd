@@ -1,6 +1,8 @@
 ---
 title: "Week 4-1 Linear model assumptions"
-output: html_document
+format: 
+  html:    
+    self-contained: true
 #   moodlequiz::moodlequiz:
 #     replicates: 1
 # moodlequiz:
@@ -44,13 +46,7 @@ Our learning objective today are:
 - **interpret** the output of a **linear regression** 
 - **run diagnostic checks** on your  model output using `check_model()` to assess whether it meets the assumptions of a linear model.
 
-<!-- using: -->
-<!--   - `summary()` -->
-<!--   - `parameters()` -->
-<!--     - **extract** the **confidence interval** for the **slope** and **intercept** of the **regression** line -->
-<!--   - `estimate_means()` -->
-<!-- - **plot** the data and the **regression** line -->
-<!--   - add the **confidence interval** using output of `estimate_means()` -->
+
 
 Let’s dive in! 🚀 
 
