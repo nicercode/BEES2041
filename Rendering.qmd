@@ -9,7 +9,7 @@ library(tidyverse)
 source("R/remove_solutions.R")
 source("R/generate_moodle_quiz.R")
 
-file <- "week 3/Wk3-2-moodle/Wk3-2-communicating.qmd"
+file <- "week 4/Wk4-1-moodle/Wk4-1-lm-assumptions.qmd"
 
 ## Rendering as html
 quarto::quarto_render(file)
@@ -19,26 +19,18 @@ file_student <- str_replace(file, ".qmd", "-student.qmd")
 lines <- readLines(file)
 
 # Remove solutions
-
 lines |>
   remove_solutions() |>
   remove_cloze() |>
   write_lines(file_student)
-```
 
-```{r}
-
-```
-
-```{r}
+# check it runs
 quarto::quarto_render(file_student)
 ```
 
 ## Render as moodle quiz
 ```{r}
-
-
-# file_moodle_quiz <- generate_moodle_quiz(file, webr = TRUE)
+file_moodle_quiz <- generate_moodle_quiz(file, webr = TRUE)
 rmarkdown::render(file_moodle_quiz)
   
 ```

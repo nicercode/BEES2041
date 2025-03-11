@@ -3,8 +3,6 @@ title: "Week 2-1 Sampling from populations"
 output: 
   moodlequiz::moodlequiz:
     replicates: 1
-  html_document:
-    toc: true
 moodlequiz:
   category: "Week 2-1 Sampling from populations"
 editor_options:
