@@ -281,7 +281,7 @@ We can extract the slope of the fitted model above using the `parameters()` func
 parameters(model)
 ```
 
-Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
+Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% confidence interval.
 
 # Theory Poisson
 
@@ -402,12 +402,13 @@ parameters(model)
 Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
 
 
-
 # GLM Binary data
+
+![Feeling crabby with R?](images/crabs.jpg){width=60%}
 
 ## Worked Example: Crabs along the beach
 
-Let's work with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
+Let's applt the theory we learned about with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
 The response variable is **discrete**: 
 
@@ -429,6 +430,8 @@ data_crabs
 
 ## Look at raw data
 
+Its always good practice to take a look at your raw data, especially your response and explanatory/predictor variable.
+
 ```{r}
 ggplot(data_crabs, aes(x = Dist, y = CrabPres)) + 
   geom_jitter(height = 0, width = 0.2, alpha = 0.2, size = 4, colour = "red") + 
@@ -449,7 +452,7 @@ fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
 
 Let's take a look at the output `paramaters()`.
 
-These output is interpreted in a similar manner as for linear model
+We interpret this output in a similar manner as for linear model
 
 ```{r}
 parameters(fit_crab)
@@ -460,6 +463,8 @@ There is no evidence that the presence of crabs varies with distance along the s
 ## Visualising our model estimates
 
 We use `estimate_means()` to do the maths for us and calculate the mean probability of sighting a crab by the different levels of distance we had in our data.
+
+Then we can visualise this with a graphic.
 
 ```{r}
 crab_means <- estimate_means(fit_crab, by = "Dist")
@@ -472,11 +477,11 @@ ggplot(crab_means, aes(x = Dist, y = Probability)) +
 
 # GLM Count data
 
-Let's work with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
+Lets try working with some count data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
 The response variable is **discrete**: 
 
-- `Soleolifera` is the latin name for the order of terrestrial slugs. This column gives us the counts of this taxa.
+- `Soleolifera` is the latin name for the order of terrestrial slugs. This column gives us the **counts** of this taxa.
 
 The predictor is **discrete**:
 
@@ -498,6 +503,8 @@ data_revegetation
 
 ## Look at raw data
 
+Let's try visualise this raw data. Here I am making violin plots and added the counts with `geom_jitter`. I also used `coord_flip` to flip the axes so its easier to look at the distribution of the data
+
 ```{r}
 ggplot(data = data_revegetation, aes(x = Treatment, y = Soleolifera))  + 
   geom_violin(fill = NA) + 
@@ -507,19 +514,25 @@ ggplot(data = data_revegetation, aes(x = Treatment, y = Soleolifera))  +
 
 ## Fit the model
 
+Let's try a GLM usng `family = "poisson"` because we are working with counts of terrestrial slugs.
+
 ```{r}
 slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_revegetation)
 ```
 
 ## Look at model output
 
+Inspect the model output
+
 ```{r}
 parameters(slug_fit)
 ```
 
-Our model indicates strong evidence of a treatment effect  p < 0.001). 
+> There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
 
 ## Visualising our model estimates
+
+We use `estimate_means()` to calculate the mean count of terrestrial slugs for each treatment and use this to create a graph.
 
 ```{r}
 slug_means <- estimate_means(slug_fit, by = "Treatment")
@@ -531,11 +544,11 @@ ggplot(slug_means, aes(x = Treatment, y = Mean)) +
   coord_flip()
 ```
 
-There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
-
 # Over to you!
 
 ## Example 1: Mites 
+
+![](images/mites.jpg){width=60%}
 
 **Exercises:**
 
@@ -544,18 +557,21 @@ There is strong evidence of a positive effect of bush regeneration on the abunda
 - Use your model output to elp you answer the questions
 
 ```{r}
+# Load in data
 mites <- read_csv("data/mites.csv")
 
+# Raw data - scatterplot
 ggplot(mites, aes(x = SubsDens, y = pa)) + 
   geom_point() + 
   theme_minimal()
 
+# Fit a model
 mite_subs_fit <- glm(pa ~ SubsDens,
                  data = mites,
                  family = "binomial")
 
+# Look at model output
 parameters(mite_subs_fit)
-estimate_means(mite_subs_fit, by = "SubsDens")
 ```
 
 **Questions:**
@@ -572,11 +588,13 @@ The Intercept in this context represents the probability of observing the Galumn
 
 The slope `SubsDen` is `r cloze("positive", c("positive", "negative"))`. This means the probability of observing the mite `r cloze("increases", c("decreases", "increases"))` with substrate density.
 
-4. **Interpret the Pp-value for the slope `SubDens`**
+4. **Interpret the P-value for the slope `SubDens`**
 
 The p-value of `r cloze("0.360",c("0.360", "0.123", "0.915"))` for the slope `SubDens`. This indicates that there is `r cloze("moderate", c("moderate", "low", "high"))` probability there is `r cloze("no", c("a strong", "no"))` relationship between the presence of mites and substrate density
 
 ## Example 2: Bacterial treatment 
+
+![](images/bacteria.jpeg){width=60%}
 
 Using the bacteria dataset (from the `MASS` R package), try and model the presence of _H. influenzae_ as a function of week of test. 
 
@@ -593,7 +611,7 @@ Medical researchers collected data on the presence of the bacteria H. influenzae
 library(MASS)
 
 # Look at data
-bacteria
+head(bacteria)
 
 # Fit a GLM
 bacteria_fit <- glm(y ~ week, data = bacteria, family = "binomial")
@@ -607,23 +625,25 @@ estimate_means(bacteria_fit, by = "week")
 
 **Questions:**
 
-1. What type of variable is `y`? What distribution can we use to represent it well? Hint: Make a scatterplot and see for yourself
+1. **What type of variable is `y`? What distribution can we use to represent it well?** _Hint: Make a scatterplot and see for yourself_
 
 `y` is the `r cloze("presence and absence/", c("presence and absence/", "count", "denisty"))` of the bacteria _H. influenzae_. A `r cloze("binomial",c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
 
-2. Interpret the slope `week`
+2. **Interpret the slope `week`**
 
 The `r cloze("negative", c("negative", "positive"))` value for the slope indicates that the probability of detecting the bacteria _H. influenzae_ `r cloze("decreases", c("decreases", "increases"))` as weeks pass.
 
-3. What is the p-value for the slope `week` represent?
+3. **What is the p-value for the slope `week` represent?**
 
 The p-value for the slope `week` represents the probabilty there is `r cloze("no", c("no", "a strong", "a weak"))` relationship between the `r cloze("presence of bacteria H. influenzae", c("presence of bacteria H. influenzae", "intercept"))` with `r cloze("week", c("week", "patient age", "patient location"))`.
 
-4. What does the p-value for the slope `week` mean then?
+4. **What does the p-value for the slope `week` mean then?**
 
 The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
 
 ## Example 3: Faramea trees in Panama
+
+![](images/faramea.jpeg){width=60%}
 
 The dataset contains the number of trees of the species _Faramea occidentalis_  measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
 
@@ -653,19 +673,21 @@ parameters(faramea_fit) |> tibble()
 
 **Questions:**
 
-1. Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this? 
+1. **Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this? **
 
 The histogram shows that the counts of `Faramea.occidentalis` are `r cloze("right-skewed", c("right-skewed", "left-skewed"))`. The variable consists of mostly `r cloze("0s", c("0s", "10s",  "20s"))`. The variable `Faramea.occidentalis` is considered `r cloze("count",c("count","binary", "continuous"))` data and would be best represented by a `r cloze("binomial",c("binomial", "normal", "Poisson"))` distribution. 
 
-2. Interpret the slope for `Elevation`
+2. **Interpret the slope for `Elevation`**
 
 The slope is `r cloze("negative", c("positive", "negative"))`, indicating the counts for _Faramea occidentalis_ `r cloze("decreases", c("decreases", "increases"))` with increasing `r cloze("elevation",c("density", "elevation", "temperature"))`.
 
-3. Interpret the CI for `Elevation`. Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`
+3. **Interpret the CI for `Elevation`.** _Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`_
 
 The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (lower) and `r cloze("-0.00157", c("-0.00157", "1.98", "0.95"))` (upper). The interval represents where the true `r cloze("population", c("sample", "population"))` mean estimate for the `r cloze("slope", c("slope", "intercept", "counts"))` could lie 95% percent of the time. 
 
 ## Example 4: Mite counts with water content
+
+![](images/mites.jpg){width=60%}
 
 Using the `mites` data, try model the abundance of the species `Galumna` as a function of water content `WatrCont`.
 
@@ -704,19 +726,19 @@ ggplot(galumna_means, aes(x = WatrCont, y = Mean)) +
 ```
 
 **Questions:**
-1. Make a histogram of `Galumna` counts, describe its distribution.
+1. **Make a histogram of `Galumna` counts, describe its distribution.**
 
 The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "left-skewed"))`, meaning there are lots of `r cloze("small", c("small", "large"))` values in the variable. This data is count data and resembles a `r cloze("Poisson", c("binomial", "Poisson", "normal"))`.
 
-2. Make a scatterplot of `Galumna` and `WatrCont.` Why do you think the data is not suited for a linear model? 
+2. **Make a scatterplot of `Galumna` and `WatrCont.` Why do you think the data is not suited for a linear model?**
 
 The scatterplot shows that the data is not `r cloze("continuous", c("continuous", "Poissrandomon", "corrected"))` (there are horizontal lines of points). The plot also shows that the points are `r cloze("not evenly spread out", c("outliers", "not evenly spread out"))`. These characteristics suggests that a linear model is not suited for this type of data.  
 
-3. Interpret the slope `WatrCont` and its p-value. 
+3. **Interpret the slope `WatrCont` and its p-value. **
 
 The slope for WaterCont is `r cloze("negative", c("positive", "negative"))`, suggesting that as water content `r cloze("increases", c("decreases", "increases"))`, the counts of Galumna decreases. The p-value tells us that there is very `r cloze("low", c("low", "high"))` probability that there is no relationship between water content and mite count.
 
-4. Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we still mite counts start to taper off? 
+4. **Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we still mite counts start to taper off? **
 
 The `r cloze("mean", c("minium", "mean", "maximum"))`  counts for Galumna, starts to taper off at `r cloze("600", c("200", "400", "600"))`.
 
