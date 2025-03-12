@@ -13,8 +13,9 @@ format:
 
 ---
 
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
@@ -50,21 +51,16 @@ We’ll learn how to choose the right model, check if our models fit well, inter
 
 Our learning objective today are:
 
-- **understand** different probaility distributions
-- **understand the concept of a link function**
-- **run** a **generalised linear regression (GLM)** in R using `glm()`
-- **interpret** the output of a **GLM** using:
-  - `parameters()`
-- **extract** the **confidence interval** for the **slope** and **intercept** of the **regression** line
-  - `estimate_means()`
-- **plot** the data and the **regression** line
-  - add the **confidence interval** using output of `estimate_means()`
+- **understand** different probaility distribution
+- **understand** the concept of a link function
+- **run** a generalised linear regression (GLM) in R using `glm()`
+- **interpret** the output of a GLM using:
+- **extract** the mean and confidence interval for the slope and intercept of the regression line
+- **plot** the data and the regression line with confidence intervals
 
 Let’s dive in! 🚀 
 
-## Setting up
-
-**Materials:**
+## Setting up: Materials
 
 Everything you need for this prac is on Moodle
 
@@ -79,7 +75,7 @@ We will be working with various datasets collected. These are in the folder `dat
 
 You will work in the relevant Quarto document for this prac. Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
 
-**Setting up: Packages:**
+## Setting up: Packages
 
 We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
 
@@ -105,17 +101,19 @@ library(patchwork)
 
 ## Why do we need GLMs? 
 
-Linear models assume **constant variance**. We learned to transform data and which can help us fit better linear models but in some cases, transformations is not enough to fulfill the assumptions of a linear model. 
+The standard linear models we used previosuly make several rather srtict assumptions, including: 
 
-For example, **discrete** response data, like **counts** and **presence/absence** data, generally exhibit a **mean-variance relationship**. This means, for counts that are on average 5, we would expect most samples to be between about 1 and 9, but for counts that are on average 500, most of the observations will tend to be between 450 and 550, giving us a much larger variance when the mean is large. 
+- residuals are normally distributed
+- constant variance, and 
+- a linear repsonses. 
 
-In situations where our response is discrete and exhibit a mean-variance relationship, we turn to **GLMs**! 
+We learned to transform data and  which can help us fit a better linear model but in many cases, this is not enough to fulfill the assumptions of a linear model. 
 
-## Probablity distributions
+In these situations,  a **G**eneralized **L**inear **M**odel (**GLM**) is often a good toool. 
 
-**Linear models** also assumes the underlying distribution for the response variable is **normal**, but sometimes that assumption is violated, meaning our data comes from a **non-normal distribution**. We used **GLMs** when working with **non-normal distributions**
+**Probablity distributions**
 
-As data scientists, we need to choose an appropiate distribution that represents our data. For example: 
+GLMs are a generalisation of linear models that allow us to model different types of responses. As data scientists, we need to choose an appropiate distribution that represents our data. For example: 
 
 - if the response variable is **binary** (e.g., presence/absence), we might use a **binomial** distribution.
 
@@ -124,6 +122,22 @@ As data scientists, we need to choose an appropiate distribution that represents
 - If the response variable is a **count** (e.g., number of species sighted in an hour), we might use a **Poisson** distribution.
 
 ![](images/counts-discrete.png){width=40%}
+
+**Link functions**
+
+A key concept in GLMs is the **link function**.
+
+A link function provides the relationship between the linear model and the mean of the distribution function.  We often denote the outcome of the linear model as $\eta$, where $\eta$ is our usual linear model given by
+$$\eta = B0 + B1 * x.$$
+
+As usual, $B0$ is the intercept and $B1$ is the slope of the model. (This is the same as the standard linear model you already know.)
+
+GLMs assume that $\eta$ is related to the mean of the response variable by a link function, $g$, such that 
+$$g(\mu_y) = \eta$$
+where $\mu_y$ is the mean of the response distribution. 
+
+
+# GLMs for binary data
 
 ## Binomial distribution
 
@@ -140,30 +154,7 @@ For example, we can draw 10 numbers (**trials**) from the **binomal distribution
 rbinom(n = 10, size = 1, prob = 0.9)
 ```
 
-## Poisson distribution
-
-The **Poisson distribution** is used to represent a **count of events per unit of sampling** (usually time, space or volume). For example, the number of invasive weeds in a quadrat. The **Poisson distribution**has one parameter $\lambda$, which is the **mean number of events per unit of sampling**.
-
-The **Poisson distribution** generates a list of integers (whole numbers), starting at 0, representing the number of events that took place.
-
-For example, we can count the number of events in 10 sampling events with mean rate of 1.5 events per unit. Change the `lambda` value to see how that changes the number of events observed.
-
-```{r}
-rpois(n = 10, lambda = 1.5)
-```
-
-## Link functions
-
-A key concept in GLMs is the **link function**.
-
-A **link function** provides the relationship between  $x$ and the mean of the distribution function.  We often denote $x$  as $\eta$, where $\eta$ is our usual linear model given by
-
-$$\eta = B0 + B1 * x.$$
-As usual, $B0$ is the intercept and $B1$ is the slope of the model. (This is the same as the standard linear model you already know.)
-
-GLMs assume that $\eta$ is related to the mean of the response variable by a link function, $g$, such that 
-$$g(\mu_y) = \eta$$
-where $\mu_y$ is the **mean of the response distribution**. 
+## Link function for a binomial response
 
 For example, with a **binomial** response, the link function $g$ is the **logit** function:
 
@@ -173,13 +164,12 @@ Setting $g(\mu_y) = \eta$ and rearranging gives
 
 $$\mu_y = \frac{e^{\eta}}{1+e^{\eta}}$$
 
-So our mean repsonse is obtained via a transformation of $x$ , creating a non-linear model. 
+So our mean repsonse is obtained via a transformation of $x$ , creating a model than has a non-linear response, but is still based ona  linear model in $x$. 
 
-# Theory Binomial 
+It may help to visualise this. Let's plot 
 
-## Link function for a binomial response
-
-It may help to visualise the **link functions**. Let's consider a **binomial** response, where the mean of the response variable is given by the **logit** function above.  Plotting the function shows the relationship between $x$  and the mean of the response variable.
+- the linear predictor $\eta$
+- the mean of the response variable $\mu_y$
 
 ```{r}
 #| code-fold: true
@@ -189,7 +179,7 @@ B1 <- 2 # slope
 
 data <- tibble(
   x = seq(-5, 5, 0.1)
-) |>
+  ) |>
   mutate(
     eta = B0 + B1 * x, # linear predictor
     mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
@@ -244,7 +234,7 @@ p3 <-
   geom_point(col = "red") +
   labs(
     x = "x",
-    y = "Number of events",
+    y = "Probability",
     title = "Simulated data"
   ) +
   theme_minimal() +
@@ -255,10 +245,9 @@ p3
 ```
 
 
-In the real world, we don't know the true relationship between $x$  and the mean of the response variable. We have to estimate this from the data. This is where GLMs come in!
+In the real world, we don't know the true relationship between $x$  and $y$; we have to estimate this from the data. This is where GLMs come in!
 
 So let's imagine we have the data above, but don't know the true relationship. 
-
 
 We can fit a GLM to the data to estimate the relationship:
 
@@ -286,129 +275,6 @@ parameters(model)
 ```
 
 Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% confidence interval.
-
-# Theory Poisson
-
-## Link function for a Poisson response
-
-Now let's consider a **Poisson** response. The link function $g$ is the **log** function, such that
-
-$$g(\mu_y) = \log(\mu_y)$$
-
-Rearranging gives
-
-$$\mu_y = e^{\eta}$$
-
-So the **mean of the response variable** is given by the **exponential** of $\eta$. Plotting the function shows the relationship between the linear predictor and the mean of the response variable.
-
-```{r, echo=FALSE}
-# Create a sequence of linear predictors
-B0 <- 0 # intercept
-B1 <- 0.8 # slope
-
-data <- tibble(
-  x = seq(-5, 5, 0.1)
-) |>
-  mutate(
-    eta = B0 + B1 * x, # linear predictor
-    mu = exp(eta) # mean of the response variable
-  )
-
-# Plot the relationship
-p1 <- data |>
-  ggplot(aes(x = x, y = eta)) +
-  geom_line() +
-  labs(
-    x = "x",
-    y = expression(eta),
-    title = "Linear model"
-  ) +
-  theme_minimal()
-
-p2 <- data |>
-  ggplot(aes(x = x, y = mu)) +
-  geom_line() +
-  labs(
-    x = "x",
-    y = expression(mu[y]),
-    title = "Mean of the response variable"
-  ) +
-  theme_minimal() 
-
-p1 + p2
-```
-
-So the rate of events increases exponentially with the linear predictor. In other words, the higher $x$, the more events are predicted to occur in a given preiod. 
-
-## Response distribution
-
-Now imagine drawing random numbers, where the **mean rate of events occurring** is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
-
-```{r, echo = FALSE}
-# Simulate data
-set.seed(123) # set seed for reproducibility
-
-data_y <- tibble(
-          x = rnorm(40, 1, 2)) |>
-  mutate(
-    eta = B0 + B1 * x, # linear predictor
-    mu = exp(eta),  # mean of the response variable
-    y = rpois(n = n(), lambda = mu) # simulate data
-  )
-
-# Plot the data
-p3 <-
-  data_y |>
-  ggplot(aes(x = x, y = y)) +
-  geom_point(col="red") +
-  labs(
-    x = "x",
-    y = "y",
-    title = "Simulated data"
-  ) +
-  theme_minimal() +
-  # add data from the link function
-  geom_line(data = data, aes(x = x, y = mu), color = "black", linetype = "dashed")
-
-p3
-```
-
-
-In the real world, we don't know the true relationship between the linear predictor and the mean of the response variable. We have to estimate this from the data. This is where GLMs come in!
-
-So let's imagine we have the data above, but don't know the true relationship between $x$  and the mean of the response variable. 
-
-We can fit a GLM to the data to estimate the relationship:
-
-```{r}
-# Fit the model
-model <- glm(y ~ x, data = data_y, family = "poisson") 
-
-# Estimate the means
-means <- estimate_means(model, by = "x", length = 100)
-```
-
-Now we can plot the data and the fitted model:
-
-```{r, echo = FALSE}
-# add to plot above
-p3 +
-  geom_line(data = means, aes(x = x, y = Mean), color = "red") +
-  geom_ribbon(data = means, aes(x = x, y = Mean, ymin = CI_low, ymax = CI_high), fill = "grey", alpha = 0.2)
-```
-
-
-We can extract the slope of the fitted model above using the `parameters()` function:
-```{r}
-parameters(model)
-```
-
-Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
-
-
-# GLM Binary data
-
-![Feeling crabby with R?](images/crabs.jpg){width=60%}
 
 ## Worked Example: Crabs along the beach
 
@@ -479,77 +345,6 @@ ggplot(crab_means, aes(x = Dist, y = Probability)) +
   theme_minimal()
 ```
 
-# GLM Count data
-
-Lets try working with some count data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
-
-The response variable is **discrete**: 
-
-- `Soleolifera` is the latin name for the order of terrestrial slugs. This column gives us the **counts** of this taxa.
-
-The predictor is **discrete**:
-
-- `Treatment` 
-
-## Worked Example: Slugs during revegetation
-
-![Ya snailed it!](images/snails.jpg){width=60%}
-
-## Read in data
-
-Let's load the data and have a look at the first few rows of the dataset
-
-```{r}
-data_revegetation <- read_csv("data/Revegetation.csv")
-
-data_revegetation
-```
-
-## Look at raw data
-
-Let's try visualise this raw data. Here I am making violin plots and added the counts with `geom_jitter`. I also used `coord_flip` to flip the axes so its easier to look at the distribution of the data
-
-```{r}
-ggplot(data = data_revegetation, aes(x = Treatment, y = Soleolifera))  + 
-  geom_violin(fill = NA) + 
-  geom_jitter(aes(colour = Treatment),alpha = 0.5, width = 0.2, size = 2 ) +   theme_minimal() + 
-  coord_flip()
-```
-
-## Fit the model
-
-Let's try a GLM usng `family = "poisson"` because we are working with counts of terrestrial slugs.
-
-```{r}
-slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_revegetation)
-```
-
-## Look at model output
-
-Inspect the model output
-
-```{r}
-parameters(slug_fit)
-```
-
-> There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
-
-## Visualising our model estimates
-
-We use `estimate_means()` to calculate the mean count of terrestrial slugs for each treatment and use this to create a graph.
-
-```{r}
-slug_means <- estimate_means(slug_fit, by = "Treatment")
-
-ggplot(slug_means, aes(x = Treatment, y = Mean)) + 
-  geom_col(aes(colour = Treatment, fill = Treatment)) + 
-  geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
-  theme_minimal() + 
-  coord_flip()
-```
-
-# Over to you!
-
 ## Example 1: Mites 
 
 ![](images/mites.jpg){width=60%}
@@ -606,13 +401,18 @@ Medical researchers collected data on the presence of the bacteria H. influenzae
 
 **Exercises:**
 
-- Install and load the `MASS` package and the bacteria dataset. 
+- load the bacteria dataset.
+- you'll need to convert the `y` variable to a binary format 
 - Fit an appropiate model for this type of data
 - Use the output to answer the following questions
 
 ```{r}
-# install.packages("MASS")
-library(MASS)
+# generate data
+# MASS::bacteria |> mutate(
+#   y = ifelse(y == "y", 1, 0)) |> write_csv("data/bacteria.csv")
+
+# Look at data
+bacteria <- read_csv("data/bacteria.csv") 
 
 # Look at data
 head(bacteria)
@@ -623,8 +423,14 @@ bacteria_fit <- glm(y ~ week, data = bacteria, family = "binomial")
 # Look at model output
 parameters(bacteria_fit)
 
-# Estimate means 
-estimate_means(bacteria_fit, by = "week")
+# Estimate means
+means <- estimate_means(bacteria_fit, by = "week", length = 100)
+
+# Plot the data
+ggplot(bacteria, aes(x = week, y = y)) +
+  geom_jitter(width=0.1, height = 0.1) +
+  geom_line(data = means, aes(x = week, y = Probability), col = "red") +
+  theme_minimal()
 ```
 
 **Questions:**
@@ -643,7 +449,205 @@ The p-value for the slope `week` represents the probabilty there is `r cloze("no
 
 4. **What does the p-value for the slope `week` mean then?**
 
-The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+
+# GLMs for count data
+
+## Poisson distribution
+
+The **Poisson distribution** is used to represent a **count of events per unit of sampling** (usually time, space or volume). For example, the number of invasive weeds in a quadrat. The Poisson distribution has one parameter $\lambda$, which is the **mean number of events per unit of sampling**.
+
+The **Poisson distribution** generates a list of integers (whole numbers), starting at 0, representing the number of events that took place.
+
+For example, if we count the number of events in 10 sampling events with mean rate of 1.5 events per unit, the data may look like this. 
+
+```{r}
+rpois(n = 10, lambda = 1.5)
+```
+
+Change the `lambda` value to see how that changes the number of events observed per sample.
+
+## Link function for a Poisson response
+
+The link function $g$ for the Poisson distribution is the log function, such that
+
+$$g(\mu_y) = \log(\mu_y)$$
+
+Rearranging gives
+
+$$\mu_y = e^{\eta}$$
+
+So the mean of the response variable is given by the exponential of $\eta$. 
+
+Plotting the function shows the relationship between the linear predictor $x$ with both $\eta$ and $\mu_y$.
+
+```{r, echo=FALSE}
+# Create a sequence of linear predictors
+B0 <- 0 # intercept
+B1 <- 0.8 # slope
+
+data <- tibble(
+  x = seq(-5, 5, 0.1)
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) # mean of the response variable
+  )
+
+# Plot the relationship
+p1 <- data |>
+  ggplot(aes(x = x, y = eta)) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(eta),
+    title = "Linear model"
+  ) +
+  theme_minimal()
+
+p2 <- data |>
+  ggplot(aes(x = x, y = mu)) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal() 
+
+p1 + p2
+```
+
+As you can see from the plot above, the mean of the response variable is a non-linear function of $x$, and the average rate of events increases exponentially with the linear predictor. 
+
+In other words, the higher $x$, the more events are predicted to occur in a given preiod. 
+
+## Response distribution
+
+Now imagine drawing random numbers, where the avarerage rate of events is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
+
+```{r, echo = FALSE}
+# Simulate data
+set.seed(123) # set seed for reproducibility
+
+data_y <- tibble(
+          x = rnorm(40, 1, 2)) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta),  # mean of the response variable
+    y = rpois(n = n(), lambda = mu) # simulate data
+  )
+
+# Plot the data
+p3 <-
+  data_y |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(col="red") +
+  labs(
+    x = "x",
+    y = "y",
+    title = "Simulated data"
+  ) +
+  theme_minimal() +
+  # add data from the link function
+  geom_line(data = data, aes(x = x, y = mu), color = "black", linetype = "dashed")
+
+p3
+```
+
+
+In the real world, we don't know the true relationship x and the response variable; we have to estimate this from the data.
+
+So let's imagine we have the data above, but don't know the true relationship between $x$  and the mean of the response variable. 
+
+We can fit a GLM to the data to estimate the relationship:
+
+```{r}
+# Fit the model
+model <- glm(y ~ x, data = data_y, family = "poisson") 
+
+# Estimate the means
+means <- estimate_means(model, by = "x", length = 100)
+```
+
+Now we can plot the data and the fitted model:
+
+```{r, echo = FALSE}
+# add to plot above
+p3 +
+  geom_line(data = means, aes(x = x, y = Mean), color = "red") +
+  geom_ribbon(data = means, aes(x = x, y = Mean, ymin = CI_low, ymax = CI_high), fill = "grey", alpha = 0.2)
+```
+
+
+We can extract the slope of the fitted model above using the `parameters()` function:
+```{r}
+parameters(model)
+```
+
+Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
+
+
+## Worked Example: Slugs during revegetation
+
+![Ya snailed it!](images/snails.jpg){width=60%}
+
+Let's work with some data collected by some students in our department who wanted to investigate **how the abundnace of slbus varied under two experimental treatemnts**. 
+
+The response variable is **discrete**: 
+
+- `Soleolifera` is the latin name for the order of terrestrial slugs. This column gives us the counts of this taxa.
+
+The predictor is **discrete**:
+
+- `Treatment` 
+
+
+## Read in data
+
+Let's load the data and have a look at the first few rows of the dataset
+
+```{r}
+data_revegetation <- read_csv("data/Revegetation.csv")
+
+data_revegetation
+```
+
+## Look at raw data
+
+```{r}
+ggplot(data = data_revegetation, aes(x = Treatment, y = Soleolifera))  + 
+  geom_violin(fill = NA) + 
+  geom_jitter(aes(colour = Treatment),alpha = 0.5, width = 0.2, size = 2 ) +   theme_minimal() + 
+  coord_flip()
+```
+
+## Fit the model
+
+```{r}
+slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_revegetation)
+```
+
+## Look at model output
+
+```{r}
+parameters(slug_fit)
+```
+
+Our model indicates strong evidence of a treatment effect  (p < 0.001). 
+
+## Visualising our model estimates
+
+```{r}
+slug_means <- estimate_means(slug_fit, by = "Treatment")
+
+ggplot(slug_means, aes(x = Treatment, y = Mean)) + 
+  geom_col(aes(colour = Treatment, fill = Treatment)) + 
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
+  theme_minimal()
+```
+
+There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
 
 ## Example 3: Faramea trees in Panama
 
@@ -664,15 +668,27 @@ faramea <- read_csv("data/faramea.csv")
 
 # Make a histogram
 ggplot(faramea, aes(x = Faramea.occidentalis)) +
-  geom_histogram() + 
+  geom_histogram() +
   theme_minimal()
 
 # Fit a Poisson GLM
-faramea_fit  = glm(Faramea.occidentalis ~ Elevation,
-  data = faramea, family = poisson) 
+faramea_fit <- glm(Faramea.occidentalis ~ Elevation,
+  data = faramea, family = poisson
+)
 
 # Look at model output
 parameters(faramea_fit) |> tibble()
+
+# Estimate means
+means <- estimate_means(faramea_fit, by = "Elevation")
+
+# Visualise means
+ggplot(means, aes(x = Elevation, y = Mean)) +
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), fill = "grey") +
+  geom_line() +
+  geom_point(data = faramea, aes(x = Elevation, y = Faramea.occidentalis), col = "red") +
+  theme_classic()
+
 ```
 
 **Questions:**
@@ -681,13 +697,13 @@ parameters(faramea_fit) |> tibble()
 
 The histogram shows that the counts of `Faramea.occidentalis` are `r cloze("right-skewed", c("right-skewed", "left-skewed"))`. The variable consists of mostly `r cloze("0s", c("0s", "10s",  "20s"))`. The variable `Faramea.occidentalis` is considered `r cloze("count",c("count","binary", "continuous"))` data and would be best represented by a `r cloze("binomial",c("binomial", "normal", "Poisson"))` distribution. 
 
-2. **Interpret the slope for `Elevation`**
+2. **Interpret the slope for the predictor `Elevation`**
 
 The slope is `r cloze("negative", c("positive", "negative"))`, indicating the counts for _Faramea occidentalis_ `r cloze("decreases", c("decreases", "increases"))` with increasing `r cloze("elevation",c("density", "elevation", "temperature"))`.
 
 3. **Interpret the CI for `Elevation`.** _Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`_
 
-The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (lower) and `r cloze("-0.00157", c("-0.00157", "1.98", "0.95"))` (upper). The interval represents where the true `r cloze("population", c("sample", "population"))` mean estimate for the `r cloze("slope", c("slope", "intercept", "counts"))` could lie 95% percent of the time. 
+The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (lower) and `r cloze("-0.00157", c("-0.00157", "1.98", "0.95"))` (upper). We are `r cloze("95%", c("5%", "95%", "97.5%"))` sure the true `r cloze("population", c("sample", "population"))` value of the `r cloze("slope", c("slope", "intercept", "counts"))` lies within this range.
 
 ## Example 4: Mite counts with water content
 
@@ -746,15 +762,17 @@ The slope for WaterCont is `r cloze("negative", c("positive", "negative"))`, sug
 
 The `r cloze("mean", c("minium", "mean", "maximum"))`  counts for Galumna, starts to taper off at `r cloze("600", c("200", "400", "600"))`.
 
-# Bonus knowledge!
+# Extensions
 
 ## Binomial: Varying the slope and intercept of the model
 
-Like a linear model, the slope of the model determines the relationship between the linear predictor and the mean of the response variable.
+Assuming you made it this far, you may be interested in how the slope and intercept of the model affect the mean of the response variable.
 
-The intercept of the model determines the mean of the response variable when the linear predictor is zero.
+**Varying the slope of the model**
 
-Varying the slope of model will make the logistic function steeper or shallower.
+Like a linear model, the slope of the model determines the relationship between the linear predictor and the mean of the response variable. However, the effects are modified by the link function and no longer linear.
+
+The following plot shows the mean of the response variable for different slopes of the binomial model.
 
 ```{r, echo=FALSE}
 # Create a sequence of linear predictors
@@ -785,7 +803,12 @@ data |>
   scale_color_discrete(name = "Slope")
 ```
 
-## Binomial: Varying the intercept of the model
+As you can see,
+
+- Varying the slope of model will make the logistic function steeper or shallower.
+- The intercept of the model determines the mean of the response variable when the linear predictor is zero.
+
+**Varying the intercept of the model**
 
 ```{r, echo = FALSE}
 # Create a sequence of linear predictors
@@ -819,11 +842,10 @@ data |>
 
 ## Poisson: Varying the slope and intercept of the model
 
-Like a linear model, the slope of the model determines the relationship between $x$  and the mean of the response variable.
 
-The intercept of the model determines the mean of the response variable when $x$  is zero.
+**Varying the slope of the model**
 
-Varying the slope of model will make the logistic function steeper or shallower.
+The following plot shows the mean of the response variable for different slopes of the Poisson model.
 
 ```{r, echo=FALSE}
 # Create a sequence of linear predictors
@@ -854,7 +876,7 @@ data |>
   scale_color_discrete(name = "Slope")
 ```
 
-## Poisson: Varying the intercept of the model
+**Varying the intercept of the model**
 
 Changing the intercept of the model will shift the distribution up and down. Technically, it specifies  the value of log(y) when x = 0.
 
