@@ -543,7 +543,8 @@ data |>
 
 
 # GLM Binomial
-## Worked Example: Binomial data
+
+## Worked Example: Crabs along the beach
 
 Let's work with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
@@ -563,6 +564,14 @@ Let's load the data and have a look at the first few rows of the dataset
 data_crabs <- read_csv("data/Crabs.csv")
 
 data_crabs
+```
+
+## Look at raw data
+
+```{r}
+ggplot(data_crabs, aes(x = Dist, y = CrabPres)) + 
+  geom_jitter(height = 0, width = 0.2, alpha = 0.2, size = 4, colour = "red") + 
+  theme_minimal()
 ```
 
 ## Fit the model
@@ -585,7 +594,6 @@ These output is interpreted in a similar manner as for linear model, but we need
 parameters(fit_crab)
 summary(fit_crab)
 ```
-
 
 If $p$ is the probability of crab presence, this output tells us:
 
@@ -622,14 +630,63 @@ estimate_means(fit_crab, by = "Dist")
 
 # GLM Count
 
-## Worked Example: Count data
+Let's work with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
+
+The response variable is **discrete**: 
+
+- `Soleolifera` is the latin name for the order of terrestrial slugs. This column gives us the counts of this taxa.
+
+The predictor is **discrete**:
+
+- `Treatment` 
+
+## Worked Example: Slugs during revegetation
 
 ## Read in data
+
+Let's load the data and have a look at the first few rows of the dataset
+
+```{r}
+data_revegetation <- read_csv("data/Revegetation.csv")
+
+data_revegetation
+```
+
+## Look at raw data
+
+```{r}
+ggplot(data = data_revegetation, aes(x = Treatment, y = Soleolifera))  + 
+  geom_violin(fill = NA) + 
+  geom_jitter(aes(colour = Treatment),alpha = 0.5, width = 0.2, size = 2 ) +   theme_minimal() + 
+  coord_flip()
+```
+
 ## Fit the model
+
+```{r}
+slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_revegetation)
+```
 
 ## Look at model output
 
-## Visualise our model estimates
+```{r}
+summary(slug_fit)
+parameters(slug_fit)
+```
+
+Tests indicate strong evidence of a treatment effect (p<0.001). To extract the model equation we can look at the coefficients from the fit.
+
+## Back transformation and visualising our model estimates
+
+The default link function for Poisson is log(). If we write the mean count as $λ$
+
+$log(λ)=−0.92+2.12×Treatment$
+
+```{r}
+estimate_means(slug_fit)
+```
+
+There is strong evidence of positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
 
 # Over to you!
 ## Over to you! GLM - Binomial data
