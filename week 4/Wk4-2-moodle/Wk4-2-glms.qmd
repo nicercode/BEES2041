@@ -780,20 +780,21 @@ In this dataset, the number of trees of the species Faramea occidentalis was mea
 ```{r}
 faramea <- read_csv("data/faramea.csv")
 
-# Histogram of F. occidentalis count data
-hist(faramea$Faramea.occidentalis, breaks=seq(0,45,1), xlab=expression(paste("Number of ",
-italic(Faramea~occidentalis))), ylab="Frequency", main="", col="grey")
+ggplot(faramea, aes(x = Faramea.occidentalis)) +
+  geom_histogram() + 
+  theme_minimal()
 
 # Fit a Poisson GLM
-glm.poisson = glm(Faramea.occidentalis ~ Elevation,
-  data = faramea,
-  family = poisson) # this is what makes it a Poisson GLM! Note the default link is log.
-summary(glm.poisson)
+faramea_fit  = glm(Faramea.occidentalis ~ Elevation,
+  data = faramea, family = poisson) 
+
+parameters(faramea_fit)
 ```
 
 
 **Questions:**
-1.
+1. Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this? 
+
 2.
 3.
 4.
