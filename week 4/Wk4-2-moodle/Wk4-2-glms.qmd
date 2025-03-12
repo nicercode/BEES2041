@@ -604,7 +604,7 @@ There is no evidence that the presence of crabs varies with distance along the s
 
 For each additional unit of distance, the odds of crab presence increase by a factor of exp(0.05804) ≈ 1.06, though this effect is not statistically significant (p = 0.364).
 
-## Back transformation and visualising our model estimates
+## Visualising our model estimates
 
 When we get a log-odds (logit) coefficient from logistic regression, it’s not directly interpretable as a probability. We need to backtransform it using the logistic function:
 
@@ -754,7 +754,7 @@ estimate_means(bacteria_fit, by = "week")
 
 **Questions:**
 
-1. What type of variable is `y`? What distribution can we use to represent it well?
+1. What type of variable is `y`? What distribution can we use to represent it well? Hint: Make a scatterplot and see for yourself
 
 `y` is the presence/absence/ count/density of the bacteria H. influenzae. A binomial/Poisson/normal distribution will represent this type of data well. 
 
@@ -788,33 +788,69 @@ ggplot(faramea, aes(x = Faramea.occidentalis)) +
 faramea_fit  = glm(Faramea.occidentalis ~ Elevation,
   data = faramea, family = poisson) 
 
-parameters(faramea_fit)
+parameters(faramea_fit) |> tibble()
 ```
 
 
 **Questions:**
+
 1. Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this? 
 
-2.
-3.
-4.
+The histogram shows that the counts of `Faramea.occidentalis` are right-skewed/left skewed. The dataset consists of mostly 0s/10s/20s. This is considered count/binary/continuous data and would be best represented by a binomial/normal/Poisson distribution. 
+
+2. Interpret the slope for `Elevation`
+
+The slope is negative/positive, indicating the counts for _Faramea occidentalis_ decreases/increases with increasing elevation/temperature/density.
+
+3. Interpret the CI for `Elevation`. Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`
+
+The CI for the slope is -0.00410 and -0.00157. The interval represents where the true population mean estimate for the slope/intercept/counts could lie 95% percent of the time. 
+
 ## Example 2: Mite counts with water content
 
 Use the mites dataset! Model the abundance of the species Galumna as a function of the substrate characteristics (water content WatrCont and density SubsDens)
 
-
 **Exercises:**
 
 ```{r}
+# Load data
 mites <- read_csv("data/mites.csv")
 
-glm.p = glm(Galumna~WatrCont, data=mites, family=poisson)
+# Raw data - histogram
+ggplot(mites, aes(x = Galumna)) + 
+  geom_histogram()
+
+ggplot(mites, aes(x = WatrCont, y = Galumna)) + 
+  geom_point()
+
+galumna_fit = glm(Galumna~WatrCont, data=mites, family = "poisson")
+
+parameters(galumna_fit)
+
+galumna_means <- estimate_means(galumna_fit, by = "WatrCont")
+
+ggplot(galumna_means, aes(x = WatrCont, y = Mean)) + 
+  geom_point() + 
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high, y = Mean), width = 20)
 ```
 
-
 **Questions:**
-1.
-2.
-3.
-4.
+1. Make a histogram of `Galumna` counts, describe its distribution.
+
+The distribution for `Galumna` is left-skewed, meaning there are lots of small/large values. This data is count data and resembles a binomial/Poisson/normal distribution.
+
+2. Make a scatterplot of `Galumna` and `WatrCont.` Why do you think the data is not suited for a linear model? 
+
+The scatterplot shows that the data is not continuous/random/corrected (there are horizontal lines of points). The plot also shows that the points are not evenly spread out/outliers. These characteristics suggests that a linear model is not suited for this type of data.  
+
+3. Interpret the slope `WatrCont` and its p-value. 
+
+The slope for WaterCont is negative, suggesting that as water content increases/decreases, the counts of Galumna decreases. The p-value tells us that there is very low probability that there is no relationship between water content and mite count.
+
+4. Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we still mite counts start to taper off? 
+
+The mean/maximum/minimum counts for Galumna, starts to taper off at 600/400/200.
+
+
+
 
