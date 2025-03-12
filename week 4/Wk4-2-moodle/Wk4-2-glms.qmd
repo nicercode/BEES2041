@@ -283,75 +283,6 @@ parameters(model)
 
 Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
 
-
-## Varying the slope and intercept of the model
-
-Like a linear model, the slope of the model determines the relationship between the linear predictor and the mean of the response variable.
-
-The intercept of the model determines the mean of the response variable when the linear predictor is zero.
-
-Varying the slope of model will make the logistic function steeper or shallower.
-
-```{r, echo=FALSE}
-# Create a sequence of linear predictors
-B0 <- 0 # intercept
-B1 <- c(0, 0.1, 1, 5) # slope
-
-data <- expand_grid(
-  x = seq(-5, 5, 0.1),
-  B0 = B0,
-  B1 = B1
-) |>
-  mutate(
-    eta = B0 + B1 * x, # linear predictor
-    mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
-  )
-
-# Plot the relationship
-data |>
-  ggplot(aes(x = x, y = mu, color = as.character(B1))) +
-  geom_line() +
-  labs(
-    x = "x",
-    y = expression(mu[y]),
-    title = "Mean of the response variable"
-  ) +
-  theme_minimal()  +
-  theme_classic() +
-  scale_color_discrete(name = "Slope")
-```
-
-## Varying the intercept of the model
-
-```{r, echo = FALSE}
-# Create a sequence of linear predictors
-B0 <- c(-2, 0, 2) # intercept
-B1 <- 2 # slope
-
-data <- expand_grid(
-  x = seq(-5, 5, 0.1),
-  B0 = B0,
-  B1 = B1
-) |>
-  mutate(
-    eta = B0 + B1 * x, # linear predictor
-    mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
-  )
-
-# Plot the relationship
-data |>
-  ggplot(aes(x = x, y = mu, color = as.character(B0))) +
-  geom_line() +
-  labs(
-    x = "x",
-    y = expression(mu[y]),
-    title = "Mean of the response variable"
-  ) +
-  theme_minimal()  +
-  theme_classic() +
-  scale_color_discrete(name = "Intercept")
-```
-
 # Theory Poisson
 
 ## Link function for a Poisson response
@@ -471,75 +402,6 @@ parameters(model)
 Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
 
 
-## Varying the slope and intercept of the model
-
-Like a linear model, the slope of the model determines the relationship between $x$  and the mean of the response variable.
-
-The intercept of the model determines the mean of the response variable when $x$  is zero.
-
-Varying the slope of model will make the logistic function steeper or shallower.
-
-```{r, echo=FALSE}
-# Create a sequence of linear predictors
-B0 <- 0 # intercept
-B1 <- c(0, 0.2, 0.8) # slope
-
-data <- expand_grid(
-  x = seq(-5, 5, 0.1),
-  B0 = B0,
-  B1 = B1
-) |>
-  mutate(
-    eta = B0 + B1 * x, # linear predictor
-    mu = exp(eta) # mean of the response variable
-  )
-
-# Plot the relationship
-data |>
-  ggplot(aes(x = x, y = mu, color = as.character(B1))) +
-  geom_line() +
-  labs(
-    x = "x",
-    y = expression(mu[y]),
-    title = "Mean of the response variable"
-  ) +
-  theme_minimal()  +
-  theme_classic() +
-  scale_color_discrete(name = "Slope")
-```
-
-## Varying the intercept of the model
-
-Changing the intercept of the model will shift the distribution up and down. Technically, it specifies  the value of log(y) when x = 0.
-
-```{r, echo = FALSE}
-# Create a sequence of linear predictors
-B0 <- c(-2, 0, 2) # intercept
-B1 <- 0.8 # slope
-
-data <- expand_grid(
-  x = seq(-5, 5, 0.1),
-  B0 = B0,
-  B1 = B1
-) |>
-  mutate(
-    eta = B0 + B1 * x, # linear predictor
-    mu = exp(eta) # mean of the response variable
-  )
-
-# Plot the relationship
-data |>
-  ggplot(aes(x = x, y = mu, color = as.character(B0))) +
-  geom_line() +
-  labs(
-    x = "x",
-    y = expression(mu[y]),
-    title = "Mean of the response variable"
-  ) +
-  theme_minimal()  +
-  theme_classic() +
-  scale_color_discrete(name = "Intercept")
-```
 
 # GLM Binary data
 
@@ -621,6 +483,8 @@ The predictor is **discrete**:
 - `Treatment` 
 
 ## Worked Example: Slugs during revegetation
+
+![Ya snailed it!](images/snails.jpg){width=60%}
 
 ## Read in data
 
@@ -842,11 +706,11 @@ ggplot(galumna_means, aes(x = WatrCont, y = Mean)) +
 **Questions:**
 1. Make a histogram of `Galumna` counts, describe its distribution.
 
-The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "left-skewed"))`, meaning there are lots of `r cloze("small", c("small", "large))` values in the variable. This data is count data and resembles a `r cloze("Poisson", c("binomial", "Poisson", "normal"))`.
+The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "left-skewed"))`, meaning there are lots of `r cloze("small", c("small", "large"))` values in the variable. This data is count data and resembles a `r cloze("Poisson", c("binomial", "Poisson", "normal"))`.
 
 2. Make a scatterplot of `Galumna` and `WatrCont.` Why do you think the data is not suited for a linear model? 
 
-The scatterplot shows that the data is not `r cloze("continuous", c("continuous", "Poissrandomon", "corrected"))` (there are horizontal lines of points). The plot also shows that the points are `r cloze("rnot evenly spread out", c("outliers", "not evenly spread out"))`. These characteristics suggests that a linear model is not suited for this type of data.  
+The scatterplot shows that the data is not `r cloze("continuous", c("continuous", "Poissrandomon", "corrected"))` (there are horizontal lines of points). The plot also shows that the points are `r cloze("not evenly spread out", c("outliers", "not evenly spread out"))`. These characteristics suggests that a linear model is not suited for this type of data.  
 
 3. Interpret the slope `WatrCont` and its p-value. 
 
@@ -855,6 +719,148 @@ The slope for WaterCont is `r cloze("negative", c("positive", "negative"))`, sug
 4. Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we still mite counts start to taper off? 
 
 The `r cloze("mean", c("minium", "mean", "maximum"))`  counts for Galumna, starts to taper off at `r cloze("600", c("200", "400", "600"))`.
+
+# Bonus knowledge!
+
+## Binomial: Varying the slope and intercept of the model
+
+Like a linear model, the slope of the model determines the relationship between the linear predictor and the mean of the response variable.
+
+The intercept of the model determines the mean of the response variable when the linear predictor is zero.
+
+Varying the slope of model will make the logistic function steeper or shallower.
+
+```{r, echo=FALSE}
+# Create a sequence of linear predictors
+B0 <- 0 # intercept
+B1 <- c(0, 0.1, 1, 5) # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B1))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal()  +
+  theme_classic() +
+  scale_color_discrete(name = "Slope")
+```
+
+## Binomial: Varying the intercept of the model
+
+```{r, echo = FALSE}
+# Create a sequence of linear predictors
+B0 <- c(-2, 0, 2) # intercept
+B1 <- 2 # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) / (1 + exp(eta)) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B0))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal()  +
+  theme_classic() +
+  scale_color_discrete(name = "Intercept")
+```
+
+
+## Poisson: Varying the slope and intercept of the model
+
+Like a linear model, the slope of the model determines the relationship between $x$  and the mean of the response variable.
+
+The intercept of the model determines the mean of the response variable when $x$  is zero.
+
+Varying the slope of model will make the logistic function steeper or shallower.
+
+```{r, echo=FALSE}
+# Create a sequence of linear predictors
+B0 <- 0 # intercept
+B1 <- c(0, 0.2, 0.8) # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B1))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal()  +
+  theme_classic() +
+  scale_color_discrete(name = "Slope")
+```
+
+## Poisson: Varying the intercept of the model
+
+Changing the intercept of the model will shift the distribution up and down. Technically, it specifies  the value of log(y) when x = 0.
+
+```{r, echo = FALSE}
+# Create a sequence of linear predictors
+B0 <- c(-2, 0, 2) # intercept
+B1 <- 0.8 # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B0))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal()  +
+  theme_classic() +
+  scale_color_discrete(name = "Intercept")
+```
+
 
 
 
