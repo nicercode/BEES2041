@@ -14,7 +14,7 @@ format:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
@@ -589,42 +589,18 @@ fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
 
 Let's take a look at the output `paramaters()`.
 
-These output is interpreted in a similar manner as for linear model, but we need to include the link function, $g$.
+These output is interpreted in a similar manner as for linear model
 
 ```{r}
 parameters(fit_crab)
-summary(fit_crab)
 ```
-
-If $p$ is the probability of crab presence, this output tells us:
-
-$logit(p) = -1.02 + 0.06 * Dist$ 
 
 There is no evidence that the presence of crabs varies with distance along the shoreline (p = 0.364). 
 
-For each additional unit of distance, the odds of crab presence increase by a factor of exp(0.05804) ≈ 1.06, though this effect is not statistically significant (p = 0.364).
-
 ## Visualising our model estimates
 
-When we get a log-odds (logit) coefficient from logistic regression, it’s not directly interpretable as a probability. We need to backtransform it using the logistic function:
+We use `estimate_means()` to do the maths for us and calculate the mean probability of sighting a crab by the different levels of distance we had in our data.
 
-Step-by-step conversion:
-
-1. Log-odds to odds:
-
-Take the exponent of the log-odds value to get to odds
-
-<!-- TODO eqation -->
- 
-Odds are the ratio of success to failure (e.g., if odds = 2, success is twice as likely as failure).
-
-2. Odds to probability:
-
-<!-- TODO eqation -->
-
-This ensures the probability is always between 0 and 1.
-
-Luckily, `estimate_means()` does this for us and we don't have to do the math to backtransform to probability for a binomial distribution
 ```{r}
 estimate_means(fit_crab, by = "Dist")
 ```
@@ -674,28 +650,25 @@ slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_reveget
 parameters(slug_fit)
 ```
 
-Tests indicate strong evidence of a treatment effect (p<0.001). To extract the model equation we can look at the coefficients from the fit.
+Our model indicates strong evidence of a treatment effect  p < 0.001). 
 
-## Back transformation and visualising our model estimates
-
-The default link function for Poisson is log(). If we write the mean count as $λ$
-
-$log(λ)=−0.92+2.12×Treatment$
+## Visualising our model estimates
 
 ```{r}
 estimate_means(slug_fit)
 ```
 
-There is strong evidence of positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
+There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
 
 # Over to you!
+
 ## Over to you! GLM - Binomial data
+
 ## Example 1: Mites 
 
 **Exercises:**
 
 Fit a logistic regression model of the presence/absence of Galumna sp. `pa` as a function of substrate density `SubsDens` as follows, using the `glm()` function and the `family` argument:
-
 
 ```{r}
 mites <- read_csv("data/mites.csv")
@@ -714,21 +687,21 @@ estimate_means(mite_subs_fit, by = "SubsDens")
 
 **Questions:**
 
-1. What type of variable is `pa`, why do we need a GLM to model this data?
+1. **What type of variable is `pa`, why do we need a GLM to model this data?**
 
-`pa` is a binary variable, 1 indicates presence/absence., 0 indicates absence/presence. We need a GLM to model this data, because this data is not continous/random and comes from a non-normal/normal distribution and cannot be represented by a linear model. 
+`pa` is a `r cloze("binary", c("binary", "continuous", "random"))` variable, 1 indicates `r cloze("presence", c("absence", "presence")` of mites. We need a GLM to model this data, because this data is not `r cloze("continuous", c("binary", "continuous", "random"))` and comes from a `r cloze("non-normal", c("normal", "non-normal"))` distribution and cannot be represented by a linear model. 
 
-2. What does the Intercept represent in this model?
+2. **What does the Intercept represent in this model?**
 
-The Intercept in this context represents the probability of observing the mite when substrate density is 1/0/100
+The Intercept in this context represents the probability of observing the Galumna mite when substrate density is `r cloze("0", c("1", "0", "100"))`
 
-3. What sign is the slope? What does this mean for `pa`? 
+3. **What sign is the slope? What does this mean for `pa`? **
 
-The slope SubsDen is positive/negative this means the probability of observing the mite increases/decreases with substrate density
+The slope `SubsDen` is `r cloze("positive", c("positive", "negative"))`. This means the probability of observing the mite `r cloze("increases", c("decreases", "increases"))` with substrate density.
 
-4. Interpret the Pp-value for the slope `SubDens`
+4. **Interpret the Pp-value for the slope `SubDens`**
 
-The p-value of 0.360/0.123/0.915 for the slope `SubDens` indicates that is moderate/low/high probability there is no/strong relationship between the presence and absence of mites and substrate density
+The p-value of `r cloze("0.360",c("0.360", "0.123", "0.915"))` for the slope `SubDens`. This indicates that there is `r cloze("moderate", c("moderate", "low", "high"))` probability there is `r cloze("no", c("a strong", "no"))` relationship between the presence of mites and substrate density
 
 ## Example 2: Bacterial treatment 
 
