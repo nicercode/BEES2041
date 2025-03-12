@@ -662,13 +662,13 @@ There is strong evidence of a positive effect of bush regeneration on the abunda
 
 # Over to you!
 
-## Over to you! GLM - Binomial data
-
 ## Example 1: Mites 
 
 **Exercises:**
 
-Fit a logistic regression model of the presence/absence of Galumna sp. `pa` as a function of substrate density `SubsDens` as follows, using the `glm()` function and the `family` argument:
+- Fit an approaiate model for the presence/absence of Galumna sp. `pa` as a function of substrate density `SubsDens` as follows, using the `glm()` function and the `family` argument
+- You may need to make some plots to help you answer the following questions
+- Use your model output to elp you answer the questions
 
 ```{r}
 mites <- read_csv("data/mites.csv")
@@ -705,25 +705,32 @@ The p-value of `r cloze("0.360",c("0.360", "0.123", "0.915"))` for the slope `Su
 
 ## Example 2: Bacterial treatment 
 
-Using the bacteria dataset (from the MASS package), model the presence of H. influenzae as a function of week of test. Start with a full model and reduce it to the most parsimonious model.
+Using the bacteria dataset (from the `MASS` R package), try and model the presence of _H. influenzae_ as a function of week of test. 
 
-This dataset was made to test the presence of the bacteria H. influenzae in children with otitis media in the Northern Territory of Australia. Dr A. Leach tested the effects of a drug on 50 children with a history of otitis media in the Northern Territory of Australia. The children were randomized to the drug or a placebo. The presence of H. influenzae was checked at weeks 0, 2, 4, 6 and 11: 30 of the checks were missing and are not included in this data frame.
+Medical researchers collected data on the presence of the bacteria H. influenzae in children with _Otitis media_ in the Northern Territory of Australia. 50 children with a history of _Otitis media_ were tested to assess the effects of a drug on the disease. The children were randomised to the drug treatment or a placebo treatment. The presence of _H. influenzae_ was checked at weeks 0, 2, 4, 6 and 11. 
 
-Load the MASS package and the bacteria dataset:
+**Exercises:**
+
+- Install and load the `MASS` package and the bacteria dataset. 
+- Fit an appropiate model for this type of data
+- Use the output to answer the following questions
 
 ```{r}
 # install.packages("MASS")
 library(MASS)
 
+# Look at data
 bacteria
 
-bacteria_fit <- glm(y ~ week, data = bacteria, family = binomial)
+# Fit a GLM
+bacteria_fit <- glm(y ~ week, data = bacteria, family = "binomial")
 
+# Look at model output
 parameters(bacteria_fit)
+
+# Estimate means 
 estimate_means(bacteria_fit, by = "week")
 ```
-
-**Exercises:**
 
 **Questions:**
 
@@ -743,16 +750,22 @@ The p-value for the slope `week` represents the probabilty there is no/strong/we
 
 The p-value is  0.011/0.1/11 this indicates there is relatively low probabilty that there is no relationship between the presence of bacteria H. influenzae and week.
 
-## Over to you! GLM - Count data
-## Example 1: Faramea trees in Panama
+## Example 3: Faramea trees in Panama
 
-In this dataset, the number of trees of the species Faramea occidentalis was measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
+The dataset contains the number of trees of the species _Faramea occidentalis_  measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
 
 **Exercises:**
 
+- Load the dataset into R
+- Fit an appropiate model for this type of data
+- Use the output to answer the following questions
+- You may need to make some plots to help answer the questions
+
 ```{r}
+# Load data
 faramea <- read_csv("data/faramea.csv")
 
+# Make a histogram
 ggplot(faramea, aes(x = Faramea.occidentalis)) +
   geom_histogram() + 
   theme_minimal()
@@ -761,9 +774,9 @@ ggplot(faramea, aes(x = Faramea.occidentalis)) +
 faramea_fit  = glm(Faramea.occidentalis ~ Elevation,
   data = faramea, family = poisson) 
 
+# Look at model output
 parameters(faramea_fit) |> tibble()
 ```
-
 
 **Questions:**
 
@@ -779,11 +792,16 @@ The slope is negative/positive, indicating the counts for _Faramea occidentalis_
 
 The CI for the slope is -0.00410 and -0.00157. The interval represents where the true population mean estimate for the slope/intercept/counts could lie 95% percent of the time. 
 
-## Example 2: Mite counts with water content
+## Example 4: Mite counts with water content
 
-Use the mites dataset! Model the abundance of the species Galumna as a function of the substrate characteristics (water content WatrCont and density SubsDens)
+Using the `mites` data, model the abundance of the species `Galumna` as a function of water content `WatrCont`.
 
 **Exercises:**
+
+- Load the dataset into R
+- Fit an appropiate model for this type of data
+- Use the output to answer the following questions
+- You may need to make some plots to help answer the questions
 
 ```{r}
 # Load data
@@ -793,15 +811,20 @@ mites <- read_csv("data/mites.csv")
 ggplot(mites, aes(x = Galumna)) + 
   geom_histogram()
 
+# Raw data - scatterplot
 ggplot(mites, aes(x = WatrCont, y = Galumna)) + 
   geom_point()
 
+# Fit model
 galumna_fit = glm(Galumna~WatrCont, data=mites, family = "poisson")
 
+# Look at model output
 parameters(galumna_fit)
 
+# Estimate means
 galumna_means <- estimate_means(galumna_fit, by = "WatrCont")
 
+# Visualise means
 ggplot(galumna_means, aes(x = WatrCont, y = Mean)) + 
   geom_point() + 
   geom_errorbar(aes(ymin = CI_low, ymax = CI_high, y = Mean), width = 20)
