@@ -228,7 +228,7 @@ data_y <- tibble(
 p3 <-
   data_y |>
   ggplot(aes(x = x, y = y)) +
-  geom_point() +
+  geom_point(col = "red") +
   labs(
     x = "x",
     y = "Number of events",
@@ -236,7 +236,7 @@ p3 <-
   ) +
   theme_minimal() +
   # add data from the link function
-  geom_line(data = data, aes(x = x, y = mu), color = "red", linetype = "dashed")
+  geom_line(data = data, aes(x = x, y = mu), color = "black", linetype = "dashed")
 
 p3
 ```
@@ -251,7 +251,7 @@ We can fit a GLM to the data to estimate the relationship:
 
 ```{r}
 # Fit the model
-model <- glm(y ~ x, data = data_y, family = "bionmial") 
+model <- glm(y ~ x, data = data_y, family = "binomial") 
 
 # Estimate the means
 means <- estimate_means(model, by = "x", length = 100)
@@ -261,8 +261,9 @@ Now we can plot the data and the fitted model:
 
 ```{r, echo = FALSE}
 # add to plot above
-p3 + 
-  geom_line(data = means, aes(x = x, y = Mean), color = "red")
+p3 +
+  geom_line(data = means, aes(x = x, y = Probability), color = "red") +
+  geom_ribbon(data = means, aes(x = x, y = Probability, ymin = CI_low, ymax = CI_high), fill = "grey", alpha = 0.2)
 ```
 
 
@@ -450,8 +451,9 @@ Now we can plot the data and the fitted model:
 
 ```{r, echo = FALSE}
 # add to plot above
-p3 + 
-  geom_line(data = means, aes(x = x, y = Mean), color = "red")
+p3 +
+  geom_line(data = means, aes(x = x, y = Mean), color = "red") +
+  geom_ribbon(data = means, aes(x = x, y = Mean, ymin = CI_low, ymax = CI_high), fill = "grey", alpha = 0.2)
 ```
 
 
