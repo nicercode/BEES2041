@@ -26,6 +26,8 @@ library(easystats)
 # Data files for prac from BEES2041 root
 # data_crabs <- read_csv("week 4/Wk4-2-moodle/data/Crabs.csv")
 # data_revegetation <- read_csv("week 4/Wk4-2-moodle/data/Revegetation.csv")
+# data_mites <- read_csv("week 4/Wk4-2-moodle/data/mites.csv")
+# data_faramea <- read_csv("week 4/Wk4-2-moodle/data/faramea.csv")
 ```
 
 # Intro to Generalised Linear Models
@@ -53,7 +55,6 @@ Our learning objective today are:
 - **run** a **generalised linear regression** in R using `glm()`
 - **run diagnostic checks** on your  model output using `check_model()` to assess whether it meets the assumptions of a linear model.
 - **interpret** the output of a **generalised linear regression** using:
-  - `summary()`
   - `parameters()`
 - **extract** the **confidence interval** for the **slope** and **intercept** of the **regression** line
   - `estimate_means()`
@@ -586,7 +587,7 @@ fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
 
 ## Look at model output
 
-If all the assumption checks are okay, we can have a look at the results the model gave us. The two main functions for inference are the same as for linear models: `summary()`, `paramaters()`.
+Let's take a look at the output `paramaters()`.
 
 These output is interpreted in a similar manner as for linear model, but we need to include the link function, $g$.
 
@@ -670,7 +671,6 @@ slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_reveget
 ## Look at model output
 
 ```{r}
-summary(slug_fit)
 parameters(slug_fit)
 ```
 
@@ -692,33 +692,49 @@ There is strong evidence of positive effect of bush regeneration on the abundanc
 ## Over to you! GLM - Binomial data
 ## Example 1: Mites 
 
-We can fit the logistic regression model of the presence of Galumna sp. as a function of water content and topography as follows, using the glm() function and the family argument:
+**Exercises:**
+
+Fit a logistic regression model of the presence/absence of Galumna sp. `pa` as a function of substrate density `SubsDens` as follows, using the `glm()` function and the `family` argument:
 
 
 ```{r}
-mites <- read_csv("https://raw.githubusercontent.com/QCBSRworkshops/workshop06/fe88f6684fa59663e9d5a1591ab5c3d9315d0284/book-fr/mites.csv")
+mites <- read_csv("data/mites.csv")
 
-write_csv(mites, "week 4/Wk4-2-moodle/data/mites.csv")
+ggplot(mites, aes(x = SubsDens, y = pa)) + 
+  geom_point() + 
+  theme_minimal()
 
-
-logit.reg <- glm(pa ~ WatrCont + Topo,
+mite_subs_fit <- glm(pa ~ SubsDens,
                  data = mites,
-                 family = binomial(link = "logit"))
+                 family = "binomial")
+
+parameters(mite_subs_fit)
+estimate_means(mite_subs_fit, by = "SubsDens")
 ```
 
-**Exercises:**
-
 **Questions:**
-1.
-2.
-3.
-4.
+
+1. What type of variable is `pa`, why do we need a GLM to model this data?
+
+`pa` is a binary variable, 1 indicates presence/absence., 0 indicates absence/presence. We need a GLM to model this data, because this data is not continous/random and comes from a non-normal/normal distribution and cannot be represented by a linear model. 
+
+2. What does the Intercept represent in this model?
+
+The Intercept in this context represents the probability of observing the mite when substrate density is 1/0/100
+
+3. What sign is the slope? What does this mean for `pa`? 
+
+The slope SubsDen is positive/negative this means the probability of observing the mite increases/decreases with substrate density
+
+4. Interpret the Pp-value for the slope `SubDens`
+
+The p-value of 0.360/0.123/0.915 for the slope `SubDens` indicates that is moderate/low/high probability there is no/strong relationship between the presence and absence of mites and substrate density
+
 ## Example 2: Bacterial treatment 
 
 Using the bacteria dataset (from the MASS package), model the presence of H. influenzae as a function of week of test. Start with a full model and reduce it to the most parsimonious model.
 
 This dataset was made to test the presence of the bacteria H. influenzae in children with otitis media in the Northern Territory of Australia. Dr A. Leach tested the effects of a drug on 50 children with a history of otitis media in the Northern Territory of Australia. The children were randomized to the drug or a placebo. The presence of H. influenzae was checked at weeks 0, 2, 4, 6 and 11: 30 of the checks were missing and are not included in this data frame.
-
 
 Load the MASS package and the bacteria dataset:
 
@@ -728,28 +744,41 @@ library(MASS)
 
 bacteria
 
-model.bact3 <- glm(y ~ week, data = bacteria, family = binomial)
+bacteria_fit <- glm(y ~ week, data = bacteria, family = binomial)
+
+parameters(bacteria_fit)
+estimate_means(bacteria_fit, by = "week")
 ```
 
 **Exercises:**
 
 **Questions:**
-1.
-2.
-3.
-4.
+
+1. What type of variable is `y`? What distribution can we use to represent it well?
+
+`y` is the presence/absence/ count/density of the bacteria H. influenzae. A binomial/Poisson/normal distribution will represent this type of data well. 
+
+2. Interpret the slope `week`
+
+The negative/positive value for the slope indicates that the probability of detecting the bacteria H. influenzae decreases as weeks pass.
+
+3. What is the p-value for the slope `week` represent?
+
+The p-value for the slope `week` represents the probabilty there is no/strong/weak relationship between the presence of bacteria H. influenzae/the intercept with week/age/location.
+
+4. What does the p-value for the slope `week` mean then?
+
+The p-value is  0.011/0.1/11 this indicates there is relatively low probabilty that there is no relationship between the presence of bacteria H. influenzae and week.
 
 ## Over to you! GLM - Count data
-## Example 1:
+## Example 1: Faramea trees in Panama
 
 In this dataset, the number of trees of the species Faramea occidentalis was measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
 
 **Exercises:**
 
 ```{r}
-faramea <- read_csv("https://raw.githubusercontent.com/QCBSRworkshops/workshop06/fe88f6684fa59663e9d5a1591ab5c3d9315d0284/book-fr/faramea.csv")
-
-write_csv(faramea, "week 4/Wk4-2-moodle/data/faramea.csv")
+faramea <- read_csv("data/faramea.csv")
 
 # Histogram of F. occidentalis count data
 hist(faramea$Faramea.occidentalis, breaks=seq(0,45,1), xlab=expression(paste("Number of ",
@@ -768,7 +797,7 @@ summary(glm.poisson)
 2.
 3.
 4.
-## Example 2:
+## Example 2: Mite counts with water content
 
 Use the mites dataset! Model the abundance of the species Galumna as a function of the substrate characteristics (water content WatrCont and density SubsDens)
 
@@ -776,6 +805,8 @@ Use the mites dataset! Model the abundance of the species Galumna as a function 
 **Exercises:**
 
 ```{r}
+mites <- read_csv("data/mites.csv")
+
 glm.p = glm(Galumna~WatrCont, data=mites, family=poisson)
 ```
 
