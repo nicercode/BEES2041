@@ -105,11 +105,11 @@ library(patchwork)
 
 ## Why do we need GLMs? 
 
-Linear models assume constant variance. We learned to transform data and  which can help us fit a better linear model but in some cases, it can be hard to fulfill the assumptions of a linear model. 
+Linear models assume **constant variance**. We learned to transform data and which can help us fit better linear models but in some cases, transformations is not enough to fulfill the assumptions of a linear model. 
 
-For example, discrete response data, like counts and presence/absence data, generally exhibit a mean-variance relationship. This means, for counts that are on average 5, we would expect most samples to be between about 1 and 9, but for counts that are on average 500, most of the observations will tend to be between 450 and 550, giving us a much larger variance when the mean is large. 
+For example, **discrete** response data, like **counts** and **presence/absence** data, generally exhibit a **mean-variance relationship**. This means, for counts that are on average 5, we would expect most samples to be between about 1 and 9, but for counts that are on average 500, most of the observations will tend to be between 450 and 550, giving us a much larger variance when the mean is large. 
 
-In situations where our response is discrete and exhibit a mean-variance relationship, we turn another tool - GLMs! 
+In situations where our response is discrete and exhibit a mean-variance relationship, we turn to **GLMs**! 
 
 ## Probablity distributions
 
@@ -119,7 +119,11 @@ As data scientists, we need to choose an appropiate distribution that represents
 
 - if the response variable is **binary** (e.g., presence/absence), we might use a **binomial** distribution.
 
+![](images/extinct-binary.png){width=40%}
+
 - If the response variable is a **count** (e.g., number of species sighted in an hour), we might use a **Poisson** distribution.
+
+![](images/counts-discrete.png){width=40%}
 
 ## Binomial distribution
 
@@ -152,16 +156,16 @@ rpois(n = 10, lambda = 1.5)
 
 A key concept in GLMs is the **link function**.
 
-A link function provides the relationship between  $x$ and the mean of the distribution function.  We often denote $x$  as $\eta$, where $\eta$ is our usual linear model given by
+A **link function** provides the relationship between  $x$ and the mean of the distribution function.  We often denote $x$  as $\eta$, where $\eta$ is our usual linear model given by
 
 $$\eta = B0 + B1 * x.$$
 As usual, $B0$ is the intercept and $B1$ is the slope of the model. (This is the same as the standard linear model you already know.)
 
 GLMs assume that $\eta$ is related to the mean of the response variable by a link function, $g$, such that 
 $$g(\mu_y) = \eta$$
-where $\mu_y$ is the mean of the response distribution. 
+where $\mu_y$ is the **mean of the response distribution**. 
 
-For example, with a bionomial response, the link function $g$ is the logit function:
+For example, with a **binomial** response, the link function $g$ is the **logit** function:
 
 $$g(\mu_y) = \log\left(\frac{\mu_y}{1-\mu_y}\right)$$
 
@@ -175,7 +179,7 @@ So our mean repsonse is obtained via a transformation of $x$ , creating a non-li
 
 ## Link function for a binomial response
 
-It may help to visualise the link functions. Let's consider a binomial response, where the mean of the response variable is given by the logistic function above.  Plotting the function shows the relationship between $x$  and the mean of the response variable.
+It may help to visualise the **link functions**. Let's consider a **binomial** response, where the mean of the response variable is given by the **logit** function above.  Plotting the function shows the relationship between $x$  and the mean of the response variable.
 
 ```{r}
 #| code-fold: true
@@ -217,7 +221,7 @@ p1 + p2
 
 ## Response distribution
 
-Now imagine drawing random numbers, where the probability of success is given by the mean of the response variable, $\mu_y$. This is the process we assume has generated the data we observe in the field.
+Now imagine drawing random numbers, where the* *probability of success** is given by the mean of the response variable, $\mu_y$. This is the process we assume has generated the data we observe in the field.
 
 The plot below shows data which were drawn from such a model The black dashed line shows the true relationship between the linear predictor $x$ and the mean of the response variable. The dots show the obseravtions. 
 
@@ -287,7 +291,7 @@ Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. S
 
 ## Link function for a Poisson response
 
-Now let's consider a Poisson response. Here the link function $g$ is the log function, such that
+Now let's consider a **Poisson** response. The link function $g$ is the **log** function, such that
 
 $$g(\mu_y) = \log(\mu_y)$$
 
@@ -295,7 +299,7 @@ Rearranging gives
 
 $$\mu_y = e^{\eta}$$
 
-So the mean of the response variable is given by the exponential of $\eta$. Plotting the function shows the relationship between the linear predictor and the mean of the response variable.
+So the **mean of the response variable** is given by the **exponential** of $\eta$. Plotting the function shows the relationship between the linear predictor and the mean of the response variable.
 
 ```{r, echo=FALSE}
 # Create a sequence of linear predictors
@@ -338,7 +342,7 @@ So the rate of events increases exponentially with the linear predictor. In othe
 
 ## Response distribution
 
-Now imagine drawing random numbers, where the avarerage rate of events is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
+Now imagine drawing random numbers, where the **mean rate of events occurring** is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
 
 ```{r, echo = FALSE}
 # Simulate data
@@ -408,7 +412,7 @@ Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$.
 
 ## Worked Example: Crabs along the beach
 
-Let's applt the theory we learned about with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
+Let's apply the theory we learned about with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
 The response variable is **discrete**: 
 
