@@ -1,39 +1,30 @@
 ---
 title: "Week 4-2 Generalised linear models"
-format: 
-  html:    
-    self-contained: true
-# output:    
-#   moodlequiz::moodlequiz:
-#     replicates: 1
-# moodlequiz:
-#   category: "Week 4-2 GLM"
-# editor_options: 
-#   chunk_output_type: console
-
+output:
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: Week 4-2 Generalised linear models
+editor_options:
+  chunk_output_type: console
 ---
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-# remotes::install_github("numbats/moodlequiz")
+```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+# webr counter
+source('../../R/webr-counter.R')
 library(moodlequiz)
-
-# Libraries for prac
 library(tidyverse)
 library(easystats)
-
-# Data files for prac from BEES2041 root
-# data_crabs <- read_csv("week 4/Wk4-2-moodle/data/Crabs.csv")
-# data_revegetation <- read_csv("week 4/Wk4-2-moodle/data/Revegetation.csv")
-# data_mites <- read_csv("week 4/Wk4-2-moodle/data/mites.csv")
-# data_faramea <- read_csv("week 4/Wk4-2-moodle/data/faramea.csv")
+library(patchwork)
 ```
 
 # Intro to Generalised Linear Models
 
 ## Introduction
+
+<h3>Introduction</h3>
+
+
 
 In this session, we’ll explore **G**eneralized **L**inear **M**odels (**GLMs**), a powerful extension of linear regression that helps us analyse data where relationships aren’t strictly linear. **GLMs** allow us to model different types of responses, making them a go-to tool for many real-world problems.
 
@@ -49,6 +40,10 @@ We’ll learn how to choose the right model, check if our models fit well, inter
 
 ## Key learning objectives
 
+<h3>Key learning objectives</h3>
+
+
+
 Our learning objective today are:
 
 - **understand** different probaility distribution
@@ -61,6 +56,10 @@ Our learning objective today are:
 Let’s dive in! 🚀 
 
 ## Setting up: Materials
+
+<h3>Setting up: Materials</h3>
+
+
 
 Everything you need for this prac is on Moodle
 
@@ -77,34 +76,44 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
+<h3>Setting up: Packages</h3>
+
+
+
 > **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` and `easystats` we need for this prac.
 
-```{r, eval=FALSE}
+<div id=`r class_id()`><pre>
 install.packages("dplyr")
 install.packages("readr")
 install.packages("ggplot2")
+install.packages("parameters")
 install.packages("performance")
 install.packages("modelbased")
 install.packages("see")
 install.packages("emmeans")
 install.packages("patchwork")
 
-```
+</pre></div>
 
 > Remember to load the packages into R to use em!
 
-```{r, results='hide', warning=FALSE, message=FALSE}
+<div id=`r class_id()`><pre>
 library(dplyr)
 library(readr)
 library(ggplot2)
 library(performance)
 library(modelbased)
+library(parameters)
 library(patchwork)
-```
+</pre></div>
 
 # GLM Theory
 
 ## Why do we need GLMs? 
+
+<h3>Why do we need GLMs? </h3>
+
+
 
 The standard linear models we used previosuly make several rather srtict assumptions, including: 
 
@@ -146,6 +155,10 @@ where $\mu_y$ is the mean of the response distribution.
 
 ## Binomial distribution
 
+<h3>Binomial distribution</h3>
+
+
+
 The binomial distribution is used to represent **the number of successes in a fixed number of trials**. The binomial distribution has two parameters: 
 
 - the number of trials $n$
@@ -155,11 +168,15 @@ The **binomial distribution** generates a series of 0s and 1s, where 1 represent
 
 For example, we can draw 10 numbers (**trials**) from the **binomal distribution** with a **probability of success** of 0.9. You can change the `prob` value and see how that affects **outcome** of the trials
 
-```{r}
+<div id=`r class_id()`><pre>
 rbinom(n = 10, size = 1, prob = 0.9)
-```
+</pre></div>
 
 ## Link function for a binomial response
+
+<h3>Link function for a binomial response</h3>
+
+
 
 For example, with a **binomial** response, the link function $g$ is the **logit** function:
 
@@ -176,8 +193,7 @@ It may help to visualise this. Let's plot
 - the linear predictor $\eta$
 - the mean of the response variable $\mu_y$
 
-```{r}
-#| code-fold: true
+```{r echo=FALSE}
 # Create a sequence of linear predictors
 B0 <- 0 # intercept
 B1 <- 2 # slope
@@ -216,11 +232,15 @@ p1 + p2
 
 ## Response distribution
 
+<h3>Response distribution</h3>
+
+
+
 Now imagine drawing random numbers, where the* *probability of success** is given by the mean of the response variable, $\mu_y$. This is the process we assume has generated the data we observe in the field.
 
 The plot below shows data which were drawn from such a model The black dashed line shows the true relationship between the linear predictor $x$ and the mean of the response variable. The dots show the obseravtions. 
 
-```{r, echo=FALSE}
+```{r echo=FALSE}
 # Simulate data
 set.seed(123) # set seed for reproducibility
 
@@ -266,7 +286,7 @@ means <- estimate_means(model, by = "x", length = 100)
 
 Now we can plot the data and the fitted model:
 
-```{r, echo=FALSE}
+```{r echo=FALSE}
 # add to plot above
 p3 +
   geom_line(data = means, aes(x = x, y = Probability), color = "red") +
@@ -283,6 +303,10 @@ Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. S
 
 ## Worked Example: Crabs along the beach
 
+<h3>Worked Example: Crabs along the beach</h3>
+
+
+
 Let's apply the theory we learned about with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
 The response variable is **discrete**: 
@@ -295,62 +319,89 @@ The predictor is **continuous**:
 
 ## Read in data
 
+<h3>Read in data</h3>
+
+
+
 Let's load the data and have a look at the first few rows of the dataset
 
-```{r}
-data_crabs <- read_csv("data/Crabs.csv")
+<div id=`r class_id()`><pre>
+# Read data as URL
+url <- "https://raw.githubusercontent.com/nicercode/BEES2041/refs/heads/main/week%204/Wk4-2-moodle/data/Crabs.csv"
+
+data_crabs <- read_csv(url)
 
 data_crabs
-```
+</pre></div>
 
 ## Look at raw data
 
+<h3>Look at raw data</h3>
+
+
+
 Its always good practice to take a look at your raw data, especially your response and explanatory/predictor variable.
 
-```{r}
+<div id=`r class_id()`><pre>
 ggplot(data_crabs, aes(x = Dist, y = CrabPres)) + 
   geom_jitter(height = 0, width = 0.2, alpha = 0.2, size = 4, colour = "red") + 
   theme_minimal()
-```
+</pre></div>
 
 ## Fit the model
+
+<h3>Fit the model</h3>
+
+
 
 Let's fit a **GLM** to **binomial** data e.g. presence/absence of crabs (0/1). GLMs uses very similar syntax to fitting linear models. 
 
 We use the `glm()` function instead of `lm()`. We need to add a `family` argument to specify the **distribution** you want to represent your response variable. We will use `family = "binomial"`.
 
-```{r}
+<div id=`r class_id()`><pre>
 fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
-```
+</pre></div>
 
 ## Look at model output
+
+<h3>Look at model output</h3>
+
+
 
 Let's take a look at the output `paramaters()`.
 
 We interpret this output in a similar manner as for linear model
 
-```{r}
+<div id=`r class_id()`><pre>
 parameters(fit_crab)
-```
+</pre></div>
 
 There is no evidence that the presence of crabs varies with distance along the shoreline (p = 0.364). 
 
 ## Visualising our model estimates
 
+<h3>Visualising our model estimates</h3>
+
+
+
 We use `estimate_means()` to do the maths for us and calculate the mean probability of sighting a crab by the different levels of distance we had in our data.
 
 Then we can visualise this with a graphic.
 
-```{r}
+<div id=`r class_id()`><pre>
 crab_means <- estimate_means(fit_crab, by = "Dist")
 
 ggplot(crab_means, aes(x = Dist, y = Probability)) +
   geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
   geom_point(size = 5, col = "darkorange") + 
   theme_minimal()
-```
+</pre></div>
 
 ## Example 1: Mites 
+
+<h3>Example 1: Mites </h3>
+
+
 
 ![](images/mites.jpg){width=60%}
 
@@ -360,23 +411,10 @@ ggplot(crab_means, aes(x = Dist, y = Probability)) +
 - You may need to make some plots to help you answer the following questions
 - Use your model output to elp you answer the questions
 
-```{r solution1}
-# Load in data
-mites <- read_csv("data/mites.csv")
+```{r}
 
-# Raw data - scatterplot
-ggplot(mites, aes(x = SubsDens, y = pa)) + 
-  geom_point() + 
-  theme_minimal()
-
-# Fit a model
-mite_subs_fit <- glm(pa ~ SubsDens,
-                 data = mites,
-                 family = "binomial")
-
-# Look at model output
-parameters(mite_subs_fit)
 ```
+
 
 **Questions:**
 
@@ -398,6 +436,10 @@ The p-value of `r cloze("< 0.001",c("0.360", "< 0.001", "< 0.0001"))` for the sl
 
 ## Example 2: Bacterial treatment 
 
+<h3>Example 2: Bacterial treatment </h3>
+
+
+
 ![](images/bacteria.jpeg){width=60%}
 
 Using the bacteria dataset (from the `MASS` R package), try and model the presence of _H. influenzae_ as a function of week of test. 
@@ -411,38 +453,16 @@ Medical researchers collected data on the presence of the bacteria H. influenzae
 - Fit an appropiate model for this type of data
 - Use the output to answer the following questions
 
-```{r solution2}
-# generate data
-# MASS::bacteria |> mutate(
-#   y = ifelse(y == "y", 1, 0)) |> write_csv("data/bacteria.csv")
 
-# Look at data
-bacteria <- read_csv("data/bacteria.csv") 
+```{r}
 
-# Look at data
-head(bacteria)
-
-# Fit a GLM
-bacteria_fit <- glm(y ~ week, data = bacteria, family = "binomial")
-
-# Look at model output
-parameters(bacteria_fit)
-
-# Estimate means
-means <- estimate_means(bacteria_fit, by = "week", length = 100)
-
-# Plot the data
-ggplot(bacteria, aes(x = week, y = y)) +
-  geom_jitter(width=0.1, height = 0.1) +
-  geom_line(data = means, aes(x = week, y = Probability), col = "red") +
-  theme_minimal()
 ```
 
 **Questions:**
 
 1. **What type of variable is `y`? What distribution can we use to represent it well?** _Hint: Make a scatterplot and see for yourself_
 
-`y` is the `r cloze("presence and absence/", c("presence and absence/", "count", "denisty"))` of the bacteria _H. influenzae_. A `r cloze("binomial",c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
+`y` is the `r cloze("presence and absence", c("presence and absence", "count", "denisty"))` of the bacteria _H. influenzae_. A `r cloze("binomial",c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
 
 2. **Interpret the slope `week`**
 
@@ -460,19 +480,27 @@ The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there
 
 ## Poisson distribution
 
+<h3>Poisson distribution</h3>
+
+
+
 The **Poisson distribution** is used to represent a **count of events per unit of sampling** (usually time, space or volume). For example, the number of invasive weeds in a quadrat. The Poisson distribution has one parameter $\lambda$, which is the **mean number of events per unit of sampling**.
 
 The **Poisson distribution** generates a list of integers (whole numbers), starting at 0, representing the number of events that took place.
 
 For example, if we count the number of events in 10 sampling events with mean rate of 1.5 events per unit, the data may look like this. 
 
-```{r}
+<div id=`r class_id()`><pre>
 rpois(n = 10, lambda = 1.5)
-```
+</pre></div>
 
 Change the `lambda` value to see how that changes the number of events observed per sample.
 
 ## Link function for a Poisson response
+
+<h3>Link function for a Poisson response</h3>
+
+
 
 The link function $g$ for the Poisson distribution is the log function, such that
 
@@ -486,7 +514,7 @@ So the mean of the response variable is given by the exponential of $\eta$.
 
 Plotting the function shows the relationship between the linear predictor $x$ with both $\eta$ and $\mu_y$.
 
-```{r, echo=FALSE}
+```{r echo=FALSE}
 # Create a sequence of linear predictors
 B0 <- 0 # intercept
 B1 <- 0.8 # slope
@@ -529,9 +557,13 @@ In other words, the higher $x$, the more events are predicted to occur in a give
 
 ## Response distribution
 
+<h3>Response distribution</h3>
+
+
+
 Now imagine drawing random numbers, where the avarerage rate of events is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
 
-```{r, echo = FALSE}
+```{r echo=FALSE}
 # Simulate data
 set.seed(123) # set seed for reproducibility
 
@@ -577,7 +609,7 @@ means <- estimate_means(model, by = "x", length = 100)
 
 Now we can plot the data and the fitted model:
 
-```{r, echo = FALSE}
+```{r}
 # add to plot above
 p3 +
   geom_line(data = means, aes(x = x, y = Mean), color = "red") +
@@ -595,6 +627,10 @@ Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$.
 
 ## Worked Example: Slugs during revegetation
 
+<h3>Worked Example: Slugs during revegetation</h3>
+
+
+
 ![Ya snailed it!](images/snails.jpg){width=60%}
 
 Let's work with some data collected by some students in our department who wanted to investigate **how the abundnace of slbus varied under two experimental treatemnts**. 
@@ -610,51 +646,78 @@ The predictor is **discrete**:
 
 ## Read in data
 
+<h3>Read in data</h3>
+
+
+
 Let's load the data and have a look at the first few rows of the dataset
 
-```{r}
-data_revegetation <- read_csv("data/Revegetation.csv")
+<div id=`r class_id()`><pre>
+# Read from URL
+snail_url <- "https://raw.githubusercontent.com/nicercode/BEES2041/refs/heads/main/week%204/Wk4-2-moodle/data/Revegetation.csv"
+
+data_revegetation <- read_csv(snail_url)
 
 data_revegetation
-```
+</pre></div>
 
 ## Look at raw data
 
-```{r}
+<h3>Look at raw data</h3>
+
+
+
+<div id=`r class_id()`><pre>
 ggplot(data = data_revegetation, aes(x = Treatment, y = Soleolifera))  + 
   geom_violin(fill = NA) + 
   geom_jitter(aes(colour = Treatment),alpha = 0.5, width = 0.2, size = 2 ) +   theme_minimal() + 
   coord_flip()
-```
+</pre></div>
 
 ## Fit the model
 
-```{r}
+<h3>Fit the model</h3>
+
+
+
+<div id=`r class_id()`><pre>
 slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_revegetation)
-```
+</pre></div>
 
 ## Look at model output
 
-```{r}
+<h3>Look at model output</h3>
+
+
+
+<div id=`r class_id()`><pre>
 parameters(slug_fit)
-```
+</pre></div>
 
 Our model indicates strong evidence of a treatment effect  (p < 0.001). 
 
 ## Visualising our model estimates
 
-```{r}
+<h3>Visualising our model estimates</h3>
+
+
+
+<div id=`r class_id()`><pre>
 slug_means <- estimate_means(slug_fit, by = "Treatment")
 
 ggplot(slug_means, aes(x = Treatment, y = rate)) + 
   geom_col(aes(colour = Treatment, fill = Treatment)) + 
   geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
   theme_minimal()
-```
+</pre></div>
 
 There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
 
 ## Example 3: Faramea trees in Panama
+
+<h3>Example 3: Faramea trees in Panama</h3>
+
+
 
 ![](images/faramea.jpeg){width=60%}
 
@@ -667,32 +730,8 @@ The dataset contains the number of trees of the species _Faramea occidentalis_  
 - Use the output to answer the following questions
 - You may need to make some plots to help answer the questions
 
-```{r solution3}
-# Load data
-faramea <- read_csv("data/faramea.csv")
 
-# Make a histogram
-ggplot(faramea, aes(x = Faramea.occidentalis)) +
-  geom_histogram() +
-  theme_minimal()
-
-# Fit a Poisson GLM
-faramea_fit <- glm(Faramea.occidentalis ~ Elevation,
-  data = faramea, family = poisson
-)
-
-# Look at model output
-parameters(faramea_fit) |> tibble()
-
-# Estimate means
-means <- estimate_means(faramea_fit, by = "Elevation")
-
-# Visualise means
-ggplot(means, aes(x = Elevation, y = Mean)) +
-  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), fill = "grey") +
-  geom_line() +
-  geom_point(data = faramea, aes(x = Elevation, y = Faramea.occidentalis), col = "red") +
-  theme_classic()
+```{r}
 
 ```
 
@@ -712,6 +751,10 @@ The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (
 
 ## Example 4: Mite counts with water content
 
+<h3>Example 4: Mite counts with water content</h3>
+
+
+
 ![](images/mites.jpg){width=60%}
 
 Using the `mites` data, try model the abundance of the species `Galumna` as a function of water content `WatrCont`.
@@ -723,33 +766,10 @@ Using the `mites` data, try model the abundance of the species `Galumna` as a fu
 - Use the output to answer the following questions
 - You may need to make some plots to help answer the questions
 
-```{r solution4}
-# Load data
-mites <- read_csv("data/mites.csv")
 
-# Raw data - histogram
-ggplot(mites, aes(x = Galumna)) + 
-  geom_histogram()
+```{r}
 
-# Raw data - scatterplot
-ggplot(mites, aes(x = WatrCont, y = Galumna)) + 
-  geom_point()
-
-# Fit model
-galumna_fit = glm(Galumna~WatrCont, data=mites, family = "poisson")
-
-# Look at model output
-parameters(galumna_fit)
-
-# Estimate means
-galumna_means <- estimate_means(galumna_fit, by = "WatrCont")
-
-# Visualise means
-ggplot(galumna_means, aes(x = WatrCont, y = Mean)) + 
-  geom_point() + 
-  geom_errorbar(aes(ymin = CI_low, ymax = CI_high, y = Mean), width = 20)
 ```
-
 **Questions:**
 
 1. **Make a histogram of `Galumna` counts, describe its distribution.**
@@ -758,7 +778,7 @@ The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "le
 
 2. **Make a scatterplot of `Galumna` and `WatrCont.` Why do you think the data is not suited for a linear model?**
 
-The scatterplot shows that the data is not `r cloze("continuous", c("continuous", "Poissrandomon", "corrected"))` (there are horizontal lines of points). The plot also shows that the points are `r cloze("not evenly spread out", c("outliers", "not evenly spread out"))`. These characteristics suggests that a linear model is not suited for this type of data.  
+The scatterplot shows that the data is not `r cloze("continuous", c("continuous", "random", "corrected"))` (there are horizontal lines of points). The plot also shows that the points are `r cloze("not evenly spread out", c("outliers", "not evenly spread out"))`. These characteristics suggests that a linear model is not suited for this type of data.  
 
 3. **Interpret the slope `WatrCont` and its p-value.**
 
@@ -770,7 +790,24 @@ The `r cloze("mean", c("minium", "mean", "maximum"))`  counts for Galumna, start
 
 # Extensions
 
+## Setting up: Packages
+
+<h3>Setting up: Packages</h3>
+
+> Remember to load the packages into R to use em!
+
+<div id=`r class_id()`><pre>
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+</pre></div>
+
+
 ## Binomial: Varying the slope and intercept of the model
+
+<h3>Binomial: Varying the slope and intercept of the model</h3>
+
+
 
 Assuming you made it this far, you may be interested in how the slope and intercept of the model affect the mean of the response variable.
 
@@ -780,12 +817,12 @@ Like a linear model, the slope of the model determines the relationship between 
 
 The following plot shows the mean of the response variable for different slopes of the binomial model.
 
-```{r, echo=FALSE}
+<div id=`r class_id()`><pre>
 # Create a sequence of linear predictors
 B0 <- 0 # intercept
 B1 <- c(0, 0.1, 1, 5) # slope
 
-data <- expand_grid(
+data <- expand.grid(
   x = seq(-5, 5, 0.1),
   B0 = B0,
   B1 = B1
@@ -807,7 +844,7 @@ data |>
   theme_minimal()  +
   theme_classic() +
   scale_color_discrete(name = "Slope")
-```
+</pre></div>
 
 As you can see,
 
@@ -816,12 +853,12 @@ As you can see,
 
 **Varying the intercept of the model**
 
-```{r, echo = FALSE}
+<div id=`r class_id()`><pre>
 # Create a sequence of linear predictors
 B0 <- c(-2, 0, 2) # intercept
 B1 <- 2 # slope
 
-data <- expand_grid(
+data <- expand.grid(
   x = seq(-5, 5, 0.1),
   B0 = B0,
   B1 = B1
@@ -843,22 +880,26 @@ data |>
   theme_minimal()  +
   theme_classic() +
   scale_color_discrete(name = "Intercept")
-```
+</pre></div>
 
 
 ## Poisson: Varying the slope and intercept of the model
+
+<h3>Poisson: Varying the slope and intercept of the model</h3>
+
+
 
 
 **Varying the slope of the model**
 
 The following plot shows the mean of the response variable for different slopes of the Poisson model.
 
-```{r, echo=FALSE}
+<div id=`r class_id()`><pre>
 # Create a sequence of linear predictors
 B0 <- 0 # intercept
 B1 <- c(0, 0.2, 0.8) # slope
 
-data <- expand_grid(
+data <- expand.grid(
   x = seq(-5, 5, 0.1),
   B0 = B0,
   B1 = B1
@@ -880,18 +921,18 @@ data |>
   theme_minimal()  +
   theme_classic() +
   scale_color_discrete(name = "Slope")
-```
+</pre></div>
 
 **Varying the intercept of the model**
 
 Changing the intercept of the model will shift the distribution up and down. Technically, it specifies  the value of log(y) when x = 0.
 
-```{r, echo = FALSE}
+<div id=`r class_id()`><pre>
 # Create a sequence of linear predictors
 B0 <- c(-2, 0, 2) # intercept
 B1 <- 0.8 # slope
 
-data <- expand_grid(
+data <- expand.grid(
   x = seq(-5, 5, 0.1),
   B0 = B0,
   B1 = B1
@@ -913,7 +954,7 @@ data |>
   theme_minimal()  +
   theme_classic() +
   scale_color_discrete(name = "Intercept")
-```
+</pre></div>
 
 
 
