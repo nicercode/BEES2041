@@ -117,9 +117,9 @@ For example,
 
 ## Binomial distribution
 
-The binomial distribution is used to model the number of successes in a fixed number of trials. The distribution has two parameters: the number of trials $n$ and the probability of success $p$. It generates a series of 0s and 1s, where 1 represents a success.
+The binomial distribution is used to model the number of successes in a fixed number of trials. The distribution has one main parameter: the probability of success $p$. It generates a series of 0s and 1s, where 1 represents a success.
 
-For exmaple, we can simulate 10 trials with a probability of success of 0.9:
+For exmaple, we can simulate observations trials with a probability of success of 0.9:
 
 ```{r}
 rbinom(n = 10, size = 1, prob = 0.9)
@@ -133,7 +133,7 @@ The Poisson distribution is used to model a count of events per unit of sampling
 
 It generates a series of integers, starting at 0, representing the number of events.
 
-For exmaple, we can the number of events in 10 sampling events, 
+For exmaple, we can generate the number of events in 10 sampling units with a mean rate of 1.5 events per unit, 
 
 ```{r}
 rpois(n = 10, lambda = 1.5)
@@ -144,27 +144,30 @@ rpois(n = 10, lambda = 1.5)
 
 A key concept in GLMs is the link function.
 
-A link function provides the relationship between the linear predictor and the mean of the distribution function.  We often denote the linear predictor as $\eta$, where $\eta$ is our usual linear model given by
+A link function provides the relationship between  $x$ and the mean of the distribution function.  We often denote $x$  as $\eta$, where $\eta$ is our usual linear model given by
 
 $$\eta = B0 + B1 * x.$$
-As usual,  $B0$ is the intercept and $B1$ is the slope of the model. (This is the same as the standard linear model you already know.)
+As usual, $B0$ is the intercept and $B1$ is the slope of the model. (This is the same as the standard linear model you already know.)
 
-A key assumption of GLMs is that $\eta$ is related to the mean of the response variable by a link function, $g$, such that 
-$$g(\mu) = \eta$$
-where $\mu$ is the mean of the response distribution. 
+GLMs assume that $\eta$ is related to the mean of the response variable by a link function, $g$, such that 
+$$g(\mu_y) = \eta$$
+where $\mu_y$ is the mean of the response distribution. 
 
 For example, with a bionomial response, the link function $g$ is the logit function:
 
-$$g(\mu) = \log\left(\frac{\mu}{1-\mu}\right)$$
+$$g(\mu_y) = \log\left(\frac{\mu_y}{1-\mu_y}\right)$$
 
-Setting $g(\mu) = \eta$ and rearranging gives
+Setting $g(\mu_y) = \eta$ and rearranging gives
 
-$$\mu = \frac{e^{\eta}}{1+e^{\eta}}$$
+$$\mu_y = \frac{e^{\eta}}{1+e^{\eta}}$$
 
-So our mean repsonse is a transformation of the linear predictor, creating a non-linear model. 
+So our mean repsonse is obtained via a transformation of $x$ , creating a non-linear model. 
+
+# Theory Bionmial 
 
 ## Link function for a binomial response
-Plotting the function shows the relationship between the linear predictor and the mean of the response variable.
+
+It maky help to visualise the link functions. Let's consider a binomial response, where the mean of the response variable is given by the logistic function above.  Plotting the function shows the relationship between $x$  and the mean of the response variable.
 
 ```{r}
 # Create a sequence of linear predictors
@@ -184,30 +187,32 @@ p1 <- data |>
   ggplot(aes(x = x, y = eta)) +
   geom_line() +
   labs(
-    x = "Linear predictor",
-    y = "Linear predictor",
-    title = "Linear predictor"
-  )
+    x = "x",
+    y = expression(eta),
+    title = "Linear model"
+  ) +
+  theme_minimal()
 
 p2 <- data |>
   ggplot(aes(x = x, y = mu)) +
   geom_line() +
   labs(
-    x = "Linear predictor",
-    y = "Mean of the response variable",
-    title = "Link function for a binomial response"
-  )
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal() 
 
 p1 + p2
 ```
 
 ## Response distribution
 
-Now imagine drawing random numbers, where the probability of success is given by the mean of the response variable, $\mu$. This is the essence of a GLM.
+Now imagine drawing random numbers, where the probability of success is given by the mean of the response variable, $\mu_y$. This is the process we assume has generated the data we observe in the field.
 
-For the example above, we can simulate data from a binomial distribution with a mean of $\mu$:
+The plot below shows data which were drawn from such a model The black dashed line shows the true relationship between the linear predictor $x$ and the mean of the response variable. The dots show the obseravtions. 
 
-```{r}
+```{r, echo = FALSE}
 # Simulate data
 set.seed(123) # set seed for reproducibility
 
@@ -226,35 +231,40 @@ p3 <-
   geom_point() +
   labs(
     x = "x",
-    y = "y",
+    y = "Number of events",
     title = "Simulated data"
   ) +
   theme_minimal() +
   # add data from the link function
-  geom_line(data = data, aes(x = x, y = mu), color = "black", linetype = "dashed")
+  geom_line(data = data, aes(x = x, y = mu), color = "red", linetype = "dashed")
 
 p3
 ```
 
-Now let's fit a GLM to this data.
+
+In the real world, we don't know the true relationship between $x$  and the mean of the response variable. We have to estimate this from the data. This is where GLMs come in!
+
+So let's imagine we have the data above, but don't know the true relationship. 
+
+
+We can fit a GLM to the data to estimate the relationship:
 
 ```{r}
 # Fit the model
-model <- glm(y ~ x, data = data_y, family = "binomial") 
+model <- glm(y ~ x, data = data_y, family = "bionmial") 
 
 # Estimate the means
 means <- estimate_means(model, by = "x", length = 100)
-
-# add to plot above
-p3 + 
-  geom_line(data = means, aes(x = x, y = Probability), color = "red")
 ```
 
-## Varying the slope and intercept of the model
+Now we can plot the data and the fitted model:
 
-Like a linear model, the slope of the model determines the relationship between the linear predictor and the mean of the response variable.
+```{r, echo = FALSE}
+# add to plot above
+p3 + 
+  geom_line(data = means, aes(x = x, y = Mean), color = "red")
+```
 
-The intercept of the model determines the mean of the response variable when the linear predictor is zero.
 
 We can extract the slope of the fitted model above using the `parameters()` function:
 ```{r}
@@ -263,9 +273,16 @@ parameters(model)
 
 Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
 
+
+## Varying the slope and intercept of the model
+
+Like a linear model, the slope of the model determines the relationship between the linear predictor and the mean of the response variable.
+
+The intercept of the model determines the mean of the response variable when the linear predictor is zero.
+
 Varying the slope of model will make the logistic function steeper or shallower.
 
-```{r}
+```{r, eval = hide}
 # Create a sequence of linear predictors
 B0 <- 0 # intercept
 B1 <- c(0, 0.1, 1, 5) # slope
@@ -286,16 +303,17 @@ data |>
   geom_line() +
   labs(
     x = "x",
-    y = "Mean of the response variable",
-    title = "Link function for a binomial response"
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
   ) +
+  theme_minimal()  +
   theme_classic() +
   scale_color_discrete(name = "Slope")
 ```
 
 ## Varying the intercept of the model
 
-```{r}
+```{r, echo = FALSE}
 # Create a sequence of linear predictors
 B0 <- c(-2, 0, 2) # intercept
 B1 <- 2 # slope
@@ -316,9 +334,201 @@ data |>
   geom_line() +
   labs(
     x = "x",
-    y = "Mean of the response variable",
-    title = "Link function for a binomial response"
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
   ) +
+  theme_minimal()  +
+  theme_classic() +
+  scale_color_discrete(name = "Intercept")
+```
+
+
+
+# Theory Poisson
+
+
+## Link function for a Poisson response
+
+Now let's consider a Poisson response. Here the link function $g$ is the log function, such that
+
+$$g(\mu_y) = \log(\mu_y)$$
+
+Rearranging gives
+
+$$\mu_y = e^{\eta}$$
+
+So the mean of the response variable is given by the exponential of $\eta$. Plotting the function shows the relationship between the linear predictor and the mean of the response variable.
+
+```{r}
+# Create a sequence of linear predictors
+B0 <- 0 # intercept
+B1 <- 0.8 # slope
+
+data <- tibble(
+  x = seq(-5, 5, 0.1)
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) # mean of the response variable
+  )
+
+# Plot the relationship
+p1 <- data |>
+  ggplot(aes(x = x, y = eta)) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(eta),
+    title = "Linear model"
+  ) +
+  theme_minimal()
+
+p2 <- data |>
+  ggplot(aes(x = x, y = mu)) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal() 
+
+p1 + p2
+```
+
+So the rate of events increases exponentially with the linear predictor. In other words, the higher $x$, the more events are predicted to occur in a given preiod. 
+
+## Response distribution
+
+Now imagine drawing random numbers, where the avarerage rate of events is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
+
+```{r, echo = FALSE}
+# Simulate data
+set.seed(123) # set seed for reproducibility
+
+data_y <- tibble(
+          x = rnorm(40, 1, 2)) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta),  # mean of the response variable
+    y = rpois(n = n(), lambda = mu) # simulate data
+  )
+
+# Plot the data
+p3 <-
+  data_y |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(col="red") +
+  labs(
+    x = "x",
+    y = "y",
+    title = "Simulated data"
+  ) +
+  theme_minimal() +
+  # add data from the link function
+  geom_line(data = data, aes(x = x, y = mu), color = "black", linetype = "dashed")
+
+p3
+```
+
+
+In the real world, we don't know the true relationship between the linear predictor and the mean of the response variable. We have to estimate this from the data. This is where GLMs come in!
+
+So let's imagine we have the data above, but don't know the true relationship between $x$  and the mean of the response variable. 
+
+We can fit a GLM to the data to estimate the relationship:
+
+```{r}
+# Fit the model
+model <- glm(y ~ x, data = data_y, family = "poisson") 
+
+# Estimate the means
+means <- estimate_means(model, by = "x", length = 100)
+```
+
+Now we can plot the data and the fitted model:
+
+```{r, echo = FALSE}
+# add to plot above
+p3 + 
+  geom_line(data = means, aes(x = x, y = Mean), color = "red")
+```
+
+
+We can extract the slope of the fitted model above using the `parameters()` function:
+```{r}
+parameters(model)
+```
+
+Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
+
+
+## Varying the slope and intercept of the model
+
+Like a linear model, the slope of the model determines the relationship between $x$  and the mean of the response variable.
+
+The intercept of the model determines the mean of the response variable when $x$  is zero.
+
+Varying the slope of model will make the logistic function steeper or shallower.
+
+```{r, eval = hide}
+# Create a sequence of linear predictors
+B0 <- 0 # intercept
+B1 <- c(0, 0.2, 0.8) # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B1))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal()  +
+  theme_classic() +
+  scale_color_discrete(name = "Slope")
+```
+
+## Varying the intercept of the model
+
+Changing the intercept of the model will shift the distribution up and down. Technically, it specifies  the value of log(y) when x = 0.
+
+```{r, echo = FALSE}
+# Create a sequence of linear predictors
+B0 <- c(-2, 0, 2) # intercept
+B1 <- 0.8 # slope
+
+data <- expand_grid(
+  x = seq(-5, 5, 0.1),
+  B0 = B0,
+  B1 = B1
+) |>
+  mutate(
+    eta = B0 + B1 * x, # linear predictor
+    mu = exp(eta) # mean of the response variable
+  )
+
+# Plot the relationship
+data |>
+  ggplot(aes(x = x, y = mu, color = as.character(B0))) +
+  geom_line() +
+  labs(
+    x = "x",
+    y = expression(mu[y]),
+    title = "Mean of the response variable"
+  ) +
+  theme_minimal()  +
   theme_classic() +
   scale_color_discrete(name = "Intercept")
 ```
