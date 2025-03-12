@@ -690,7 +690,20 @@ There is strong evidence of positive effect of bush regeneration on the abundanc
 
 # Over to you!
 ## Over to you! GLM - Binomial data
-## Example 1:
+## Example 1: Mites
+
+We can fit the logistic regression model of the presence of Galumna sp. as a function of water content and topography as follows, using the glm() function and the family argument:
+
+
+```{r}
+mites <- read_csv("https://raw.githubusercontent.com/QCBSRworkshops/workshop06/fe88f6684fa59663e9d5a1591ab5c3d9315d0284/book-fr/mites.csv")
+
+
+logit.reg <- glm(pa ~ WatrCont + Topo,
+                 data = mites,
+                 family = binomial(link = "logit"))
+```
+
 **Exercises:**
 
 **Questions:**
@@ -698,7 +711,23 @@ There is strong evidence of positive effect of bush regeneration on the abundanc
 2.
 3.
 4.
-## Example 2:
+## Example 2: Bacterial treatment 
+
+Using the bacteria dataset (from the MASS package), model the presence of H. influenzae as a function of week of test. Start with a full model and reduce it to the most parsimonious model.
+
+This dataset was made to test the presence of the bacteria H. influenzae in children with otitis media in the Northern Territory of Australia. Dr A. Leach tested the effects of a drug on 50 children with a history of otitis media in the Northern Territory of Australia. The children were randomized to the drug or a placebo. The presence of H. influenzae was checked at weeks 0, 2, 4, 6 and 11: 30 of the checks were missing and are not included in this data frame.
+
+
+Load the MASS package and the bacteria dataset:
+
+```{r}
+library(MASS)
+
+bacteria
+
+model.bact3 <- glm(y ~ week, data = bacteria, family = binomial)
+```
+
 **Exercises:**
 
 **Questions:**
@@ -709,7 +738,25 @@ There is strong evidence of positive effect of bush regeneration on the abundanc
 
 ## Over to you! GLM - Count data
 ## Example 1:
+
+In this dataset, the number of trees of the species Faramea occidentalis was measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
+
 **Exercises:**
+
+```{r}
+faramea <- read_csv("https://raw.githubusercontent.com/QCBSRworkshops/workshop06/fe88f6684fa59663e9d5a1591ab5c3d9315d0284/book-fr/faramea.csv")
+
+# Histogram of F. occidentalis count data
+hist(faramea$Faramea.occidentalis, breaks=seq(0,45,1), xlab=expression(paste("Number of ",
+italic(Faramea~occidentalis))), ylab="Frequency", main="", col="grey")
+
+# Fit a Poisson GLM
+glm.poisson = glm(Faramea.occidentalis ~ Elevation,
+  data = faramea,
+  family = poisson) # this is what makes it a Poisson GLM! Note the default link is log.
+summary(glm.poisson)
+```
+
 
 **Questions:**
 1.
@@ -717,7 +764,16 @@ There is strong evidence of positive effect of bush regeneration on the abundanc
 3.
 4.
 ## Example 2:
+
+Use the mites dataset! Model the abundance of the species Galumna as a function of the substrate characteristics (water content WatrCont and density SubsDens)
+
+
 **Exercises:**
+
+```{r}
+glm.p = glm(Galumna~WatrCont, data=mites, family=poisson)
+```
+
 
 **Questions:**
 1.
