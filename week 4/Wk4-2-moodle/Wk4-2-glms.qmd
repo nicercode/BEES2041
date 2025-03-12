@@ -23,7 +23,9 @@ library(moodlequiz)
 library(tidyverse)
 library(easystats)
 
-# Data files for prac
+# Data files for prac from BEES2041 root
+# data_crabs <- read_csv("week 4/Wk4-2-moodle/data/Crabs.csv")
+# data_revegetation <- read_csv("week 4/Wk4-2-moodle/data/Revegetation.csv")
 ```
 
 # Intro to Generalised Linear Models
@@ -539,6 +541,21 @@ data |>
 
 # GLM Binomial
 ## Worked Example: Binomial data
+
+Let's work with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
+
+The response variable is discrete: 
+- the presence or absence of a crab in a given sighting 
+
+Let's load the data and have a look at the first few rows of the dataset
+
+```{r}
+data_crabs <- read_csv("data/Crabs.csv")
+
+data_crabs
+```
+
+
 ## Read in data
 ## Fit the model
 ## Check the model
