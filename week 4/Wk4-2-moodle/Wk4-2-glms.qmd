@@ -690,13 +690,15 @@ There is strong evidence of positive effect of bush regeneration on the abundanc
 
 # Over to you!
 ## Over to you! GLM - Binomial data
-## Example 1: Mites
+## Example 1: Mites 
 
 We can fit the logistic regression model of the presence of Galumna sp. as a function of water content and topography as follows, using the glm() function and the family argument:
 
 
 ```{r}
 mites <- read_csv("https://raw.githubusercontent.com/QCBSRworkshops/workshop06/fe88f6684fa59663e9d5a1591ab5c3d9315d0284/book-fr/mites.csv")
+
+write_csv(mites, "week 4/Wk4-2-moodle/data/mites.csv")
 
 
 logit.reg <- glm(pa ~ WatrCont + Topo,
@@ -721,6 +723,7 @@ This dataset was made to test the presence of the bacteria H. influenzae in chil
 Load the MASS package and the bacteria dataset:
 
 ```{r}
+# install.packages("MASS")
 library(MASS)
 
 bacteria
@@ -745,6 +748,8 @@ In this dataset, the number of trees of the species Faramea occidentalis was mea
 
 ```{r}
 faramea <- read_csv("https://raw.githubusercontent.com/QCBSRworkshops/workshop06/fe88f6684fa59663e9d5a1591ab5c3d9315d0284/book-fr/faramea.csv")
+
+write_csv(faramea, "week 4/Wk4-2-moodle/data/faramea.csv")
 
 # Histogram of F. occidentalis count data
 hist(faramea$Faramea.occidentalis, breaks=seq(0,45,1), xlab=expression(paste("Number of ",
