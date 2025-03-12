@@ -52,9 +52,8 @@ Our learning objective today are:
 
 - **understand** different probaility distributions
 - **understand the concept of a link function**
-- **run** a **generalised linear regression** in R using `glm()`
-- **run diagnostic checks** on your  model output using `check_model()` to assess whether it meets the assumptions of a linear model.
-- **interpret** the output of a **generalised linear regression** using:
+- **run** a **generalised linear regression (GLM)** in R using `glm()`
+- **interpret** the output of a **GLM** using:
   - `parameters()`
 - **extract** the **confidence interval** for the **slope** and **intercept** of the **regression** line
   - `estimate_means()`
@@ -542,8 +541,7 @@ data |>
   scale_color_discrete(name = "Intercept")
 ```
 
-
-# GLM Binomial
+# GLM Binary data
 
 ## Worked Example: Crabs along the beach
 
@@ -577,7 +575,7 @@ ggplot(data_crabs, aes(x = Dist, y = CrabPres)) +
 
 ## Fit the model
 
-Let's fit a **GLM** to **binomial** data e.g. presence/absence of crabs (0/1). =GLMs uses very similar syntax to fitting linear models. 
+Let's fit a **GLM** to **binomial** data e.g. presence/absence of crabs (0/1). GLMs uses very similar syntax to fitting linear models. 
 
 We use the `glm()` function instead of `lm()`. We need to add a `family` argument to specify the **distribution** you want to represent your response variable. We will use `family = "binomial"`.
 
@@ -602,10 +600,15 @@ There is no evidence that the presence of crabs varies with distance along the s
 We use `estimate_means()` to do the maths for us and calculate the mean probability of sighting a crab by the different levels of distance we had in our data.
 
 ```{r}
-estimate_means(fit_crab, by = "Dist")
+crab_means <- estimate_means(fit_crab, by = "Dist")
+
+ggplot(crab_means, aes(x = Dist, y = Probability)) +
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
+  geom_point(size = 5, col = "darkorange") + 
+  theme_minimal()
 ```
 
-# GLM Count
+# GLM Count data
 
 Let's work with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
@@ -655,7 +658,13 @@ Our model indicates strong evidence of a treatment effect  p < 0.001).
 ## Visualising our model estimates
 
 ```{r}
-estimate_means(slug_fit)
+slug_means <- estimate_means(slug_fit, by = "Treatment")
+
+ggplot(slug_means, aes(x = Treatment, y = Mean)) + 
+  geom_col(aes(colour = Treatment, fill = Treatment)) + 
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
+  theme_minimal() + 
+  coord_flip()
 ```
 
 There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
@@ -689,7 +698,7 @@ estimate_means(mite_subs_fit, by = "SubsDens")
 
 1. **What type of variable is `pa`, why do we need a GLM to model this data?**
 
-`pa` is a `r cloze("binary", c("binary", "continuous", "random"))` variable, 1 indicates `r cloze("presence", c("absence", "presence")` of mites. We need a GLM to model this data, because this data is not `r cloze("continuous", c("binary", "continuous", "random"))` and comes from a `r cloze("non-normal", c("normal", "non-normal"))` distribution and cannot be represented by a linear model. 
+`pa` is a `r cloze("binary", c("binary", "continuous", "random"))` variable, 1 indicates `r cloze("presence", c("absence", "presence"))` of mites. We need a GLM to model this data, because this data is not `r cloze("continuous", c("binary", "continuous", "random"))` and comes from a `r cloze("non-normal", c("normal", "non-normal"))` distribution and cannot be represented by a linear model. 
 
 2. **What does the Intercept represent in this model?**
 
@@ -736,19 +745,19 @@ estimate_means(bacteria_fit, by = "week")
 
 1. What type of variable is `y`? What distribution can we use to represent it well? Hint: Make a scatterplot and see for yourself
 
-`y` is the presence/absence/ count/density of the bacteria H. influenzae. A binomial/Poisson/normal distribution will represent this type of data well. 
+`y` is the `r cloze("presence and absence/", c("presence and absence/", "count", "denisty"))` of the bacteria _H. influenzae_. A `r cloze("binomial",c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
 
 2. Interpret the slope `week`
 
-The negative/positive value for the slope indicates that the probability of detecting the bacteria H. influenzae decreases as weeks pass.
+The `r cloze("negative", c("negative", "positive"))` value for the slope indicates that the probability of detecting the bacteria _H. influenzae_ `r cloze("decreases", c("decreases", "increases"))` as weeks pass.
 
 3. What is the p-value for the slope `week` represent?
 
-The p-value for the slope `week` represents the probabilty there is no/strong/weak relationship between the presence of bacteria H. influenzae/the intercept with week/age/location.
+The p-value for the slope `week` represents the probabilty there is `r cloze("no", c("no", "a strong", "a weak"))` relationship between the `r cloze("presence of bacteria H. influenzae", c("presence of bacteria H. influenzae", "intercept"))` with `r cloze("week", c("week", "patient age", "patient location"))`.
 
 4. What does the p-value for the slope `week` mean then?
 
-The p-value is  0.011/0.1/11 this indicates there is relatively low probabilty that there is no relationship between the presence of bacteria H. influenzae and week.
+The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
 
 ## Example 3: Faramea trees in Panama
 
@@ -782,15 +791,15 @@ parameters(faramea_fit) |> tibble()
 
 1. Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this? 
 
-The histogram shows that the counts of `Faramea.occidentalis` are right-skewed/left skewed. The dataset consists of mostly 0s/10s/20s. This is considered count/binary/continuous data and would be best represented by a binomial/normal/Poisson distribution. 
+The histogram shows that the counts of `Faramea.occidentalis` are `r cloze("right-skewed", c("right-skewed", "left-skewed"))`. The variable consists of mostly `r cloze("0s", "10s",  "20s"))`. The variable `Faramea.occidentalis` is considered `r cloze("count",c("count","binary", "continuous"))` data and would be best represented by a `r cloze("binomial",c("binomial", "normal", "Poisson")` distribution. 
 
 2. Interpret the slope for `Elevation`
 
-The slope is negative/positive, indicating the counts for _Faramea occidentalis_ decreases/increases with increasing elevation/temperature/density.
+The slope is `r cloze("negative", c("positive", "negative"))`, indicating the counts for _Faramea occidentalis_ `r cloze("decreases", c("decreases", "increases"))` with increasing `r cloze("elevation",c("density", "elevation", "temperature"))`.
 
 3. Interpret the CI for `Elevation`. Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`
 
-The CI for the slope is -0.00410 and -0.00157. The interval represents where the true population mean estimate for the slope/intercept/counts could lie 95% percent of the time. 
+The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (lower) and `r cloze("-0.00157", c("-0.00157", "1.98", "0.95"))` (upper). The interval represents where the true `r cloze("population", c("sample", "population"))` mean estimate for the `r cloze("slope", c("slope", "intercept", "counts"))` could lie 95% percent of the time. 
 
 ## Example 4: Mite counts with water content
 
