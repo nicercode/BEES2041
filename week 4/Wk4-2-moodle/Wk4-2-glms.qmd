@@ -30,7 +30,7 @@ library(easystats)
 
 ## Introduction
 
-In this session, we’ll explore **G**eneralized **L**inear **M**odels (*GLMs*), a powerful extension of linear regression that helps us analyze data where relationships aren’t strictly linear. GLMs allow us to model different types of responses, making them a go-to tool for many real-world problems.
+In this session, we’ll explore **G**eneralized **L**inear **M**odels (**GLMs**), a powerful extension of linear regression that helps us analyse data where relationships aren’t strictly linear. **GLMs** allow us to model different types of responses, making them a go-to tool for many real-world problems.
 
 We’ll focus on two key types of data:
 
@@ -97,52 +97,52 @@ library(tidyverse)
 library(easystats)
 library(patchwork)
 ```
+
+
 # GLM Theory
-
-
 
 ## Probablity distributions
 
-Before thinking about GLMs, let's refresh our understanding of probability distributions.
+A key assumption we make with statistical modelling is that the response variable follows a probability distribution. 
 
-We assume that the response variable follows a probability distribution. The choice of distribution depends on the nature of the response variable.
+**Linear models** we have been using a lot lately assumes the underlying disstribution for the response variable is **normal**, but sometimes that assumption is violated, meaning our data comes from a **non-normal distribution**. We used **GLMs** when working with **non-normal distributions**
 
-For example, 
+As data scientistis, we need to choose an appropiate distribution that represents our data. For example: 
 
-- if the response variable is continuous, we might use a normal distribution.
-- If the response variable is binary (e.g., presence/absence), we might use a binomial distribution.
-- If the response variable is a count (e.g., number of species), we might use a Poisson distribution.
+- if the response variable is **binary** (e.g., presence/absence), we might use a **binomial** distribution.
 
-
+- If the response variable is a **count** (e.g., number of species sighted in an hour), we might use a **Poisson** distribution.
 
 ## Binomial distribution
 
-The binomial distribution is used to model the number of successes in a fixed number of trials. The distribution has two parameters: the number of trials $n$ and the probability of success $p$. It generates a series of 0s and 1s, where 1 represents a success.
+The binomial distribution is used to represent **the number of successes in a fixed number of trials**. The binomial distribution has two parameters: 
 
-For exmaple, we can simulate 10 trials with a probability of success of 0.9:
+- the number of trials $n$
+- the probability of success $p$. 
+
+The **binomial distribution** generates a series of 0s and 1s, where 1 represents a success.
+
+For example, we can draw 10 numbers (**trials**) from the **binomal distribution** with a **probability of success** of 0.9. You can change the `prob` value and see how that affects **outcome** of the trials
 
 ```{r}
 rbinom(n = 10, size = 1, prob = 0.9)
 ```
 
-
 ## Poisson distribution
 
+The **Poisson distribution** is used to represent a **count of events per unit of sampling** (usually time, space or volume). For example, the number of invasive weeds in a quadrat. The **Poisson distribution**has one parameter $\lambda$, which is the **mean number of events per unit of sampling**.
 
-The Poisson distribution is used to model a count of events per unit of sampling (usually time, space or volume). The distribution has one parameter $\lambda$, which is the mean number of events per unit of sampling.
+The **Poisson distribution** generates a list of integers (whole numbers), starting at 0, representing the number of events that took place.
 
-It generates a series of integers, starting at 0, representing the number of events.
-
-For exmaple, we can the number of events in 10 sampling events, 
+For example, we can count the number of events in 10 sampling events. Change the `lambda` value to see how that changes the number of events observed.
 
 ```{r}
 rpois(n = 10, lambda = 1.5)
 ```
 
-
 ## Link functions
 
-A key concept in GLMs is the link function.
+A key concept in GLMs is the **link function**.
 
 A link function provides the relationship between the linear predictor and the mean of the distribution function.  We often denote the linear predictor as $\eta$, where $\eta$ is our usual linear model given by
 
