@@ -103,6 +103,14 @@ library(patchwork)
 
 # GLM Theory
 
+## Why do we need GLMs? 
+
+Linear models assume constant variance. You might have learned to transform count data and then fit a linear model. This can reduce the mean variance relationship, but it won’t get rid of it completely, especially if you have a lot of zeros in your data. To analyse discrete data accurately we need to use GLM’s.
+
+Discrete response data, like counts and presence/absence data, generally exhibit a mean-variance relationship. For example; for counts that are on average 5, we would expect most samples to be between about 1 and 9, but for counts that are on average 500, most of the observations will tend to be between 450 and 550, giving us a much larger variance when the mean is large.
+
+
+
 ## Probablity distributions
 
 A key assumption we make with statistical modelling is that the response variable follows a probability distribution. 
@@ -363,7 +371,7 @@ $$\mu_y = e^{\eta}$$
 
 So the mean of the response variable is given by the exponential of $\eta$. Plotting the function shows the relationship between the linear predictor and the mean of the response variable.
 
-```{r}
+```{r, echo=FALSE}
 # Create a sequence of linear predictors
 B0 <- 0 # intercept
 B1 <- 0.8 # slope
@@ -544,8 +552,15 @@ data |>
 
 Let's work with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
-The response variable is discrete: 
-- the presence or absence of a crab in a given sighting 
+The response variable is **discrete**: 
+
+- `CrabPres` the **presence or absence** of a crab in a given sighting 
+
+The predictor is **continuous**:
+
+- `Dist` 
+
+## Read in data
 
 Let's load the data and have a look at the first few rows of the dataset
 
@@ -555,11 +570,44 @@ data_crabs <- read_csv("data/Crabs.csv")
 data_crabs
 ```
 
-
-## Read in data
 ## Fit the model
+
+Let's fit a **GLM** to **binomial** data e.g. presence/absence of crabs (0/1). =GLMs uses very similar syntax to fitting linear models. 
+
+We use the `glm()` function instead of `lm()`. We need to add a `family` argument to specify the **distribution** you want to represent your response variable. We will use `family = "binomial"`.
+
+```{r}
+fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
+```
+
 ## Check the model
+
+<!-- A GLM makes some important assumptions that we will check shortly:  -->
+
+<!-- 1. The observed y are independent, depends on some predictors x -->
+
+<!-- - We can’t check this assumption from the model results, but you can ensure it’s true by taking a random sample for your experimental design.  -->
+
+<!-- 2. The response y come from a known distribution with a known mean-variance relationship -->
+
+<!-- 3. There is a straight line relationship between a known function $g$ of the mean of $y$ and the predictors  -->
+<!-- $x$ -->
+
+
+<!-- Note: R may prompt you to install some additional packages when checking a GLM model -->
+
+```{r}
+check_model(fit_crab)
+```
+
 ## Look at model output
+
+If all the assumption checks are okay, we can have a look at the results the model gave us. The two main functions for inference are the same as for linear models: `summary()`, `paramaters()` and `anova()`.
+
+```{r}
+parameters(fit_crab)
+summary(fit_crab)
+```
 
 # GLM Count
 ## Worked Example: Count data
