@@ -105,17 +105,15 @@ library(patchwork)
 
 ## Why do we need GLMs? 
 
-Linear models assume constant variance. You might have learned to transform count data and then fit a linear model. This can reduce the mean variance relationship, but it won’t get rid of it completely, especially if you have a lot of zeros in your data. To analyse discrete data accurately we need to use GLM’s.
+Linear models assume constant variance. We learned to transform data and  which can help us fit a better linear model but in some cases, it can be hard to fulfill the assumptions of a linear model. 
 
-Discrete response data, like counts and presence/absence data, generally exhibit a mean-variance relationship. For example; for counts that are on average 5, we would expect most samples to be between about 1 and 9, but for counts that are on average 500, most of the observations will tend to be between 450 and 550, giving us a much larger variance when the mean is large.
+For example, discrete response data, like counts and presence/absence data, generally exhibit a mean-variance relationship. This means, for counts that are on average 5, we would expect most samples to be between about 1 and 9, but for counts that are on average 500, most of the observations will tend to be between 450 and 550, giving us a much larger variance when the mean is large. 
 
-
+In situations where our response is discrete and exhibit a mean-variance relationship, we turn another tool - GLMs! 
 
 ## Probablity distributions
 
-A key assumption we make with statistical modelling is that the response variable follows a probability distribution. 
-
-**Linear models** we have been using a lot lately assumes the underlying disstribution for the response variable is **normal**, but sometimes that assumption is violated, meaning our data comes from a **non-normal distribution**. We used **GLMs** when working with **non-normal distributions**
+**Linear models** also assumes the underlying distribution for the response variable is **normal**, but sometimes that assumption is violated, meaning our data comes from a **non-normal distribution**. We used **GLMs** when working with **non-normal distributions**
 
 As data scientists, we need to choose an appropiate distribution that represents our data. For example: 
 
@@ -354,10 +352,7 @@ data |>
   scale_color_discrete(name = "Intercept")
 ```
 
-
-
 # Theory Poisson
-
 
 ## Link function for a Poisson response
 
@@ -578,26 +573,6 @@ We use the `glm()` function instead of `lm()`. We need to add a `family` argumen
 
 ```{r}
 fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
-```
-
-## Check the model
-
-<!-- A GLM makes some important assumptions that we will check shortly:  -->
-
-<!-- 1. The observed y are independent, depends on some predictors x -->
-
-<!-- - We can’t check this assumption from the model results, but you can ensure it’s true by taking a random sample for your experimental design.  -->
-
-<!-- 2. The response y come from a known distribution with a known mean-variance relationship -->
-
-<!-- 3. There is a straight line relationship between a known function $g$ of the mean of $y$ and the predictors  -->
-<!-- $x$ -->
-
-
-<!-- Note: R may prompt you to install some additional packages when checking a GLM model -->
-
-```{r}
-check_model(fit_crab)
 ```
 
 ## Look at model output
