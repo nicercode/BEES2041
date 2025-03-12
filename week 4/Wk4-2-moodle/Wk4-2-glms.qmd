@@ -77,25 +77,30 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
+> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` and `easystats` we need for this prac.
 
-> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer
-
-In case you don't have them installed, here is code for you to do so:
 ```{r, eval=FALSE}
-# Uncomment and run only the lines below only if you have not previously installed these.
-# install.packages("tidyverse")
-# install.packages("easystats")
+install.packages("dplyr")
+install.packages("readr")
+install.packages("ggplot2")
+install.packages("performance")
+install.packages("modelbased")
+install.packages("see")
+install.packages("emmeans")
+install.packages("patchwork")
+
 ```
 
-> Remember to load the packages into R to use em! 
+> Remember to load the packages into R to use em!
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
-library(tidyverse)
-library(easystats)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(performance)
+library(modelbased)
 library(patchwork)
 ```
-
 
 # GLM Theory
 
@@ -383,7 +388,7 @@ parameters(mite_subs_fit)
 
 The Intercept in this context represents the probability of observing the Galumna mite when substrate density is `r cloze("0", c("1", "0", "100"))`
 
-3. **What sign is the slope? What does this mean for `pa`? **
+3. **What sign is the slope? What does this mean for `pa`?**
 
 The slope `SubsDen` is `r cloze("positive", c("positive", "negative"))`. This means the probability of observing the mite `r cloze("increases", c("decreases", "increases"))` with substrate density.
 
@@ -693,7 +698,7 @@ ggplot(means, aes(x = Elevation, y = Mean)) +
 
 **Questions:**
 
-1. **Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this? **
+1. **Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this?**
 
 The histogram shows that the counts of `Faramea.occidentalis` are `r cloze("right-skewed", c("right-skewed", "left-skewed"))`. The variable consists of mostly `r cloze("0s", c("0s", "10s",  "20s"))`. The variable `Faramea.occidentalis` is considered `r cloze("count",c("count","binary", "continuous"))` data and would be best represented by a `r cloze("binomial",c("binomial", "normal", "Poisson"))` distribution. 
 
@@ -746,6 +751,7 @@ ggplot(galumna_means, aes(x = WatrCont, y = Mean)) +
 ```
 
 **Questions:**
+
 1. **Make a histogram of `Galumna` counts, describe its distribution.**
 
 The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "left-skewed"))`, meaning there are lots of `r cloze("small", c("small", "large"))` values in the variable. This data is count data and resembles a `r cloze("Poisson", c("binomial", "Poisson", "normal"))`.
@@ -754,11 +760,11 @@ The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "le
 
 The scatterplot shows that the data is not `r cloze("continuous", c("continuous", "Poissrandomon", "corrected"))` (there are horizontal lines of points). The plot also shows that the points are `r cloze("not evenly spread out", c("outliers", "not evenly spread out"))`. These characteristics suggests that a linear model is not suited for this type of data.  
 
-3. **Interpret the slope `WatrCont` and its p-value. **
+3. **Interpret the slope `WatrCont` and its p-value.**
 
 The slope for WaterCont is `r cloze("negative", c("positive", "negative"))`, suggesting that as water content `r cloze("increases", c("decreases", "increases"))`, the counts of Galumna decreases. The p-value tells us that there is very `r cloze("low", c("low", "high"))` probability that there is no relationship between water content and mite count.
 
-4. **Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we still mite counts start to taper off? **
+4. **Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we still mite counts start to taper off?**
 
 The `r cloze("mean", c("minium", "mean", "maximum"))`  counts for Galumna, starts to taper off at `r cloze("600", c("200", "400", "600"))`.
 
