@@ -577,19 +577,59 @@ fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
 
 ## Look at model output
 
-If all the assumption checks are okay, we can have a look at the results the model gave us. The two main functions for inference are the same as for linear models: `summary()`, `paramaters()` and `anova()`.
+If all the assumption checks are okay, we can have a look at the results the model gave us. The two main functions for inference are the same as for linear models: `summary()`, `paramaters()`.
+
+These output is interpreted in a similar manner as for linear model, but we need to include the link function, $g$.
 
 ```{r}
 parameters(fit_crab)
 summary(fit_crab)
 ```
 
+
+If $p$ is the probability of crab presence, this output tells us:
+
+$logit(p) = -1.02 + 0.06 * Dist$ 
+
+There is no evidence that the presence of crabs varies with distance along the shoreline (p = 0.364). 
+
+For each additional unit of distance, the odds of crab presence increase by a factor of exp(0.05804) ≈ 1.06, though this effect is not statistically significant (p = 0.364).
+
+## Back transformation and visualising our model estimates
+
+When we get a log-odds (logit) coefficient from logistic regression, it’s not directly interpretable as a probability. We need to backtransform it using the logistic function:
+
+Step-by-step conversion:
+
+1. Log-odds to odds:
+
+Take the exponent of the log-odds value to get to odds
+
+<!-- TODO eqation -->
+ 
+Odds are the ratio of success to failure (e.g., if odds = 2, success is twice as likely as failure).
+
+2. Odds to probability:
+
+<!-- TODO eqation -->
+
+This ensures the probability is always between 0 and 1.
+
+Luckily, `estimate_means()` does this for us and we don't have to do the math to backtransform to probability for a binomial distribution
+```{r}
+estimate_means(fit_crab, by = "Dist")
+```
+
 # GLM Count
+
 ## Worked Example: Count data
+
 ## Read in data
 ## Fit the model
-## Check the model
+
 ## Look at model output
+
+## Visualise our model estimates
 
 # Over to you!
 ## Over to you! GLM - Binomial data
