@@ -46,7 +46,7 @@ We’ll learn how to choose the right model, check if our models fit well, inter
 
 Our learning objective today are:
 
-- **understand** different probaility distribution
+- **understand** different probability distribution
 - **understand** the concept of a link function
 - **run** a generalised linear regression (GLM) in R using `glm()`
 - **interpret** the output of a GLM using:
@@ -65,8 +65,10 @@ Everything you need for this prac is on Moodle
 
 1. Download this week's materials zip file from Moodle, from the course page
 2. Unzip the file by: 
-  - MacOS: Double clicking the zipfile 
-  - Windows: Right click on the zip file and click "Extract All" 
+
+- MacOS: Double clicking the zipfile 
+- Windows: Right click on the zip file and click "Extract All" 
+
 3. Move the extracted folder into the folder where you store materials for `BEES2041/` 
 4. **Click on the Rstudio project file, eg. `Wk-4-2-glms.Rproj`** to open the RStudio project and you're in!!!
 
@@ -115,7 +117,7 @@ library(patchwork)
 
 
 
-The standard linear models we used previosuly make several rather srtict assumptions, including: 
+The standard linear models we used previously make several rather strict assumptions, including: 
 
 - residuals are normally distributed
 - constant variance, and 
@@ -236,7 +238,7 @@ p1 + p2
 
 
 
-Now imagine drawing random numbers, where the* *probability of success** is given by the mean of the response variable, $\mu_y$. This is the process we assume has generated the data we observe in the field.
+Now imagine drawing random numbers, where the**probability of success** is given by the mean of the response variable, $\mu_y$. This is the process we assume has generated the data we observe in the field.
 
 The plot below shows data which were drawn from such a model The black dashed line shows the true relationship between the linear predictor $x$ and the mean of the response variable. The dots show the obseravtions. 
 
@@ -295,6 +297,7 @@ p3 +
 
 
 We can extract the slope of the fitted model above using the `parameters()` function:
+
 ```{r}
 parameters(model)
 ```
@@ -442,9 +445,9 @@ The p-value of `r cloze("< 0.001",c("0.360", "< 0.001", "< 0.0001"))` for the sl
 
 ![](images/bacteria.jpeg){width=60%}
 
-Using the bacteria dataset (from the `MASS` R package), try and model the presence of _H. influenzae_ as a function of week of test. 
+Using the bacteria dataset (from the `MASS` R package), try and model the presence of *H. influenzae* as a function of week of test. 
 
-Medical researchers collected data on the presence of the bacteria H. influenzae in children with _Otitis media_ in the Northern Territory of Australia. 50 children with a history of _Otitis media_ were tested to assess the effects of a drug on the disease. The children were randomised to the drug treatment or a placebo treatment. The presence of _H. influenzae_ was checked at weeks 0, 2, 4, 6 and 11. 
+Medical researchers collected data on the presence of the bacteria H. influenzae in children with *Otitis media* in the Northern Territory of Australia. 50 children with a history of *Otitis media* were tested to assess the effects of a drug on the disease. The children were randomised to the drug treatment or a placebo treatment. The presence of *H. influenzae* was checked at weeks 0, 2, 4, 6 and 11. 
 
 **Exercises:**
 
@@ -460,13 +463,13 @@ Medical researchers collected data on the presence of the bacteria H. influenzae
 
 **Questions:**
 
-1. **What type of variable is `y`? What distribution can we use to represent it well?** _Hint: Make a scatterplot and see for yourself_
+1. **What type of variable is `y`? What distribution can we use to represent it well?** *Hint: Make a scatterplot and see for yourself*
 
-`y` is the `r cloze("presence and absence", c("presence and absence", "count", "denisty"))` of the bacteria _H. influenzae_. A `r cloze("binomial",c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
+`y` is the `r cloze("presence and absence", c("presence and absence", "count", "denisty"))` of the bacteria *H. influenzae*. A `r cloze("binomial",c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
 
 2. **Interpret the slope `week`**
 
-The `r cloze("negative", c("negative", "positive"))` value for the slope indicates that the probability of detecting the bacteria _H. influenzae_ `r cloze("decreases", c("decreases", "increases"))` as weeks pass.
+The `r cloze("negative", c("negative", "positive"))` value for the slope indicates that the probability of detecting the bacteria *H. influenzae* `r cloze("decreases", c("decreases", "increases"))` as weeks pass.
 
 3. **What is the p-value for the slope `week` represent?**
 
@@ -474,7 +477,7 @@ The p-value for the slope `week` represents the probabilty there is `r cloze("no
 
 4. **What does the p-value for the slope `week` mean then?**
 
-The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria *H. influenzae* and weeks.
 
 # GLMs for count data
 
@@ -618,6 +621,7 @@ p3 +
 
 
 We can extract the slope of the fitted model above using the `parameters()` function:
+
 ```{r}
 parameters(model)
 ```
@@ -721,7 +725,7 @@ There is strong evidence of a positive effect of bush regeneration on the abunda
 
 ![](images/faramea.jpeg){width=60%}
 
-The dataset contains the number of trees of the species _Faramea occidentalis_  measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
+The dataset contains the number of trees of the species *Faramea occidentalis*  measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
 
 **Exercises:**
 
@@ -743,9 +747,9 @@ The histogram shows that the counts of `Faramea.occidentalis` are `r cloze("righ
 
 2. **Interpret the slope for the predictor `Elevation`**
 
-The slope is `r cloze("negative", c("positive", "negative"))`, indicating the counts for _Faramea occidentalis_ `r cloze("decreases", c("decreases", "increases"))` with increasing `r cloze("elevation",c("density", "elevation", "temperature"))`.
+The slope is `r cloze("negative", c("positive", "negative"))`, indicating the counts for *Faramea occidentalis* `r cloze("decreases", c("decreases", "increases"))` with increasing `r cloze("elevation",c("density", "elevation", "temperature"))`.
 
-3. **Interpret the CI for `Elevation`.** _Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`_
+3. **Interpret the CI for `Elevation`.** *Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`*
 
 The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (lower) and `r cloze("-0.00157", c("-0.00157", "1.98", "0.95"))` (upper). We are `r cloze("95%", c("5%", "95%", "97.5%"))` sure the true `r cloze("population", c("sample", "population"))` value of the `r cloze("slope", c("slope", "intercept", "counts"))` lies within this range.
 
@@ -770,6 +774,7 @@ Using the `mites` data, try model the abundance of the species `Galumna` as a fu
 ```{r}
 
 ```
+
 **Questions:**
 
 1. **Make a histogram of `Galumna` counts, describe its distribution.**
@@ -833,6 +838,7 @@ data <- expand.grid(
   )
 
 # Plot the relationship
+
 data |>
   ggplot(aes(x = x, y = mu, color = as.character(B1))) +
   geom_line() +
@@ -869,6 +875,7 @@ data <- expand.grid(
   )
 
 # Plot the relationship
+
 data |>
   ggplot(aes(x = x, y = mu, color = as.character(B0))) +
   geom_line() +
@@ -910,6 +917,7 @@ data <- expand.grid(
   )
 
 # Plot the relationship
+
 data |>
   ggplot(aes(x = x, y = mu, color = as.character(B1))) +
   geom_line() +
@@ -943,6 +951,7 @@ data <- expand.grid(
   )
 
 # Plot the relationship
+
 data |>
   ggplot(aes(x = x, y = mu, color = as.character(B0))) +
   geom_line() +

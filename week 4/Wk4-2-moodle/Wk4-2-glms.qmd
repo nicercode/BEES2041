@@ -51,7 +51,7 @@ We’ll learn how to choose the right model, check if our models fit well, inter
 
 Our learning objective today are:
 
-- **understand** different probaility distribution
+- **understand** different probability distribution
 - **understand** the concept of a link function
 - **run** a generalised linear regression (GLM) in R using `glm()`
 - **interpret** the output of a GLM using:
@@ -106,7 +106,7 @@ library(patchwork)
 
 ## Why do we need GLMs? 
 
-The standard linear models we used previosuly make several rather srtict assumptions, including: 
+The standard linear models we used previously make several rather strict assumptions, including: 
 
 - residuals are normally distributed
 - constant variance, and 
