@@ -42,7 +42,7 @@ We’ll focus on two key types of data:
 - **Binomial** data – useful for modeling **probabilities**, like whether an event happens or not (e.g., predicting invasive species presence/absence, or organism surival).
 - **Count** data – great for modeling things that happen a certain number of times, like the number of visits to a nesting site or the number of species in a sample.
 
-We’ll learn how to choose the right model, check if our models fit well, interpret results, . By the end, you’ll be equipped to apply GLMs to your own data!
+We’ll learn how to choose the right model, fit them and interpret results. By the end, you’ll be equipped to apply GLMs to your own data!
 
 ![Artwork by @allison_horst](images/error-comic.png){width=70%}
 <br>

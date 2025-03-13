@@ -195,7 +195,11 @@ It may help to visualise this. Let's plot
 - the linear predictor $\eta$
 - the mean of the response variable $\mu_y$
 
-```{r echo=FALSE}
+<details>
+
+<summary> Scary code </summary>
+
+```{r}
 # Create a sequence of linear predictors
 B0 <- 0 # intercept
 B1 <- 2 # slope
@@ -231,6 +235,9 @@ p2 <- data |>
 
 p1 + p2
 ```
+
+
+</details>
 
 ## Response distribution
 
