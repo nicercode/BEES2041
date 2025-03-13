@@ -303,11 +303,12 @@ We use `estimate_means()` to do the maths for us and calculate the mean probabil
 Then we can visualise this with a graphic.
 
 ```{r}
-crab_means <- estimate_means(fit_crab, by = "Dist")
+crab_means <- estimate_means(fit_crab, by = "Dist", length = 100)
 
 ggplot(crab_means, aes(x = Dist, y = Probability)) +
-  geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
-  geom_point(size = 5, col = "darkorange") + 
+  geom_ribbon(aes(ymin = CI_low, ymax = CI_high), fill = "grey") + 
+  geom_line(size = 1, col = "darkorange") + 
+  geom_jitter(data = data_crabs, aes(y = CrabPres), height = 0, width = 0.2, alpha = 0.2, size = 4, colour = "red") + 
   theme_minimal()
 ```
 
