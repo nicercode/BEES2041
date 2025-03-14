@@ -53,11 +53,11 @@ We will use this program throughout the course and over time you will really kno
 1. Create a folder in a meaningful location on your computer called `BEES2041`
 2. Download `Wk1-1-materials` from the course page in Moodle. This is a zip file.
 3. Unzip the file by: 
-  - MacOS: Double clicking the file `Wk-1-intro`
+  - MacOS: Double clicking the file `Wk1-intro`
   - Windows: Right click on the zip file and click "Extract All"
-4. Move the folder created, called `Wk-1-intro`, into your course folder (`BEES2041`) you created in step 1.
+4. Move the folder created, called `Wk1-intro`, into your course folder (`BEES2041`) you created in step 1.
 
-5. Withing that folder, **Click on the `Wk-1-intro.Rproj`** to open the RStudio project and you're in!!!
+5. Withing that folder, **Click on the `Wk1-intro.Rproj`** to open the RStudio project and you're in!!!
 
 <h3>The RStudio Layout</h3>
 
@@ -66,7 +66,7 @@ Now that you're in RStudio, let's talk through all the panes and features you ca
 ![RStudio layout](rstudio.png){width=100%}
 <br>
 
-When you open `Wk-1-intro.Rproj`, you will be greeted by three panels:
+When you open `Wk1-intro.Rproj`, you will be greeted by three panels:
 
 - The interactive **R console** (entire left pane)
 
@@ -84,7 +84,7 @@ This is where you can see the files in the project. The **Plots** tab is where y
 
 ![Are you in a RStudio project?](are-you-in-the-project.png){width=80%}
 
-> If you see `Project: (None)`, close RStudio and **Click on the `Wk-1-intro.Rproj`**
+> If you see `Project: (None)`, close RStudio and **Click on the `Wk1-intro.Rproj`**
 
 <h3>Project organisation goes a long way</h3>
 
@@ -99,7 +99,7 @@ A `.Rproj` file will keep all your ducks in a row, all your data and code script
 getwd()
 ```
 
-The `getwd()` function, tells you the 'address' or **file path** that you are currently in. Everyone will have different output because we all created the `BEES2041` folder in a unique location on our computers that makes sense to us. What is *critical* is the latest part `Wk-1-intro`. We are **ALL** working in the project folder `Wk-1-intro`! This minor little detail will make loading our own data into R a smooth process.
+The `getwd()` function, tells you the 'address' or **file path** that you are currently in. Everyone will have different output because we all created the `BEES2041` folder in a unique location on our computers that makes sense to us. What is *critical* is the latest part `Wk1-intro`. We are **ALL** working in the project folder `Wk1-intro`! This minor little detail will make loading our own data into R a smooth process.
 
 <h3>Hello, meet Quarto docs</h3>
 

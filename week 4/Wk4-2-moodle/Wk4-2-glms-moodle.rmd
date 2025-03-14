@@ -70,7 +70,7 @@ Everything you need for this prac is on Moodle
 - Windows: Right click on the zip file and click "Extract All" 
 
 3. Move the extracted folder into the folder where you store materials for `BEES2041/` 
-4. **Click on the Rstudio project file, eg. `Wk-4-2-glms.Rproj`** to open the RStudio project and you're in!!!
+4. **Click on the Rstudio project file, eg. `Wk4-2-glms.Rproj`** to open the RStudio project and you're in!!!
 
 We will be working with various datasets collected. These are in the folder `data/`.
 

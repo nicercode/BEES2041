@@ -52,7 +52,7 @@ Everything you need for this practical is on Moodle
 -   Windows: Right click on the zip file and click "Extract All"
 
 4.  Go into the folder `Wk1-2-materials` created by extracting the zip.
-5.  **Click on the `Wk-1-2-data-manip.Rproj`** to open the RStudio project and you're in!!!
+5.  **Click on the `Wk1-2-data-manip.Rproj`** to open the RStudio project and you're in!!!
 
 We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
