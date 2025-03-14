@@ -1,0 +1,114 @@
+---
+title: "Week 7-1 Multivariate methods"
+format: 
+  html:    
+    self-contained: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Set the working directory
+rprojroot::has_file("BEES2041-code.Rproj") |>
+  rprojroot::find_root() |>
+  file.path("week 7/Wk7-moodle") |>
+  setwd()
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+```
+
+# Intro
+
+## Introduction
+
+In this session, we’ll explore XXXX.
+
+
+We’ll learn how xxx. By the end, you’ll be equipped to apply GLMs to your own data!
+
+![](images/Picture1.jpg){width=70%}
+
+<br>
+
+## Key learning objectives
+
+Our learning objective today are:
+
+- 
+
+Let’s dive in! 🚀 
+
+## Setting up: Materials
+
+Everything you need for this prac is on Moodle
+
+1. Download this week's materials zip file from Moodle, from the course page
+2. Unzip the file by: 
+  - MacOS: Double clicking the zipfile 
+  - Windows: Right click on the zip file and click "Extract All" 
+3. Move the extracted folder into the folder where you store materials for `BEES2041/` 
+4. **Click on the Rstudio project file, eg. `Wk7-Multivariate.Rproj`** to open the RStudio project and you're in!!!
+
+We will be working with various datasets collected. These are in the folder `data/`.
+
+You will work in the relevant Quarto document for this prac. Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
+
+## Setting up: Packages
+
+> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` we need for this prac.
+
+We'll also be using a new package, called `vegan`, which is XXX
+
+```{r, eval=FALSE}
+install.packages("dplyr")
+install.packages("readr")
+install.packages("ggplot2")
+install.packages("vegan")
+```
+
+> Remember to load the packages into R to use em!
+
+```{r, results='hide', warning=FALSE, message=FALSE}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(vegan)
+```
+
+# Single hask for major setcions
+
+## Use a double hash for each question
+
+How to include an image
+
+![](images/Beach.jpeg){width=70%}
+
+This is how you... 
+```{r}
+# Code you want to display
+```
+
+Example of a cloze question 
+
+The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+
+
+```{r solution1}
+# label chunk solution1,2,3, etc with solutions, and code you want to remove
+
+```
+
+## Title of next question
+
+
+Example of a cloze question 
+
+The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+
+```{r solution1}
+# label chunk solution1,2,3, etc with solutions, and code you want to remove
+
+```
+

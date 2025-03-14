@@ -1,0 +1,99 @@
+---
+title: "Week 7-1 Multivariate methods"
+format: 
+  html:    
+    self-contained: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Set the working directory
+rprojroot::has_file("BEES2041-code.Rproj") |>
+  rprojroot::find_root() |>
+  file.path("week 7/Wk7-moodle") |>
+  setwd()
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+```
+
+# Intro
+
+## Introduction
+
+In this practical, we will continue our look at methods to visualise complex, multivariate data sets - ones where more than one response variable has been measured from each replicate sample. You will get a brief introduction to cluster diagrams. Then, we revisit some of the issues that need deciding on before making these plots (transformations and choices of similarity measures).
+
+Then, we will learn how to run a formal hypothesis test on multivariate data (permutational multivariate analysis of variance). This will be used to contrast species composition in and out of rock pools from the class data set collected at Maroubra.
+
+![](images/nature14140-sf2.jpg){width=70%}
+
+For some questions, we will be using the data sets from last practical. To avoid a lot of work, add today's code to the notebook you created for the first multivariate practical rather than make a new one. You can then easily re-run previous code to import data and give you some of the objects in R that you will need for today's work.
+
+
+## Key learning objectives
+
+Our learning objective today are:
+
+- 
+
+Let’s dive in! 🚀 
+
+## Setting up: Packages
+
+> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` we need for this prac.
+
+We'll also be using a new package, called `vegan`, which is XXX
+
+```{r, eval=FALSE}
+install.packages("dplyr")
+install.packages("readr")
+install.packages("ggplot2")
+install.packages("vegan")
+```
+
+> Remember to load the packages into R to use em!
+
+```{r, results='hide', warning=FALSE, message=FALSE}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(vegan)
+```
+
+# Single hask for major setcions
+
+## Use a double hash for each question
+
+How to include an image
+
+![](images/Beach.jpeg){width=70%}
+
+This is how you... 
+```{r}
+# Code you want to display
+```
+
+Example of a cloze question 
+
+The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+
+
+```{r solution1}
+# label chunk solution1,2,3, etc with solutions, and code you want to remove
+
+```
+
+## Title of next question
+
+
+Example of a cloze question 
+
+The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+
+```{r solution1}
+# label chunk solution1,2,3, etc with solutions, and code you want to remove
+
+```
+
