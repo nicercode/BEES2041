@@ -1,0 +1,254 @@
+---
+title: "Multiple predictors"
+format:
+  html:    
+    self-contained: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Set the working directory
+rprojroot::has_file("BEES2041-code.Rproj") |>
+  rprojroot::find_root() |>
+  file.path("week 5/Wk5-1-moodle") |>
+  setwd()
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+```
+
+```{r}
+library(tidyverse)
+library(easystats)
+
+
+```
+
+
+## Outline
+
+- two categoircal predictors (2 way anova)
+  - Qu: do both factors have an effect, how big is the effect, is it interactive or additive
+  - Example 1: Penguins: size by sex and species
+  - Example 2: Environmental computing: Invert richness by substrate and copper treatment
+  
+- Two continuous predictors
+  - addtive effect
+  - Angela height: altitude and rainfall
+
+- Two continuous predictors with interaction
+  - Does efecct of X on Y change with Z? 
+  - Isaac leaves
+
+- One categorical, one continuous variable
+  - Question concerns sloep, looking for difference between groups
+  - Example 1: Urchins
+
+
+
+
+
+
+
+## Two factor ANOVA
+```{r}
+data2 <- data_penguins |>
+  filter(!is.na(sex))
+
+fit <- lm(body_mass_g ~ species * sex, data = data2)
+
+anova(fit)
+
+ggplot(data2, aes(x = species, y = body_mass_g, fill = sex, col = sex)) +
+  geom_violin() +
+  #  geom_jitter() +
+  labs(
+    x = "Species",
+    y = "Bill depth (mm)"
+  )
+
+means <- estimate_means(fit, by = c("sex", "species"))
+
+estimate_contrasts(fit, contrast = c("sex"), by = c("species"))
+estimate_contrasts(fit, contrast = c("species"))
+
+ggplot(data2, aes(x = species, y = body_mass_g, colour = sex, group = sex)) +
+  geom_jitter() +
+  geom_line(data = means, aes(y = Mean)) +
+  geom_ribbon(data = means, aes(y = Mean, ymin = CI_low, ymax = CI_high), alpha = 0.2) +
+  theme_minimal() +
+  labs(
+    title = "Body Mass by Species and Sex",
+    y = "bill_depth_mm",
+    x = "Body Mass (g)",
+    fill = "Sex"
+  ) 
+```
+
+
+## Two continuous predictors- Isaac leaves
+
+```{r}
+data_leaves <- read_csv("data/towers-2024.csv")
+```
+
+Additive model
+
+```{r}
+fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature, data = data_leaves)
+
+parameters(fit)
+```
+
+```{r}
+fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall * temperature, data = data_leaves)
+
+parameters(fit)
+anova(fit)
+
+means <- estimate_prediction(fit)
+
+means1 <- estimate_means(fit, by = c("log10_rainfall")) |>
+  mutate(temperature = 16)
+
+means2 <- estimate_means(fit, by = c("log10_rainfall", "temperature"))
+
+# plot
+ggplot(means2, aes(x = log10_rainfall, y = Mean, group = temperature, color = temperature)) +
+  geom_point(data = data_leaves, aes(y = log10_leaf_mass_per_area), alpha = 0.5, col = "red") +
+  geom_line() +
+  geom_line(data = means1, col = "orange") +
+  labs(
+    x = "log10_rainfall",
+    y = "log10_leaf_mass_per_area"
+  )
+```
+
+
+## One categorical, one continuous variable (ANCOVA) - Urchins
+
+```{r}
+
+# read in data: 
+data_urchins <- read_csv("data/Urchins.csv") %>%
+  mutate(
+    Quadrat = as.factor(Quadrat)
+  )
+```
+
+```{r}
+fit <- lm(BareRock ~ Day*Treatment, data = urch)
+
+check_model(fit)
+
+# neeeds a log transofrm
+data_urchins <- data_urchins %>% mutate(logBareRock = log(BareRock + 1))
+
+fit_log <- lm(logBareRock ~ Day * Treatment, data = data_urchins)
+
+check_model(fit_log)
+
+parameters(fit_log)
+
+anova(fit_log)
+```
+
+```{r}
+means <- estimate_means(fit_log, by = c("Day", "Treatment"))
+
+p1 <-
+  ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
+  geom_line() +
+  labs(
+    x = "Day",
+    y = "log(BareRock)"
+  ) +
+  theme_minimal()
+
+# Compare lines
+p1
+
+# Compare lines with data
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Treatment)
+```
+
+Add a random effect for Quadrat
+
+```{r}
+library(glmmTMB)
+fit <- glmmTMB(logBareRock ~ Day * Treatment + (1 | Quadrat), data = data_urchins)
+
+fit_simple <- glmmTMB(logBareRock ~ Day * Treatment, data = data_urchins)
+
+check_model(fit)
+
+means <- estimate_expectation(fit, by = c("Day", "Treatment"))
+means2 <- estimate_expectation(fit)
+
+p1 <-
+  ggplot(means2, aes(x = Day, y = Predicted, color = Treatment)) +
+  geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
+  labs(
+    x = "Day",
+    y = "log(BareRock)"
+  ) +
+  theme_minimal() +
+  geom_line(data = means, alpha = 1, size = 2)
+
+p1
+
+# Plot for each treatmeant
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Treatment)
+
+# Plot for each Quadrat
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Quadrat)
+
+parameters(fit_simple)
+parameters(fit)
+
+## Ignoring qudrat adds to noise
+## CI's are smaller with the random effect included
+```
+
+
+## Penguins example
+
+Want to test for differences in bill depth between species, use bill length as a covariate, because larger penguins have larger bills overall
+
+```{r}
+library(palmerpenguins)
+data_penguins <- penguins
+
+fit <- lm(bill_depth_mm ~ bill_length_mm * species, data = data_penguins)
+
+means <- estimate_expectation(fit, by = c("bill_length_mm", "species"))
+
+parameters(fit)
+ggplot(data_penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  geom_line(data = means, aes(y = Predicted)) +
+  labs(
+    x = "Bill length (mm)",
+    y = "Bill depth (mm)"
+  )
+
+anova(fit)
+
+estimate_contrasts(fit)
+
+# Simple analysis without covariate
+
+fit_simple <- lm(bill_depth_mm ~ species, data = data_penguins)
+
+parameters(fit_simple)
+estimate_contrasts(fit_simple)
+```
+
