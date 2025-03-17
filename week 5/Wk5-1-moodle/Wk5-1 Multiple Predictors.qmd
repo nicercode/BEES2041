@@ -345,16 +345,20 @@ There were no statistical differences in body mass male Chinstrap and male Adeli
 
 ## Use case 2: Two **continuous** predictors
 
-Let's move on to our next use case: **two continuous predictors**. Recall from week 3, Isaac was interested in how leaf construction changed with climate. Previously, we found that leaf mass per area decreased as rainfall increased.
+Let's move on to our next use case: **two continuous predictors**. Recall from week 3, Dr Isaac Towers was interested in how leaf construction changed with climate. 
 
-Additonally, Isaac asked **whether temperature had an effect on leaf mass per area**? He first wanted to test the **main effects** of rainfall and temperature on leaf mass per area.
+![Meet Dr. Isaac Towers! Image credit: Data Dan](images/isaac-plant-ecosystems.png){width=60%} <br>
+
+Previously, we found that leaf mass per area decreased as rainfall increased. 
+
+Additonally, Isaac asked **whether temperature also had an effect on leaf mass per area**? He first wanted to test the **main effects** of rainfall and temperature on leaf mass per area.
 
 Let's load the data and fit a linear model to test the main effects of both rainfall and temperature on log10 leaf mass per area.
 ```{r}
 data_leaves <- read_csv("data/towers-2024.csv")
 ```
 
-Fit a model with rainfall and temperature as predictors
+Fit a model with rainfall and temperature as predictors.
 
 ```{r}
 fit_leaves_main <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature, data = data_leaves)
@@ -369,20 +373,19 @@ parameters(fit_leaves_main)
 What can we see?
 
 - The *Intercept* is the mean `log10_leaf_mass_per_area` when both rainfall and temperature are 0.
-- The `log10_rainfall` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in log10 rainfall, holding temperature constant. As we found previously, **this effect is signifcant**, with rainfall having a negative effect on `log10_leaf_mass_per_area` by 0.54 units per unit of `log10_rainfall`.
+- The `log10_rainfall` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in log10 rainfall, holding temperature constant.
 - The `temperature` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in temperature, holding rainfall constant. 
-
 
 **Questions:**
 
 - What is the estimated effect (slope) of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("-0.54", c("-0.42", "close to zero", "3.81"))`
-- What is the estimated effect (slope) of `temperature` on `log10_leaf_mass_per_area`? `r cloze("close to zero", c("-0.42", "close to zero", "3.81"))`
 - Is the effect of `log10_rainfall` significantly different to zero? `r cloze("yes", c("yes", "no"))`
+- What is the estimated effect (slope) of `temperature` on `log10_leaf_mass_per_area`? `r cloze("close to zero", c("-0.42", "close to zero", "3.81"))`
 - Is the effect of `temperature` significantly different to zero? `r cloze("no", c("yes", "no"))`
 
 ## Interactive effects
 
-Now, Isaac was interested in **whether the effect of rainfall on leaf mass per area depended on temperature**. In other words, he wants to know if the slope of the relationship between rainfall and leaf mass per area changes with temperature. This is an **interactive effect**.
+With no main effect of temperature, Isaac wondered  **whether the effect of rainfall on leaf mass per area depended on temperature**. In other words, he wants to test if the slope of the relationship between rainfall and leaf mass per area changes with temperature. This is an **interactive effect**.
 
 Let's fit a model with an interaction term between `log10_rainfall` and `temperature`:
 
@@ -390,11 +393,21 @@ Let's fit a model with an interaction term between `log10_rainfall` and `tempera
 # fit the model
 fit_leaves_interaction <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature + log10_rainfall:temperature, data = data_leaves)
 
-# parameters
+```
+
+Note the formula for the model.
+
+-  `log10_rainfall` and `temperature` are the main effects
+- `log10_rainfall:temperature` is the interaction. 
+
+Lets check the parameters of the model
+
+```{r}
 parameters(fit_leaves_interaction)
 ```
 
 Interesting! Now all the effects are significant. There's an effect of `log10_rainfall`, and an interaction with temperature. 
+
 So let's plot the relationship between `log10_rainfall` and `log10_leaf_mass_per_area` for different temperatures to understand these significant effects better.
 
 ## Plotting the interactive effect
@@ -406,10 +419,10 @@ As we've done previously, we can use `estimate_means()` to get the means of y wi
 
 ```{r}
 # Estimate the means
-means_leaves_temp <- estimate_means(fit, by = c("log10_rainfall", "temperature"))
+means_leaves_temp <- estimate_means(fit_leaves_interaction, by = c("log10_rainfall", "temperature"))
 
 # estimate the overall means for rainfall only
-means_leaves_overall <- estimate_means(fit, by = c("log10_rainfall"))
+means_leaves_overall <- estimate_means(fit_leaves_interaction, by = c("log10_rainfall"))
 
 # plot
 ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
@@ -428,7 +441,7 @@ ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
 Say we'd run the model with the interaction term, but we wanted to know the overall effect of `log10_rainfall` on `log10_leaf_mass_per_area`, averaged over the different temperatures. We can use `estimate_slopes` to get this estimate. This corresponds to the slope of the orange line in the plot above.
 
 ```{r}
-estimate_slopes(fit_leaves_main, trend = "log10_rainfall")
+estimate_slopes(fit_leaves_interaction, trend = "log10_rainfall")
 ```
 
 You can see the effect estimated here is very close to that we calculated above in the additive model. This makes sense.
@@ -443,6 +456,7 @@ You can see the effect estimated here is very close to that we calculated above 
 3. Based on these results, what can we say about the effect of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("It has limited direct effect, but changes the effect of rainfall on leaves", c("It is negative", "It is positive", "It is close to zero", "It has limited direct effect, but changes the effect of rainfall on leaves"))`
 
 # ANCOVA
+
 ## Use case 3: One categorical, one continuous variable 
 
 **Urchin grazing**
