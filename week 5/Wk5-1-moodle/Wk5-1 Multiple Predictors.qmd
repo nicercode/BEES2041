@@ -17,11 +17,11 @@ rprojroot::has_file("BEES2041-code.Rproj") |>
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
-```
 
-```{r}
+# For prac
 library(tidyverse)
 library(easystats)
+library(palmerpenguins)
 ```
 
 # Outline
@@ -106,6 +106,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ```{r, eval=FALSE}
 install.packages("dplyr")
+install.packages("palmerpenguins")
 install.packages("readr")
 install.packages("ggplot2")
 install.packages("performance")
@@ -119,6 +120,7 @@ install.packages("patchwork")
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(dplyr)
+library(palmerpenguins)
 library(readr)
 library(ggplot2)
 library(performance)
@@ -136,14 +138,43 @@ Some research designs are interested in the effects of **two categorical variabl
 
 > Recall that ANOVA at their core, are linear models. 
 
-This means that we can fit a **two-way ANOVA** using the `lm()` function and then call `anova()` on the model fit object. 
+This means that we can fit a **two-way ANOVA** using the `lm()` function
+
+Using `anova()` on the model fit object, we can **test whether the overall main effect and interaction effect the predictors are important** or not.
 
 We can also look at the output of using `parameters()` to see **HOW big the main/interactive effect** is. 
 
-## Worked Example: Penguins: size by sex and species
+## Worked Example: Penguins: Body mass by sex and species
+
+![](images/palmer_penguins.png){width=60%}
+
+We are all familiar with the Palmer Penguins by now, let's get to know them better with multiple regression. 
+
+**Our research question: How much does body mass vary by sex and penguin species?**
+
+Our **continuous response** variable (y) is: `body_mass_mm`
+Our **two categorical predictor** variables (x1, x2) are: `sex` and `species`
+
+First, let's exclude the penguins where `sex` is NA. These are juvenille penguins that won't contribute to answering our question.
+
 ```{r}
-data2 <- data_penguins |>
-  filter(!is.na(sex))
+penguins_adults <- penguins |>
+  filter(!is.na(sex)) # Exclude sex when its NA
+
+summary(penguins_adults)
+```
+
+Now with our data all prepped, we can fit our linear model for our **two-way ANOVA**
+
+
+```{r}
+
+```
+
+
+```{r}
+
+
 
 fit <- lm(body_mass_g ~ species * sex, data = data2)
 
