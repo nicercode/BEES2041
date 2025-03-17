@@ -234,7 +234,7 @@ The Mean Sq / F value for `sex` are `r cloze("smaller", c("smaller", "larger"))`
 
 **2. Which of the three effects are contributing significantly to variation on body mass? (Select all that applies)**
 
-`r cloze(c("sex", "species", "sex:species"), ("sex", "species", "sex:species"))`
+`r cloze(c("sex", "species", "sex:species"), c("sex", "species", "sex:species"))`
 
 > But how big are the effects of sex, species and their interactive effects on body mass? How much difference in body mass are we talking about?
 
@@ -264,7 +264,7 @@ The coefficient for `sex [male] × species [Gentoo]` is `r cloze("130.44", c("13
 
 **4. Interpret the p-value for `species [Gentoo]`**
 
-The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("<1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between `r cloze("female", c("female", "male"))` Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "male"))`.
+The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between `r cloze("female", c("female", "male"))` Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "male"))`.
 
 ## Contrasts
 
@@ -334,6 +334,8 @@ There were no statistical differences in body mass male Chinstrap and male Adeli
 # Over to you: Two way ANOVA
 
 ## Exercise Example: Marine Invertebrates Richness 
+
+![](images/sessile.jpg){width=50%}
 
 A researcher is testing the **main and interactive effects** of metal contamination on the number of species found in sessile marine invertebrates (sponges, bryozoans and sea squirts etc.) but they also know that the richness of invertebrates can depend on whether the substrate is vertical or horizontal.
 
@@ -436,7 +438,7 @@ What can we see?
 
 **Questions:**
 
-1. What is the estimated effect (slope) of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("-0.54", c("-0.42", "close to zero", "3.81"))`
+1. What is the estimated effect (slope) of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("-0.54", c("-0.54", "close to zero", "3.81"))`
 2. What is the estimated effect (slope) of `temperature` on `log10_leaf_mass_per_area`? `r cloze("close to zero", c("-0.42", "close to zero", "3.81"))`
 3. Is the effect of `log10_rainfall` significantly different to zero? `r cloze("yes", c("yes", "no"))`
 4. Is the effect of `temperature` significantly different to zero? `r cloze("no", c("yes", "no"))`
@@ -508,7 +510,7 @@ You can see the effect estimated here is very close to that we calculated above 
 
 **Questions**
 
-1. Why might Isaac be interested in the interactive effect of rainfall and temperature on leaf mass per area? `r cloze("to better understand the effect", c("to better understand the nature of the effect", "to see if the effect of rainfall is significant", "to see if the effect of rainfall is negative"))`
+1. Why might Isaac be interested in the interactive effect of rainfall and temperature on leaf mass per area? `r cloze("to better understand the effect", c("to better understand the effect", "to see if the effect of rainfall is significant", "to see if the effect of rainfall is negative"))`
 
 2. What is the estimated effect of `log10_rainfall` on `log10_leaf_mass_per_area` when averaged over temperature? `r cloze("-0.52", c("-0.26", "-0.52", "2.94"))`
 
@@ -516,11 +518,11 @@ You can see the effect estimated here is very close to that we calculated above 
 
 # ANCOVA
 
-## Use case 3: One categorical, one continuous variable 
+## Use case 3: One **categorical**, one **continuous** variable 
 
 **Urchin grazing**
 
-[](images/Urchins.jpg){width=60%}
+![](images/Urchins.jpg){width=60%}
 
 We've seen how to test the effects of two continuous predictors or two categorical predictors on a continuous response. Now let's look at a different scenario: **one categorical and one continuous predictor**.
 
@@ -545,7 +547,6 @@ Read this data in and save it as an object. We're also going to log transform th
 ```{r}
 data_urchins <- read_csv("data/Urchins.csv") |>
   mutate(
-    Quadrat = as.factor(Quadrat),
     logBareRock = log(BareRock + 1)
   )
 ```   
@@ -643,34 +644,85 @@ You will have a test of whether the % cover of bare rock varied among treatments
 
 ## Exercise Example: Penguins again
 
-Want to test for differences in bill depth between species, use bill length as a covariate, because larger penguins have larger bills overall
+![](images/bill_dimensions.png){width=50%}
 
-```{r}
+For your final challenge today, we want you test for differences in `bill depth` between `species`, using bill length as a covariate (longer beaks tend to also be deeper) using the penguins dataset.
+
+Your job is to: 
+
+- analyse this data with multiple regression (ANCOVA) like in the previous example
+- **estimate contrasts** for both **main and interactive effects**, 
+- **estimate means** for both **categorical predictors**
+- produce a **plot** summarising your findings
+
+Using your results, answer questions in Moodle. 
+ 
+```{r solution-1}
 library(palmerpenguins)
+
+# Load data
 data_penguins <- penguins
 
-fit <- lm(bill_depth_mm ~ bill_length_mm * species, data = data_penguins)
+# Fit model
+fit_bill <- lm(bill_depth_mm ~ bill_length_mm + species + bill_length_mm:species, data = data_penguins)
 
-means <- estimate_expectation(fit, by = c("bill_length_mm", "species"))
+# Estimate means for plot
+means_bill <- estimate_means(fit_bill, by = c("bill_length_mm", "species"))
 
-parameters(fit)
+# Plot raw data and estimated means
 ggplot(data_penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_point() +
-  geom_line(data = means, aes(y = Predicted)) +
+  geom_line(data = means_bill, aes(y = Mean)) +
   labs(
     x = "Bill length (mm)",
     y = "Bill depth (mm)"
-  )
+  ) + 
+  theme_classic()
 
-anova(fit)
+# Test for main and interactive effects
+anova(fit_bill)
 
-estimate_contrasts(fit)
+# Esimate contrasts by species
+estimate_contrasts(fit_bill, contrast = "species")
+```
 
-# Simple analysis without covariate
+**Questions:**
 
+1. Did the results of the ANOVA suggest that account for `bill_length_mm` is a good idea?
+
+`r cloze("Yes", c("Yes", "No"))`, the significant main effect of `bill_length_mm` suggests it contributes to variation to bill depth
+
+2.  What conclusions can we draw from the output of `estimate_contrasts(fit_bill, contrast = "species")`? 
+
+The species contrasts holding bill length at `r cloze("44", c("40", "44", "60"))` mm suggests that there `r cloze("are", c("are", "are not"))` differences in bill depth between species
+
+3. Redo the analysis NOT accounting for the covariate of bill length. In other words, do one-way ANOVA between bill depth and species and see how your key result changes!
+
+If we did not account for bill length as a covariate, we would conclude that there are only differences in bill depth between `r cloze("Gentoo", c("Gentoo", "Adelie"))` and `r `cloze("Chinstrap", c("Adelie", "Chinstrap"))`. 
+
+```{r solution-2}
+# Simple analysis without covariate of bill length
 fit_simple <- lm(bill_depth_mm ~ species, data = data_penguins)
 
-parameters(fit_simple)
+# One way ANOVA
+anova(fit_simple)
+
+# Estimate species differences
 estimate_contrasts(fit_simple)
+
+# Estimate species means
+means_simple <- estimate_means(fit_simple, by = "species")
+
+# Plot raw data and estimated means NOT ACCOUNTING FOR COVARIATE
+ggplot(data_penguins, aes(x = species, y = bill_depth_mm, color = species)) +
+  geom_jitter() +
+  geom_violin(fill = NA) +
+  geom_point(data = means_simple, aes(y = Mean), col = "black")+ 
+  geom_errorbar(data = means_simple, aes(y = Mean, ymin = CI_low, ymax = CI_high), col = "black", width = 0.2) +
+  labs(
+    x = "Species of Penguins",
+    y = "Bill depth (mm)"
+  ) + 
+  theme_classic()
 ```
 
