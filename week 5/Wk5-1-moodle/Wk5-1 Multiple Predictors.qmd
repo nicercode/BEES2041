@@ -334,12 +334,62 @@ There were no statistical differences in body mass male Chinstrap and male Adeli
 # Over to you: Two way ANOVA
 
 ## Exercise Example: Marine Invertebrates Richness 
- 
- <!-- - Example 2: Environmental computing: Invert richness by substrate and copper treatment -->
- 
-```{r}
 
+A researcher is testing the **main and interactive effects** of metal contamination on the number of species found in sessile marine invertebrates (sponges, bryozoans and sea squirts etc.) but they also know that the richness of invertebrates can depend on whether the substrate is vertical or horizontal.
+
+**The research question is: How much does copper and substrate effect species richness?**
+
+They ran an experiment where species richness was recorded in replicate samples in each of the six combinations of copper enrichment (None, Low, High) and orientation (Vertical,Horizontal)
+
+Your job is to: 
+
+- analyse this data with a **two-way ANOVA**, 
+- **estimate contrasts* *for both** main and interactive effects**, 
+- **estimate means** for both **categorical predictors**
+- produce a **plot** summarising your findings
+
+Using your results, answer questions in Moodle.
+ 
+```{r solutions-1}
+# Load data
+data_marine <- read_csv("data/Sessile.csv")
+
+# Fit model
+fit_marine <- lm(Richness ~ Copper + Orientation + Copper:Orientation, data = data_marine)
+
+# Estimate means
+means_marine <- estimate_means(fit_marine, by=c("Copper", "Orientation"))
+
+# Produce a plot
+ggplot(data_marine, aes(x = Copper, y = Richness, fill = Copper, col = Copper)) +
+  geom_violin(alpha = 0.3) +
+  geom_jitter(width = 0.1) +
+  geom_errorbar(data = means_marine, aes(y = Mean, ymin = CI_low, ymax = CI_high),col = "black", width = 0.2) + 
+  geom_point(data = means_marine, aes(y = Mean), col = "black") + 
+  labs(
+    x = "Copper Metal Contamination",
+    y = "Species Richness"
+  ) + 
+  theme_classic() + 
+  facet_wrap(~Orientation)  +
+  theme(legend.position = "none") 
+
+# ANOVA
+anova(fit_marine)
+
+# Estimate contrasts 
+estimate_contrasts(fit_marine, contrast =  "Copper") # Main effect of copper
+estimate_contrasts(fit_marine, contrast =  "Orientation") # Main effect of copper
+
+estimate_contrasts(fit_marine, contrasts =  "Copper", by = "Orientation") # Interactive effects
+estimate_contrasts(fit_marine, contrasts =  "Orientation", by = "Copper") # Interactive effects
 ```
+
+**Questions:**
+
+1.
+2.
+3.
 
 # Two continuous predictors 
 
@@ -375,10 +425,10 @@ What can we see?
 
 **Questions:**
 
-- What is the estimated effect (slope) of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("-0.54", c("-0.42", "close to zero", "3.81"))`
-- What is the estimated effect (slope) of `temperature` on `log10_leaf_mass_per_area`? `r cloze("close to zero", c("-0.42", "close to zero", "3.81"))`
-- Is the effect of `log10_rainfall` significantly different to zero? `r cloze("yes", c("yes", "no"))`
-- Is the effect of `temperature` significantly different to zero? `r cloze("no", c("yes", "no"))`
+1. What is the estimated effect (slope) of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("-0.54", c("-0.42", "close to zero", "3.81"))`
+2. What is the estimated effect (slope) of `temperature` on `log10_leaf_mass_per_area`? `r cloze("close to zero", c("-0.42", "close to zero", "3.81"))`
+3. Is the effect of `log10_rainfall` significantly different to zero? `r cloze("yes", c("yes", "no"))`
+4. Is the effect of `temperature` significantly different to zero? `r cloze("no", c("yes", "no"))`
 
 ## Interactive effects
 
