@@ -23,25 +23,6 @@ library(easystats)
 library(palmerpenguins)
 ```
 
-<!-- # Outline -->
-
-<!-- - two categoircal predictors (2 way anova) -->
-<!--   - Qu: do both factors have an effect, how big is the effect, is it interactive or additive -->
-<!--   - Example 1: Penguins: size by sex and species -->
-<!--   - Example 2: Environmental computing: Invert richness by substrate and copper treatment -->
-
-<!-- - Two continuous predictors -->
-<!--   - addtive effect -->
-<!--   - Angela height: altitude and rainfall -->
-
-<!-- - Two continuous predictors with interaction -->
-<!--   - Does efecct of X on Y change with Z? -->
-<!--   - Isaac leaves -->
-
-<!-- - One categorical, one continuous variable -->
-<!--   - Question concerns sloep, looking for difference between groups -->
-<!--   - Example 1: Urchins -->
-
 # Introduction to Linear Regression with Multiple predictors
 
 ## Introduction
