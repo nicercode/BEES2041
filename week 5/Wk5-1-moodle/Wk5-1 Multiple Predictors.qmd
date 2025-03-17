@@ -22,6 +22,7 @@ library(moodlequiz)
 library(tidyverse)
 library(easystats)
 library(palmerpenguins)
+
 ```
 
 # Outline
@@ -58,16 +59,15 @@ First let's briefly recap on variable types, as this will determine the choice o
 
 ![](images/continuous-discrete.png){width=60%}
 
-Today, we will go through four different use cases that have different combinations of predictor variables: 
-
-<!-- #TODO: @Daniel, do we want to split 1. into 2 (Main and interactive effects?) -->
+Today, we will go through three different use cases that have different combinations of predictor variables: 
 
 1. Two **categorical** predictors 
     - main additive effects
     - interactive effects 
-2. Two **continuous** predictors (main effects)
-3. Two **continuous** predictors (with interaction)
-4. One **categorical** predictor, one continuous predictor
+2. Two **continuous** predictors
+    - main additive effects
+    - interactive effects 
+3. One **categorical** predictor, one continuous predictor
 
 > Note in all use cases today, our response variable (y) is continuous.
 
@@ -155,6 +155,8 @@ We are all familiar with the Palmer Penguins by now, let's get to know them bett
 Our **continuous response** variable (y) is: `body_mass_mm`
 Our **two categorical predictor** variables (x1, x2) are: `sex` and `species`
 
+
+
 First, let's exclude the penguins where `sex` is NA. These are juvenille penguins that won't contribute to answering our question.
 
 ```{r}
@@ -168,6 +170,16 @@ Now with our data all prepped, we can fit our linear model for our **two-way ANO
 
 
 ```{r}
+fit2 <- lm(body_mass_g ~ sex + species + sex:species , data = penguins_adults)
+
+
+
+parameters(fit2)
+parameters(fit1)
+
+anova(fit2)
+anova(fit1)
+
 
 ```
 
@@ -176,7 +188,7 @@ Now with our data all prepped, we can fit our linear model for our **two-way ANO
 
 
 
-fit <- lm(body_mass_g ~ species * sex, data = data2)
+fit1 <- lm(body_mass_g ~ species * sex, data = penguins_adults)
 
 anova(fit)
 
@@ -213,10 +225,10 @@ ggplot(data2, aes(x = species, y = body_mass_g, colour = sex, group = sex)) +
 ```{r}
 
 ```
- 
 
 
-## Two continuous predictors- Isaac leaves
+# Use case 2: Two **continuous** predictors 
+## Worked example - Isaac leaves (main effects)
 
 ```{r}
 data_leaves <- read_csv("data/towers-2024.csv")
@@ -229,6 +241,8 @@ fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature, data = data_l
 
 parameters(fit)
 ```
+
+## Worked example - Isaac leaves (interactive effects)
 
 ```{r}
 fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall * temperature, data = data_leaves)
@@ -255,7 +269,8 @@ ggplot(means2, aes(x = log10_rainfall, y = Mean, group = temperature, color = te
 ```
 
 
-## One categorical, one continuous variable (ANCOVA) - Urchins
+# Use case 3: One categorical, one continuous variable (ANCOVA) 
+## Worked Example: Urchins
 
 ```{r}
 
@@ -308,7 +323,9 @@ Add a random effect for Quadrat
 
 ```{r}
 library(glmmTMB)
-fit <- glmmTMB(logBareRock ~ Day * Treatment + (1 | Quadrat), data = data_urchins)
+
+
+fit <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
 
 fit_simple <- glmmTMB(logBareRock ~ Day * Treatment, data = data_urchins)
 
@@ -347,7 +364,7 @@ parameters(fit)
 ```
 
 
-## Penguins example
+## Exercise Example: Penguins again
 
 Want to test for differences in bill depth between species, use bill length as a covariate, because larger penguins have larger bills overall
 
