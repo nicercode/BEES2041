@@ -24,24 +24,24 @@ library(palmerpenguins)
 
 ```
 
-# Outline
+<!-- # Outline -->
 
-- two categoircal predictors (2 way anova)
-  - Qu: do both factors have an effect, how big is the effect, is it interactive or additive
-  - Example 1: Penguins: size by sex and species
-  - Example 2: Environmental computing: Invert richness by substrate and copper treatment
+<!-- - two categoircal predictors (2 way anova) -->
+<!--   - Qu: do both factors have an effect, how big is the effect, is it interactive or additive -->
+<!--   - Example 1: Penguins: size by sex and species -->
+<!--   - Example 2: Environmental computing: Invert richness by substrate and copper treatment -->
 
-- Two continuous predictors
-  - addtive effect
-  - Angela height: altitude and rainfall
+<!-- - Two continuous predictors -->
+<!--   - addtive effect -->
+<!--   - Angela height: altitude and rainfall -->
 
-- Two continuous predictors with interaction
-  - Does efecct of X on Y change with Z?
-  - Isaac leaves
+<!-- - Two continuous predictors with interaction -->
+<!--   - Does efecct of X on Y change with Z? -->
+<!--   - Isaac leaves -->
 
-- One categorical, one continuous variable
-  - Question concerns sloep, looking for difference between groups
-  - Example 1: Urchins
+<!-- - One categorical, one continuous variable -->
+<!--   - Question concerns sloep, looking for difference between groups -->
+<!--   - Example 1: Urchins -->
 
 ## Key learning objectives
 # Introduction to Linear Regression with Multiple predictors
@@ -169,7 +169,7 @@ Based on **our research question: How much does body mass vary by sex and pengui
 This is how we fit our two-way ANOVA:
 
 ```{r}
-fit_penguin_adults <- lm(body_mass_g ~ sex + species + sex:species, data = penguins_adults)
+fit_penguin_adults <- lm(body_mass_g ~ sex + species + sex:species, data = data_penguins_adults)
 ```
 
 > Let's talk through the predictors, including: 
@@ -330,11 +330,11 @@ Generally female/male pengiuns are smaller than male penguins (mean difference =
 There were no statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were marginal differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 below. 
 
 ```{r}
-ggplot(penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
+ggplot(data_penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
   geom_violin(alpha = 0.3) +
   geom_jitter(width = 0.1) +
   geom_errorbar(data = means_penguin_adults, aes(y = Mean, ymin = CI_low, ymax = CI_high),col = "black", width = 0.2) + 
-  geom_point(data = means, aes(y = Mean), col = "black") + 
+  geom_point(data = means_penguin_adults, aes(y = Mean), col = "black") + 
   labs(
     x = "Sex",
     y = "Body Mass (g)"
@@ -410,7 +410,7 @@ data_urchins <- read_csv("data/Urchins.csv") %>%
 ```
 
 ```{r}
-fit <- lm(BareRock ~ Day*Treatment, data = urch)
+fit <- lm(BareRock ~ Day*Treatment, data = data_urchins)
 
 check_model(fit)
 
