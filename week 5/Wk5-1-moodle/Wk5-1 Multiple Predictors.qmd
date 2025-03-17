@@ -387,9 +387,17 @@ estimate_contrasts(fit_marine, contrasts =  "Orientation", by = "Copper") # Inte
 
 **Questions:**
 
-1.
-2.
-3.
+1. Which effect contributed most to variation in species richness? 
+
+`r cloze("Copper", c("Copper", "Orientation", "Copper:Orientation"))` contributed the most to variable in species richness. This is reflected in the Mean sq / F value / p value
+
+2. At which level of copper metal contamination did we see the greatest difference between substrate orientation? 
+
+We found the greatest difference in species richness in `r cloze("High", c("High", "Low", "None"))` levels of copper contamination when comparing between horizontal and vertical substrates. 
+
+3. Which substrate orientation did we find the greatest difference in species richness between different contamination levels? 
+
+In `r cloze("vertical", c("horizontal", "vertical"))` substrates, we found the greatest difference in species richness between "None" and `r cloze("High", c("High", "Low"))` levels of copper contamination. 
 
 # Two continuous predictors 
 
@@ -534,7 +542,7 @@ The following file has the data for the % cover of bare rock, `data/Urchins.csv`
 
 Read this data in and save it as an object. We're also going to log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
 
-```{r)
+```{r}
 data_urchins <- read_csv("data/Urchins.csv") |>
   mutate(
     Quadrat = as.factor(Quadrat),
