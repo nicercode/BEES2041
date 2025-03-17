@@ -152,26 +152,51 @@ We are all familiar with the Palmer Penguins by now, let's get to know them bett
 
 **Our research question: How much does body mass vary by sex and penguin species?**
 
-Our **continuous response** variable (y) is: `body_mass_mm`
-Our **two categorical predictor** variables (x1, x2) are: `sex` and `species`
-
-
+The **continuous response** variable (y) is: `body_mass_mm`
+The **two categorical predictor** variables (x1, x2) are: `sex` and `species`
 
 First, let's exclude the penguins where `sex` is NA. These are juvenille penguins that won't contribute to answering our question.
 
 ```{r}
-penguins_adults <- penguins |>
+data_penguins_adults <- penguins |>
   filter(!is.na(sex)) # Exclude sex when its NA
 
-summary(penguins_adults)
+summary(data_penguins_adults)
 ```
 
-Now with our data all prepped, we can fit our linear model for our **two-way ANOVA**
+Now with our data all prepped, we can fit our linear model for our **two-way ANOVA**. 
 
+Based on **our research question: How much does body mass vary by sex and penguin species?**, we want determine the **main effects** of sex and species as well as their **interactive effects**. 
+
+This is how we fit our two-way ANOVA:
 
 ```{r}
-fit2 <- lm(body_mass_g ~ sex + species + sex:species , data = penguins_adults)
+fit_penguin_adults <- lm(body_mass_g ~ sex + species + sex:species, data = penguins_adults)
+```
 
+> Let's talk through the predictors, including: 
+
+- `sex` as a standalone predictor means we are interested in the sole effect of sex on body mass
+- `species` as a standalone predictor means we are interested in the sole effect of species on body mass
+- `sex:species` means we are interested in the **interactive effects** of both sex and species. In other words, the effect on body mass may depend sex AND species. 
+
+Ok, let's look at the output of `anova(fit_penguin_adults)` to see whether the main/interactive effects were important in explaining variation in body mass.
+
+What can we see? 
+
+```{r}
+anova(fit_penguin_adults) 
+```
+
+We can see our predictor variables listed as rows. **Each row tests whether an effect signficantly affects body mass**. 
+
+- The first rows for  the main effect of `sex`
+- The second row for the main effect of ` species` after main effect of `sex`
+- The third row for the interactive effect of `sex` and `species` after the two main effects.
+
+This output tells us that both the **main effects** of sex and species and their **interactive effects** have a strong effect on body mass variation in Palmer penguins.
+
+```{r}
 
 
 parameters(fit2)
@@ -179,13 +204,6 @@ parameters(fit1)
 
 anova(fit2)
 anova(fit1)
-
-
-```
-
-
-```{r}
-
 
 
 fit1 <- lm(body_mass_g ~ species * sex, data = penguins_adults)
