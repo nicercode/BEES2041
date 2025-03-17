@@ -303,25 +303,6 @@ means_penguin_adults
 
 The 95% CI internal for `female | Gentoo` penguins represents the range of values where we would find the true population estimate of body mass for female/male Gentoo/Chinstrap/Adelie penguins 95% of the time.
 
-> Let's plot the raw data and our estimated means from our model see if it aligns with our results so far.
-
-Notice we are calling `means_penguin_adults` in `geom_errorbar()` and `geom_point()` as we want to plot the mean body mass and their associated CIs. 
-
-```{r}
-ggplot(penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
-  geom_violin(alpha = 0.3) +
-  geom_jitter(width = 0.1) +
-  geom_errorbar(data = means_penguin_adults, aes(y = Mean, ymin = CI_low, ymax = CI_high),col = "black", width = 0.2) + 
-  geom_point(data = means, aes(y = Mean), col = "black") + 
-  labs(
-    x = "Sex",
-    y = "Body Mass (g)"
-  ) + 
-  theme_classic() + 
-  facet_wrap(~species)  +
-  theme(legend.position = "none") 
-```
-
 ## Reporting results
 
 **Our research question was how much does body mass vary by sex and penguin species?**
@@ -341,14 +322,29 @@ Overall, our multiple linear regression model explained R^2 = 28%/64%/85% of var
 
 _Contrasts_
 
-Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27, 700.75, p-value = <0.001). 
+Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
 ## Report on the constrasts of `species` {type=essay}
 **Report on the constrasts of `species`** 
 
-_Means_
+There were no statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were marginal differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 below. 
 
+```{r}
+ggplot(penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
+  geom_violin(alpha = 0.3) +
+  geom_jitter(width = 0.1) +
+  geom_errorbar(data = means_penguin_adults, aes(y = Mean, ymin = CI_low, ymax = CI_high),col = "black", width = 0.2) + 
+  geom_point(data = means, aes(y = Mean), col = "black") + 
+  labs(
+    x = "Sex",
+    y = "Body Mass (g)"
+  ) + 
+  theme_classic() + 
+  facet_wrap(~species)  +
+  theme(legend.position = "none") 
+```
 
+> Notice we are calling `means_penguin_adults` in `geom_errorbar()` and `geom_point()` as we want to plot the mean body mass and their associated CIs. 
 
 ## Exercise Example: Marine Invertebrates Richness 
  
