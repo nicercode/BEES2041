@@ -442,26 +442,85 @@ You can see the effect estimated here is very close to that we calculated above 
 
 3. Based on these results, what can we say about the effect of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("It has limited direct effect, but changes the effect of rainfall on leaves", c("It is negative", "It is positive", "It is close to zero", "It has limited direct effect, but changes the effect of rainfall on leaves"))`
 
-# Use case 3: One **categorical** and one **continuous** variable (ANCOVA) 
+# ANCOVA
+## Use case 3: One categorical, one continuous variable 
 
-## Worked Example: Urchins
+**Urchin grazing**
+
+[](images/Urchins.jpg){width=60%}
+
+We've seen how to test the effects of two continuous predictors or two categorical predictors on a continuous response. Now let's look at a different scenario: **one categorical and one continuous predictor**.
+
+Already, you have seen how linear models can analyse data with continuous predictor variables (regression) and categorical predictor variables (ANOVA), but they can also use a combination of categorical and continuous variables. These are known as **analyses of covariance** (**ANCOVA**). 
+
+These models can get as complex as you like, but we will look at the simplest version of these - models with one categorical and one continuous variable.
+
+To explore this analysis, let's look at some data from marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. To study how urchins affect the communities on the rocky reef, researchers set up five experimental treatments on the sea floor:
+
+- cages that enclosed a high density of urchins
+- cages that enclosed a low density of urchins
+- cages with no urchins (cage control)
+- cages with no urchins and no top (open cage)
+- control plots with no manipulation.
+ 
+There were 8 replicates per treatment. The % cover of algae and bare rock were measured several times over a 210 day experiment.
+
+The following file has the data for the % cover of bare rock, `data/Urchins.csv`
+
+Read this data in and save it as an object. We're also going to log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
+
+```{r)
+data_urchins <- read_csv("data/Urchins.csv") |>
+  mutate(
+    Quadrat = as.factor(Quadrat),
+    logBareRock = log(BareRock + 1)
+  )
+```   
+
+## Visualising the data
+
+Let's plot the data to see how the % cover of bare rock changes over time for each treatment.
 
 ```{r}
-# Read in data 
-data_urchins <- read_csv("data/Urchins.csv") 
+ggplot(data_urchins, aes(x = Day, y = logBareRock, color = Treatment)) +
+  geom_point() +
+  labs(
+    x = "Day",
+    y = "log(BareRock)"
+  ) +
+  theme_minimal()
 ```
 
-```{r}
-# Fit the multiple regression model
-fit_urchin <- lm(BareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
+What would be a good model to fit to this data? 
 
-# Check model
-check_model(fit_urchin)
+- `Treatment` is a categorical variable with 5 levels
+- `Day` is a continuous variable
+- The response variable is `logBareRock`
+- We expect the % cover of bare rock to change over time, but we also expect the different treatments to have different effects on the % cover of bare rock. 
+
+Hence, we are really intersted in whether the slope of the relationship between `Day` and `logBareRock` changes with `Treatment`!
+
+## Fit the model
+
+```{r}
+fit <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
 ```
 
+We can look at the parameters of the model to see the estimated effects of `Day`, `Treatment` and the interaction between `Day` and `Treatment`.
 ```{r}
-# The response needs a log transoform
-data_urchins <- data_urchins |>  mutate(logBareRock = log(BareRock + 1))
+parameters(fit)
+```
+
+This is a bit confusing. Because we have a categorical effect, the `Intercept` is the mean `logBareRock` for the reference group. This is the first level of `Treatment`, which is `cage.control`. Effects are then the difference to these.
+
+I wonder if there is a better way to look at the results?
+
+## Visualising the results
+
+By now you should be familiar with the worfklow for visualising the results of a linear model. We can use `estimate_means()` to get the means of `logBareRock` for each level of `Treatment` at different levels of `Day`. then add layers to a ggplot.
+
+```{r}
+means <- estimate_means(fit, by = c("Day", "Treatment"))
 
 # Refit the model with transformed variable
 fit_log_urchin <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
@@ -482,7 +541,8 @@ means_urchins |> head()
 
 ```{r}
 p1 <-
-  ggplot(means_urchins, aes(x = Day, y = Mean, color = Treatment)) +
+  ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
+#  geom_ribbon(aes(ymin = CI_low, ymax = CI_high, fill = Treatment), alpha = 0.2) +
   geom_line() +
   labs(
     x = "Day",
@@ -492,12 +552,37 @@ p1 <-
 
 # Compare lines
 p1
+```
 
+This plot shows the fitted lines only. We've left the ribbon code in there, but it's commented out. You can uncomment it to see the confidence intervals around the lines.
+
+We can also add the data points to the plot to see how well the model fits the data. It's easier to see facetting by `Treatment` in this case.
+```{r}
 # Compare lines with data
 p1 +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Treatment)
+```   
+
+## Testing the effects
+
+Recall, the `anova` function can be used to test the overall significance of the main and interactive effects of the predictors.
+
+```{r}
+anova(fit)
 ```
+
+You will have a test of whether the % cover of bare rock varied among treatments, with time (Day), and whether the slopes of the bare rock vs day relationships varied among treatments (Treatment x Day interction).
+
+**Questions**
+
+1. An interaction between the two predictor variables would be evident if the slopes of these five lines were not parallel. Does the scatterplot suggest an interaction? `r cloze("yes", c("yes", "no"))`
+
+2. Do the results of the anova function support this? 
+`r cloze("yes, indicated by the effect of Day:Treatment", c("yes, indicated by the effect of Day:Treatment", "yes, indicated by the effect of Treatment", "yes, indicated by the effect of Day"))`
+
+3. Which treatment has the largest effect on the % cover of bare rock,  `cage.control` or `low.urchin`? `r cloze("cage.control", c("cage.control", "low.urchin"))`
+
 
 # Over to you: 
 
