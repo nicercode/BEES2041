@@ -595,24 +595,6 @@ By now you should be familiar with the worfklow for visualising the results of a
 ```{r}
 means <- estimate_means(fit, by = c("Day", "Treatment"))
 
-# Refit the model with transformed variable
-fit_log_urchin <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
-
-# Check model
-check_model(fit_log_urchin)
-```
-
-```{r}
-anova(fit_log_urchin)
-```
-
-```{r}
-means_urchins <- estimate_means(fit_log_urchin, by = c("Day", "Treatment"))
-
-means_urchins |> head()
-```
-
-```{r}
 p1 <-
   ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
 #  geom_ribbon(aes(ymin = CI_low, ymax = CI_high, fill = Treatment), alpha = 0.2) +
