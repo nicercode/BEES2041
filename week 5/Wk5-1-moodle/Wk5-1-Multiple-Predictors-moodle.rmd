@@ -4,7 +4,7 @@ output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
-  category: Introduction to Linear Regression with Multiple predictors
+  category: Weel 5-1 multiple predictors
 editor_options:
   chunk_output_type: console
 ---
@@ -106,14 +106,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 
 
-> You will be working in your own devices today. Load the following packages, you should have these installed already
-
-```{r, eval=FALSE}
-# install.packages("tidyverse")
-# install.packages("palmerpenguins")
-# install.packages("easystats")
-# install.packages("patchwork")
-```
+We can use the same familiar packages as previous practicals.
 
 > Remember to load the packages into R to use em!
 
@@ -347,11 +340,12 @@ Generally female/male pengiuns are smaller than male penguins (mean difference =
 There were `r cloze("no", c("no", "weak", "strong"))` statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were `r cloze("marginal", c("weak", "marginal", "strong"))` differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
 
 ## Report on the main effect of `species` {type=essay}
+
 **Report on the main effect of `species`**  _Hint: look at output of ANOVA_
 
 
-
 ## Report on the contrasts of `species` {type=essay}
+
 **Report on the contrasts of `species`**  _Hint: look at output of `estimate_contrasts()`_
 
 

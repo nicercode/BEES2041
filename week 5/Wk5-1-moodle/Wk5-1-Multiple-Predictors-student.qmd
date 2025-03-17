@@ -60,14 +60,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` and `easystats` we need for this prac.
-
-```{r, eval=FALSE}
-install.packages("tidyverse")
-install.packages("palmerpenguins")
-install.packages("easystats")
-install.packages("patchwork")
-```
+We can use the same familiar packages as previous practicals.
 
 > Remember to load the packages into R to use em!
 
