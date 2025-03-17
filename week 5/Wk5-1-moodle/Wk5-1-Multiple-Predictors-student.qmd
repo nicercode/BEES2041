@@ -5,24 +5,6 @@ format:
     self-contained: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-# Set the working directory
-rprojroot::has_file("BEES2041-code.Rproj") |>
-  rprojroot::find_root() |>
-  file.path("week 5/Wk5-1-moodle") |>
-  setwd()
-
-# remotes::install_github("numbats/moodlequiz")
-library(moodlequiz)
-
-# For prac
-library(tidyverse)
-library(easystats)
-library(palmerpenguins)
-```
-
 ## Introduction
 
 Welcome back! So far in our linear models, we have been working with linear or generalised linear models with a **single predictor** (i.e one x variable) to explain variation in the response variable. While **single predictors** are straightforward to understand for simple experimental designs, we often need **more than one predictor** to help us capture real-world complexity to answer our research questions. 
@@ -189,7 +171,7 @@ anova(fit_penguin_adults)
 
 We can see our predictor variables listed as rows. **Each row tests whether an effect signficantly affects body mass**. 
 
-- The first rows for  the main effect of `sex`
+- The first row for  the main effect of `sex`
 - The second row for the main effect of ` species` after main effect of `sex`
 - The third row for the interactive effect of `sex` and `species` after the two main effects.
 
@@ -197,9 +179,9 @@ This output tells us that both the **main effects** of sex and species and their
 
 **Questions:**
 
-**1. Looking at the values for Mean Sq / F value, can you deduce which main effect explains has a stronger effect on body mass?**
+**1. Looking at the values for Mean Sq or F value, which main effect explains has a stronger effect on body mass?**
 
-The Mean Sq / F value for `sex` are ??? than the Mean Sq / F value for `species`. This means that ???/species has a weaker effect on body mass.
+The Mean Sq or F value for `sex` are ??? than the Mean Sq or F value for `species`. This means that ??? has a weaker effect on body mass.
 
 **2. Which of the three effects are contributing significantly to variation on body mass? (Select all that applies)**
 
@@ -207,33 +189,33 @@ The Mean Sq / F value for `sex` are ??? than the Mean Sq / F value for `species`
 
 > But how big are the effects of sex, species and their interactive effects on body mass? How much difference in body mass are we talking about?
 
-## Model output
+## Model parameters
 
 Typically when we are working with **categorical** predictors, we look at the ANOVA output first to determine whether there is an effect of a predictor before looking at the model output using `paramaters(fit_penguin_adults)`. 
 
-The output of `parameters(fit_penguin_adults)` gives us a snapshot of the how big of the effect of sex and species for a reference group (female Adelie) but this is not particularly useful. 
+The output of `parameters` gives us a snapshot of the how big of the effect of sex and species for a reference group (female Adelie) but this is not as useful as `anova`. 
 
-> In our penguins study here, the **reference group are the female Adelie** penguins. **The coefficient is 3368.84 is the mean body mass for female Adelie penguins**.
+> In our penguins study here, the **reference group are the female Adelie** penguins. This is the *Intercept* term in the model. The coefficient is 3368.84 is the mean body mass for female Adelie penguins.
 
 ```{r}
 parameters(fit_penguin_adults)
 ```
 
-Knowing this about the `Intercept`, we can start to interpret the other rows in this model output. Recall that in a linear model containing categorical predictors, each row represents the **difference relative to the reference group due to that specific predictor**. 
+Knowing this important fact about the *Intercept*, we can start to interpret the other rows in this model output. Recall that in a linear model containing categorical predictors, each row represents the **difference relative to the reference group due to that specific predictor**. 
 
 For example:
 
-- `sex [male] × species [Chinstrap]` is the **difference in mean body mass between the Intercept (female Adelie) and male Chinstrap penguins (-262.89)**. This value is negative, implying the male Chinstraps are smaller than the Intercept (female Adelie).
+- `species [Chinstrap]` is the average **difference in mean body mass between the Adelie and  Chinstrap penguins (158.37)**. This value is positive, implying the Chinstraps are on average larger than the Intercept group (Adelie).
 
 **Questions:**
 
-**3. What does `sex [male] × species [Gentoo]` represent?**
+**3. What does `sex [male]` represent?**
 
-The coefficient for `sex [male] × species [Gentoo]` is ???. This represents the ??? mean body mass between female ??? penguins and male ??? penguins.
+The coefficient for `sex [male]` is ???. This represents the ??? mean body mass between ??? female  penguins and male ??? penguins.
 
 **4. Interpret the p-value for `species [Gentoo]`**
 
-The p-value for `species [Gentoo]` is ???. This indicates that the probability for finding the difference of ??? in mean body mass between ??? Gentoo penguins and female Adelie pengions is very ???.
+The p-value for `species [Gentoo]` is ???. This indicates that the probability for finding the difference of ??? in mean body mass between Gentoo penguins and female Adelie pengions is very ???.
 
 ## Contrasts
 
@@ -241,19 +223,19 @@ After establishing that there are main and interactive effects on body mass in o
 
 What's useful is that you can estimate constrasts for a main effect while holding the other effects constant. 
 
-For example, here we are calculating the difference between the sexes and taking an average over each species (**main effect of sex**)
+For example, here we are calculating the difference between the sexes and taking an average over each species, including the main effect and interactions
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = c("sex"))
 ```
 
-Or we can calculate the difference between the species taking an average over sexes (**main effect of species**)
+Or we can calculate the difference between the species taking an average over sexes,including the main effect and interactions
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = c("species"))
 ```
 
-Importantly, for our **interaction effect** we can also estimate the difference between sexes **for each species** using `by = "species`
+Importantly, we can also estimate the difference between sexes for each species using `by = "species`
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = "sex", by = "species")
@@ -284,10 +266,6 @@ _ANOVA_
 
 There was a **significant main effect of sex** on body mass, F(1, 327) = 406.15, p < .001, indicating that males and females penguins differ in body mass.
 
-## Report on the main effect of `species` {type=essay}
-**Report on the main effect of `species`**  _Hint: look at output of ANOVA_
-
-
 We found a  **significant interaction effect between sex and species**, F(2, 327) = 8.76, p < .001, indicating that the difference in body mass between males and females penguins depends on the species.
 
 Overall, our multiple linear regression model explained R^2 = ??? of variation in body mass.  _Hint: look at output of `summary(fit)`_
@@ -296,10 +274,16 @@ _Contrasts_
 
 Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
+There were ??? statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were ??? differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
+
+## Report on the main effect of `species` {type=essay}
+**Report on the main effect of `species`**  _Hint: look at output of ANOVA_
+
+
+
 ## Report on the contrasts of `species` {type=essay}
 **Report on the contrasts of `species`**  _Hint: look at output of `estimate_contrasts()`_
 
-There were ??? statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were ??? differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
 
 # Over to you: Two way ANOVA
 
@@ -352,7 +336,9 @@ Let's move on to our next use case: **two continuous predictors**.
 
 Previously, we found that leaf mass per area decreased as rainfall increased. 
 
-Additonally, Isaac asked **whether temperature also had an effect on leaf mass per area**? He first wanted to test the **main effects** of rainfall and temperature on leaf mass per area.
+![Effect of rain on leaves](images/Towers-rain.png){width=60%}
+
+Additonally, Isaac asked **whether temperature also had an effect on leaf mass per area**? He first wanted to test the **main (additive) effects** of rainfall and temperature on leaf mass per area.
 
 Let's load the data and fit a linear model to test the main effects of both rainfall and temperature on log10 leaf mass per area.
 ```{r}
@@ -416,7 +402,7 @@ parameters(fit_leaves_interaction)
 
 Interesting! Now all the effects are significant. There's an effect of `log10_rainfall`, and an interaction with temperature. 
 
-So let's plot the relationship between `log10_rainfall` and `log10_leaf_mass_per_area` for different temperatures to understand these significant effects better.
+So let's plot the relationship between `log10_rainfall` and `log10_leaf_mass_per_area` for different temperatures to understand these effects better.
 
 ## Plotting the interactive effect
 
@@ -541,13 +527,13 @@ We can look at the parameters of the model to see the estimated effects of `Day`
 parameters(fit)
 ```
 
-This is a bit confusing, becayse we have a categorical effect. The `Intercept` is the mean `logBareRock` for the reference group. This is the first level of `Treatment`, which is `cage.control`. Effects are then the difference to these.
+Because we have a categorical effect, the `Intercept` is the mean `logBareRock` for the reference group. This is the first level of `Treatment`, which is `cage.control`, when Day = 0. Effects are then the difference for each predictor, relative to this group.
 
 I wonder if there is a better way to look at the results?
 
 ## Visualising the results
 
-By now you should be familiar with the workflow for visualising the results of a linear model. We can use `estimate_means()` to get the means of `logBareRock` for each level of `Treatment` at different levels of `Day`. then add layers to a ggplot.
+By now you should be familiar with the worfklow for visualising the results of a linear model. We use `estimate_means()` to get the means of `logBareRock` for each level of `Treatment` at different levels of `Day`, then add layers to a ggplot.
 
 ```{r}
 means <- estimate_means(fit, by = c("Day", "Treatment"))
@@ -568,7 +554,7 @@ p1
 
 This plot shows the fitted lines only. We've left the ribbon code in there, but it's commented out. You can uncomment it to see the confidence intervals around the lines.
 
-We can also add the data points to the plot to see how well the model fits the data. It's easier to see facetting by `Treatment` in this case.
+We can also add the data points to the plot to see how well the model fits the data. It get's messy, so it's easier to see facetting by `Treatment`.
 ```{r}
 # Compare lines with data
 p1 +
@@ -598,6 +584,19 @@ You will have to test:
 
 **3. Which treatment has the largest effect on the % cover of bare rock,  `cage.control` or `low.urchin`?** ???
 
+## Contrasts
+
+We can use the fitted model to estimate the differences between the treatments at a specific time point.
+
+```{r}
+estimate_contrasts(fit, contrast = "Treatment", by = "Day") |>
+  filter(Day == 0)
+
+estimate_contrasts(fit, contrast = "Treatment", by = "Day") |>
+  filter(Day == 210)   
+```
+
+This provides strong evidence that the % cover of bare rock is not different between the treatments at the start of the experiment, but is significantly different between the treatments at the end of the experiment.
 
 # Over to you: ANCOVA
 
@@ -605,14 +604,16 @@ You will have to test:
 
 ![](images/bill_dimensions.png){width=50%}
 
-For your final challenge today, we want you test for **differences in `bill depth` between `species`, using bill length as a covariate** (longer beaks tend to also be deeper) using the penguins dataset.
+For your final challenge today, we want you test for **differences in relative `bill depth` between `species`**, To do this, we will run an ANCOVA using bill length as a covariate.
+
+We're adding a covariate because we know that as penguins get larger, their beaks get both longer and deeper. We want to know if there are differences in bill depth between species after we account for overall size.
 
 Your job is to: 
 
 - analyse this data with multiple regression (ANCOVA) like in the previous example
-- **estimate contrasts** for both **main and interactive effects**, 
 - **estimate means** for both **categorical predictors**
 - produce a **plot** summarising your findings
+- **estimate contrasts** for to compare at a common size
 
 Using your results, answer questions in Moodle. 
  
@@ -624,15 +625,15 @@ Using your results, answer questions in Moodle.
 
 **1. Did the results of the ANOVA suggest that accounting for `bill_length_mm` is a good idea?**
 
-???, the significant main effect of `bill_length_mm` suggests it contributes to variation to bill depth
+???, the significant main effect of `bill_length_mm` suggests it contributes to variation to bill depth.
 
-**2.  What conclusions can we draw from the output of `estimate_contrasts(fit_bill, contrast = "species")`? **
+**2.  What conclusions can we draw from the output of `estimate_contrasts(fit_bill, contrast = "species")`?**
 
 The species contrasts holding bill length at ??? mm suggests that there ??? differences in bill depth between species
 
 **3. Redo the analysis NOT accounting for the covariate of bill length. In other words, do one-way ANOVA between bill depth and species and see how your key result changes!**
 
-If we did not account for bill length as a covariate, we would conclude that there are only differences in bill depth between ??? and `r `cloze("Chinstrap", c("Adelie", "Chinstrap"))`. 
+If we did not account for bill length as a covariate, would our conclusions be the same? ???. 
 
 ```{r}
 

@@ -284,10 +284,6 @@ _ANOVA_
 
 There was a **significant main effect of sex** on body mass, F(1, 327) = 406.15, p < .001, indicating that males and females penguins differ in body mass.
 
-## Report on the main effect of `species` {type=essay}
-**Report on the main effect of `species`**  _Hint: look at output of ANOVA_
-
-
 We found a  **significant interaction effect between sex and species**, F(2, 327) = 8.76, p < .001, indicating that the difference in body mass between males and females penguins depends on the species.
 
 Overall, our multiple linear regression model explained R^2 = `r cloze("85%", c("28%", "64%", "85%"))` of variation in body mass.  _Hint: look at output of `summary(fit)`_
@@ -296,10 +292,16 @@ _Contrasts_
 
 Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
+There were `r cloze("no", c("no", "weak", "strong"))` statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were `r cloze("marginal", c("weak", "marginal", "strong"))` differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
+
+## Report on the main effect of `species` {type=essay}
+**Report on the main effect of `species`**  _Hint: look at output of ANOVA_
+
+
+
 ## Report on the contrasts of `species` {type=essay}
 **Report on the contrasts of `species`**  _Hint: look at output of `estimate_contrasts()`_
 
-There were `r cloze("no", c("no", "weak", "strong"))` statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were `r cloze("marginal", c("weak", "marginal", "strong"))` differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
 
 # Over to you: Two way ANOVA
 
