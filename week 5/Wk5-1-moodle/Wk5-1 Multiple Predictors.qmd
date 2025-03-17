@@ -230,13 +230,11 @@ This output tells us that both the **main effects** of sex and species and their
 
 **1. Looking at the values for Mean Sq / F value, can you deduce which main effect explains has a stronger effect on body mass?**
 
-The Sum Sq/Mean Sq values for `sex` are smaller/larger than the Sum Sq/Mean Sq values for `species`. This means that sex/species has a stronger/weaker effect on body mass
+The Mean Sq / F value for `sex` are `r cloze("smaller", c("smaller", "larger"))` than the Mean Sq / F value for `species`. This means that `r cloze("sex", c("sex", "species"))`/species has a weaker effect on body mass.
 
 **2. Which of the three effects are contributing significantly to variation on body mass? (Select all that applies)**
 
-`sex`
-`species`
-`sex:species`
+`r cloze(c("sex", "species", "sex:species"), ("sex", "species", "sex:species"))`
 
 > But how big are the effects of sex, species and their interactive effects on body mass? How much difference in body mass are we talking about?
 
@@ -262,14 +260,13 @@ For example:
 
 **3. What does `sex [male] × species [Gentoo]` represent?**
 
-The coefficient for `sex [male] × species [Gentoo]` is 130.44/-262.89/1310.91. This represents the difference in/p-value for mean body mass between female Adelie/Chinstrap/Gentoo penguins and male Gentoo/Adelie/Chinstrap penguins.
+The coefficient for `sex [male] × species [Gentoo]` is `r cloze("130.44", c("130.44", "-262.89", "1310.91"))`. This represents the `r cloze("difference in", c("difference in", "p value for"))` mean body mass between female `r cloze("Adelie", c("Adelie", "Chinstrap", "Gentoo"))` penguins and male `r cloze("Gentoo", c("Adelie", "Chinstrap", "Gentoo"))` penguins.
 
 **4. Interpret the p-value for `species [Gentoo]`**
 
-The p-value for `species [Gentoo]` is < .001/0.014/0.089. This indicates that the probability for finding the difference of 1310.91/3368.84/674.66 in mean body mass between female/male Gentoo penguins and female/male Adelie pengions is very low/high.
+The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("<1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between `r cloze("female", c("female", "male"))` Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "male"))`.
 
 ## Contrasts
-
 
 After establishing that there are main and interactive effects on body mass, we may want to use model to get some estimates of differences between sex and species using `estimate_contrasts()`
 
@@ -300,9 +297,9 @@ estimate_contrasts(fit_penguin_adults, contrast = "species", by = "sex")
 
 **Questions:**
 
-5. In  the contrasts between species for each sex, which differences are non-significant?
+5. In the contrasts between species for each sex, which differences are non-significant?
 
-For both female and male penguins, the difference between Chinstrap/Gentoo and Adelie were non-significant/significant.
+For both female and male penguins, the difference between `r cloze("Chinstrap", c("Chinstrap", "Gentoo"))` and Adelie were non-significant.
 
 6. What does the 95% CI represent for `female | Gentoo` penguins? 
 
@@ -316,7 +313,6 @@ Let's report on our findings.
 
 There was a **significant main effect of sex** on body mass, F(1, 327) = 406.15, p < .001, indicating that males and females penguins differ in body mass.
 
-<!-- Ignore this header as it is an essay question -->
 ## Report on the main effect of `species` {type=essay}
 **Report on the main effect of `species`** 
 
@@ -330,7 +326,6 @@ _Contrasts_
 
 Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
-<!-- Ignore this header as it is an essay question -->
 ## Report on the contrasts of `species` {type=essay}
 **Report on the contrasts of `species`** 
 
@@ -346,7 +341,6 @@ There were no statistical differences in body mass male Chinstrap and male Adeli
 
 ```
 
-
 # Two continuous predictors 
 
 ## Use case 2: Two **continuous** predictors
@@ -361,24 +355,25 @@ data_leaves <- read_csv("data/towers-2024.csv")
 ```
 
 Fit a model with rainfall and temperature as predictors
+
 ```{r}
-fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature, data = data_leaves)
+fit_leaves_main <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature, data = data_leaves)
 ```
 
 Now check out the parameters of the model
 
 ```{r}
-parameters(fit)
+parameters(fit_leaves_main)
 ```
 
 What can we see?
 
 - The *Intercept* is the mean `log10_leaf_mass_per_area` when both rainfall and temperature are 0.
-- The `log10_rainfall` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in log10 rainfall, holding temperature constant. As we found previously, **this effect is signifcant**, with rainfall having a negative effect on `log10_leaf_mass_per_area` by _0.54 units per unit of `log10_rainfall`.
+- The `log10_rainfall` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in log10 rainfall, holding temperature constant. As we found previously, **this effect is signifcant**, with rainfall having a negative effect on `log10_leaf_mass_per_area` by 0.54 units per unit of `log10_rainfall`.
 - The `temperature` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in temperature, holding rainfall constant. 
 
 
-Questions:
+**Questions:**
 
 - What is the estimated effect (slope) of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("-0.54", c("-0.42", "close to zero", "3.81"))`
 - What is the estimated effect (slope) of `temperature` on `log10_leaf_mass_per_area`? `r cloze("close to zero", c("-0.42", "close to zero", "3.81"))`
@@ -393,38 +388,37 @@ Let's fit a model with an interaction term between `log10_rainfall` and `tempera
 
 ```{r}
 # fit the model
-fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature + log10_rainfall:temperature, data = data_leaves)
+fit_leaves_interaction <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature + log10_rainfall:temperature, data = data_leaves)
 
 # parameters
-parameters(fit)
+parameters(fit_leaves_interaction)
 ```
 
 Interesting! Now all the effects are significant. There's an effect of `log10_rainfall`, and an interaction with temperature. 
-
-| So let's plot the relationship between `log10_rainfall` and `log10_leaf_mass_per_area` for different temperatures.
+So let's plot the relationship between `log10_rainfall` and `log10_leaf_mass_per_area` for different temperatures to understand these significant effects better.
 
 ## Plotting the interactive effect
 
 As we've done previously, we can use `estimate_means()` to get the means of y with respect to x1 and x2. Specificailly, we can estimate the mean `log10_leaf_mass_per_area` for
 
 - different levels of `log10_rainfall` and `temperature`, and 
-- different levels of `log10_rainfall` only, averaging out the effect of temperature.
+- different levels of `log10_rainfall` only, averaging out the effect of `temperature`.
 
 ```{r}
-# estimate the means
-means <- estimate_means(fit, by = c("log10_rainfall", "temperature"))
+# Estimate the means
+means_leaves_temp <- estimate_means(fit, by = c("log10_rainfall", "temperature"))
 
 # estimate the overall means for rainfall only
-means_overall <- estimate_means(fit, by = c("log10_rainfall"))
+means_leaves_overall <- estimate_means(fit, by = c("log10_rainfall"))
 
 # plot
 ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
-  geom_point(alpha = 0.5, col = "red") + # the data`
-  geom_line(data = means, aes(y = Mean, group = temperature, color = temperature)) + # means by temperature
-  geom_line(data = means_overall, aes(y = Mean), col = "orange") + # overall mean
+  geom_point(alpha = 0.5, col = "darkgreen") + # the data`
+  geom_line(data = means_leaves_temp, aes(y = Mean, group = temperature, color = temperature)) + # means by temperature
+  geom_line(data = means_leaves_overall, aes(y = Mean), col = "orange") + # overall mean
   labs(
-    x = "log10_rainfall",
-    y = "log10_leaf_mass_per_area"
+    x = "Log 10 Rainfall",
+    y = "Log 10 Leaf per mass area"
   ) +
   theme_classic()
 ```
@@ -434,10 +428,10 @@ ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
 Say we'd run the model with the interaction term, but we wanted to know the overall effect of `log10_rainfall` on `log10_leaf_mass_per_area`, averaged over the different temperatures. We can use `estimate_slopes` to get this estimate. This corresponds to the slope of the orange line in the plot above.
 
 ```{r}
-estimate_slopes(fit, trend = "log10_rainfall")
+estimate_slopes(fit_leaves_main, trend = "log10_rainfall")
 ```
 
-You can see the effect estimated here is very close to that we calculated above in the addtive model. This makes sense.
+You can see the effect estimated here is very close to that we calculated above in the additive model. This makes sense.
 
 
 **Questions**
