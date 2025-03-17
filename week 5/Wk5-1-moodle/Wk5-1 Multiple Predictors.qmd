@@ -67,7 +67,7 @@ Today, we will go through three different use cases that have different combinat
     - interactive effects 
 3. One **categorical** predictor, one continuous predictor
 
-> Note in all use cases today, our response variable (y) is continuous.
+> Note in all use cases today, our response variable (y) is continuous. But you could apply the same principles to binary or count data in a Generalised Linear Model (GLM).
 
 ## Key learning objectives
 
@@ -126,7 +126,9 @@ library(modelbased)
 library(patchwork)
 ```
 
-# Use case 1: Two **categorical** predictors (Two-way ANOVA)
+# Two way ANOVA
+
+## Use case 1: Two **categorical** predictors (Two-way ANOVA)
 
 Some research designs are interested in the effects of **two categorical variables** on the continuous response variable. In these instances, we use **Two-way ANOVA** (Analysis of Variance) - a statistical method that help us to examine:
 
@@ -146,7 +148,7 @@ We can also look at the output of using `parameters()` to see **HOW big the main
 
 ![](images/palmer_penguins.png){width=60%}
 
-We are all familiar with the Palmer Penguins by now, let's get to know them better with multiple regression. 
+We are all familiar with the Palmer Penguins by now, let's get to know them better with two way Anova. 
 
 **Our research question: How much does body mass vary by sex and penguin species?**
 
@@ -268,6 +270,7 @@ The p-value for `species [Gentoo]` is < .001/0.014/0.089. This indicates that th
 
 ## Contrasts
 
+
 After establishing that there are main and interactive effects on body mass, we may want to use model to get some estimates of differences between sex and species using `estimate_contrasts()`
 
 What's useful is that you can estimate constrasts for a main effect while holding the other effects constant. 
@@ -344,48 +347,109 @@ There were no statistical differences in body mass male Chinstrap and male Adeli
 ```
 
 
-# Use case 2: Two **continuous** predictors 
-## Worked example - Isaac leaves (main effects)
+# Two continuous predictors 
 
+## Use case 2: Two **continuous** predictors
+
+Let's move on to our next use case: **two continuous predictors**. Recall from week 3, Isaac was interested in how leaf construction changed with climate. Previously, we found that leaf mass per area decreased as rainfall increased.
+
+Additonally, Isaac asked **whether temperature had an effect on leaf mass per area**? He first wanted to test the **main effects** of rainfall and temperature on leaf mass per area.
+
+Let's load the data and fit a linear model to test the main effects of both rainfall and temperature on log10 leaf mass per area.
 ```{r}
 data_leaves <- read_csv("data/towers-2024.csv")
 ```
 
-Additive model
-
+Fit a model with rainfall and temperature as predictors
 ```{r}
 fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature, data = data_leaves)
+```
 
+Now check out the parameters of the model
+
+```{r}
 parameters(fit)
 ```
 
-## Worked example - Isaac leaves (interactive effects)
+What can we see?
+
+- The *Intercept* is the mean `log10_leaf_mass_per_area` when both rainfall and temperature are 0.
+- The `log10_rainfall` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in log10 rainfall, holding temperature constant. As we found previously, **this effect is signifcant**, with rainfall having a negative effect on `log10_leaf_mass_per_area` by _0.54 units per unit of `log10_rainfall`.
+- The `temperature` coefficient is the change in `log10_leaf_mass_per_area` for a one unit increase in temperature, holding rainfall constant. 
+
+
+Questions:
+
+- What is the estimated effect (slope) of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("-0.54", c("-0.42", "close to zero", "3.81"))`
+- What is the estimated effect (slope) of `temperature` on `log10_leaf_mass_per_area`? `r cloze("close to zero", c("-0.42", "close to zero", "3.81"))`
+- Is the effect of `log10_rainfall` significantly different to zero? `r cloze("yes", c("yes", "no"))`
+- Is the effect of `temperature` significantly different to zero? `r cloze("no", c("yes", "no"))`
+
+## Interactive effects
+
+Now, Isaac was interested in **whether the effect of rainfall on leaf mass per area depended on temperature**. In other words, he wants to know if the slope of the relationship between rainfall and leaf mass per area changes with temperature. This is an **interactive effect**.
+
+Let's fit a model with an interaction term between `log10_rainfall` and `temperature`:
 
 ```{r}
-fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall * temperature, data = data_leaves)
+# fit the model
+fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall + temperature + log10_rainfall:temperature, data = data_leaves)
 
+# parameters
 parameters(fit)
-anova(fit)
+```
 
-means <- estimate_prediction(fit)
+Interesting! Now all the effects are significant. There's an effect of `log10_rainfall`, and an interaction with temperature. 
 
-means1 <- estimate_means(fit, by = c("log10_rainfall")) |>
-  mutate(temperature = 16)
+| So let's plot the relationship between `log10_rainfall` and `log10_leaf_mass_per_area` for different temperatures.
 
-means2 <- estimate_means(fit, by = c("log10_rainfall", "temperature"))
+## Plotting the interactive effect
+
+As we've done previously, we can use `estimate_means()` to get the means of y with respect to x1 and x2. Specificailly, we can estimate the mean `log10_leaf_mass_per_area` for
+
+- different levels of `log10_rainfall` and `temperature`, and 
+- different levels of `log10_rainfall` only, averaging out the effect of temperature.
+
+```{r}
+# estimate the means
+means <- estimate_means(fit, by = c("log10_rainfall", "temperature"))
+
+# estimate the overall means for rainfall only
+means_overall <- estimate_means(fit, by = c("log10_rainfall"))
 
 # plot
-ggplot(means2, aes(x = log10_rainfall, y = Mean, group = temperature, color = temperature)) +
-  geom_point(data = data_leaves, aes(y = log10_leaf_mass_per_area), alpha = 0.5, col = "red") +
-  geom_line() +
-  geom_line(data = means1, col = "orange") +
+ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
+  geom_point(alpha = 0.5, col = "red") + # the data`
+  geom_line(data = means, aes(y = Mean, group = temperature, color = temperature)) + # means by temperature
+  geom_line(data = means_overall, aes(y = Mean), col = "orange") + # overall mean
   labs(
     x = "log10_rainfall",
     y = "log10_leaf_mass_per_area"
-  )
+  ) +
+  theme_classic()
 ```
 
+## Overall effect of rainfall in second model?
+
+Say we'd run the model with the interaction term, but we wanted to know the overall effect of `log10_rainfall` on `log10_leaf_mass_per_area`, averaged over the different temperatures. We can use `estimate_slopes` to get this estimate. This corresponds to the slope of the orange line in the plot above.
+
+```{r}
+estimate_slopes(fit, trend = "log10_rainfall")
+```
+
+You can see the effect estimated here is very close to that we calculated above in the addtive model. This makes sense.
+
+
+**Questions**
+
+1. Why might Isaac be interested in the interactive effect of rainfall and temperature on leaf mass per area? `r cloze("to better understand the effect", c("to better understand the nature of the effect", "to see if the effect of rainfall is significant", "to see if the effect of rainfall is negative"))`
+
+2. What is the estimated effect of `log10_rainfall` on `log10_leaf_mass_per_area` when averaged over temperature? `r cloze("-0.52", c("-0.26", "-0.52", "2.94"))`
+
+3. Based on these results, what can we say about the effect of `log10_rainfall` on `log10_leaf_mass_per_area`? `r cloze("It has limited direct effect, but changes the effect of rainfall on leaves", c("It is negative", "It is positive", "It is close to zero", "It has limited direct effect, but changes the effect of rainfall on leaves"))`
+
 # Use case 3: One **categorical** and one **continuous** variable (ANCOVA) 
+
 ## Worked Example: Urchins
 
 ```{r}
