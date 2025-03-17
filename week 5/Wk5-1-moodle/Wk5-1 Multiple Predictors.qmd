@@ -159,11 +159,11 @@ First, let's exclude the penguins where `sex` is NA. These are juvenille penguin
 data_penguins_adults <- penguins |>
   filter(!is.na(sex)) # Exclude sex when its NA
 
-summary(data_penguins_adults)
+summary(data_penguins_adults) # Get an overview of data
 ```
 
 Now with our data all prepped, we can fit our linear model for our **two-way ANOVA**. 
-Based on **our research question: How much does body mass vary by sex and penguin species?**, we want determine the **main effects** of sex and species as well as their **interactive effects**. 
+Based on **our research question: How much does body mass vary by sex and penguin species?**, we want determine the **main effects** of sex and species, as well as their **interactive effects**. 
 
 This is how we fit our two-way ANOVA:
 
@@ -175,11 +175,41 @@ fit_penguin_adults <- lm(body_mass_g ~ sex + species + sex:species, data = data_
 
 - `sex` as a standalone predictor means we are interested in the sole effect of sex on body mass
 - `species` as a standalone predictor means we are interested in the sole effect of species on body mass
-- `sex:species` means we are interested in the **interactive effects** of both sex and species. In other words, the effect on body mass may depend sex AND species. 
+- `sex:species` means we are interested in the **interactive effects** of both sex and species. In other words, the effect on body mass may depend sex AND species.
+
+Let's estimate the mean of body mass by sex and species using our model with `estimate_means()` and plot them with the raw data 
+
+```{r}
+# Estimate mean of response for sex and species
+means_penguin_adults <- estimate_means(fit_penguin_adults, by=c("sex", "species"))
+
+means_penguin_adults
+```
+
+Here we are creating violin plots and adding some jitter to the raw data. We added error bars and the mean for each sex and we facetted the plot by species
+
+> Notice we are calling `means_penguin_adults` in `geom_errorbar()` and `geom_point()` as we want to plot the mean body mass and their associated CIs. 
+
+```{r}
+ggplot(data_penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
+  geom_violin(alpha = 0.3) +
+  geom_jitter(width = 0.1) +
+  geom_errorbar(data = means_penguin_adults, aes(y = Mean, ymin = CI_low, ymax = CI_high),col = "black", width = 0.2) + 
+  geom_point(data = means_penguin_adults, aes(y = Mean), col = "black") + 
+  labs(
+    x = "Sex",
+    y = "Body Mass (g)"
+  ) + 
+  theme_classic() + 
+  facet_wrap(~species)  +
+  theme(legend.position = "none") 
+```
+
+Let's proceed with our two-way ANOVA to test whether we have the main effects of sex and species and their interaction contributes to variation in body mass.
 
 ## ANOVA output
 
-Ok, let's look at the output of `anova(fit_penguin_adults)` to see whether the main/interactive effects were important in explaining variation in body mass.
+To run a two way ANOVA, we call `anova(fit_penguin_adults)`
 
 What can we see? 
 
@@ -194,30 +224,27 @@ We can see our predictor variables listed as rows. **Each row tests whether an e
 - The third row for the interactive effect of `sex` and `species` after the two main effects.
 
 This output tells us that both the **main effects** of sex and species and their **interactive effects** have a strong effect on body mass variation in Palmer penguins. 
-
 **Questions:**
 
-**1. Looking at the values for Sum Sq/Mean Sq, can you deduce which main effect explains has a stronger effect on body mass?**
+**1. Looking at the values for Mean Sq / F value, can you deduce which main effect explains has a stronger effect on body mass?**
 
 The Sum Sq/Mean Sq values for `sex` are smaller/larger than the Sum Sq/Mean Sq values for `species`. This means that sex/species has a stronger/weaker effect on body mass
 
-**2. Looking at the F value and P value for the main and interactive effects. Which one has a stronger effect on body mass?**
+**2. Which of the three effects are contributing significantly to variation on body mass? (Select all that applies)**
 
-The F value/P value values for both the main effects (`sex` and `species`) are smaller/larger than the F value/P value values for the interaction `sex:species`. This means that interactive effects of sex and species has a weaker/stronger effect on body mass.
+`sex`
+`species`
+`sex:species`
 
-> But how big is the effect of sex, species and their interactive effects on body mass?
+> But how big are the effects of sex, species and their interactive effects on body mass? How much difference in body mass are we talking about?
 
 ## Model output
 
-We will need to look at the output of our multiple linear regression using `paramaters(fit_penguin_adults)`
+Typically when we are working with categorical predictors, we look at the ANOVA output first to determine whether there is an effect of a predictor before looking at the model output using `paramaters(fit_penguin_adults)`. 
 
-This table looks fuller compared to the ones we've seen right? We've got more rows here.
+The output of `parameters(fit_penguin_adults)` gives us a snapshot of the how big of the effect of sex and species for a reference group (female Adelie) but this is not particularly useful. 
 
-Recall in a linear model where there are categorical predictors, the `Intercept` represents the **mean of your response variable for a reference groups**
-
-In our penguins study here, the **reference group are the female Adelie** penguins. **The coefficient is 3368.84 is the mean body mass for female Adelie penguins**.
-
-R chooses the reference groups level by alphabetical order for each main effect. 
+> In our penguins study here, the **reference group are the female Adelie** penguins. **The coefficient is 3368.84 is the mean body mass for female Adelie penguins**.
 
 ```{r}
 parameters(fit_penguin_adults)
@@ -227,78 +254,52 @@ Knowing this important fact about the `Intercept`, we can start to interpret the
 
 For example:
 
-- `sex [male]` represents the **difference in mean body mass between the Intercept (female Adelie) and male Adelie penguins (674.66)**. This means that the Intercept (3368.84) + 674.66 is the mean mass for male Adelie penguins. 
-
-- `species [Chinstrap]` is the **difference in mean body mass between the Intercept (female Adelie) and female Chinstrap penguins (158.37)**. 
-
 - `sex [male] × species [Chinstrap]` is the **difference in mean body mass between the Intercept (female Adelie) and male Chinstrap penguins (-262.89)**. This value is negative, implying the male Chinstraps are smaller than the Intercept (female Adelie).
 
 **Questions:**
 
-**1. What does `sex [male] × species [Gentoo]` represent?**
+**3. What does `sex [male] × species [Gentoo]` represent?**
 
 The coefficient for `sex [male] × species [Gentoo]` is 130.44/-262.89/1310.91. This represents the difference in/p-value for mean body mass between female Adelie/Chinstrap/Gentoo penguins and male Gentoo/Adelie/Chinstrap penguins.
 
-**2. Interpret the p-value for `species [Gentoo]`**
+**4. Interpret the p-value for `species [Gentoo]`**
 
 The p-value for `species [Gentoo]` is < .001/0.014/0.089. This indicates that the probability for finding the difference of 1310.91/3368.84/674.66 in mean body mass between female/male Gentoo penguins and female/male Adelie pengions is very low/high.
 
-The output of `parameters(fit_penguin_adults)` gives us a snapshot of the how big of the effect of sex and species for a reference group but this is not particularly useful. 
-
 ## Contrasts
 
-To answer our research question, what we _really_ want to know is: 
-
-1.  The **difference of body mass** for all possible combinations/*constrasts* of sex and species `estimate_contrasts()`
-
-We've specificied `contrast = c("sex", "species")` so the function will calculate the difference in body mass for all combinations for groups.
-
-We are arranging our contrasts by `Level2` so there is a bit more structure to the output. You can also arrange by `Difference` to see which combinations showed the biggest difference
-
-```{r}
-constrasts_penguin_adults <- estimate_contrasts(fit_penguin_adults, contrast = c("sex", "species"))
-
-constrasts_penguin_adults |> 
-  arrange(Level2, Difference)
-```
-
-See how the difference for  `male, Adelie | female, Adelie` row is 674.66. This is the same value from the `sex [male]` row in the model output above. 
-
-**Questions:**
-
-1. Which species and sex combination showed the largest difference in body mass? 
-
-The largest difference was between male/female Adelie penguins and male/female Gentoo/Chinstrap/Adelie penguins. The absolute difference in body mass was  2116.00/740.77/411.76.
+After establishing that there are main and interactive effects on body mass, we may want to use model to get some estimates of differences between sex and species using `estimate_contrasts()`
 
 What's useful is that you can estimate constrasts for a main effect while holding the other effects constant. 
 
-Here we are calculating the difference between the sexes and taking an average over species
+For example, here we are calculating the difference between the sexes and taking an average over each species (**main effect of sex**)
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = c("sex"))
 ```
 
-Here we are calculating the difference between the species taking an average over sexes
+Or we can calculate the difference between the species taking an average over sexes (**main effect of species**)
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = c("species"))
 ```
 
-## Mean of the response
-
-To answer our research question, we want to obtain:
-
-2. The **mean body mass** for all possible combinations of sex and species `estimate_means()` 
+Importantly, for our **interaction effect** we can also estimate the difference between sexes for each species 
 
 ```{r}
-means_penguin_adults <- estimate_means(fit_penguin_adults, by=c("sex", "species"))
+estimate_contrasts(fit_penguin_adults, contrast = "sex", by = "species")
+```
 
-means_penguin_adults
+and the difference between species for each sex
+```{r}
+estimate_contrasts(fit_penguin_adults, contrast = "species", by = "sex")
 ```
 
 **Questions:**
 
-1.  What does the 95% CI represent for `female | Gentoo` penguins? 
+5. Which differences are non-significant?
+
+6.  What does the 95% CI represent for `female | Gentoo` penguins? 
 
 The 95% CI internal for `female | Gentoo` penguins represents the range of values where we would find the true population estimate of body mass for female/male Gentoo/Chinstrap/Adelie penguins 95% of the time.
 
@@ -325,27 +326,10 @@ _Contrasts_
 Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
 <!-- Ignore this header as it is an essay question -->
-## Report on the constrasts of `species` {type=essay}
-**Report on the constrasts of `species`** 
+## Report on the contrasts of `species` {type=essay}
+**Report on the contrasts of `species`** 
 
-There were no statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were marginal differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 below. 
-
-```{r}
-ggplot(data_penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
-  geom_violin(alpha = 0.3) +
-  geom_jitter(width = 0.1) +
-  geom_errorbar(data = means_penguin_adults, aes(y = Mean, ymin = CI_low, ymax = CI_high),col = "black", width = 0.2) + 
-  geom_point(data = means_penguin_adults, aes(y = Mean), col = "black") + 
-  labs(
-    x = "Sex",
-    y = "Body Mass (g)"
-  ) + 
-  theme_classic() + 
-  facet_wrap(~species)  +
-  theme(legend.position = "none") 
-```
-
-> Notice we are calling `means_penguin_adults` in `geom_errorbar()` and `geom_point()` as we want to plot the mean body mass and their associated CIs. 
+There were no statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were marginal differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
 
 # Over to you: Two way ANOVA
 
