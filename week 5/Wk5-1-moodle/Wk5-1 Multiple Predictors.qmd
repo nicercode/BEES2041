@@ -164,7 +164,6 @@ summary(data_penguins_adults)
 ```
 
 Now with our data all prepped, we can fit our linear model for our **two-way ANOVA**. 
-
 Based on **our research question: How much does body mass vary by sex and penguin species?**, we want determine the **main effects** of sex and species as well as their **interactive effects**. 
 
 This is how we fit our two-way ANOVA:
@@ -178,6 +177,8 @@ fit_penguin_adults <- lm(body_mass_g ~ sex + species + sex:species, data = pengu
 - `sex` as a standalone predictor means we are interested in the sole effect of sex on body mass
 - `species` as a standalone predictor means we are interested in the sole effect of species on body mass
 - `sex:species` means we are interested in the **interactive effects** of both sex and species. In other words, the effect on body mass may depend sex AND species. 
+
+## ANOVA output
 
 Ok, let's look at the output of `anova(fit_penguin_adults)` to see whether the main/interactive effects were important in explaining variation in body mass.
 
@@ -195,7 +196,19 @@ We can see our predictor variables listed as rows. **Each row tests whether an e
 
 This output tells us that both the **main effects** of sex and species and their **interactive effects** have a strong effect on body mass variation in Palmer penguins. 
 
+**Questions:**
+
+**1. Looking at the values for Sum Sq/Mean Sq, can you deduce which main effect explains has a stronger effect on body mass?**
+
+The Sum Sq/Mean Sq values for `sex` are smaller/larger than the Sum Sq/Mean Sq values for `species`. This means that sex/species has a stronger/weaker effect on body mass
+
+**2. Looking at the F value and P value for the main and interactive effects. Which one has a stronger effect on body mass?**
+
+The F value/P value values for both the main effects (`sex` and `species`) are smaller/larger than the F value/P value values for the interaction `sex:species`. This means that interactive effects of sex and species has a weaker/stronger effect on body mass.
+
 > But how big is the effect of sex, species and their interactive effects on body mass?
+
+## Model output
 
 We will need to look at the output of our multiple linear regression using `paramaters(fit_penguin_adults)`
 
@@ -206,7 +219,6 @@ Recall in a linear model where there are categorical predictors, the `Intercept`
 In our penguins study here, the **reference group are the female Adelie** penguins. **The coefficient is 3368.84 is the mean body mass for female Adelie penguins**.
 
 R chooses the reference groups level by alphabetical order for each main effect. 
-
 
 ```{r}
 parameters(fit_penguin_adults)
@@ -222,48 +234,74 @@ For example:
 
 - `sex [male] × species [Chinstrap]` is the **difference in mean body mass between the Intercept (female Adelie) and male Chinstrap penguins (-262.89)**. This value is negative, implying the male Chinstraps are smaller than the Intercept (female Adelie).
 
->
+**Questions:**
 
+**1. What does `sex [male] × species [Gentoo]` represent?**
+
+The coefficient for `sex [male] × species [Gentoo]` is 130.44/-262.89/1310.91. This represents the difference in/p-value for mean body mass between female Adelie/Chinstrap/Gentoo penguins and male Gentoo/Adelie/Chinstrap penguins.
+
+**2. Interpret the p-value for `species [Gentoo]`**
+
+The p-value for `species [Gentoo]` is < .001/0.014/0.089. This indicates that the probability for finding the difference of 1310.91/3368.84/674.66 in mean body mass between female/male Gentoo penguins and female/male Adelie pengions is very low/high.
+
+The output of `parameters(fit_penguin_adults)` gives us a snapshot of the how big of the effect of sex and species for a reference group but this is not particularly useful. 
+
+## Contrasts
+
+To answer our research question, what we _really_ want to know is: 
+
+1.  The **difference of body mass** for all possible combinations/*constrasts* of sex and species `estimate_contrasts()`
+
+We've specificied `contrast = c("sex", "species")` so the function will calculate the difference in body mass for all combinations for groups.
+
+We are arranging our contrasts by `Level2` so there is a bit more structure to the output. You can also arrange by `Difference` to see which combinations showed the biggest difference
 
 ```{r}
+constrasts_penguin_adults <- estimate_contrasts(fit_penguin_adults, contrast = c("sex", "species"))
 
-
-parameters(fit2)
-parameters(fit1)
-
-anova(fit2)
-anova(fit1)
-
-
-fit1 <- lm(body_mass_g ~ species * sex, data = penguins_adults)
-
-anova(fit)
-
-ggplot(data2, aes(x = species, y = body_mass_g, fill = sex, col = sex)) +
-  geom_violin() +
-  #  geom_jitter() +
-  labs(
-    x = "Species",
-    y = "Bill depth (mm)"
-  )
-
-means <- estimate_means(fit, by = c("sex", "species"))
-
-estimate_contrasts(fit, contrast = c("sex"), by = c("species"))
-estimate_contrasts(fit, contrast = c("species"))
-
-ggplot(data2, aes(x = species, y = body_mass_g, colour = sex, group = sex)) +
-  geom_jitter() +
-  geom_line(data = means, aes(y = Mean)) +
-  geom_ribbon(data = means, aes(y = Mean, ymin = CI_low, ymax = CI_high), alpha = 0.2) +
-  theme_minimal() +
-  labs(
-    title = "Body Mass by Species and Sex",
-    y = "bill_depth_mm",
-    x = "Body Mass (g)",
-    fill = "Sex"
-  ) 
+constrasts_penguin_adults |> 
+  arrange(Level2)
 ```
+
+See how the difference for  `male, Adelie | female, Adelie` row is 674.66. This is the same value from the `sex [male]` row in the model output above. 
+
+## Mean of the response
+
+To answer our research question, we want to obtain:
+
+2. The **mean body mass** for all possible combinations of sex and species `estimate_means()` 
+
+```{r}
+means_penguin_adults <- estimate_means(fit_penguin_adults, by=c("sex", "species"))
+
+means_penguin_adults
+```
+
+> Let's plot the raw data and our estimated means from our model see if it aligns with our results so far.
+
+Notice we are calling `means_penguin_adults` in `geom_errorbar()` and `geom_point()` as we want to plot the mean body mass and their associated CIs. 
+
+```{r}
+ggplot(penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
+  geom_violin(alpha = 0.3) +
+  geom_jitter(width = 0.1) +
+  geom_errorbar(data = means_penguin_adults, aes(y = Mean, ymin = CI_low, ymax = CI_high),col = "black", width = 0.2) + 
+  geom_point(data = means, aes(y = Mean), col = "black") + 
+  labs(
+    x = "Sex",
+    y = "Body Mass (g)"
+  ) + 
+  theme_classic() + 
+  facet_wrap(~species)  +
+  theme(legend.position = "none") 
+```
+
+**Questions:**
+
+1. 
+2.
+3.
+
 
 ## Exercise Example: Marine Invertebrates Richness 
  
