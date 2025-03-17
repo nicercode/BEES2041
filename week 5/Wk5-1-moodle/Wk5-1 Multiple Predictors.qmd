@@ -5,7 +5,6 @@ format:
     self-contained: true
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -194,7 +193,37 @@ We can see our predictor variables listed as rows. **Each row tests whether an e
 - The second row for the main effect of ` species` after main effect of `sex`
 - The third row for the interactive effect of `sex` and `species` after the two main effects.
 
-This output tells us that both the **main effects** of sex and species and their **interactive effects** have a strong effect on body mass variation in Palmer penguins.
+This output tells us that both the **main effects** of sex and species and their **interactive effects** have a strong effect on body mass variation in Palmer penguins. 
+
+> But how big is the effect of sex, species and their interactive effects on body mass?
+
+We will need to look at the output of our multiple linear regression using `paramaters(fit_penguin_adults)`
+
+This table looks fuller compared to the ones we've seen right? We've got more rows here.
+
+Recall in a linear model where there are categorical predictors, the `Intercept` represents the **mean of your response variable for a reference groups**
+
+In our penguins study here, the **reference group are the female Adelie** penguins. **The coefficient is 3368.84 is the mean body mass for female Adelie penguins**.
+
+R chooses the reference groups level by alphabetical order for each main effect. 
+
+
+```{r}
+parameters(fit_penguin_adults)
+```
+
+Knowing this important fact about the `Intercept`, we can start to interpret the other rows in this model output. Recall that in a linear model containing categorical predictors, each row represents the **difference relative to the reference group due to that specific predictor**. 
+
+For example:
+
+- `sex [male]` represents the **difference in mean body mass between the Intercept (female Adelie) and male Adelie penguins (674.66)**. This means that the Intercept (3368.84) + 674.66 is the mean mass for male Adelie penguins. 
+
+- `species [Chinstrap]` is the **difference in mean body mass between the Intercept (female Adelie) and female Chinstrap penguins (158.37)**. 
+
+- `sex [male] × species [Chinstrap]` is the **difference in mean body mass between the Intercept (female Adelie) and male Chinstrap penguins (-262.89)**. This value is negative, implying the male Chinstraps are smaller than the Intercept (female Adelie).
+
+>
+
 
 ```{r}
 
