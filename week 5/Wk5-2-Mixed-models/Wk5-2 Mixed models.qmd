@@ -385,46 +385,40 @@ ggplot(means2, aes(x = log10_rainfall, y = Mean, group = temperature, color = te
   )
 ```
 
-# Use case 3: One **categorical** and one **continuous** variable (ANCOVA) 
+# Use case 3: One categorical, one continuous variable (ANCOVA) 
 ## Worked Example: Urchins
 
 ```{r}
+
 # Read in data 
-data_urchins <- read_csv("data/Urchins.csv") 
+data_urchins <- read_csv("data/Urchins.csv")  |> 
+  mutate(
+    Quadrat = as.factor(Quadrat)
+  )
 ```
 
 ```{r}
-# Fit the multiple regression model
-fit_urchin <- lm(BareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
+fit <- lm(BareRock ~ Day*Treatment, data = data_urchins)
 
-# Check model
-check_model(fit_urchin)
-```
+check_model(fit)
 
-```{r}
-# The response needs a log transoform
+# neeeds a log transofrm
 data_urchins <- data_urchins |>  mutate(logBareRock = log(BareRock + 1))
 
-# Refit the model with transformed variable
-fit_log_urchin <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
+fit_log <- lm(logBareRock ~ Day * Treatment, data = data_urchins)
 
-# Check model
-check_model(fit_log_urchin)
+check_model(fit_log)
+
+parameters(fit_log)
+
+anova(fit_log)
 ```
 
 ```{r}
-anova(fit_log_urchin)
-```
+means <- estimate_means(fit_log, by = c("Day", "Treatment"))
 
-```{r}
-means_urchins <- estimate_means(fit_log_urchin, by = c("Day", "Treatment"))
-
-means_urchins |> head()
-```
-
-```{r}
 p1 <-
-  ggplot(means_urchins, aes(x = Day, y = Mean, color = Treatment)) +
+  ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
   geom_line() +
   labs(
     x = "Day",
@@ -439,6 +433,50 @@ p1
 p1 +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Treatment)
+```
+
+Add a random effect for Quadrat
+
+```{r}
+library(glmmTMB)
+
+
+fit <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
+
+fit_simple <- glmmTMB(logBareRock ~ Day * Treatment, data = data_urchins)
+
+check_model(fit)
+
+means <- estimate_expectation(fit, by = c("Day", "Treatment"))
+means2 <- estimate_expectation(fit)
+
+p1 <-
+  ggplot(means2, aes(x = Day, y = Predicted, color = Treatment)) +
+  geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
+  labs(
+    x = "Day",
+    y = "log(BareRock)"
+  ) +
+  theme_minimal() +
+  geom_line(data = means, alpha = 1, size = 2)
+
+p1
+
+# Plot for each treatmeant
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Treatment)
+
+# Plot for each Quadrat
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Quadrat)
+
+parameters(fit_simple)
+parameters(fit)
+
+## Ignoring qudrat adds to noise
+## CI's are smaller with the random effect included
 ```
 
 # Over to you: 
