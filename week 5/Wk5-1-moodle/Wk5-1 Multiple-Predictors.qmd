@@ -21,7 +21,6 @@ library(moodlequiz)
 library(tidyverse)
 library(easystats)
 library(palmerpenguins)
-
 ```
 
 <!-- # Outline -->

@@ -1,5 +1,5 @@
 
-
+# Rendering various practical files from main .qmd
 
 ```{r setup, include=FALSE}
 library(quarto)
@@ -9,7 +9,7 @@ library(tidyverse)
 source("R/remove_solutions.R")
 source("R/generate_moodle_quiz.R")
 
-file <- "week 4/Wk4-1-moodle/Wk4-1-lm-assumptions.qmd"
+file <- "week 5/Wk5-1-moodle/Wk5-1 Multiple Predictors.qmd"
 
 ## Rendering as html
 quarto::quarto_render(file)
