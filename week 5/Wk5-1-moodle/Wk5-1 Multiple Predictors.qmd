@@ -60,10 +60,16 @@ First let's briefly recap on variable types, as this will determine the choice o
 
 Today, we will go through four different use cases that have different combinations of predictor variables: 
 
-1. Two **categorical** predictors
-2. Two **continuous** predictors 
-3. Two **continuous** predictors with **an interaction**
+<!-- #TODO: @Daniel, do we want to split 1. into 2 (Main and interactive effects?) -->
+
+1. Two **categorical** predictors 
+    - main additive effects
+    - interactive effects 
+2. Two **continuous** predictors (main effects)
+3. Two **continuous** predictors (with interaction)
 4. One **categorical** predictor, one continuous predictor
+
+> Note in all use cases today, our response variable (y) is continuous.
 
 ## Key learning objectives
 
@@ -120,8 +126,21 @@ library(modelbased)
 library(patchwork)
 ```
 
+# Use case 1: Two **categorical** predictors (Two-way ANOVA)
 
-## Two factor ANOVA
+Some research designs are interested in the effects of **two categorical variables** on the continuous response variable. In these instances, we use **Two-way ANOVA** (Analysis of Variance) - a statistical method that help us to examine:
+
+- **Main effects** – The **independent impact** of each categorical variable on the outcome.
+
+- **Interaction effect** – Whether the **effect of one variable depends on the level of the other**.
+
+> Recall that ANOVA at their core, are linear models. 
+
+This means that we can fit a **two-way ANOVA** using the `lm()` function and then call `anova()` on the model fit object. 
+
+We can also look at the output of using `parameters()` to see **HOW big the main/interactive effect** is. 
+
+## Worked Example: Penguins: size by sex and species
 ```{r}
 data2 <- data_penguins |>
   filter(!is.na(sex))
@@ -155,6 +174,15 @@ ggplot(data2, aes(x = species, y = body_mass_g, colour = sex, group = sex)) +
     fill = "Sex"
   ) 
 ```
+
+## Exercise Example: Marine Invertebrates Richness 
+ 
+ <!-- - Example 2: Environmental computing: Invert richness by substrate and copper treatment -->
+ 
+```{r}
+
+```
+ 
 
 
 ## Two continuous predictors- Isaac leaves
