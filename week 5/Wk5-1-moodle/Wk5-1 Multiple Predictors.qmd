@@ -310,6 +310,7 @@ Let's report on our findings.
 
 There was a **significant main effect of sex** on body mass, F(1, 327) = 406.15, p < .001, indicating that males and females penguins differ in body mass.
 
+<!-- Ignore this header as it is an essay question -->
 ## Report on the main effect of `species` {type=essay}
 **Report on the main effect of `species`** 
 
@@ -323,6 +324,7 @@ _Contrasts_
 
 Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
+<!-- Ignore this header as it is an essay question -->
 ## Report on the constrasts of `species` {type=essay}
 **Report on the constrasts of `species`** 
 
