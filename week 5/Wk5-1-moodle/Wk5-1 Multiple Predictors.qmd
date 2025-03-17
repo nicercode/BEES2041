@@ -260,10 +260,30 @@ We are arranging our contrasts by `Level2` so there is a bit more structure to t
 constrasts_penguin_adults <- estimate_contrasts(fit_penguin_adults, contrast = c("sex", "species"))
 
 constrasts_penguin_adults |> 
-  arrange(Level2)
+  arrange(Level2, Difference)
 ```
 
 See how the difference for  `male, Adelie | female, Adelie` row is 674.66. This is the same value from the `sex [male]` row in the model output above. 
+
+**Questions:**
+
+1. Which species and sex combination showed the largest difference in body mass? 
+
+The largest difference was between male/female Adelie penguins and male/female Gentoo/Chinstrap/Adelie penguins. The absolute difference in body mass was  2116.00/740.77/411.76.
+
+What's useful is that you can estimate constrasts for a main effect while holding the other effects constant. 
+
+Here we are calculating the difference between the sexes and taking an average over species
+
+```{r}
+estimate_contrasts(fit_penguin_adults, contrast = c("sex"))
+```
+
+Here we are calculating the difference between the species taking an average over sexes
+
+```{r}
+estimate_contrasts(fit_penguin_adults, contrast = c("species"))
+```
 
 ## Mean of the response
 
@@ -276,6 +296,12 @@ means_penguin_adults <- estimate_means(fit_penguin_adults, by=c("sex", "species"
 
 means_penguin_adults
 ```
+
+**Questions:**
+
+1.  What does the 95% CI represent for `female | Gentoo` penguins? 
+
+The 95% CI internal for `female | Gentoo` penguins represents the range of values where we would find the true population estimate of body mass for female/male Gentoo/Chinstrap/Adelie penguins 95% of the time.
 
 > Let's plot the raw data and our estimated means from our model see if it aligns with our results so far.
 
@@ -296,11 +322,32 @@ ggplot(penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
   theme(legend.position = "none") 
 ```
 
-**Questions:**
+## Reporting results
 
-1. 
-2.
-3.
+**Our research question was how much does body mass vary by sex and penguin species?**
+
+Let's report on our findings. 
+
+There was a **significant main effect of sex** on body mass, F(1, 327) = 406.15, p < .001, indicating that males and females penguins differ in body mass.
+
+## Report on the main effect of `species` {type=essay}
+**Report on the main effect of `species`** 
+
+_ANOVA_
+
+We found a  **significant interaction effect between sex and species**, F(2, 327) = 8.76, p < .001, indicating that the difference in body mass between males and females penguins depends on the species.
+
+Overall, our multiple linear regression model explained R^2 = 28%/64%/85% of variation in body mass. 
+
+_Contrasts_
+
+Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27, 700.75, p-value = <0.001). 
+
+## Report on the constrasts of `species` {type=essay}
+**Report on the constrasts of `species`** 
+
+_Means_
+
 
 
 ## Exercise Example: Marine Invertebrates Richness 
