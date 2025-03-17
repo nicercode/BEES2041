@@ -43,7 +43,6 @@ library(palmerpenguins)
 <!--   - Question concerns sloep, looking for difference between groups -->
 <!--   - Example 1: Urchins -->
 
-## Key learning objectives
 # Introduction to Linear Regression with Multiple predictors
 
 ## Introduction
@@ -346,6 +345,8 @@ ggplot(data_penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex
 
 > Notice we are calling `means_penguin_adults` in `geom_errorbar()` and `geom_point()` as we want to plot the mean body mass and their associated CIs. 
 
+# Over to you: Two way ANOVA
+
 ## Exercise Example: Marine Invertebrates Richness 
  
  <!-- - Example 2: Environmental computing: Invert richness by substrate and copper treatment -->
@@ -491,6 +492,7 @@ parameters(fit)
 ## CI's are smaller with the random effect included
 ```
 
+# Over to you: 
 
 ## Exercise Example: Penguins again
 
