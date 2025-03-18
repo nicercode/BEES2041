@@ -1,0 +1,225 @@
+---
+title: "Mixed models"
+format:
+  html:    
+    self-contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Set the working directory
+rprojroot::has_file("BEES2041-code.Rproj") |>
+  rprojroot::find_root() |>
+  file.path("week 5/Wk5-2-moodle") |>
+  setwd()
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+
+# For prac
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+
+```
+
+<!-- # Outline -->
+<!-- - Fixed and Random effects -->
+<!-- - How to construct a model forumula -->
+<!--   - varying intercepts -->
+<!--   - varying slopes -->
+<!-- - How to choose to suit question -->
+
+
+# Introduction to Mixed Models
+
+![Bringing all your R skills together!](images/witches.png){width=60%}
+
+## Introduction
+
+Hey folks! In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** (also known as linear mixed-effects models) help us handle this complexity by explicitly modeling both fixed effects — the overall trends we're interested in — and random effects — the variation due to these groupings.
+
+Today, we will go through  XXXX: 
+
+
+> 
+
+## Key learning objectives
+
+Our learning objectives today are:
+
+- **understand** how different predictor variable types can influence your choice of analysis 
+- **understand** difference between additive and interactive effects
+- **run** a multiple linear regression in R using `lm()`
+- **test** for effects of your predictor variables using `anova()`
+- **interpret** the output of your multiple regression using `parameters()`, `estimate_means()`, `estimate_contrasts()`
+- **extract** the mean and confidence interval for the slope and intercept of the regression line
+- **plot** the data and the regression line with confidence intervals
+
+Let’s dive in! 🚀 
+
+## Setting up: Materials
+
+Everything you need for this prac is on Moodle
+
+1. Download this week's materials zip file from Moodle, from the course page
+2. Unzip the file by: 
+  - MacOS: Double clicking the zipfile 
+  - Windows: Right click on the zip file and click "Extract All" 
+3. Move the extracted folder into the folder where you store materials for `BEES2041/` 
+4. **Click on the Rstudio project file, eg. `Wk5-2-mixed-models.Rproj`** to open the RStudio project and you're in!!!
+
+We will be working with various datasets collected. These are in the folder `data/`.
+
+You will work in the relevant Quarto document for this prac. Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
+
+## Setting up: Packages
+
+> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` and `easystats` we need for this prac.
+
+```{r, eval=FALSE}
+# install.packages("tidyverse")
+# install.packages("easystats")
+# install.packages("patchwork")
+# install.packages("glmmTMB")
+```
+
+> Remember to load the packages into R to use em!
+
+```{r, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+library(easystats)
+library(patchwork)
+library(glmmTMB)
+```
+
+## Worked Example: Urchins
+
+```{r}
+
+# Read in data 
+data_urchins <- read_csv("data/Urchins.csv")  |> 
+  mutate(
+    Quadrat = as.factor(Quadrat),
+    logBareRock = log(BareRock + 1)
+  )
+```
+
+```{r}
+fit <- lm(BareRock ~ Day*Treatment, data = data_urchins)
+
+check_model(fit)
+
+# neeeds a log transofrm
+data_urchins <- data_urchins |>  mutate(logBareRock = log(BareRock + 1))
+
+fit_log <- lm(logBareRock ~ Day * Treatment, data = data_urchins)
+
+check_model(fit_log)
+
+parameters(fit_log)
+
+anova(fit_log)
+```
+
+```{r}
+means <- estimate_means(fit_log, by = c("Day", "Treatment"))
+
+p1 <-
+  ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
+  geom_line() +
+  labs(
+    x = "Day",
+    y = "log(BareRock)"
+  ) +
+  theme_minimal()
+
+# Compare lines
+p1
+
+# Compare lines with data
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Treatment)
+```
+
+Add a random effect for Quadrat
+
+```{r}
+library(glmmTMB)
+
+
+fit <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
+
+fit_simple <- glmmTMB(logBareRock ~ Day * Treatment, data = data_urchins)
+
+check_model(fit)
+
+means <- estimate_expectation(fit, by = c("Day", "Treatment"))
+means2 <- estimate_expectation(fit)
+
+p1 <-
+  ggplot(means2, aes(x = Day, y = Predicted, color = Treatment)) +
+  geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
+  labs(
+    x = "Day",
+    y = "log(BareRock)"
+  ) +
+  theme_minimal() +
+  geom_line(data = means, alpha = 1, size = 2)
+
+p1
+
+# Plot for each treatmeant
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Treatment)
+
+# Plot for each Quadrat
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Quadrat)
+
+parameters(fit_simple)
+parameters(fit)
+
+## Ignoring qudrat adds to noise
+## CI's are smaller with the random effect included
+```
+
+# Over to you: 
+
+## Exercise Example: Penguins again
+
+Want to test for differences in bill depth between species, use bill length as a covariate, because larger penguins have larger bills overall
+
+```{r}
+library(palmerpenguins)
+data_penguins <- penguins
+
+fit <- lm(bill_depth_mm ~ bill_length_mm * species, data = data_penguins)
+
+means <- estimate_expectation(fit, by = c("bill_length_mm", "species"))
+
+parameters(fit)
+ggplot(data_penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  geom_line(data = means, aes(y = Predicted)) +
+  labs(
+    x = "Bill length (mm)",
+    y = "Bill depth (mm)"
+  )
+
+anova(fit)
+
+estimate_contrasts(fit)
+
+# Simple analysis without covariate
+
+fit_simple <- lm(bill_depth_mm ~ species, data = data_penguins)
+
+parameters(fit_simple)
+estimate_contrasts(fit_simple)
+```
+
