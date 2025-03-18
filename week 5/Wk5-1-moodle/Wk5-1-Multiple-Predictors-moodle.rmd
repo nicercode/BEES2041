@@ -270,7 +270,7 @@ The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1
 
 **4. Interpret the p-value for `species [Gentoo]`**
 
-The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "male"))`.
+The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "high"))`.
 
 ## Contrasts
 
