@@ -222,7 +222,7 @@ For example:
 
 **3. What does `sex [male]` represent?**
 
-The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1310.91"))`. This represents the `r cloze("difference in", c("difference in", "p value for"))` mean body mass between `r cloze("all", c("all", "Adelie", "Chinstrap", "Gentoo"))` female  penguins and male `r cloze("all", c("all", "Adelie", "Chinstrap", "Gentoo"))` penguins.
+The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1310.91"))`. This represents the `r cloze("difference in", c("difference in", "p value for"))` mean body mass between `r cloze("Adelie", c("Adelie", "Chinstrap", "Gentoo"))` female  penguins and male `r cloze("Adelie", c("Adelie", "Chinstrap", "Gentoo"))` penguins.
 
 **4. Interpret the p-value for `species [Gentoo]`**
 

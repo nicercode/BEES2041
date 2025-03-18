@@ -26,6 +26,15 @@ library(palmerpenguins)
 
 <!-- # Outline -->
 
+- What is a random effect
+- Fixed and Random effects
+- How to construct a model forumula
+  - varying intercepts
+  - varying slopes
+- How to choose to suit question
+- Why fitting everything is not ideal
+
+
 <!-- - two categoircal predictors (2 way anova) -->
 <!--   - Qu: do both factors have an effect, how big is the effect, is it interactive or additive -->
 <!--   - Example 1: Penguins: size by sex and species -->
