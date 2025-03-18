@@ -686,7 +686,7 @@ You will have to test:
 **2. Do the results of the anova function support this? **
 `r cloze("yes, indicated by the effect of Day:Treatment", c("yes, indicated by the effect of Day:Treatment", "yes, indicated by the effect of Treatment", "yes, indicated by the effect of Day"))`
 
-**3. Which treatment has the largest effect on the % cover of bare rock,  `cage.control` or `low.urchin`?** `r cloze("cage.control", c("cage.control", "low.urchin"))`
+**3. Which treatment has the largest effect on the % cover of bare rock,  `cage.control` or `low.urchin`?** `r cloze("low.urchin", c("cage.control", "low.urchin"))`
 
 ## Contrasts
 
