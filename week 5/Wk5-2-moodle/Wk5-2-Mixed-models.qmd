@@ -102,7 +102,7 @@ You will need to use mixed effect models if you have a random factor in your exp
 - only a random subsample of levels is included in your design and, 
 - you want to make inference in general and not only for the levels you observed.
 
-## Example: Estuaries
+## Worked Example: Estuaries
 
 ![](images/estuaries.jpg){width=60%} <br>
 
@@ -220,18 +220,11 @@ The `Intercept` represents the `r cloze("mean", c("mean","min","max")` `Total` n
 
 The `Modification [Pristine]` coefficient is `r cloze("-14.47", c("-14.47", "40.97", "7.42")`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
 
-
-## Example: Urchins
+## Exercise Example: Urchins
 
 ![**Urchin grazing**](images/Urchins.jpg){width=60%}
 
-Already, you have seen how linear models can analyse data with continuous predictor variables (regression) and categorical predictor variables (ANOVA), but they can also use a combination of categorical and continuous variables. These are known as **analyses of covariance** (**ANCOVA**). 
-
-These models can get as complex as you like, but we will look at the simplest version of these - let's look at thesimplest scenario: a model with **one categorical and one continuous predictor**.
-
-To explore this analysis, let's look at some data from marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. 
-
-**These researchers wanted to know: "How do urchin densities affect algal cover over time?"**
+In the last prac, we worked with this sea urchin dataset. This data was collected marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. 
 
 To study how urchins affect the communities on the rocky reef, researchers set up five experimental treatments on the sea floor:
 
@@ -240,10 +233,44 @@ To study how urchins affect the communities on the rocky reef, researchers set u
 - cages with no urchins (cage control)
 - cages with no urchins and no top (open cage)
 - control plots with no manipulation.
- 
-There were 8 replicates per treatment. The % cover of algae and bare rock were measured several times over a 210-day experiment.
 
-The following file has the data for the % cover of bare rock, `data/Urchins.csv`
+**These researchers wanted to know: "How do urchin densities affect algal cover over time?"**
+
+The **% cover of bare rock** were measured several times over **210 days**, using **quadrats** (Like you did in the Maroubra field trip!)
+
+We fitted a linear model containing **one categorical and one continuous predictor**, this is also know as an **ANCOVA**: 
+
+- `Day` was treated as a covariate. We are not really interested in `Day` as an effect but we know that time is a factor and would likely affect the % of bare rock.
+- The main effect of `Treatment`. 
+- The interaction between Day and Treatment `Day:Treatment`
+
+```{r}
+fit_urchins <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
+```
+
+From this model we produced this plot: 
+
+```{r, include=FALSE}
+means <- estimate_means(fit, by = c("Day", "Treatment"))
+
+p1 <-
+  ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
+#  geom_ribbon(aes(ymin = CI_low, ymax = CI_high, fill = Treatment), alpha = 0.2) +
+  geom_line() +
+  labs(
+    x = "Day",
+    y = "log(BareRock)"
+  ) +
+  theme_minimal()
+
+# Compare lines with data
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Treatment)
+```
+
+
+
 
 Read this data in and save it as an object. We're also going to log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
 
@@ -252,8 +279,8 @@ Read this data in and save it as an object. We're also going to log transform th
 # Read in data 
 data_urchins <- read_csv("data/Urchins.csv")  |> 
   mutate(
+    logBareRock = log(BareRock + 1),
     Quadrat = as.factor(Quadrat),
-    logBareRock = log(BareRock + 1)
   )
 ```
 
