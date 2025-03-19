@@ -9,7 +9,7 @@ library(tidyverse)
 source("R/remove_solutions.R")
 source("R/generate_moodle_quiz.R")
 
-file <- "week 5/Wk5-1-moodle/Wk5-1-Multiple-Predictors.qmd"
+file <- "week 5/Wk5-2-moodle/Wk5-2-Mixed-models.qmd"
 
 ## Rendering as html
 quarto::quarto_render(file)

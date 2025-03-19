@@ -81,12 +81,14 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-> We will be using a new package today called `glmmTMB`. Uncomment the last line in the next code block to install it in your own devices.
+> We will be using two new package todays called `glmmTMB` and `remotes`. Uncomment the last two lines in the next code block to install it in your own devices.
 
 ```{r, eval=FALSE}
 # install.packages("tidyverse")
 # install.packages("easystats")
 # install.packages("patchwork")
+
+# install.packages("remotes")
 # install.packages("glmmTMB")
 ```
 
@@ -377,10 +379,9 @@ In this example, we will use the [**Biomass And Allometry Database (BAAD)**](htt
 
 **Install relevant packages**
 
-To access the data, we will use the `baad.data` R package. To install this, you will need to run the following code.
+To access the data, we will use the `baad.data` R package. To install this, you will need to uncomment and run the following code.
 
 ```{r}
-# install.packages("remotes")
 # remotes::install_github("richfitz/datastorr")
 # remotes::install_github("traitecoevo/baad.data")
 ```
