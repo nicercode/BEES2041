@@ -364,27 +364,250 @@ parameters(fit_urchins_random)
 
 *3.*
 
-
 # Random Slopes
 
-## BAAD
+## Example: Tree height vs leaf area
 
-**Questions:**
+In this example, we will look at the relationship between parts of the tree height and leaf area. We will use the `baad` dataset, which contains data on plant structure compiled by Data Dan, using studies from all around the world. 
 
-*1.*
+To access the data, we will use the `baad.data` package. To install this, you will need to run the following code:
 
-*2.*
+Install relevant packages:
+```{r}
+#devtools::install_github("richfitz/datastorr")
+#devtools::install_github("traitecoevo/baad.data")
+```
 
-*3.*
+Download the data
+```{r}
+library(baad.data)
+baad <- baad_data("1.0.0")
 
-# Random Interpepts and Slopes
+names(baad)
+```
 
-## BAAD
+In  the example, we will look at the relationship between tree height and leaf area. Data Dan has asked you to estimate how much the total leaf area of the tree increases with it's height. measuring leaf area is hard, but measuring height is relatively easy. Dan wants to report on how much more leaf area there will be if we let the forests in an urban area grow taller and older.
 
-**Questions:**
+The data in the BAAD dataset contains information on the sizes of tree parts for a number of species at different locations around the world. The data comes from a number of studies. The following code reshape the data so that it is in the form of a tibble, with columns for the study name, species, location, height, and leaf area. We've also 
 
-*1.*
+- remove rows with missing values for height and leaf area
+- added columns for the log10 of height and leaf area.
 
-*2.*
+```{r}
+# dataset assembly
+data_trees <- baad$data |>
+  as_tibble() |>
+  select(studyName, species, location, height_m = h.t, area_leaf_m2 = a.lf) |>
+  filter(!is.na(height_m), !is.na(area_leaf_m2))
 
-*3.*
+data_trees 
+```
+
+Your first thought is to fit a simple linear model to the data. This model assumes that the relationship between height and leaf area is the same for all species and locations.
+
+```{r}
+fit_simple_raw <- glmmTMB(area_leaf_m2 ~ height_m, data = data_trees)
+
+check_model(fit_simple_raw)
+```
+
+However, the data is not well described by a simple linear model. let's try a double log transformation to see if that helps.
+
+```{r}
+data_trees <- data_trees |> mutate(log10_height_m = log10(height_m), log10_area_leaf_m2 = log10(area_leaf_m2))
+
+fit_simple <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m, data = data_trees)
+
+check_model(fit_simple)
+```
+
+Not perefct, but much better and good enough!
+
+Let's plot the data and the model fit.
+```{r}
+means_all <- estimate_expectation(fit_simple, by = c("log10_height_m"))
+
+ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2)) +
+  geom_point(alpha = 0.3) +
+  geom_ribbon(data = means_all, aes(y = Predicted, ymin = CI_low, ymax = CI_high), alpha = 0.2, fill = "orange", linewidth = 0) +
+  geom_line(data = means_all, aes(y = Predicted), alpha = 1, linewidth = 2, col = "orange") +
+  theme_minimal()
+```
+
+What do you see? 
+
+- the line provides a good fit to the data
+- the confidence intervals are narrow, indicating that the model is confident in its predictions about the mean.
+- but there's a lot of unexplained variation in the data. So any given tree is likely could have a leaf area that is quite different from the mean.
+
+In fact, for a tree of 10m tall plant (log10= 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
+```{r}
+10^c(0.2, 2.4)
+```
+ 10 cm^2. This is a huge range!
+
+Can we do better?
+
+## Linear model with random effect by species
+
+We could try to improve the model by allowing the relationship between height and leaf area to vary between species. Since the dataset contains lots of species, we can hypothesise that some of the variation in the relationship between height and leaf area is due to differences between species. We can account for this by fitting a model with a random intercept and slope for species.
+
+```{r}
+# fit a model with random slopes for species and location
+fit_rs <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m + (1 + log10_height_m | species), data = data_trees)
+```
+
+In the code above, the terms 
+
+- `(1 + log10_height_m | species)` specifies that we want to fit a model with a random intercept and slope for species. This means that the relationship between height and leaf area can vary between species. 
+- The `| species` term specifies that the random effects are occurring at the species level.
+
+Let's plot the new model fit and compare it to the simple model.
+
+```{r}
+# estimate the predictiosn for the model for height x species
+means_sp <- estimate_expectation(fit_rs)
+# Estimate marginal means for the model by height, averaging out species
+means_all <- estimate_expectation(fit_rs, by = c("log10_height_m"))
+
+# make the plot
+ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2, color = species, group = species)) +
+  geom_point(alpha = 0.3, show.legend = FALSE) +
+  geom_line(data = means_sp, aes(y = Predicted), alpha = 0.5, linewidth = 1) +
+  geom_line(data = means_all, aes(y = Predicted, group = 1), alpha = 1, linewidth = 2) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(
+    x = "log10_height (m)",
+    y = "log10_area_leaf (m^2)"
+  )
+```
+
+Wow! The model with random slopes for species provides a much better fit to the data. Each coloured line gives the relationship between height and leaf area for a different species. The black line gives the average relationship across all species. The model is able to capture the variation in the relationship between height and leaf area between species. As we thoguht, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species.
+
+## Quantifying the variance components
+
+Now that we have a richer model, we can find out how much of the variation in the data is due to the fixed effect, the random effects, and the residual noise. We can quantify these via the r2 of the model, with and without the random effects. In the following, 
+
+- `R2 (marg.)` ( Marginal r2 ) is the proportion of the total variance that is explained by the fixed effects alone. 
+- `R2 (cond.)` ( Conditional r2 ) is the proportion of the total variance that is explained by the fixed and random effects together.
+- So, `R2 (cond.)` - `R2 (marg.)` is the proportion of the total variance that is explained by the random effects alone.
+- And, 1 - `R2 (cond.)` is the proportion of the total variance that remains unexplained, i.e. the residuals. 
+
+| Let's get some numbers
+```{r}
+# Calculate the r2 values
+performance(fit_rs)
+```
+
+So we can see that 
+
+- log10 height explains 78.8% of the variance in log10 leaf area, 
+- Adding differences between species explain an additional 17%, brining the total explained variance to 96.1%
+- This leaves only 3.9% of the variance unexplained.
+
+## Comparing the models
+
+Finally, let's compare the slope estimates and predictions from the random slopes model to the simple model
+
+**Slopes**
+
+```{r}
+parameters(fit_simple)
+parameters(fit_rs)
+```
+
+The simple model gives a slope of 1.71, the random slopes model gives a slope of 1.79. Also, the confidence intervals for the simple model are much narrower than the random slopes model. And they don't contain the slope estimate from the random slopes model. 
+
+**Predictions**
+Let's use this mdoel to estimate the leaf area of a tree that is 10m tall.
+
+```{r}
+# Create a dataset to pass in to predict output
+data_pred <- tibble(
+  log10_height_m = log10(10))
+
+# make predictions from the models
+estimate_expectation(fit_simple, data = data_pred)
+estimate_expectation(fit_rs, data = data_pred)
+```
+
+The simple mdoel is predicting a higher value with very narrow confidence intervals. The random slopes model is predicting a lower value with much wider confidence intervals.
+
+## Summary
+
+In this example, we have seen how to fit a mixed model with random slopes and intercepts for species. Compared to the simple model, the random slopes model 
+
+- allows the relationship between height and leaf area to vary between species, 
+- captures more total variation in the data and shows use where this variation is coming from (differences between species),
+- estimates a steeper slope for the relationship between height and leaf area,
+- provides a more conservative estimate (wider CI) for the leaf area of a tree that is 10m tall in a randome tree, due to differences between species,
+- once species is know, provides a tighter rletaionhsip between height and leaf area.
+
+We can conclude that the simple model is overly confident in its predictions, indicated by the narrow confidence intervals. It doesn't know that species can differ a lot from each other. And it suggests less leaf area gained per unit height. Using the random slopes model gives us a much more nuanced view on the data.
+
+## Your turn: Stem diameter vs biomass
+
+Another potential use of data from the BAAD is to qunatify the relationship between stem diameter and biomass. There is a lot of ineterest in estimate the amount of carbon stored in forests, and using growing trees to remove carbon from the atmosphere. Since biomass is mostly (~42%) carbon, we can use the biomass of a tree as a proxy for the amount of carbon stored in the tree.
+
+Your task is to fit a model between stem diameter and biomass, with random slopes for species, and use this to estimate 
+
+- rate at which log10_biomass increases with log10_stem_diameter, and
+- the log10_biomass of a tree with a stem diameter of 20cm.
+
+Here's the code to get you started with the data. 
+```{r}
+# dataset assembly
+data_trees <- baad$data |>
+  as_tibble() |>
+  select(studyName, species, location, stem_diameter_m = d.ba, height = h.t, biomass_kg = m.so) |>
+  filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |>
+  mutate(
+    log10_stem_diameter_m = log10(stem_diameter_m),
+    log10_height = log10(height), log10_biomass_kg = log10(biomass_kg)
+  )
+
+data_trees
+```
+
+Now get to work! Unlike the example above, you don't need to fit the simple model first. Just go straight to fitting the model with random slopes model. 
+
+```{r solution}
+
+# fit a model with random slopes for species and location
+fit <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m + (log10_stem_diameter_m | species), data = data_trees, REML = F)
+
+# Plot results
+means_all <- estimate_expectation(fit, by = c("log10_stem_diameter_m"))
+means_sp <- estimate_expectation(fit)
+
+ggplot(data_trees, aes(x = log10_stem_diameter_m, y = log10_biomass_kg, color = species, group = species)) +
+  geom_point(alpha = 0.3, show.legend = FALSE) +
+  geom_line(data = means_sp, aes(y = Predicted), alpha = 0.5, linewidth = 1) +
+  geom_line(data = means_all, aes(y = Predicted, group = 1), alpha = 1, linewidth = 2) +
+  theme_minimal() +
+  theme(legend.position = "none") 
+
+parameters(fit)
+performance(fit)
+
+fit_simple <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m, data = data_trees)
+parameters(fit_simple)
+performance(fit_simple)
+
+## Estimate biomass of a tree with a stem diameter of 20cm
+data_pred <- tibble(
+  log10_stem_diameter_m = log10(0.2))
+
+estimate_expectation(fit, data = data_pred) |> mutate(biomass_kg = 10^Predicted)
+estimate_expectation(fit_simple, data = data_pred)|> mutate(biomass_kg = 10^Predicted)
+```
+
+Questions:
+
+1. What is the rate at which log10_biomass increases with log10_stem_diameter_m? 
+2. What is the log10_biomass of a tree with a stem diameter of 20cm?
+
+
+
+## Fonti Lizards?
