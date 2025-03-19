@@ -97,69 +97,7 @@ library(patchwork)
 library(glmmTMB)
 ```
 
-# Random Intercept
-
-## Example: Estuaries
-
-You will need to use mixed effect models if you have a random factor in your experimental design. A random factor is categorical
-has a large number of levels only a random subsample of levels is included in your design you want to make inference in general, and not only for the levels you observed.
-
-This is a tough concept to get your head around, and is best explained with an example. The data we will analyse here are counts of invertebrates at 3-4 sites in each of 7 (randomly chosen) estuaries. Here the estuaries are the random effect, as there are a large number of possible estuaries, and we only sample from a random few of them, but we would like to make inference about estuaries in general.
-
-```{r}
-data_estuaries <- read_csv("data/Estuaries.csv")
-
-data_estuaries
-```
-
-```{r}
-data_estuaries |> 
-  count(Modification, Estuary)
-```
-
-```{r}
-# ft.estu <- lme4::lmer(Total ~ Modification + (1 | Estuary), data = data_estuaries, REML = T)
-# ft.estu.0 <- lmer(Total ~ (1 | Estuary), data = data_estuaries, REML = F)
-
-fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estuaries)
-```
-
-```{r}
-# Does not support glmmTMB - yet still produces output??
-check_model(fit_estuaries) 
-
-
-estimate_contrasts(fit_estuaries)
-means_by_mod_estuaries <- estimate_expectation(fit_estuaries) # ??? Some levels missing?? 
-
-means_by_estuaries_mod <- means_by_mod_estuaries |>  select(Modification, Estuary, Predicted, starts_with("CI")) |> 
-  distinct()
-
-means_by_estuaries <- estimate_means(fit_estuaries, by = c("Modification", "Estuary")) # all possible combinations 
-```
-
-```{r}
-ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification)) +
-  geom_errorbar(data = means_by_mod_estuaries, 
-                aes(x = Estuary, y = Predicted, ymin = CI_low, ymax = CI_high),
-                width = 0.15,
-                col = "azure4") +
-  geom_violin(fill = NA) +
-  geom_jitter(width = 0.3, alpha = 0.5) + 
-  geom_point(data = means_by_estuaries, aes(y = Predicted), colour = "azure4", size = 2) + 
-  scale_color_manual(values = c("burlywood4", "cadetblue")) + 
-  theme_classic() + 
-  facet_grid(~Modification, scales = "free")
-```
-
-**Questions:**
-
-1.
-2.
-3.
-
-
-## Example: Urchins
+## Worked Example: Urchins
 
 ![**Urchin grazing**](images/Urchins.jpg){width=60%}
 
@@ -272,15 +210,94 @@ parameters(fit)
 ## CI's are smaller with the random effect included
 ```
 
+## Example: Estuaries
 
-## Towers cells? 
+You will need to use mixed effect models if you have a random factor in your experimental design. A random factor is categorical
+has a large number of levels only a random subsample of levels is included in your design you want to make inference in general, and not only for the levels you observed.
 
-# Random Slopes
+This is a tough concept to get your head around, and is best explained with an example. The data we will analyse here are counts of invertebrates at 3-4 sites in each of 7 (randomly chosen) estuaries. Here the estuaries are the random effect, as there are a large number of possible estuaries, and we only sample from a random few of them, but we would like to make inference about estuaries in general.
 
-## BAAD
+```{r}
+data_estuaries <- read_csv("data/Estuaries.csv")
 
-# Random Interpepts and Slopes
+data_estuaries
+```
 
-## BAAD? 
+```{r}
+data_estuaries |> 
+  count(Modification, Estuary)
+```
 
-## Fonti Lizards?
+```{r}
+# ft.estu <- lme4::lmer(Total ~ Modification + (1 | Estuary), data = data_estuaries, REML = T)
+# ft.estu.0 <- lmer(Total ~ (1 | Estuary), data = data_estuaries, REML = F)
+
+fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estuaries)
+```
+
+```{r}
+# Does not support glmmTMB - yet still produces output??
+check_model(fit_estuaries) 
+
+
+estimate_contrasts(fit_estuaries)
+means_by_mod_estuaries <- estimate_expectation(fit_estuaries) # ??? Some levels missing?? 
+
+means_by_estuaries_mod <- means_by_mod_estuaries |>  select(Modification, Estuary, Predicted, starts_with("CI")) |> 
+  distinct()
+
+means_by_estuaries <- estimate_means(fit_estuaries, by = c("Modification", "Estuary")) # all possible combinations 
+```
+
+```{r}
+ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification)) +
+  geom_errorbar(data = means_by_mod_estuaries, 
+                aes(x = Estuary, y = Predicted, ymin = CI_low, ymax = CI_high),
+                width = 0.15,
+                col = "azure4") +
+  geom_violin(fill = NA) +
+  geom_jitter(width = 0.3, alpha = 0.5) + 
+  geom_point(data = means_by_estuaries, aes(y = Predicted), colour = "azure4", size = 2) + 
+  scale_color_manual(values = c("burlywood4", "cadetblue")) + 
+  theme_classic() + 
+  facet_grid(~Modification, scales = "free")
+```
+
+**Questions:**
+
+1.
+2.
+3.
+
+# Crossed/Nested designs
+
+## Worked Example: 
+
+Many experimental designs in ecology and environmental sciences require mixed models with several random effects (factors). You might have heard of nested and crossed factors. We often define these as quite distinct designs (e.g., from www.theanalysisfactor.com)
+
+Two factors are crossed when every category (level) of one factor co-occurs in the design with every category of the other factor. In other words, there is at least one observation in every combination of categories for the two factors.
+
+A factor is nested within another factor when each category of the first factor co-occurs with only one category of the other. In other words, an observation has to be within one category of Factor 2 in order to have a specific category of Factor 1. All combinations of categories are not represented.
+
+There are also intermediate designs that are partially crossed, where some levels of one factor occur in several (but not all) levels of the second factor. These designs have often been taught as separate problems with different ways to carry out analyses of variance (ANOVAs) depending on if you have crossed or nested factors. Using mixed models with the package lme4, we can think if all of these in one framework, where nested and crossed designs are modelled in the same way. Thinking about factors as crossed or nested is simplified to careful labelling of factor levels - more on this later.
+
+Fitting a model with a fixed effect and several random effects
+
+In this data set, we have a fixed effect (Modification; modified vs pristine) and two random effects (Estuary and Site). Site is nested within Estuary as each site can only belong in one estuary. When entering the data, however, we’ve been careless and numbered sites within each estuary as 1, 2, 3 etc.
+
+Estuary JAK and estuary JER each have sites numbered 1, even though these sites are not connected in any way. We can also see this in the cross tabulation xtabs. This site labelling looks crossed, where each site occurs in each estuary, rather than nested.
+
+We can fix this by simply telling R that Site is nested in Estuary. It is best practice, however, to do this at the data entry stage. If things are the same, then they should be labelled the same, and if they are not they should be labelled differently.
+
+```{r}
+data_estuaries |> 
+  count(Modification, Estuary, Site) |> 
+  print(n = 100)
+```
+
+Create a nested Estuary_Site variable
+
+```{r}
+
+```
+
