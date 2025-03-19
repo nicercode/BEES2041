@@ -202,8 +202,6 @@ There are three things that might be new to you in this code:
 
 Since this is a simple model with 1 fixed effect, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites
 
-<!-- TODO: Walk through # Random effects of paramaters? -->
-
 ```{r}
 parameters(fit_estuaries)
 estimate_contrasts(fit_estuaries)
@@ -402,9 +400,9 @@ The data in the BAAD dataset contains information on the sizes of tree parts for
 ```{r}
 # Dataset assembly
 data_trees <- baad$data |>
-  as_tibble() |>
-  select(studyName, species, location, height_m = h.t, area_leaf_m2 = a.lf) |>
-  filter(!is.na(height_m), !is.na(area_leaf_m2))
+  as_tibble() |> # Convert dataframe into tibble
+  select(studyName, species, location, height_m = h.t, area_leaf_m2 = a.lf) |> # Select some columns and rename them
+  filter(!is.na(height_m), !is.na(area_leaf_m2)) # Exclude any NAs in height and area
 
 data_trees 
 ```
@@ -582,7 +580,7 @@ We can conclude that:
 
 It doesn't know that species can differ a lot from each other. This suggests less leaf area gained per unit height.
 
-Using the mixed model gives us a much more nuanced view on the data.
+> Using the mixed model gives us a much more nuanced view on the data!
 
 ## Your turn: Stem diameter vs biomass
 
@@ -598,7 +596,7 @@ Here's the code to get you started with the data.
 # dataset assembly
 data_trees <- baad$data |>
   as_tibble() |> # Treat dataframe as a tibble
-  select(studyName, species, location, stem_diameter_m = d.ba, height = h.t, biomass_kg = m.so) |> # Select specific columns
+  select(studyName, species, location, stem_diameter_m = d.ba, height = h.t, biomass_kg = m.so) |> # Select and rename some columns
   filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |> # Exclude NA in  and biomass_kg
   mutate(
     log10_stem_diameter_m = log10(stem_diameter_m), # log10 transform 
@@ -608,17 +606,17 @@ data_trees <- baad$data |>
 data_trees
 ```
 
-Now give it a go! Unlike the example above, you don't need to fit the simple model first. Just go straight to fitting the mixed model with random slopes model. 
+Now give it a go! Unlike the example above, you don't need to fit the simple model first. Just go straight to fitting the mixed model with random slopes for species model. 
 
 ```{r solution}
+# Fit a model with random slopes for species and location
+fit_stem <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m + (1 + log10_stem_diameter_m | species), data = data_trees, REML = F)
 
-# fit a model with random slopes for species and location
-fit <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m + (log10_stem_diameter_m | species), data = data_trees, REML = F)
+# Estimate means
+means_all <- estimate_expectation(fit_stem, by = c("log10_stem_diameter_m"))
+means_sp <- estimate_expectation(fit_stem)
 
 # Plot results
-means_all <- estimate_expectation(fit, by = c("log10_stem_diameter_m"))
-means_sp <- estimate_expectation(fit)
-
 ggplot(data_trees, aes(x = log10_stem_diameter_m, y = log10_biomass_kg, color = species, group = species)) +
   geom_point(alpha = 0.3, show.legend = FALSE) +
   geom_line(data = means_sp, aes(y = Predicted), alpha = 0.5, linewidth = 1) +
@@ -626,23 +624,38 @@ ggplot(data_trees, aes(x = log10_stem_diameter_m, y = log10_biomass_kg, color = 
   theme_minimal() +
   theme(legend.position = "none") 
 
-parameters(fit)
-performance(fit)
+# Look at model output
+parameters(fit_stem)
 
-fit_simple <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m, data = data_trees)
-parameters(fit_simple)
-performance(fit_simple)
+# Look at variance components
+performance(fit_stem)
 
 ## Estimate biomass of a tree with a stem diameter of 20cm
-data_pred <- tibble(
+data_pred_stem <- tibble(
   log10_stem_diameter_m = log10(0.2))
 
-estimate_expectation(fit, data = data_pred) |> mutate(biomass_kg = 10^Predicted)
-estimate_expectation(fit_simple, data = data_pred)|> mutate(biomass_kg = 10^Predicted)
+# Make model prediction for a tree that is 10m tall and back transforming prediction
+estimate_expectation(fit_stem, data = data_pred_stem) |> mutate(biomass_kg = 10^Predicted)
+
+# Fit a simpler model to compare (optional but insightful)
+fit_stem_simple <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m, data = data_trees)
+
+# Outputs of simple model
+parameters(fit_stem_simple)
+performance(fit_stem_simple)
+
+estimate_expectation(fit_stem_simple, data = data_pred_stem)|> mutate(biomass_kg = 10^Predicted)
 ```
 
-Questions:
+**Questions:**
 
-1. What is the rate at which log10_biomass increases with log10_stem_diameter_m? 
-2. What is the log10_biomass of a tree with a stem diameter of 20cm?
+**1. What is the rate at which `log10_biomass` increases with `log10_stem_diameter_m`?** `r cloze("2.49", c("1.03", "2.49", "3.36"))`
+
+**2. How much variation is explained by random effects in your model? _Hint: Using performance()_**
+
+`r cloze("6.4%", c("6.4", "91.7%", "98.1%")`
+
+**3. What is the `log10_biomass` of a tree with a stem diameter of 20cm e.g `log10_stem_diameter_m = log10(0.2)`?**
+
+`r cloze("41.11", c("1.03", "1.61", "41.11")`
 
