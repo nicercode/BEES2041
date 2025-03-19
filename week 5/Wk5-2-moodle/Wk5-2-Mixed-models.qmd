@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
   rprojroot::find_root() |>
-  file.path("week 5/Wk5-2-moodle") |>
+  file.path("week 5/Wk5-2-moodle/") |>
   setwd()
 
 # remotes::install_github("numbats/moodlequiz")
@@ -21,6 +21,12 @@ library(moodlequiz)
 library(tidyverse)
 library(easystats)
 library(glmmTMB)
+
+data_urchins <- read_csv("data/Urchins.csv")  |> 
+  mutate(
+    logBareRock = log(BareRock + 1),
+    Quadrat = as.factor(Quadrat),
+  )
 ```
 
 <!-- # Outline -->
@@ -214,11 +220,11 @@ estimate_contrasts(fit_estuaries)
 
 **1. What does the Intercept represent in the paramters output?** 
 
-The `Intercept` represents the `r cloze("mean", c("mean","min","max")` `Total` number of invertebrates from the `r cloze("Modified", c("Modified","Pristine"))` site.
+The `Intercept` represents the `r cloze("mean", c("mean","min","max"))` `Total` number of invertebrates from the `r cloze("Modified", c("Modified","Pristine"))` site.
 
 **2. Intepret the `Modification [Pristine]` cofficient and p-value**
 
-The `Modification [Pristine]` coefficient is `r cloze("-14.47", c("-14.47", "40.97", "7.42")`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
+The `Modification [Pristine]` coefficient is `r cloze("-14.47", c("-14.47", "40.97", "7.42"))`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
 
 ## Exercise Example: Urchins
 
@@ -251,7 +257,7 @@ fit_urchins <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urc
 From this model we produced this plot: 
 
 ```{r, include=FALSE}
-means <- estimate_means(fit, by = c("Day", "Treatment"))
+means <- estimate_means(fit_urchins, by = c("Day", "Treatment"))
 
 p1 <-
   ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
@@ -325,12 +331,12 @@ p1 +
 Add a random effect for Quadrat
 
 ```{r}
-fit <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
+fit_urchins_random <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
 
-check_model(fit)
+check_model(fit_urchins_random)
 
-means <- estimate_expectation(fit, by = c("Day", "Treatment"))
-means2 <- estimate_expectation(fit)
+means <- estimate_expectation(fit_urchins_random, by = c("Day", "Treatment"))
+means2 <- estimate_expectation(fit_urchins_random)
 
 p1 <-
   ggplot(means2, aes(x = Day, y = Predicted, color = Treatment)) +
@@ -354,8 +360,8 @@ p1 +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Quadrat)
 
-parameters(fit_simple)
-parameters(fit)
+parameters(fit_urchins)
+parameters(fit_urchins_random)
 
 ## Ignoring qudrat adds to noise
 ## CI's are smaller with the random effect included
