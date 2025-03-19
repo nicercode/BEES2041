@@ -99,14 +99,20 @@ library(patchwork)
 library(glmmTMB)
 ```
 
-# Random Intercept
+# Introduction
 
-You will need to use mixed effect models if you have a random factor in your experimental design. A **random factor** is: 
+## Fixed and Random effects
+
+In the previous pracs, we have been working with **fixed effects**. These are the variables that we are interested in and whose effects are relevant across the entire population. For example, in the `urchins` dataset, we were interested in the effect of `Treatment` on `logBareRock`.
+
+A **random effect** is: 
 
 - categorical
 - has a large number of levels but,
 - only a random subsample of levels is included in your design and, 
 - you want to make inference in general and not only for the levels you observed.
+
+You will need to use mixed effect models if you have a random factor in your experimental design.
 
 ## Worked Example: Estuaries
 
@@ -133,21 +139,21 @@ data_estuaries |>
   count(Modification, Estuary)
 ```
 
-> Notice that `Estuary` is not replicated across both levels of `Modification`. This is because, `Estuary` is not our primary variable of interest. We collected data we needed randomly from these estuaries. 
+> Notice that `Estuary` is not replicated across both levels of `Modification`. This is because, `Estuary` is not our primary variable of interest. We collected data we needed from randomly selected estuaries. 
 
-Importantly, we know that our sample of estuaries are likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate may be more favourable to invertebrates than others. Ultimately, we know that different estuaries is likely to differ, on average in `Total` number of invertebrates. This random effect of `Estuary` is something we want to account for in our model. 
+Importantly, we know that our sample of estuaries are likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate may be more favourable to invertebrates than others. Ultimately, we know that different estuaries are likely to differ, on average in `Total` number of invertebrates. This random effect of `Estuary` is something we want to account for in our model. 
 
 ## Fit our mixed model
 
 Let's fit the model together and we will talk through the code. For mixed models, we will be using the `glmmTMB` package and function. The way we write a model is very similar to what we have been doing in `lm()` and `glm()`.
 
 ```{r}
-fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estuaries, REML = T)
+fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estuaries)
 ```
 
 - `Total` is our numeric, continuous response variable (y) 
 - `Modification` is our categorial predictor variable (x)
-- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting 
+- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting an intercpet that is allows to vary by Estuary.
 
 > Technically `Total` count data, but it's distribution doesn't really resemble a Poisson distribution. A Normal distribution fits it quite well! Create a histogram and see for yourself! 
 
@@ -157,6 +163,8 @@ We can proceed with checking out model fit before looking at the model's output.
 # Check our model
 check_model(fit_estuaries) 
 ```
+
+Not perefcet, but good enough! Let's move on to the next step.
 
 ## Compute estimated means
 
@@ -207,7 +215,7 @@ There are three things that might be new to you in this code:
 
 ## Test for an effect of `Modification`
 
-Since this is a simple model with 1 predictor, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites
+Since this is a simple model with 1 fixed effect, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites
 
 <!-- TODO: Walk through # Random effects of paramaters? -->
 
@@ -218,7 +226,7 @@ estimate_contrasts(fit_estuaries)
 
 **Questions:**
 
-**1. What does the Intercept represent in the paramters output?** 
+**1. What does the Intercept represent in the parameters output?** 
 
 The `Intercept` represents the `r cloze("mean", c("mean","min","max"))` `Total` number of invertebrates from the `r cloze("Modified", c("Modified","Pristine"))` site.
 
