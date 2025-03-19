@@ -452,28 +452,30 @@ What do you see?
 - the confidence intervals are **narrow**, so narrow that we can barely see them! This indicates that the model is confident in its predictions about the mean relationship.
 - there's a lot of **unexplained variation** in the data (above and below the line). So any given tree is likely could have a leaf area that is quite different from the mean.
 
-In fact, for a tree of 10m tall plant (log10 = 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
+In fact, for a tree of 10m tall plant (log10 = 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. 
+
+Back transforming these values gives a range of m^2^ leaf from 
 ```{r}
 10^c(0.2, 2.4)
 ```
 
-10 cm^2. This is a huge range! Surely we can do better!
+10 cm^2^. This is a huge range! Surely we can do better!
 
 ## Linear model with random effect by species
 
-We could try to improve the model by allowing the relationship between height and leaf area to vary between species. We can hypothesise that some of the variation in the relationship between height and leaf area is due to differences between species. We can account for this by fitting a model with a **random intercept AND slope** for species.
+We could try to improve the model by **allowing the relationship between height and leaf area to vary between species**. We can hypothesise that **some of the variation in the relationship** between height and leaf area **is due to differences between species**. We can account for this by fitting a model with a **random intercept AND slope** for species.
 
 ```{r}
 # Fit a model with random slopes for species 
 fit_rs <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m + (1 + log10_height_m | species), data = data_trees)
 ```
 
-In the code above, the terms 
+In the code above, the model terms:
 
-- `(1 + log10_height_m | species)` specifies that we want to fit a model with a **random intercept and slope** for species. This means that the relationship between height and leaf area can vary between species. 
+- `(1 + log10_height_m | species)` specifies that we want to fit a model with a **random intercept and slope** for species. This means that the **relationship between height and leaf area can vary between species**. 
   - The `| species` term specifies that the **random effects** are occurring at the species level.
 
-Let's plot this mixed model fit and compare it to our first simple model.
+> Let's plot this mixed model fit and compare it to our first simple model (without any random effects).
 
 ```{r}
 # Estimate the predictiosn for the model for height x species
@@ -498,30 +500,41 @@ ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2, color = speci
 Wow! The model with random slopes for species provides a much better fit to the data.
 
 - Each coloured line gives the relationship between height and leaf area for a different species. 
-- The grey line gives the average relationship across all species. This mixed model is able to capture the variation in the relationship between height and leaf area between species. 
+- The grey line gives the average relationship across all species. 
 
-Just as we thought, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species!
+Just as we thought, the relationship between height and leaf area is not the same for all species. This mixed model is able to capture the variation in the relationship between height and leaf area between species. 
 
 ## Quantifying the variance components
 
-Now that we have a richer model, we can find out how much of the variation in the data is due to the fixed effect, the random effects, and the residual noise. We can quantify these via the r2 of the model, with and without the random effects. In the following, 
+Now that we have a richer model, we can find out how much of the variation in the data is due to: 
 
-- `R2 (marg.)` ( Marginal r2 ) is the proportion of the total variance that is explained by the fixed effects alone. 
-- `R2 (cond.)` ( Conditional r2 ) is the proportion of the total variance that is explained by the fixed and random effects together.
-- So, `R2 (cond.)` - `R2 (marg.)` is the proportion of the total variance that is explained by the random effects alone.
-- And, 1 - `R2 (cond.)` is the proportion of the total variance that remains unexplained, i.e. the residuals. 
+- the fixed effects
+- the random effects
+- residual noise.
 
-| Let's get some numbers
+We can quantify these via the **R^2^ of models, with and without the random effects**. 
+
+> Recall that R^2^ describes the proportion of variation explained by our model and ranges between 0 - 1. An R^2^ value of 1 means our model describes the variation in the data perfectly. 
+
+Let's get some numbers first using the `performance()` function
 ```{r}
 # Calculate the r2 values
 performance(fit_rs)
 ```
 
-So we can see that 
+In the output:
 
-- log10 height explains 78.8% of the variance in log10 leaf area, 
-- Adding differences between species explain an additional 17%, brining the total explained variance to 96.1%
-- This leaves only 3.9% of the variance unexplained.
+- `R2 (marg.)` ( Marginal R^2^ ) is the proportion of the total variance that is **explained by the fixed effects alone**. 
+- `R2 (cond.)` ( Conditional R^2^ ) is the proportion of the total variance that is explained by the **fixed and random effects together**.
+
+- So, `R2 (cond.)` - `R2 (marg.)` is the proportion of the total variance that is explained by the **random effects alone.**
+- And, 1 - `R2 (cond.)` is the proportion of the total **variance that remains unexplained**, i.e. the residuals. 
+
+So we can see that: 
+
+- `log10 height` explains **78.8%** of the variance in `log10 leaf area` `R2 (marg.)` 
+- Adding species as random effects explains **an additional 17%**, bringing the total explained variance to **96.1%**. `R2 (cond.)` - `R2 (marg.)`
+- This leaves only **3.9%** of the variance unexplained 1 - `R2 (cond.)`
 
 ## Comparing the models
 
@@ -534,34 +547,42 @@ parameters(fit_simple)
 parameters(fit_rs)
 ```
 
-The simple model gives a slope of 1.71, the random slopes model gives a slope of 1.79. Also, the confidence intervals for the simple model are much narrower than the random slopes model. And they don't contain the slope estimate from the random slopes model. 
+- The simple model gives a slope of **1.71**, the mixed model gives a slope of **1.79**. 
+- The confidence intervals for the simple model are much narrower than the random slopes model. And they don't contain the slope estimate from the mixed model model. 
 
 **Predictions**
-Let's use this mdoel to estimate the leaf area of a tree that is 10m tall.
+
+Let's use both these models to estimate the leaf area of a tree that is 10m tall. We need to create some placeholder data for `estimate_expectation()` so it can make this prediction. 
 
 ```{r}
 # Create a dataset to pass in to predict output
 data_pred <- tibble(
   log10_height_m = log10(10))
 
-# make predictions from the models
+# Make predictions from the models
 estimate_expectation(fit_simple, data = data_pred)
 estimate_expectation(fit_rs, data = data_pred)
 ```
 
-The simple mdoel is predicting a higher value with very narrow confidence intervals. The random slopes model is predicting a lower value with much wider confidence intervals.
+The simple model is predicting a higher value with very narrow confidence intervals. The random slopes model is predicting a lower value with much wider confidence intervals.
 
 ## Summary
 
-In this example, we have seen how to fit a mixed model with random slopes and intercepts for species. Compared to the simple model, the random slopes model 
+In this example, we have seen how to fit a mixed model with random slopes and intercepts for species. Compared to the simple model, the random slopes model: 
 
-- allows the relationship between height and leaf area to vary between species, 
-- captures more total variation in the data and shows use where this variation is coming from (differences between species),
-- estimates a steeper slope for the relationship between height and leaf area,
-- provides a more conservative estimate (wider CI) for the leaf area of a tree that is 10m tall in a randome tree, due to differences between species,
-- once species is know, provides a tighter rletaionhsip between height and leaf area.
+- allows the **relationship between height and leaf area to vary between species** 
+- **captures more total variation** in the data and shows us that this variation due to differences between species,
+- **estimates a steeper slope** for the relationship between height and leaf area,
+- provides a **more conservative estimate (wider CI)** for the leaf area of a random tree that is 10m tall, due to differences between species,
+- once species is known, provides a tighter relationship between height and leaf area.
 
-We can conclude that the simple model is overly confident in its predictions, indicated by the narrow confidence intervals. It doesn't know that species can differ a lot from each other. And it suggests less leaf area gained per unit height. Using the random slopes model gives us a much more nuanced view on the data.
+We can conclude that: 
+
+- the simple model is **overly confident in its predictions**, indicated by the narrow confidence intervals.
+
+It doesn't know that species can differ a lot from each other. This suggests less leaf area gained per unit height.
+
+Using the mixed model gives us a much more nuanced view on the data.
 
 ## Your turn: Stem diameter vs biomass
 
@@ -576,12 +597,12 @@ Here's the code to get you started with the data.
 ```{r}
 # dataset assembly
 data_trees <- baad$data |>
-  as_tibble() |>
-  select(studyName, species, location, stem_diameter_m = d.ba, height = h.t, biomass_kg = m.so) |>
-  filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |>
+  as_tibble() |> # Treat dataframe as a tibble
+  select(studyName, species, location, stem_diameter_m = d.ba, height = h.t, biomass_kg = m.so) |> # Select specific columns
+  filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |> # Exclude NA in  and biomass_kg
   mutate(
-    log10_stem_diameter_m = log10(stem_diameter_m),
-    log10_height = log10(height), log10_biomass_kg = log10(biomass_kg)
+    log10_stem_diameter_m = log10(stem_diameter_m), # log10 transform 
+    log10_height = log10(height), log10_biomass_kg = log10(biomass_kg) # log10 transform 
   )
 
 data_trees
