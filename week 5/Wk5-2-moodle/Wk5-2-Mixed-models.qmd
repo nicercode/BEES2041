@@ -6,7 +6,7 @@ format:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
@@ -42,10 +42,6 @@ Hey folks! In many real-world datasets, our observations are not entirely indepe
 Today, we will go through  XXXX: 
 
 > 
-
-## Mixed Model assumptions
-
-
 
 
 ## Key learning objectives
@@ -99,12 +95,24 @@ library(glmmTMB)
 
 # Random Intercept
 
+You will need to use mixed effect models if you have a random factor in your experimental design. A **random factor** is: 
+
+- categorical
+- has a large number of levels but,
+- only a random subsample of levels is included in your design and, 
+- you want to make inference in general and not only for the levels you observed.
+
 ## Example: Estuaries
 
-You will need to use mixed effect models if you have a random factor in your experimental design. A random factor is categorical
-has a large number of levels only a random subsample of levels is included in your design you want to make inference in general, and not only for the levels you observed.
+![](images/estuaries.jpg)
 
-This is a tough concept to get your head around, and is best explained with an example. The data we will analyse here are counts of invertebrates at 3-4 sites in each of 7 (randomly chosen) estuaries. Here the estuaries are the random effect, as there are a large number of possible estuaries, and we only sample from a random few of them, but we would like to make inference about estuaries in general.
+Random factors are hard to get your head around, and is best explained with an example. The data we will analyse here are **counts of invertebrates at 3-4 sites pristine and modified sites in each of 7 (randomly chosen) estuaries**.
+
+**Our research question is: How does total inverebrate counts differ between pristine and modified sites across all estuaries?**
+
+Here the estuaries are the **random effect**, as there are **a large number of possible estuaries**, and we only sampled a few from the wider population of them, but we would like to make inference about estuaries in general.
+
+Let's read in the dataset first
 
 ```{r}
 data_estuaries <- read_csv("data/Estuaries.csv")
@@ -112,31 +120,60 @@ data_estuaries <- read_csv("data/Estuaries.csv")
 data_estuaries
 ```
 
+A handy way to understand the structure of your study design is to create a table of counts. Here we are tabulating `Modification` by `Estuary` so we have a breakdown of how many samples we have in each category. 
+
 ```{r}
 data_estuaries |> 
   count(Modification, Estuary)
 ```
 
-```{r}
-# ft.estu <- lme4::lmer(Total ~ Modification + (1 | Estuary), data = data_estuaries, REML = T)
-# ft.estu.0 <- lmer(Total ~ (1 | Estuary), data = data_estuaries, REML = F)
+> Notice that `Estuary` is not replicated across both levels of `Modification`. This is because, `Estuary` is not our primary variable of interest. We collected data we needed randomly from these estuaries. 
 
-fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estuaries)
+Importantly, we know that our sample of estuaries are likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate may be more favourable to invertebrates than others. Ultimately, we know that different estuaries is likely to differ, on average in `Total` number of invertebrates. This random effect of `Estuary` is something we want to account for in our model. 
+
+## Fit our mixed model
+
+Let's fit the model together and we will talk through the code. For mixed models, we will be using the `glmmTMB` package and function. The way we write a model is very similar to what we have been doing in `lm()` and `glm()`.
+
+```{r}
+fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estuaries, REML = T)
 ```
 
+- `Total` is our numeric, continuous response variable (y) 
+- `Modification` is our categorial predictor variable (x)
+- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting 
+
+> Technically `Total` count data, but it's distribution doesn't really resemble a Poisson distribution. A Normal distribution fits it quite well! Create a histogram and see for yourself! 
+
+We can proceed with checking out model fit before looking at the model's output. Things are looking okay!
+
 ```{r}
-# Does not support glmmTMB - yet still produces output??
+# Check our model
 check_model(fit_estuaries) 
-
-
-estimate_contrasts(fit_estuaries)
-means_by_mod_estuaries <- estimate_expectation(fit_estuaries) # ??? Some levels missing?? 
-
-means_by_estuaries_mod <- means_by_mod_estuaries |>  select(Modification, Estuary, Predicted, starts_with("CI")) |> 
-  distinct()
-
-means_by_estuaries <- estimate_means(fit_estuaries, by = c("Modification", "Estuary")) # all possible combinations 
 ```
+
+## Compute estimated means
+
+By now, you are familar with `estimate_means()` and `estimate_contrasts()`. For mixed models, we need to use a different function `estimate_expectations()` to compute means for each level of our predictors and random effect. 
+
+```{r}
+means_by_mod_estuaries <- estimate_expectation(fit_estuaries)  
+
+means_by_mod_estuaries
+```
+
+There are a lot of repeated rows here! This is because `estimate_expectations()` generates mean predictions for the same number of rows and replicates we had in the data. You can verify this by counting the number of rows for `Modification` and `Estuary` and the values should match with our earlier table of counts.
+
+```{r}
+means_by_mod_estuaries |> 
+  count(Modification, Estuary)
+```
+
+> Let's use these means and CI to look at our data
+
+## Visualise our data
+
+Here we are plotting our raw data across different estuaries and facetting the plot by our variable of interest `Modification`.
 
 ```{r}
 ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification)) +
@@ -146,11 +183,31 @@ ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification)) +
                 col = "azure4") +
   geom_violin(fill = NA) +
   geom_jitter(width = 0.3, alpha = 0.5) + 
-  geom_point(data = means_by_estuaries, aes(y = Predicted), colour = "azure4", size = 2) + 
+  geom_point(data = means_by_mod_estuaries, aes(y = Predicted), colour = "azure4", size = 2) + 
   scale_color_manual(values = c("burlywood4", "cadetblue")) + 
   theme_classic() + 
-  facet_grid(~Modification, scales = "free")
+  facet_grid(~Modification, scales = "free") + 
+  # facet_wrap(~Modification) +
+  theme(legend.position = "none")
 ```
+
+There are three things that might be new to you in this code:
+
+- `scale_color_manual(values = c("burlywood4", "cadetblue"))` allows me to see the colours manually for my plot
+- `facet_grid(~Modification, scales = "free")` is very similar to `facet_wrap()` but the only difference it allows the x and y axes to differ in values. This is useful here because we didn't sample at the same estuaries for both `Modified` and `Pristine` sites. You can replace `facet_grid()` with `facet_wrap()` and see for yourself! 
+- `theme(legend.position = "none")` hides the legend. The legend here is redundant to the facet title so I decided to ditch it. 
+
+> So let's go ahead and test whether `Modification` has an effect on `Total` invertebrate abundance.
+
+## Test for an effect of `Modification`
+
+Since this is a simple model with 1 predictor, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites
+
+```{r}
+parameters(fit_estuaries)
+estimate_contrasts(fit_estuaries)
+```
+
 
 **Questions:**
 
@@ -272,15 +329,11 @@ parameters(fit)
 ## CI's are smaller with the random effect included
 ```
 
-
-## Towers cells? 
-
 # Random Slopes
 
 ## BAAD
 
 # Random Interpepts and Slopes
 
-## BAAD? 
+## BAAD
 
-## Fonti Lizards?
