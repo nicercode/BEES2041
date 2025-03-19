@@ -281,6 +281,8 @@ p1 +
 
 The researchers collected data using `Quadrats`, this is the sampling unit. They sampled 360 quadrats. While we're not particularly interested in the `Quadrats` themselves, we know that each time we use them, the % `BareRock` will differ by chance. We also know our 360 `Quadrats` are really a sample from a much wider population of `Quadrats` and we want be able to make inferences about any `Quadrat` in general. 
 
+**Exercise:**
+
 > Your task is to refit the same model, adding `Quadrat` as a random intercept and reproduce the results again 🚀!
 
 Let's get you hitting the ground running: 
@@ -360,6 +362,8 @@ For example, imagine you're studying how study hours affect test scores across d
 > "The effect of studying on test scores might be stronger in some schools and weaker in others."
 
 ## Worked Example: Tree height vs leaf area
+
+![](images/trees.jpeg){width=60%}
 
 In this example, we will use the `baad` dataset, which contains data on plant structure compiled by Data Dan, using studies from all around the world. 
 
@@ -584,14 +588,21 @@ It doesn't know that species can differ a lot from each other. This suggests les
 
 ## Your turn: Stem diameter vs biomass
 
-Another potential use of data from the BAAD is to qunatify the relationship between stem diameter and biomass. There is a lot of ineterest in estimate the amount of carbon stored in forests, and using growing trees to remove carbon from the atmosphere. Since biomass is mostly (~42%) carbon, we can use the biomass of a tree as a proxy for the amount of carbon stored in the tree.
+![](images/stem.jpeg){width=60%}
 
-Your task is to fit a model between stem diameter and biomass, with random slopes for species, and use this to estimate 
+Another potential use of data from the BAAD is to quantify the **relationship between stem diameter and biomass**. 
 
-- rate at which log10_biomass increases with log10_stem_diameter, and
-- the log10_biomass of a tree with a stem diameter of 20cm.
+There is a lot of ineterest in estimate the amount of carbon stored in forests, and using growing trees to remove carbon from the atmosphere. Since biomass is mostly (~42%) carbon, we can use the biomass of a tree as a proxy for the amount of carbon stored in the tree.
 
-Here's the code to get you started with the data. 
+**Exercise:**
+
+Your task is to fit a model between stem diameter and biomass, with random slopes for species, and use this to estimate: 
+
+- rate at which `log10_biomass` increases with `log10_stem_diameter`, and
+- the `log10_biomass` of a tree with a stem diameter of 20cm.
+
+Here's the code to get you started with the data:
+
 ```{r}
 # dataset assembly
 data_trees <- baad$data |>
@@ -653,9 +664,9 @@ estimate_expectation(fit_stem_simple, data = data_pred_stem)|> mutate(biomass_kg
 
 **2. How much variation is explained by random effects in your model? _Hint: Using performance()_**
 
-`r cloze("6.4%", c("6.4", "91.7%", "98.1%")`
+`r cloze("6.4%", c("6.4%", "91.7%", "98.1%"))`
 
 **3. What is the `log10_biomass` of a tree with a stem diameter of 20cm e.g `log10_stem_diameter_m = log10(0.2)`?**
 
-`r cloze("41.11", c("1.03", "1.61", "41.11")`
+`r cloze("41.11", c("1.03", "1.61", "41.11"))`
 
