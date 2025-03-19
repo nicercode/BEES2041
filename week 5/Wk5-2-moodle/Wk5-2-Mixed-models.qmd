@@ -104,7 +104,7 @@ You will need to use mixed effect models if you have a random factor in your exp
 
 ## Example: Estuaries
 
-![](images/estuaries.jpg)
+![](images/estuaries.jpg){width=60%} <br>
 
 Random factors are hard to get your head around, and is best explained with an example. The data we will analyse here are **counts of invertebrates at 3-4 sites pristine and modified sites in each of 7 (randomly chosen) estuaries**.
 
@@ -169,7 +169,7 @@ means_by_mod_estuaries |>
   count(Modification, Estuary)
 ```
 
-> Let's use these means and CI to look at our data
+> Let's use these means and CI to visualise our data
 
 ## Visualise our data
 
@@ -203,17 +203,22 @@ There are three things that might be new to you in this code:
 
 Since this is a simple model with 1 predictor, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites
 
+<!-- TODO: Walk through # Random effects of paramaters? -->
+
 ```{r}
 parameters(fit_estuaries)
 estimate_contrasts(fit_estuaries)
 ```
 
-
 **Questions:**
 
-1.
-2.
-3.
+**1. What does the Intercept represent in the paramters output?** 
+
+The `Intercept` represents the `r cloze("mean", c("mean","min","max")` `Total` number of invertebrates from the `r cloze("Modified", c("Modified","Pristine"))` site.
+
+**2. Intepret the `Modification [Pristine]` cofficient and p-value**
+
+The `Modification [Pristine]` coefficient is `r cloze("-14.47", c("-14.47", "40.97", "7.42")`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
 
 
 ## Example: Urchins
