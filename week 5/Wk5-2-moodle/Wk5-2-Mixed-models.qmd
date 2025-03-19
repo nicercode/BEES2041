@@ -165,7 +165,7 @@ By now, you are familar with `estimate_means()` and `estimate_contrasts()`. For 
 ```{r}
 means_by_mod_estuaries <- estimate_expectation(fit_estuaries)  
 
-means_by_mod_estuaries
+head(means_by_mod_estuaries)
 ```
 
 There are a lot of repeated rows here! This is because `estimate_expectations()` generates mean predictions for the same number of rows and replicates we had in the data. You can verify this by counting the number of rows for `Modification` and `Estuary` and the values should match with our earlier table of counts.
@@ -242,11 +242,11 @@ To study how urchins affect the communities on the rocky reef, researchers set u
 
 **These researchers wanted to know: "How do urchin densities affect algal cover over time?"**
 
-The **% cover of bare rock** were measured several times over **210 days**, using **quadrats** (Like you did in the Maroubra field trip!)
+The **% cover of `BareRock`** were measured several times over **210 days**, using **quadrats** (Like you did in the Maroubra field trip!)
 
 We fitted a linear model containing **one categorical and one continuous predictor**, this is also know as an **ANCOVA**: 
 
-- `Day` was treated as a covariate. We are not really interested in `Day` as an effect but we know that time is a factor and would likely affect the % of bare rock.
+- `Day` was treated as a covariate. We are not really interested in `Day` as an effect but we know that time is a factor and would likely affect the % of `BareRock`.
 - The main effect of `Treatment`. 
 - The interaction between Day and Treatment `Day:Treatment`
 
@@ -254,9 +254,11 @@ We fitted a linear model containing **one categorical and one continuous predict
 fit_urchins <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
 ```
 
-From this model we produced this plot: 
+From this model, we produced this plot: 
 
-```{r, include=FALSE}
+<details>
+    <summary>Plot code here:</summary>
+```{r}
 means <- estimate_means(fit_urchins, by = c("Day", "Treatment"))
 
 p1 <-
@@ -275,11 +277,27 @@ p1 +
   facet_wrap(~Treatment)
 ```
 
+</details>
+
+```{r, echo=FALSE}
+p1 +
+  geom_point(data = data_urchins, aes(y = logBareRock)) +
+  facet_wrap(~Treatment)
+```
 
 
+> **But we forgot an important sampling design detail!**
 
-Read this data in and save it as an object. We're also going to log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
+The researchers collected data using `Quadrats`, this is the sampling unit. They sampled 360 quadrats. While we're not particularly interested in the `Quadrats` themselves, we know that each time we use them, the % `BareRock` will differ by chance. We also know our 360 `Quadrats` are really a sample from a much wider population of `Quadrats` and we want be able to make inferences about any `Quadrat` in general. 
 
+> Your task is to refit the same model, adding `Quadrat` as a random intercept and reproduce the results again 🚀!
+
+Let's get you hitting the ground running: 
+
+Here is the code to: 
+- read in the `data/urchins.csv` dataset. 
+- log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. 
+- setting the `Quadrat` variable as a factor/catergorical variable as it is recorded as integers.
 
 ```{r}
 # Read in data 
@@ -290,50 +308,21 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
   )
 ```
 
-```{r}
-fit <- lm(BareRock ~ Day*Treatment, data = data_urchins)
-
-check_model(fit)
-
-# neeeds a log transofrm
-data_urchins <- data_urchins |>  mutate(logBareRock = log(BareRock + 1))
-
-fit_log <- lm(logBareRock ~ Day * Treatment, data = data_urchins)
-
-check_model(fit_log)
-
-parameters(fit_log)
-
-anova(fit_log)
-```
-
-```{r}
-means <- estimate_means(fit_log, by = c("Day", "Treatment"))
-
-p1 <-
-  ggplot(means, aes(x = Day, y = Mean, color = Treatment)) +
-  geom_line() +
-  labs(
-    x = "Day",
-    y = "log(BareRock)"
-  ) +
-  theme_minimal()
-
-# Compare lines
-p1
-
-# Compare lines with data
-p1 +
-  geom_point(data = data_urchins, aes(y = logBareRock)) +
-  facet_wrap(~Treatment)
-```
-
-Add a random effect for Quadrat
 
 ```{r}
 fit_urchins_random <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
 
 check_model(fit_urchins_random)
+
+parameters(fit_urchins_random)
+
+anova(fit_urchins_random) # doesn't work
+
+# estimate_contrasts(fit_urchins, contrast = "Treatment", by = "Day") |>
+#   filter(Day == 0)
+# 
+# estimate_contrasts(fit_urchins, contrast = "Treatment", by = "Day") |>
+#   filter(Day == 210)   
 
 means <- estimate_expectation(fit_urchins_random, by = c("Day", "Treatment"))
 means2 <- estimate_expectation(fit_urchins_random)
@@ -367,11 +356,35 @@ parameters(fit_urchins_random)
 ## CI's are smaller with the random effect included
 ```
 
+**Questions:**
+
+*1.*
+
+*2.*
+
+*3.*
+
+
 # Random Slopes
 
 ## BAAD
+
+**Questions:**
+
+*1.*
+
+*2.*
+
+*3.*
 
 # Random Interpepts and Slopes
 
 ## BAAD
 
+**Questions:**
+
+*1.*
+
+*2.*
+
+*3.*
