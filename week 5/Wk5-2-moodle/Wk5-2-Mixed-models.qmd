@@ -33,7 +33,7 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 
 ![Bringing all your R skills together!](images/witches.png){width=60%}
 
-In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both fixed effects — the overall trends we're interested in — and random effects — addional variation due to these groupings.
+In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both **fixed effects** — the overall trends we're interested in — and **random effects** — addional variation due to these groupings.
 
 # Fixed and Random effects
 
@@ -348,7 +348,7 @@ parameters(fit_urchins_random)
 
 **Questions:**
 
-**1. Compare the output of `parameters(fit_urchins)` and the paramaters()` output of your mixed model. How did included the random effect of `Quadrat` change the model output?** 
+**1. Compare the output of `parameters(fit_urchins)` and the `paramaters()` output of your mixed model. How did included the random effect of `Quadrat` change the model output?** 
 
 Broadly speaking, the CI of the mixed models are `r cloze("smaller", c("smaller", "larger"))`. Corresponding, the p values are `r cloze("smaller", c("smaller", "larger"))`.
 
@@ -372,7 +372,7 @@ For example, imagine you're studying how study hours affect test scores across d
 
 ![](images/trees.jpeg){width=60%}
 
-In this example, we will use the Biomass And Allometry Database (BAAD), which contains data on plant structure compiled by Data Dan, using studies from all around the world. You can find more information about the BAAD dataset [here](https://github.com/dfalster/BAAD). This datasets enables us to ask questions about how plant structure varies across species and environments, and how the dimensions of different plant parts (tree height, stem diameter, leaf area, biomass etc) are related to each other.
+In this example, we will use the [**Biomass And Allometry Database (BAAD)**](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/14-1889.1), which contains data on plant structure compiled by Data Dan, using studies from all around the world. You can find more information about the BAAD dataset [here](https://github.com/dfalster/BAAD). This datasets enables us to ask questions about how plant structure varies across species and environments, and how the dimensions of different plant parts (tree height, stem diameter, leaf area, biomass etc) are related to each other.
 
 
 **Install relevant packages**
@@ -380,8 +380,9 @@ In this example, we will use the Biomass And Allometry Database (BAAD), which co
 To access the data, we will use the `baad.data` R package. To install this, you will need to run the following code.
 
 ```{r}
-# devtools::install_github("richfitz/datastorr")
-# devtools::install_github("traitecoevo/baad.data")
+# install.packages("remotes")
+# remotes::install_github("richfitz/datastorr")
+# remotes::install_github("traitecoevo/baad.data")
 ```
 
 **Download the data**
@@ -393,7 +394,7 @@ library(baad.data)
 # Download data
 baad <- baad_data("1.0.0") # This will take a few minutes
 
-# Look at columns of the data
+# Look at variable names of the data
 names(baad)
 ```
 
@@ -401,12 +402,14 @@ Let's look at the relationship between **tree height** and **leaf area**.
 
 Data Dan has asked you to: 
 
-- estimate how much the total leaf area of the tree increases with it's height, 
-- estimate the likely leaf area of a tree that is 10m tall, 
+- estimate **how much the total leaf area of the tree increases with it's height**, 
+- estimate the **likely leaf area of a random tree that is 10m tall**, 
 
+The data in the BAAD dataset contains information on the sizes of tree parts for a number of species at different locations around the world. The data comes from a number of studies. 
 
-The data in the BAAD dataset contains information on the sizes of tree parts for a number of species at different locations around the world. The data comes from a number of studies. The following code reformats the data so that it is in the form of a tibble, with columns for the study name, species, location, height, and leaf area. We've also: 
+The following code prepares the data by: 
 
+- reformatting the data so that it is in the form of a tibble, with columns for the study name, species, location, height, and leaf area. 
 - remove rows with missing values for height and leaf area
 - added columns for the log10 of height and leaf area.
 
@@ -420,7 +423,7 @@ data_trees <- baad$data |>
 data_trees 
 ```
 
-Our first thought is to fit a simple linear model to the data. This model assumes that the relationship between height and leaf area is the same for all species and locations.
+Our first thought is to fit a **simple linear model** to the data. This model **assumes that the relationship between height and leaf area is the same for all species and locations**.
 
 ```{r}
 fit_simple_raw <- glmmTMB(area_leaf_m2 ~ height_m, data = data_trees)
@@ -437,7 +440,7 @@ data_trees <- data_trees |>
 
 fit_simple <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m, data = data_trees)
 
-check_model(fit_simple)
+check_model(fit_simple) # THis might take a few seconds
 ```
 
 Not perfect, but much better and good enough!
@@ -451,7 +454,7 @@ means_all <- estimate_expectation(fit_simple, by = c("log10_height_m"))
 ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2)) +
   geom_point(alpha = 0.3) +
   geom_line(data = means_all, aes(y = Predicted), alpha = 1, col = "orange") +
-  geom_ribbon(data = means_all, aes(y = Predicted, ymin = CI_low, ymax = CI_high), fill = "white") +
+  geom_ribbon(data = means_all, aes(y = Predicted, ymin = CI_low, ymax = CI_high), fill = "white", linewidth = 3) +
   theme_classic() + 
   labs(x = "Log10 Height (m)",
        y = "Log10 Leaf area (m^2)")
@@ -461,7 +464,9 @@ What do you see?
 
 - the line provides a good fit to the data
 - the confidence intervals around the mean are **narrow**, so narrow that we can barely see them! This indicates that the model is confident in its predictions about the mean relationship.
-- there's a lot of **unexplained variation** in the data (above and below the line). So any given tree is likely could have a leaf area that is quite different from the mean. In fact, for a tree of 10m tall plant (log10 = 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
+- however...there's a lot of **unexplained variation** in the data (above and below the line). So any given tree is likely could have a leaf area that is quite different from the mean.
+
+In fact, for a tree of 10m tall plant (log10 = 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
 ```{r}
 10^c(0.2, 2.4)
 ```
@@ -506,12 +511,13 @@ ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2, color = speci
 
 Wow! The model with random slopes for species provides a much better fit to the data.
 
-- Each coloured line gives the relationship between height and leaf area for a different species. 
-- The grey line gives the average relationship across all species.
+- Each coloured line gives the **relationship between height and leaf area for a different species**. 
+- The grey line gives the **average relationship across all species**.
 
-Just as we thought, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species! The mixed model is able to capture the variation in the relationship between height and leaf area between species. 
+Just as we thought, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species! 
+The mixed model is able to capture the variation in the relationship between height and leaf area between species. 
 
-We can assess whether the variation in the data due to the random effect is signifcant by comparing the RE model to the simple model. We can do this using an ANOVA test, which will tell us if the random slopes model is significantly better than the simple model. It is!
+We can assess whether the variation in the data due to the random effect is signifcant by comparing the mixed model to the simple model. We can do this using an `anova()` test , which will tell us if the random slopes model is significantly better than the simple model. It is!
 
 ```{r}
 anova(fit_simple, fit_rs)
@@ -563,7 +569,7 @@ parameters(fit_rs)
 ```
 
 - The simple model gives a slope of **1.71**, the mixed model gives a slope of **1.79**. 
-- The confidence intervals for the simple model are much narrower than the random slopes model. And they don't contain the slope estimate from the mixed model model. 
+- The confidence intervals for the **simple model are much narrower** than the random slopes model. And they don't overlap the slope estimate from the mixed model model! 
 
 **Predictions**
 
@@ -579,7 +585,9 @@ estimate_expectation(fit_simple, data = data_pred)
 estimate_expectation(fit_rs, data = data_pred)
 ```
 
-The simple model is predicting a higher value with very narrow confidence intervals. The random slopes model is predicting a lower value with much wider confidence intervals.
+- The simple model is predicting a higher value with very narrow confidence intervals. 
+
+- The random slopes model is predicting a lower value with much wider confidence intervals.
 
 ## Summary
 
@@ -674,11 +682,11 @@ estimate_expectation(fit_stem_simple, data = data_pred_stem)|> mutate(biomass_kg
 
 **1. What is the rate at which `log10_biomass` increases with `log10_stem_diameter_m`?** `r cloze("2.49", c("1.03", "2.49", "3.36"))`
 
-**2. What does the conditional r2 capture?**
+**2. What does the conditional R^2^ capture?**
 
 the `r cloze("variation explained by the fixed and random effects", c("variation explained by the fixed effects", "variation explained by the random effects", "variation explained by the fixed and random effects"))`
 
-**3. How much variation is explained by only the random effects in your model? _Hint: Using performance(), compare the marginal and conditional r2_**
+**3. How much variation is explained by only the random effects in your model? _Hint: Using performance(), compare the marginal and conditional R^2^_**
 
 `r cloze("6.4%", c("6.4%", "91.7%", "98.1%"))`
 
