@@ -35,7 +35,7 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 
 Hey folks! In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both fixed effects — the overall trends we're interested in — and random effects — the variation due to these groupings.
 
-## Fixed and Random effects
+# Fixed and Random effects
 
 In the previous pracs, we have been working with **fixed effects**. These are the variables that we are interested in and whose effects are relevant across the entire population. For example, in the `urchins` dataset, we were interested in the effect of `Treatment` on `logBareRock`.
 
@@ -353,11 +353,19 @@ Ignoring `Quadrat` means that we are not accounting for `r cloze("noise due to Q
 
 # Random Slopes
 
+A **random slope** allows the effect of a predictor variable to vary across groups in your data.
+
+In a mixed model, a **random intercept** lets each group (like a species, site, or school) have its own baseline value. A **random slope** goes a step further — it allows the relationship between a predictor and the outcome to differ between groups.
+
+For example, imagine you're studying how study hours affect test scores across different schools. If you fit a random slope for study hours, you're saying:
+
+> "The effect of studying on test scores might be stronger in some schools and weaker in others."
+
 ## Worked Example: Tree height vs leaf area
 
-In this example, we will look at the relationship between parts of the tree height and leaf area. We will use the `baad` dataset, which contains data on plant structure compiled by Data Dan, using studies from all around the world. 
+In this example, we will use the `baad` dataset, which contains data on plant structure compiled by Data Dan, using studies from all around the world. 
 
-To access the data, we will use the `baad.data` package. To install this, you will need to run the following code:
+To access the data, we will use the `baad.data` R package. To install this, you will need to run the following code:
 
 **Install relevant packages**
 
@@ -369,21 +377,30 @@ To access the data, we will use the `baad.data` package. To install this, you wi
 **Download the data**
 
 ```{r, message=FALSE}
+# Load library
 library(baad.data)
+
+# Download data
 baad <- baad_data("1.0.0") # This will take a few minutes
 
+# Look at columns of the data
 names(baad)
 ```
 
-Inthe example, we will look at the relationship between tree height and leaf area. Data Dan has asked you to estimate how much the total leaf area of the tree increases with it's height. measuring leaf area is hard, but measuring height is relatively easy. Dan wants to report on how much more leaf area there will be if we let the forests in an urban area grow taller and older.
+Let's look at the relationship between **tree height** and **leaf area**. 
 
-The data in the BAAD dataset contains information on the sizes of tree parts for a number of species at different locations around the world. The data comes from a number of studies. The following code reshape the data so that it is in the form of a tibble, with columns for the study name, species, location, height, and leaf area. We've also 
+Data Dan has asked you to: 
+
+- estimate how much the total leaf area of the tree increases with it's height, 
+- report on how much more leaf area there will be if we let the forests in an urban area grow taller and older.
+
+The data in the BAAD dataset contains information on the sizes of tree parts for a number of species at different locations around the world. The data comes from a number of studies. The following code reformats the data so that it is in the form of a tibble, with columns for the study name, species, location, height, and leaf area. We've also: 
 
 - remove rows with missing values for height and leaf area
 - added columns for the log10 of height and leaf area.
 
 ```{r}
-# dataset assembly
+# Dataset assembly
 data_trees <- baad$data |>
   as_tibble() |>
   select(studyName, species, location, height_m = h.t, area_leaf_m2 = a.lf) |>
@@ -392,7 +409,7 @@ data_trees <- baad$data |>
 data_trees 
 ```
 
-Your first thought is to fit a simple linear model to the data. This model assumes that the relationship between height and leaf area is the same for all species and locations.
+Our first thought is to fit a simple linear model to the data. This model assumes that the relationship between height and leaf area is the same for all species and locations.
 
 ```{r}
 fit_simple_raw <- glmmTMB(area_leaf_m2 ~ height_m, data = data_trees)
@@ -400,79 +417,90 @@ fit_simple_raw <- glmmTMB(area_leaf_m2 ~ height_m, data = data_trees)
 check_model(fit_simple_raw)
 ```
 
-However, the data is not well described by a simple linear model. let's try a double log transformation to see if that helps.
+However, the data is not well described by a simple linear model. Let's try a **double log10 transformation** to see if that helps.
 
 ```{r}
-data_trees <- data_trees |> mutate(log10_height_m = log10(height_m), log10_area_leaf_m2 = log10(area_leaf_m2))
+data_trees <- data_trees |> 
+  mutate(log10_height_m = log10(height_m), 
+         log10_area_leaf_m2 = log10(area_leaf_m2))
 
 fit_simple <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m, data = data_trees)
 
 check_model(fit_simple)
 ```
 
-Not perefct, but much better and good enough!
+Not perfect, but much better and good enough!
 
-Let's plot the data and the model fit.
+Let's plot the data and the means estimated by this model: 
+
 ```{r}
+# Estimate means 
 means_all <- estimate_expectation(fit_simple, by = c("log10_height_m"))
 
 ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2)) +
   geom_point(alpha = 0.3) +
-  geom_ribbon(data = means_all, aes(y = Predicted, ymin = CI_low, ymax = CI_high), alpha = 0.2, fill = "orange", linewidth = 0) +
-  geom_line(data = means_all, aes(y = Predicted), alpha = 1, linewidth = 2, col = "orange") +
-  theme_minimal()
+  geom_line(data = means_all, aes(y = Predicted), alpha = 1, col = "orange") +
+  geom_ribbon(data = means_all, aes(y = Predicted, ymin = CI_low, ymax = CI_high), fill = "white") +
+  theme_classic() + 
+  labs(x = "Log10 Height (m)",
+       y = "Log10 Leaf area (m^2)")
 ```
 
 What do you see? 
 
 - the line provides a good fit to the data
-- the confidence intervals are narrow, indicating that the model is confident in its predictions about the mean.
-- but there's a lot of unexplained variation in the data. So any given tree is likely could have a leaf area that is quite different from the mean.
+- the confidence intervals are **narrow**, so narrow that we can barely see them! This indicates that the model is confident in its predictions about the mean relationship.
+- there's a lot of **unexplained variation** in the data (above and below the line). So any given tree is likely could have a leaf area that is quite different from the mean.
 
-In fact, for a tree of 10m tall plant (log10= 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
+In fact, for a tree of 10m tall plant (log10 = 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
 ```{r}
 10^c(0.2, 2.4)
 ```
- 10 cm^2. This is a huge range!
 
-Can we do better?
+10 cm^2. This is a huge range! Surely we can do better!
 
 ## Linear model with random effect by species
 
-We could try to improve the model by allowing the relationship between height and leaf area to vary between species. Since the dataset contains lots of species, we can hypothesise that some of the variation in the relationship between height and leaf area is due to differences between species. We can account for this by fitting a model with a random intercept and slope for species.
+We could try to improve the model by allowing the relationship between height and leaf area to vary between species. We can hypothesise that some of the variation in the relationship between height and leaf area is due to differences between species. We can account for this by fitting a model with a **random intercept AND slope** for species.
 
 ```{r}
-# fit a model with random slopes for species and location
+# Fit a model with random slopes for species 
 fit_rs <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m + (1 + log10_height_m | species), data = data_trees)
 ```
 
 In the code above, the terms 
 
-- `(1 + log10_height_m | species)` specifies that we want to fit a model with a random intercept and slope for species. This means that the relationship between height and leaf area can vary between species. 
-- The `| species` term specifies that the random effects are occurring at the species level.
+- `(1 + log10_height_m | species)` specifies that we want to fit a model with a **random intercept and slope** for species. This means that the relationship between height and leaf area can vary between species. 
+  - The `| species` term specifies that the **random effects** are occurring at the species level.
 
-Let's plot the new model fit and compare it to the simple model.
+Let's plot this mixed model fit and compare it to our first simple model.
 
 ```{r}
-# estimate the predictiosn for the model for height x species
+# Estimate the predictiosn for the model for height x species
 means_sp <- estimate_expectation(fit_rs)
+
 # Estimate marginal means for the model by height, averaging out species
+# This might take a while to compute
 means_all <- estimate_expectation(fit_rs, by = c("log10_height_m"))
 
-# make the plot
+# Make the plot
 ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2, color = species, group = species)) +
   geom_point(alpha = 0.3, show.legend = FALSE) +
   geom_line(data = means_sp, aes(y = Predicted), alpha = 0.5, linewidth = 1) +
-  geom_line(data = means_all, aes(y = Predicted, group = 1), alpha = 1, linewidth = 2) +
-  theme_minimal() +
+  geom_line(data = means_all, aes(y = Predicted, group = 1),
+            linewidth = 2, colour = "lightgrey") +
+  theme_classic() +
   theme(legend.position = "none") +
-  labs(
-    x = "log10_height (m)",
-    y = "log10_area_leaf (m^2)"
-  )
+  labs(x = "Log10 Height (m)",
+       y = "Log10 Leaf area (m^2)")
 ```
 
-Wow! The model with random slopes for species provides a much better fit to the data. Each coloured line gives the relationship between height and leaf area for a different species. The black line gives the average relationship across all species. The model is able to capture the variation in the relationship between height and leaf area between species. As we thoguht, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species.
+Wow! The model with random slopes for species provides a much better fit to the data.
+
+- Each coloured line gives the relationship between height and leaf area for a different species. 
+- The grey line gives the average relationship across all species. This mixed model is able to capture the variation in the relationship between height and leaf area between species. 
+
+Just as we thought, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species!
 
 ## Quantifying the variance components
 
