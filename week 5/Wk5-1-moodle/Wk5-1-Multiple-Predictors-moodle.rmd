@@ -223,7 +223,7 @@ anova(fit_penguin_adults)
 We can see our predictor variables listed as rows. **Each row tests whether an effect signficantly affects body mass**. 
 
 - The first row for  the main effect of `sex`
-- The second row for the main effect of ` species` after main effect of `sex`
+- The second row for the main effect of `species` after main effect of `sex`
 - The third row for the interactive effect of `sex` and `species` after the two main effects.
 
 This output tells us that both the **main effects** of sex and species and their **interactive effects** have a strong effect on body mass variation in Palmer penguins. 
@@ -270,7 +270,7 @@ The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1
 
 **4. Interpret the p-value for `species [Gentoo]`**
 
-The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "male"))`.
+The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "high"))`.
 
 ## Contrasts
 
@@ -683,10 +683,10 @@ You will have to test:
 
 **1. An interaction between the two predictor variables would be evident if the slopes of these five lines were not parallel. Does the scatterplot suggest an interaction?** `r cloze("yes", c("yes", "no"))`
 
-**2. Do the results of the anova function support this? **
+**2. Do the results of the anova function support this?**
 `r cloze("yes, indicated by the effect of Day:Treatment", c("yes, indicated by the effect of Day:Treatment", "yes, indicated by the effect of Treatment", "yes, indicated by the effect of Day"))`
 
-**3. Which treatment has the largest effect on the % cover of bare rock,  `cage.control` or `low.urchin`?** `r cloze("cage.control", c("cage.control", "low.urchin"))`
+**3. Which treatment has the largest effect on the % cover of bare rock,  `cage.control` or `low.urchin`?** `r cloze("low.urchin", c("cage.control", "low.urchin"))`
 
 ## Contrasts
 
