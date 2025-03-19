@@ -33,7 +33,7 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 
 ![Bringing all your R skills together!](images/witches.png){width=60%}
 
-Hey folks! In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both fixed effects — the overall trends we're interested in — and random effects — the variation due to these groupings.
+In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both **fixed effects** — the overall trends we're interested in — and **random effects** — the variation due to these groupings.
 
 # Fixed and Random effects
 
@@ -42,9 +42,9 @@ In the previous pracs, we have been working with **fixed effects**. These are th
 A **random effect** is: 
 
 - categorical
-- has a large number of levels but,
-- only a random subsample of levels is included in your design and, 
-- you want to make inference in general and not only for the levels you observed.
+- has a large number of levels _but_,
+- only a **random subsample** of levels is included in your design and, 
+- you want to **make inference in general** and not only for the levels you observed.
 
 You will need to use mixed effect models if you have a random factor in your experimental design.
 
@@ -53,13 +53,14 @@ You will need to use mixed effect models if you have a random factor in your exp
 
 Our learning objectives today are:
 
-<!-- - **understand** how different predictor variable types can influence your choice of analysis  -->
-<!-- - **understand** difference between additive and interactive effects -->
-<!-- - **run** a multiple linear regression in R using `lm()` -->
-<!-- - **test** for effects of your predictor variables using `anova()` -->
-<!-- - **interpret** the output of your multiple regression using `parameters()`, `estimate_means()`, `estimate_contrasts()` -->
-<!-- - **extract** the mean and confidence interval for the slope and intercept of the regression line -->
-<!-- - **plot** the data and the regression line with confidence intervals -->
+- **understand** differences between fixed and random effects
+- **understand** difference between random intercept and random slope
+- **run** a linear mixed effects model in R using `glmmTMB()`
+- **interpret** the output of your multiple regression using `parameters()`, `estimate_expectations()`, `performance()`
+- **understand** differences between marginal and conditional R^2^ values.
+- **make model predictions** using your mixed model using `estimate_expectations()`
+- **extract** the mean and confidence interval for the slope and intercept of the regression line
+- **plot** the data and the regression line with confidence intervals
 
 Let’s dive in! 🚀 
 
