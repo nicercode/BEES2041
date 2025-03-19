@@ -1,0 +1,185 @@
+---
+title: "Making plots for linear rgression ppt"
+format: html
+---
+
+# Notes 
+
+
+Names
+
+Mixed effects models
+Linear mixed models
+Multilevel models (implies multiple levels of hierarchically clustered data)
+Hierarchical linear models
+Random intercepts and slopes
+Intercepts- and/or slopes-as-outcomes
+Growth curve models (possibly Latent GCM)
+
+
+Choosing level of compelxity
+
+- be guided by questions of interest
+- be guided by the data --> is there enough data to estimate the parameters of interest?
+  - is there evidence for an effect?
+
+
+Table of formula and what they mean
+see chat GPT
+
+random effects are simply those specific to an observational unit, however defined. The approach outlined in this document largely pertains to the case where the observational unit is the level of some grouping factor, but this is only one of several possibilities
+
+https://m-clark.github.io/mixed-models-with-R/random_intercepts.html
+
+
+# Setup
+
+Path
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Set the working directory
+rprojroot::has_file("BEES2041-code.Rproj") |>
+  rprojroot::find_root() |>
+  file.path("week 5/Wk5-slides") |>
+  setwd()
+```
+
+Libraries
+```{r}
+library(tidyverse)
+library(easystats)
+library(glmmTMB)
+library(patchwork)
+
+
+# Figure styling - function to set my own theme for the plots
+
+styling <- function(p, background = "white") {
+  theme_classic() +
+    theme(
+      panel.background = element_rect(fill = background, color = NA), # Panel background
+      plot.background = element_rect(fill = background, color = NA), # Plot background
+      axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+      axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+      axis.text = element_blank(), # Axis tick labels
+      axis.title = element_text(size = 0.58), # Axis titles
+      plot.title = element_text(size = 0.58, face = "bold") # Plot title
+    )
+}
+```
+
+# Checks for linear regression
+
+
+```{r}
+# Load packages
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Simulate data
+n_species <- 5 # Number of species
+n_obs <- 100 # Number of obs
+
+# Create a dataset
+data <- tibble(
+  species_id = rep(1:n_species, each = n_obs / n_species), # 10 species
+  x = runif(n_obs, 1, 10) # X variable
+)
+
+# Assign random intercepts and slopes per school
+random_intercepts <- rnorm(n_species, mean = 50, sd = 10) # Varying intercepts
+random_slopes <- rnorm(n_species, mean = 3, sd = 1) # Varying slopes
+
+# Generate test y based on random effects
+data <- data |>
+  mutate(
+    species = letters[species_id], # Convert species to a factor
+    intercept = random_intercepts[species_id],
+    slope = random_slopes[species_id],
+    y = intercept + slope * x + rnorm(n_obs, 0, 5) # Adding noise
+  )
+
+# Simple model
+model_0 <- glmmTMB(y ~ x, data = data)
+
+# Random intercept model
+model_intercept <- glmmTMB(y ~ x + (1 | species), data = data)
+
+# Random slope model
+model_slope <- glmmTMB(y ~ x + (0 + x | species), data = data)
+
+# Random intercept & slope model
+model_intercept_slope <- glmmTMB(y ~ x + (1 + x | species), data = data)
+```
+
+Random intercept model
+
+```{r}
+# No random effects
+means_all <- estimate_expectation(model_0, by = "x")
+
+p0 <-
+  ggplot(data, aes(x = x, y = y, color = species, group = species)) +
+  geom_point(alpha = 0.5) +
+  geom_line(data = means_all, aes(y = Predicted, group = ""), col = "black", size = 0.5) +
+  labs(title = "Standard model") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
+# Random intercept model
+means_j <- estimate_expectation(model_intercept)
+means_all <- estimate_expectation(model_intercept, by = "x")
+
+p1 <-
+  ggplot(data, aes(x = x, y = y, color = species, group = species)) +
+  geom_point(alpha = 0.5) +
+  geom_line(data = means_j, aes(y = Predicted), size = 0.5) +
+  geom_line(data = means_all, aes(y = Predicted, group = ""), col = "black", size = 0.5) +
+  labs(title = "Random Intercepts") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Random slope model
+
+means_j <- estimate_expectation(model_slope)
+means_all <- estimate_expectation(model_slope, by = "x")
+
+p2 <-
+  ggplot(data, aes(x = x, y = y, color = species, group = species)) +
+  geom_point(alpha = 0.5) +
+  geom_line(data = means_j, aes(y = Predicted), size = 0.5) +
+  geom_line(data = means_all, aes(y = Predicted, group = ""), col = "black", size = 0.5) +
+  labs(title = "Random Slopes") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Random slope and intercepts
+
+means_j <- estimate_expectation(model_intercept_slope)
+means_all <- estimate_expectation(model_intercept_slope, by = "x")
+
+p3 <-
+  ggplot(data, aes(x = x, y = y, color = species, group = species)) +
+  geom_point(alpha = 0.5) +
+  geom_line(data = means_j, aes(y = Predicted), size = 0.5) +
+  geom_line(data = means_all, aes(y = Predicted, group = ""), col = "black", size = 0.5) +
+  labs(title = "Random slope & intercepts") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Combine plots
+p_all <- p0 + p1 + p2 + p3
+
+ggsave("mixed_effects_models.png", p_all, width = 10, height = 5)
+
+``` 
+
+```{r}
+parameters(model_intercept_slope)
+
+anova(model_0, model_intercept, model_intercept_slope)
+```
