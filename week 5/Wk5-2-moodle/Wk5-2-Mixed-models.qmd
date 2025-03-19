@@ -126,7 +126,7 @@ data_estuaries |>
 
 > Notice that `Estuary` is not replicated across both levels of `Modification`. This is because, `Estuary` is not our primary variable of interest. We collected data we needed from randomly selected estuaries. 
 
-Importantly, we know that our sample of estuaries are likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate may be more favourable to invertebrates than others. Ultimately, we know that different estuaries are likely to differ, on average in `Total` number of invertebrates. This random effect of `Estuary` is something we want to account for in our model. 
+Importantly, we know that our **random sample of estuaries** is likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate at some estuaries may be more favourable to invertebrates than others. Ultimately, we know that different estuaries are likely to differ, on average in `Total` number of invertebrates. This random effect of `Estuary` is something we want to account for in our model. 
 
 ## Fit our mixed model
 
@@ -138,18 +138,18 @@ fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estua
 
 - `Total` is our numeric, continuous response variable (y) 
 - `Modification` is our categorial predictor variable (x)
-- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting an intercpet that is allows to vary by Estuary.
+- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting an intercpet that is allowed to vary by Estuary (mean `Total` at each `Estuary`).
 
 > Technically `Total` count data, but it's distribution doesn't really resemble a Poisson distribution. A Normal distribution fits it quite well! Create a histogram and see for yourself! 
 
-We can proceed with checking out model fit before looking at the model's output. Things are looking okay!
+We can proceed with checking our model fit before looking at the model's output. Things are looking okay!
 
 ```{r}
 # Check our model
 check_model(fit_estuaries) 
 ```
 
-Not perefcet, but good enough! Let's move on to the next step.
+Not perfect, but good enough! Let's move on to the next step.
 
 ## Compute estimated means
 
@@ -168,7 +168,7 @@ means_by_mod_estuaries |>
   count(Modification, Estuary)
 ```
 
-> Let's use these means and CI to visualise our data
+> Let's use these means and CI to visualise our data!
 
 ## Visualise our data
 
@@ -201,7 +201,7 @@ There are three things that might be new to you in this code:
 
 ## Test for an effect of `Modification`
 
-Since this is a simple model with 1 fixed effect, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites
+Since this is a simple model with 1 fixed effect, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites. The numbers are the same.
 
 ```{r}
 parameters(fit_estuaries)
@@ -286,11 +286,16 @@ The researchers collected data using `Quadrats`, this is the sampling unit. They
 
 > Your task is to refit the same model, adding `Quadrat` as a random intercept and reproduce the results again 🚀!
 
+- Fit a mixed model adding in `Quadrat` a random intercept
+- Generate means for `Total` for `Days`, `Treatment` and `Quadrat` 
+- Create a plot, fitting lines for each `Quadrat` 
+
 Let's get you hitting the ground running: 
 
 Here is the code to: 
+
 - read in the `data/urchins.csv` dataset. 
-- log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. 
+- log transform the y variable (`BareRock`) as it is a percentage and will be right skewed. 
 - setting the `Quadrat` variable as a factor/catergorical variable as it is recorded as integers.
 
 ```{r}
@@ -303,13 +308,17 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 ```
 
 ```{r, solution-1}
+# Fit model
 fit_urchins_random <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
 
+# Check model assumptions
 check_model(fit_urchins_random)
 
+# Compute means
 means_by_day_treat <- estimate_expectation(fit_urchins_random, by = c("Day", "Treatment"))
 means_urchins_all <- estimate_expectation(fit_urchins_random)
 
+# Fit a line for each quadrat
 p1 <-
   ggplot(means_urchins_all, aes(x = Day, y = Predicted, color = Treatment)) +
   geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
@@ -319,6 +328,7 @@ p1 <-
   ) +
   theme_minimal() 
 
+# Add in the overall line
 p1 +
   geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2)
 
@@ -334,12 +344,9 @@ p1 +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Quadrat)
 
+# Compare the models 
 parameters(fit_urchins) 
-
 parameters(fit_urchins_random)
-
-## Ignoring qudrat adds to noise
-## CI's are smaller with the random effect included
 ```
 
 **Questions:**
