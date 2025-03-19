@@ -4,7 +4,7 @@ output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
-  category: 5-2 Mixed models
+  category: Mixed models
 editor_options:
   chunk_output_type: console
 ---
@@ -43,7 +43,7 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 
 # Introduction to Mixed Models
 
-![Bringing all your R skills together!](images/witches.png){width=60%}
+![Bringing all your R skills together!](images/witches.png){width=60%} <br>
 
 In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both **fixed effects** — the overall trends we're interested in — and **random effects** — addional variation due to these groupings.
 
@@ -262,7 +262,7 @@ The `Intercept` represents the `r cloze("mean", c("mean","min","max"))` `Total` 
 
 **2. Intepret the `Modification [Pristine]` cofficient and p-value**
 
-The `Modification [Pristine]` coefficient is `r cloze("-14.47", c("-14.47", "40.97", "7.42"))`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
+The `Modification [Pristine]` coefficient is `r cloze("-14.52", c("-14.52", "40.97", "7.42"))`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
 
 ## Your turn: Urchins
 
@@ -270,7 +270,7 @@ The `Modification [Pristine]` coefficient is `r cloze("-14.47", c("-14.47", "40.
 
 
 
-![**Urchin grazing**](images/Urchins.jpg){width=60%}
+![**Urchin grazing**](images/Urchins.jpg){width=60%} <br>
 
 In the last prac, we worked with this sea urchin dataset. This data was collected marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. 
 
@@ -354,7 +354,7 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 
 Now fit the model with the random effect of `Quadrat`. 
 
-```{r, solution-1}
+```{r, solution1}
 # Fit model
 fit_urchins_random <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
 
@@ -414,6 +414,8 @@ Ignoring `Quadrat` means that we are not accounting for `r cloze("noise due to Q
 
 
 
+![](images/random-effects.png){wdith=60%}  <br>
+
 A **random slope** allows the effect of a predictor variable to vary across groups in your data.
 
 In a mixed model, a **random intercept** lets each group (like a species, site, or school) have its own baseline value. A **random slope** goes a step further — it allows the relationship between a predictor and the outcome to differ between groups.
@@ -428,7 +430,7 @@ For example, imagine you're studying how study hours affect test scores across d
 
 
 
-![](images/trees.jpeg){width=60%}
+![](images/trees.jpeg){width=60%}  <br>
 
 In this example, we will use the [**Biomass And Allometry Database (BAAD)**](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/14-1889.1), which contains data on plant structure compiled by Data Dan, using studies from all around the world. You can find more information about the BAAD dataset [here](https://github.com/dfalster/BAAD). This datasets enables us to ask questions about how plant structure varies across species and environments, and how the dimensions of different plant parts (tree height, stem diameter, leaf area, biomass etc) are related to each other.
 
@@ -686,7 +688,7 @@ It doesn't know that species can differ a lot from each other. This suggests les
 
 
 
-![](images/stem.jpeg){width=60%}
+![](images/stem.jpeg){width=60%}  <br>
 
 Another potential use of data from the BAAD is to quantify the **relationship between stem diameter and biomass**. 
 

@@ -29,6 +29,8 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
   )
 ```
 
+
+
 # Introduction to Mixed Models
 
 ![Bringing all your R skills together!](images/witches.png){width=60%} <br>
@@ -83,6 +85,8 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 > We will be using two new package todays called `glmmTMB` and `remotes`. Uncomment the last two lines in the next code block to install it in your own devices.
 
+
+
 ```{r, eval=FALSE}
 # install.packages("tidyverse")
 # install.packages("easystats")
@@ -92,7 +96,11 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 # install.packages("glmmTMB")
 ```
 
+
+
 > Remember to load the packages into R to use em!
+
+
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -100,6 +108,8 @@ library(easystats)
 library(patchwork)
 library(glmmTMB)
 ```
+
+
 
 ## Worked Example: Estuaries
 
@@ -115,20 +125,28 @@ Here the estuaries are the **random effect**, as there are **a large number of p
 
 Let's read in the dataset first
 
+
+
 ```{r}
 data_estuaries <- read_csv("data/Estuaries.csv")
 
 data_estuaries
 ```
 
+
+
 **Summarise data**
 
 A handy way to understand the structure of your study design is to create a table of counts. Here we are tabulating `Modification` by `Estuary` so we have a breakdown of how many samples we have in each category. 
+
+
 
 ```{r}
 data_estuaries |> 
   count(Modification, Estuary)
 ```
+
+
 
 > Notice that `Estuary` is not replicated across both levels of `Modification`. This is because, `Estuary` is not our primary variable of interest. We collected data we needed from randomly selected estuaries. 
 
@@ -138,9 +156,13 @@ Importantly, we know that our **random sample of estuaries** is likely to harbou
 
 Let's fit the model together and we will talk through the code. For mixed models, we will be using the `glmmTMB` package and function. The way we write a model is very similar to what we have been doing in `lm()` and `glm()`.
 
+
+
 ```{r}
 fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estuaries)
 ```
+
+
 
 - `Total` is our numeric, continuous response variable (y) 
 - `Modification` is our categorial predictor variable (x)
@@ -150,10 +172,14 @@ fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estua
 
 We can proceed with checking our model fit before looking at the model's output. Things are looking okay!
 
+
+
 ```{r}
 # Check our model
 check_model(fit_estuaries) 
 ```
+
+
 
 Not perfect, but good enough! Let's move on to the next step.
 
@@ -161,24 +187,34 @@ Not perfect, but good enough! Let's move on to the next step.
 
 By now, you are familar with `estimate_means()` and `estimate_contrasts()`. For mixed models, we need to use a different function `estimate_expectations()` to compute means for each level of our predictors and random effect. 
 
+
+
 ```{r}
 means_by_mod_estuaries <- estimate_expectation(fit_estuaries)  
 
 head(means_by_mod_estuaries)
 ```
 
+
+
 There are a lot of repeated rows here! This is because `estimate_expectations()` generates mean predictions for the same number of rows and replicates we had in the data. You can verify this by counting the number of rows for `Modification` and `Estuary` and the values should match with our earlier table of counts.
+
+
 
 ```{r}
 means_by_mod_estuaries |> 
   count(Modification, Estuary)
 ```
 
+
+
 > Let's use these means and CI to visualise our data!
 
 ## Visualise our data
 
 Here we are plotting our raw data across different estuaries and facetting the plot by our variable of interest `Modification`.
+
+
 
 ```{r}
 ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification, fill = Modification)) +
@@ -197,6 +233,8 @@ ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification, fill =
   theme(legend.position = "none")
 ```
 
+
+
 There are three things that might be new to you in this code:
 
 - `scale_color/fill_manual(values = c("burlywood4", "cadetblue"))` allows me to set the colour and fill manually for my plot
@@ -209,20 +247,24 @@ There are three things that might be new to you in this code:
 
 Since this is a simple model with 1 fixed effect, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites. The numbers are the same.
 
+
+
 ```{r}
 parameters(fit_estuaries)
 estimate_contrasts(fit_estuaries)
 ```
 
+
+
 **Questions:**
 
 **1. What does the Intercept represent in the parameters output?** 
 
-The `Intercept` represents the `r cloze("mean", c("mean","min","max"))` `Total` number of invertebrates from the `r cloze("Modified", c("Modified","Pristine"))` site.
+The `Intercept` represents the ??? `Total` number of invertebrates from the ??? site.
 
 **2. Intepret the `Modification [Pristine]` cofficient and p-value**
 
-The `Modification [Pristine]` coefficient is `r cloze("-14.52", c("-14.52", "40.97", "7.42"))`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
+The `Modification [Pristine]` coefficient is ???. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is ??? which means the mean in `Total` is ??? for `Pristine` sites.
 
 ## Your turn: Urchins
 
@@ -248,14 +290,20 @@ We fitted a linear model containing **one categorical and one continuous predict
 - The main effect of `Treatment`. 
 - The interaction between Day and Treatment `Day:Treatment`
 
+
+
 ```{r}
 fit_urchins <- lm(logBareRock ~ Day + Treatment + Day:Treatment, data = data_urchins)
 ```
+
+
 
 From this model, we produced this plot: 
 
 <details>
     <summary>Plot code here:</summary>
+
+
 ```{r}
 means <- estimate_means(fit_urchins, by = c("Day", "Treatment"))
 
@@ -272,11 +320,17 @@ p1 <-
 
 ```
 
+
+
 </details>
+
+
 
 ```{r, echo=FALSE}
 p1
 ```
+
+
 
 
 > **But we forgot an important sampling design detail!**
@@ -299,6 +353,8 @@ Here is the code to:
 - log transform the y variable (`BareRock`) as it is a percentage and will be right skewed. 
 - setting the `Quadrat` variable as a factor/catergorical variable as it is recorded as integers.
 
+
+
 ```{r}
 # Read in data 
 data_urchins <- read_csv("data/Urchins.csv")  |> 
@@ -308,59 +364,27 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
   )
 ```
 
+
+
 Now fit the model with the random effect of `Quadrat`. 
 
-```{r solution-1}
-# Fit model
-fit_urchins_random <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
 
-# Check model assumptions
-check_model(fit_urchins_random)
 
-# Compute means
-means_by_day_treat <- estimate_expectation(fit_urchins_random, by = c("Day", "Treatment"))
-means_urchins_all <- estimate_expectation(fit_urchins_random)
+```{r}
 
-# Fit a line for each quadrat
-p1 <-
-  ggplot(means_urchins_all, aes(x = Day, y = Predicted, color = Treatment)) +
-  geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
-  labs(
-    x = "Day",
-    y = "log(BareRock)"
-  ) +
-  theme_minimal() 
-
-# Add in the overall line
-p1 +
-  geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2)
-
-# Plot for each treatmeant
-p1 +
-  geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2) +
-  geom_point(data = data_urchins, aes(y = logBareRock)) +
-  facet_wrap(~Treatment)
-
-# Plot for each Quadrat
-p1 +
-  geom_line(alpha = 0.5, size = 0.5) +
-  geom_point(data = data_urchins, aes(y = logBareRock)) +
-  facet_wrap(~Quadrat)
-
-# Compare the models 
-parameters(fit_urchins) 
-parameters(fit_urchins_random)
 ```
+
+
 
 **Questions:**
 
 **1. Compare the output of `parameters(fit_urchins)` and the `paramaters()` output of your mixed model. How did included the random effect of `Quadrat` change the model output?** 
 
-Broadly speaking, the CI of the mixed models are `r cloze("smaller", c("smaller", "larger"))`. Corresponding, the p values are `r cloze("smaller", c("smaller", "larger"))`.
+Broadly speaking, the CI of the mixed models are ???. Corresponding, the p values are ???.
 
 **2. What does it mean then if we were to ignore `Quadrat` and not include it as a random effect?**
 
-Ignoring `Quadrat` means that we are not accounting for `r cloze("noise due to Quadrat in the data", c("normality", "non constant variance", "noise due to Quadrat in the data"))` 
+Ignoring `Quadrat` means that we are not accounting for ??? 
 
 # Random Slopes
 
@@ -387,12 +411,18 @@ In this example, we will use the [**Biomass And Allometry Database (BAAD)**](htt
 
 To access the data, we will use the `baad.data` R package. To install this, you will need to uncomment and run the following code.
 
+
+
 ```{r}
 # remotes::install_github("richfitz/datastorr")
 # remotes::install_github("traitecoevo/baad.data")
 ```
 
+
+
 **Download the data**
+
+
 
 ```{r, message=FALSE}
 # Load library
@@ -404,6 +434,8 @@ baad <- baad_data("1.0.0") # This will take a few minutes
 # Look at variable names of the data
 names(baad)
 ```
+
+
 
 Let's look at the relationship between **tree height** and **leaf area**.
 
@@ -420,6 +452,8 @@ The following code prepares the data by:
 - remove rows with missing values for height and leaf area
 - added columns for the log10 of height and leaf area.
 
+
+
 ```{r}
 # Dataset assembly
 data_trees <- baad$data |>
@@ -430,7 +464,11 @@ data_trees <- baad$data |>
 data_trees 
 ```
 
+
+
 Our first thought is to fit a **simple linear model** to the data. This model **assumes that the relationship between height and leaf area is the same for all species and locations**.
+
+
 
 ```{r}
 fit_simple_raw <- glmmTMB(area_leaf_m2 ~ height_m, data = data_trees)
@@ -438,7 +476,11 @@ fit_simple_raw <- glmmTMB(area_leaf_m2 ~ height_m, data = data_trees)
 check_model(fit_simple_raw)
 ```
 
+
+
 However, the data is not well described by a simple linear model. Let's try a **double log10 transformation** to see if that helps.
+
+
 
 ```{r}
 data_trees <- data_trees |> 
@@ -450,9 +492,13 @@ fit_simple <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m, data = data_trees)
 check_model(fit_simple) # THis might take a few seconds
 ```
 
+
+
 Not perfect, but much better and good enough!
 
 Let's plot the data and the means estimated by this model: 
+
+
 
 ```{r}
 # Estimate means 
@@ -467,6 +513,8 @@ ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2)) +
        y = "Log10 Leaf area (m^2)")
 ```
 
+
+
 What do you see? 
 
 - the line provides a good fit to the data
@@ -474,9 +522,13 @@ What do you see?
 - however...there's a lot of **unexplained variation** in the data (above and below the line). So any given tree is likely could have a leaf area that is quite different from the mean.
 
 In fact, for a tree of 10m tall plant (log10 = 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
+
+
 ```{r}
 10^c(0.2, 2.4)
 ```
+
+
 
 This is a huge range! Surely we can do better!
 
@@ -484,10 +536,14 @@ This is a huge range! Surely we can do better!
 
 We could try to improve the model by **allowing the relationship between height and leaf area to vary between species**. We can hypothesise that **some of the variation in the relationship** between height and leaf area **is due to differences between species**. We can account for this by fitting a model with a **random intercept AND slope** for species.
 
+
+
 ```{r}
 # Fit a model with random slopes for species 
 fit_rs <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m + (1 + log10_height_m | species), data = data_trees)
 ```
+
+
 
 In the code above, the model terms:
 
@@ -495,6 +551,8 @@ In the code above, the model terms:
 - The `| species` term specifies that the **random effects** are occurring at the species level.
 
 > Let's plot this mixed model fit and compare it to our first simple model (without any random effects).
+
+
 
 ```{r}
 # Estimate the predictiosn for the model for height x species
@@ -516,6 +574,8 @@ ggplot(data_trees, aes(x = log10_height_m, y = log10_area_leaf_m2, color = speci
        y = "Log10 Leaf area (m^2)")
 ```
 
+
+
 Wow! The model with random slopes for species provides a much better fit to the data.
 
 - Each coloured line gives the **relationship between height and leaf area for a different species**. 
@@ -526,9 +586,13 @@ The mixed model is able to capture the variation in the relationship between hei
 
 We can assess whether the variation in the data due to the random effect is signifcant by comparing the mixed model to the simple model. We can do this using an `anova()` test , which will tell us if the random slopes model is significantly better than the simple model. It is!
 
+
+
 ```{r}
 anova(fit_simple, fit_rs)
 ```
+
+
 
 (If we wanted, we could also test whether the random slopes model is significantly better than a model with just a random intercept for species. This would tell us if the relationship between height and leaf area varies between species, as well as the average leaf area for each species.)
 
@@ -545,10 +609,14 @@ We can quantify these via the **R^2^ of models, with and without the random effe
 > Recall that R^2^ describes the proportion of variation explained by our model and ranges between 0 - 1. An R^2^ value of 1 means our model describes the variation in the data perfectly. 
 
 Let's get some numbers first using the `performance()` function
+
+
 ```{r}
 # Calculate the r2 values
 performance(fit_rs)
 ```
+
+
 
 In the output:
 
@@ -570,10 +638,14 @@ Finally, let's compare the slope estimates and predictions from the random slope
 
 **Slopes**
 
+
+
 ```{r}
 parameters(fit_simple)
 parameters(fit_rs)
 ```
+
+
 
 - The simple model gives a slope of **1.71**, the mixed model gives a slope of **1.79**. 
 - The confidence intervals for the **simple model are much narrower** than the random slopes model. And they don't overlap the slope estimate from the mixed model model! 
@@ -581,6 +653,8 @@ parameters(fit_rs)
 **Predictions**
 
 Let's use both these models to estimate the leaf area of a tree that is 10m tall. We need to create some placeholder data for `estimate_expectation()` so it can make this prediction. 
+
+
 
 ```{r}
 # Create a dataset to pass in to predict output
@@ -591,6 +665,8 @@ data_pred <- tibble(
 estimate_expectation(fit_simple, data = data_pred)
 estimate_expectation(fit_rs, data = data_pred)
 ```
+
+
 
 - The simple model is predicting a higher value with very narrow confidence intervals. 
 
@@ -631,6 +707,8 @@ Your task is to fit a model between stem diameter and biomass, with random slope
 
 Here's the code to get you started with the data:
 
+
+
 ```{r}
 # dataset assembly
 data_trees <- baad$data |>
@@ -645,59 +723,32 @@ data_trees <- baad$data |>
 data_trees
 ```
 
+
+
 Now give it a go! Unlike the example above, you don't need to fit the simple model first. Just go straight to fitting the mixed model with random slopes for species model. 
 
-```{r solution}
-# Fit a model with random slopes for species and location
-fit_stem <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m + (1 + log10_stem_diameter_m | species), data = data_trees, REML = F)
 
-# Estimate means
-means_all <- estimate_expectation(fit_stem, by = c("log10_stem_diameter_m"))
-means_sp <- estimate_expectation(fit_stem)
 
-# Plot results
-ggplot(data_trees, aes(x = log10_stem_diameter_m, y = log10_biomass_kg, color = species, group = species)) +
-  geom_point(alpha = 0.3, show.legend = FALSE) +
-  geom_line(data = means_sp, aes(y = Predicted), alpha = 0.5, linewidth = 1) +
-  geom_line(data = means_all, aes(y = Predicted, group = 1), alpha = 1, linewidth = 2) +
-  theme_minimal() +
-  theme(legend.position = "none") 
+```{r}
 
-# Look at model output
-parameters(fit_stem)
-
-fit_simple <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m, data = data_trees)
-
-## Estimate biomass of a tree with a stem diameter of 20cm
-data_pred_stem <- tibble(
-  log10_stem_diameter_m = log10(0.2))
-
-# Make model prediction for a tree that is 10m tall and back transforming prediction
-estimate_expectation(fit_stem, data = data_pred_stem) |> mutate(biomass_kg = 10^Predicted)
-
-# Fit a simpler model to compare (optional but insightful)
-fit_stem_simple <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m, data = data_trees)
-
-# Outputs of simple model
-parameters(fit_stem_simple)
-performance(fit_stem_simple)
-
-estimate_expectation(fit_stem_simple, data = data_pred_stem)|> mutate(biomass_kg = 10^Predicted)
 ```
+
+
 
 **Questions:**
 
-**1. What is the rate at which `log10_biomass` increases with `log10_stem_diameter_m`?** `r cloze("2.49", c("1.03", "2.49", "3.36"))`
+**1. What is the rate at which `log10_biomass` increases with `log10_stem_diameter_m`?** ???
 
 **2. What does the conditional R^2^ capture?**
 
-the `r cloze("variation explained by the fixed and random effects", c("variation explained by the fixed effects", "variation explained by the random effects", "variation explained by the fixed and random effects"))`
+the ???
 
 **3. How much variation is explained by only the random effects in your model? _Hint: Using performance(), compare the marginal and conditional R^2^_**
 
-`r cloze("6.4%", c("6.4%", "91.7%", "98.1%"))`
+???
 
 **4. What is the `log10_biomass` of a tree with a stem diameter of 20cm e.g `log10_stem_diameter_m = log10(0.2)`?**
 
-`r cloze("41.11", c("1.03", "1.61", "41.11"))`
+???
+
 
