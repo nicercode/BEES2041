@@ -1,0 +1,118 @@
+---
+title: "Making plots for linear rgression ppt"
+format: html
+---
+
+
+
+# Setup
+
+Path
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Set the working directory
+rprojroot::has_file("BEES2041-code.Rproj") |>
+  rprojroot::find_root() |>
+  file.path("week 5/Wk5-slides") |>
+  setwd()
+```
+
+Libraries
+```{r}
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+library(plotly)
+
+
+# Figure styling - function to set my own theme for the plots
+
+styling <- function(p, background = "white") {
+  theme_classic() +
+    theme(
+      panel.background = element_rect(fill = background, color = NA), # Panel background
+      plot.background = element_rect(fill = background, color = NA), # Plot background
+      axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+      axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+      axis.text = element_blank(), # Axis tick labels
+      axis.title = element_text(size = 18), # Axis titles
+      plot.title = element_text(size = 18, face = "bold") # Plot title
+    )
+}
+```
+
+# Checks for linear regression
+
+Generate data, same as week 3 opening lecture
+
+```{r}
+## Generate data for simple example on intro slides
+
+generate_data_reg_2D <- function(n, B0, B1, B2, B1B2,sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x1 = runif(n, 0, 4),
+    x2 = runif(n, 0, 4),
+    y_hat = B0 + B1 * x1 + B2 * x2 + B1B2 * x2 * x1,
+    err = rnorm(n, sd = sigma),
+    y = y_hat + err,
+    error = lab
+  )
+}
+
+n <- 40
+B0 <- 2
+B1 <- 1.5
+B2 <- 0.5
+B1B2 <- -0.5
+
+# plots generated with seed = 110
+data_gen_1_5 <- generate_data_reg_2D(40, B0, B1, B2, B1B2, 1.1, "med", 110) |>
+  mutate(y_bar = mean(y))
+
+data_grid <- expand_grid(
+  x1 = seq(0, 4, length.out = 50),
+  x2 = seq(0, 4, length.out = 100)
+) |>
+  mutate(y_hat = B0 + B1 * x1 + B2 * x2 + B1B2 * x2 * x1)
+
+
+fit <- lm(y ~ x1 * x2, data = data_gen_1_5)
+
+# Create 3D plot with points from y and using surface from y_bar
+p <-
+  plot_ly(data_gen_1_5, x = ~x1, y = ~x2, z = ~y, type = "scatter3d", mode = "markers", marker = list(color = "red")) |>
+  add_trace(
+    z = matrix(data_grid$y_hat, nrow = length(unique(data_grid$x2)), ncol = length(unique(data_grid$x1))),
+    x = unique(data_grid$x1),
+    y = unique(data_grid$x2),
+    type = "surface",
+    opacity = 0.8
+  ) |>
+  layout(scene = list(
+    xaxis = list(title = "x1"),
+    yaxis = list(title = "x2"),
+    zaxis = list(title = "y")
+  ))
+
+p
+```
+
+```{r}
+
+
+# basic scatter
+p1 <- data_gen_1_5 |>
+  mutate(y_hat_lm = coef(fit)[1] + coef(fit)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  geom_smooth(method = "lm", se = FALSE, col = "#eb8240") +
+  styling()
+
+p1
+```
+
+
+## 
