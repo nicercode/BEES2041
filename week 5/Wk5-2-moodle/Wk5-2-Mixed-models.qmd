@@ -29,38 +29,37 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
   )
 ```
 
-<!-- # Outline -->
-<!-- - Fixed and Random effects -->
-<!-- - How to construct a model forumula -->
-<!--   - varying intercepts -->
-<!--   - varying slopes -->
-<!-- - How to choose to suit question -->
-
-
 # Introduction to Mixed Models
 
 ![Bringing all your R skills together!](images/witches.png){width=60%}
 
-## Introduction
+Hey folks! In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both fixed effects — the overall trends we're interested in — and random effects — the variation due to these groupings.
 
-Hey folks! In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** (also known as linear mixed-effects models) help us handle this complexity by explicitly modeling both fixed effects — the overall trends we're interested in — and random effects — the variation due to these groupings.
+## Fixed and Random effects
 
-Today, we will go through  XXXX: 
+In the previous pracs, we have been working with **fixed effects**. These are the variables that we are interested in and whose effects are relevant across the entire population. For example, in the `urchins` dataset, we were interested in the effect of `Treatment` on `logBareRock`.
 
-> 
+A **random effect** is: 
+
+- categorical
+- has a large number of levels but,
+- only a random subsample of levels is included in your design and, 
+- you want to make inference in general and not only for the levels you observed.
+
+You will need to use mixed effect models if you have a random factor in your experimental design.
 
 
 ## Key learning objectives
 
 Our learning objectives today are:
 
-- **understand** how different predictor variable types can influence your choice of analysis 
-- **understand** difference between additive and interactive effects
-- **run** a multiple linear regression in R using `lm()`
-- **test** for effects of your predictor variables using `anova()`
-- **interpret** the output of your multiple regression using `parameters()`, `estimate_means()`, `estimate_contrasts()`
-- **extract** the mean and confidence interval for the slope and intercept of the regression line
-- **plot** the data and the regression line with confidence intervals
+<!-- - **understand** how different predictor variable types can influence your choice of analysis  -->
+<!-- - **understand** difference between additive and interactive effects -->
+<!-- - **run** a multiple linear regression in R using `lm()` -->
+<!-- - **test** for effects of your predictor variables using `anova()` -->
+<!-- - **interpret** the output of your multiple regression using `parameters()`, `estimate_means()`, `estimate_contrasts()` -->
+<!-- - **extract** the mean and confidence interval for the slope and intercept of the regression line -->
+<!-- - **plot** the data and the regression line with confidence intervals -->
 
 Let’s dive in! 🚀 
 
@@ -81,7 +80,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` and `easystats` we need for this prac.
+> We will be using a new package today called `glmmTMB`. Uncomment the last line in the next code block to install it in your own devices.
 
 ```{r, eval=FALSE}
 # install.packages("tidyverse")
@@ -98,21 +97,6 @@ library(easystats)
 library(patchwork)
 library(glmmTMB)
 ```
-
-# Introduction
-
-## Fixed and Random effects
-
-In the previous pracs, we have been working with **fixed effects**. These are the variables that we are interested in and whose effects are relevant across the entire population. For example, in the `urchins` dataset, we were interested in the effect of `Treatment` on `logBareRock`.
-
-A **random effect** is: 
-
-- categorical
-- has a large number of levels but,
-- only a random subsample of levels is included in your design and, 
-- you want to make inference in general and not only for the levels you observed.
-
-You will need to use mixed effect models if you have a random factor in your experimental design.
 
 ## Worked Example: Estuaries
 
@@ -190,14 +174,15 @@ means_by_mod_estuaries |>
 Here we are plotting our raw data across different estuaries and facetting the plot by our variable of interest `Modification`.
 
 ```{r}
-ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification)) +
+ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification, fill = Modification)) +
+  geom_violin(alpha = 0.2) +
+  geom_jitter(width = 0.3, alpha = 0.5) + 
   geom_errorbar(data = means_by_mod_estuaries, 
                 aes(x = Estuary, y = Predicted, ymin = CI_low, ymax = CI_high),
                 width = 0.15,
                 col = "azure4") +
-  geom_violin(fill = NA) +
-  geom_jitter(width = 0.3, alpha = 0.5) + 
   geom_point(data = means_by_mod_estuaries, aes(y = Predicted), colour = "azure4", size = 2) + 
+  scale_fill_manual(values = c("burlywood4", "cadetblue")) + 
   scale_color_manual(values = c("burlywood4", "cadetblue")) + 
   theme_classic() + 
   facet_grid(~Modification, scales = "free") + 
@@ -207,7 +192,7 @@ ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification)) +
 
 There are three things that might be new to you in this code:
 
-- `scale_color_manual(values = c("burlywood4", "cadetblue"))` allows me to see the colours manually for my plot
+- `scale_color/fill_manual(values = c("burlywood4", "cadetblue"))` allows me to set the colour and fill manually for my plot
 - `facet_grid(~Modification, scales = "free")` is very similar to `facet_wrap()` but the only difference it allows the x and y axes to differ in values. This is useful here because we didn't sample at the same estuaries for both `Modified` and `Pristine` sites. You can replace `facet_grid()` with `facet_wrap()` and see for yourself! 
 - `theme(legend.position = "none")` hides the legend. The legend here is redundant to the facet title so I decided to ditch it. 
 
@@ -234,7 +219,7 @@ The `Intercept` represents the `r cloze("mean", c("mean","min","max"))` `Total` 
 
 The `Modification [Pristine]` coefficient is `r cloze("-14.47", c("-14.47", "40.97", "7.42"))`. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is `r cloze("negative", c("negative", "positive"))` which means the mean in `Total` is `r cloze("lower", c("higher", "lower"))` for `Pristine` sites.
 
-## Exercise Example: Urchins
+## Your turn: Urchins
 
 ![**Urchin grazing**](images/Urchins.jpg){width=60%}
 
@@ -316,48 +301,40 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
   )
 ```
 
-
-```{r}
+```{r, solution-1}
 fit_urchins_random <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
 
 check_model(fit_urchins_random)
 
-parameters(fit_urchins_random)
-
-anova(fit_urchins_random) # doesn't work
-
-# estimate_contrasts(fit_urchins, contrast = "Treatment", by = "Day") |>
-#   filter(Day == 0)
-# 
-# estimate_contrasts(fit_urchins, contrast = "Treatment", by = "Day") |>
-#   filter(Day == 210)   
-
-means <- estimate_expectation(fit_urchins_random, by = c("Day", "Treatment"))
-means2 <- estimate_expectation(fit_urchins_random)
+means_by_day_treat <- estimate_expectation(fit_urchins_random, by = c("Day", "Treatment"))
+means_urchins_all <- estimate_expectation(fit_urchins_random)
 
 p1 <-
-  ggplot(means2, aes(x = Day, y = Predicted, color = Treatment)) +
+  ggplot(means_urchins_all, aes(x = Day, y = Predicted, color = Treatment)) +
   geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
   labs(
     x = "Day",
     y = "log(BareRock)"
   ) +
-  theme_minimal() +
-  geom_line(data = means, alpha = 1, linewidth = 2)
+  theme_minimal() 
 
-p1
+p1 +
+  geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2)
 
 # Plot for each treatmeant
 p1 +
+  geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2) +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Treatment)
 
 # Plot for each Quadrat
 p1 +
+  geom_line(alpha = 0.5, size = 0.5) +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Quadrat)
 
-parameters(fit_urchins)
+parameters(fit_urchins) 
+
 parameters(fit_urchins_random)
 
 ## Ignoring qudrat adds to noise
@@ -366,35 +343,39 @@ parameters(fit_urchins_random)
 
 **Questions:**
 
-*1.*
+**1. Compare the output of `parameters(fit_urchins)` and the paramaters()` output of your mixed model. How did included the random effect of `Quadrat` change the model output?** 
 
-*2.*
+Broadly speaking, the CI of the mixed models are `r cloze("smaller", c("smaller", "larger"))`. Corresponding, the p values are `r cloze("smaller", c("smaller", "larger"))`.
 
-*3.*
+**2. What does it mean then if we were to ignore `Quadrat` and not include it as a random effect?**
+
+Ignoring `Quadrat` means that we are not accounting for `r cloze("noise due to Quadrat in the data", c("normality", "non constant variance", "noise due to Quadrat in the data"))` 
 
 # Random Slopes
 
-## Example: Tree height vs leaf area
+## Worked Example: Tree height vs leaf area
 
 In this example, we will look at the relationship between parts of the tree height and leaf area. We will use the `baad` dataset, which contains data on plant structure compiled by Data Dan, using studies from all around the world. 
 
 To access the data, we will use the `baad.data` package. To install this, you will need to run the following code:
 
-Install relevant packages:
+**Install relevant packages**
+
 ```{r}
-#devtools::install_github("richfitz/datastorr")
-#devtools::install_github("traitecoevo/baad.data")
+# devtools::install_github("richfitz/datastorr")
+# devtools::install_github("traitecoevo/baad.data")
 ```
 
-Download the data
-```{r}
+**Download the data**
+
+```{r, message=FALSE}
 library(baad.data)
-baad <- baad_data("1.0.0")
+baad <- baad_data("1.0.0") # This will take a few minutes
 
 names(baad)
 ```
 
-In  the example, we will look at the relationship between tree height and leaf area. Data Dan has asked you to estimate how much the total leaf area of the tree increases with it's height. measuring leaf area is hard, but measuring height is relatively easy. Dan wants to report on how much more leaf area there will be if we let the forests in an urban area grow taller and older.
+Inthe example, we will look at the relationship between tree height and leaf area. Data Dan has asked you to estimate how much the total leaf area of the tree increases with it's height. measuring leaf area is hard, but measuring height is relatively easy. Dan wants to report on how much more leaf area there will be if we let the forests in an urban area grow taller and older.
 
 The data in the BAAD dataset contains information on the sizes of tree parts for a number of species at different locations around the world. The data comes from a number of studies. The following code reshape the data so that it is in the form of a tibble, with columns for the study name, species, location, height, and leaf area. We've also 
 
@@ -578,7 +559,7 @@ data_trees <- baad$data |>
 data_trees
 ```
 
-Now get to work! Unlike the example above, you don't need to fit the simple model first. Just go straight to fitting the model with random slopes model. 
+Now give it a go! Unlike the example above, you don't need to fit the simple model first. Just go straight to fitting the mixed model with random slopes model. 
 
 ```{r solution}
 
@@ -616,6 +597,3 @@ Questions:
 1. What is the rate at which log10_biomass increases with log10_stem_diameter_m? 
 2. What is the log10_biomass of a tree with a stem diameter of 20cm?
 
-
-
-## Fonti Lizards?
