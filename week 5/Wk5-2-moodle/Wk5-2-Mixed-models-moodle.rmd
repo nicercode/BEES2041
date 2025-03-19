@@ -139,6 +139,8 @@ Random factors are hard to get your head around, and are best explained with exa
 
 Here the estuaries are the **random effect**, as there are **a large number of possible estuaries**, and we only sampled a few from the wider population of them, but we would like to make inference about estuaries in general.
 
+**Load data**
+
 Let's read in the dataset first
 
 ```{r}
@@ -146,6 +148,8 @@ data_estuaries <- read_csv("data/Estuaries.csv")
 
 data_estuaries
 ```
+
+**Summarise data**
 
 A handy way to understand the structure of your study design is to create a table of counts. Here we are tabulating `Modification` by `Estuary` so we have a breakdown of how many samples we have in each category. 
 
@@ -354,46 +358,8 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 
 Now fit the model with the random effect of `Quadrat`. 
 
-```{r, solution1}
-# Fit model
-fit_urchins_random <- glmmTMB(logBareRock ~ Day + Treatment + Day:Treatment +  (1 | Quadrat), data = data_urchins)
+```{r}
 
-# Check model assumptions
-check_model(fit_urchins_random)
-
-# Compute means
-means_by_day_treat <- estimate_expectation(fit_urchins_random, by = c("Day", "Treatment"))
-means_urchins_all <- estimate_expectation(fit_urchins_random)
-
-# Fit a line for each quadrat
-p1 <-
-  ggplot(means_urchins_all, aes(x = Day, y = Predicted, color = Treatment)) +
-  geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
-  labs(
-    x = "Day",
-    y = "log(BareRock)"
-  ) +
-  theme_minimal() 
-
-# Add in the overall line
-p1 +
-  geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2)
-
-# Plot for each treatmeant
-p1 +
-  geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2) +
-  geom_point(data = data_urchins, aes(y = logBareRock)) +
-  facet_wrap(~Treatment)
-
-# Plot for each Quadrat
-p1 +
-  geom_line(alpha = 0.5, size = 0.5) +
-  geom_point(data = data_urchins, aes(y = logBareRock)) +
-  facet_wrap(~Quadrat)
-
-# Compare the models 
-parameters(fit_urchins) 
-parameters(fit_urchins_random)
 ```
 
 **Questions:**
@@ -414,7 +380,7 @@ Ignoring `Quadrat` means that we are not accounting for `r cloze("noise due to Q
 
 
 
-![](images/random-effects.png){wdith=60%}  <br>
+![](images/random-effects.png){width=60%}  <br>
 
 A **random slope** allows the effect of a predictor variable to vary across groups in your data.
 
