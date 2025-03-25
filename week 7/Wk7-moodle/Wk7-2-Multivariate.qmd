@@ -3,8 +3,9 @@ title: "Week 7-1 Multivariate methods"
 format: 
   html:    
     self-contained: true
+editor_options: 
+  chunk_output_type: console
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -19,32 +20,34 @@ rprojroot::has_file("BEES2041-code.Rproj") |>
 library(moodlequiz)
 ```
 
-# Intro
-
 ## Introduction
 
 In this practical, we will continue our look at methods to visualise complex, multivariate data sets - ones where more than one response variable has been measured from each replicate sample. You will get a brief introduction to cluster diagrams. Then, we revisit some of the issues that need deciding on before making these plots (transformations and choices of similarity measures).
 
 Then, we will learn how to run a formal hypothesis test on multivariate data (permutational multivariate analysis of variance). This will be used to contrast species composition in and out of rock pools from the class data set collected at Maroubra.
 
-![](images/nature14140-sf2.jpg){width=70%}
+![](images/nature14140-sf2.jpg){width="70%"}
 
 For some questions, we will be using the data sets from last practical. To avoid a lot of work, add today's code to the notebook you created for the first multivariate practical rather than make a new one. You can then easily re-run previous code to import data and give you some of the objects in R that you will need for today's work.
 
-
 ## Key learning objectives
 
-Our learning objective today are:
+At the end of both multivariate practicals, you should be able to:
 
-- 
+-   Calculate a variety of similarity/dissimilarity coefficients to represent the differences among samples (or variables) in multivariate data sets
+-   Create and interpret an multi-dimenional scaling (MDS) plot
+-   Create and interpret cluster diagrams to summarise the relationships among samples or variables
+-   Understand the logic behind permutational MANOVA
+-   Define a principal component
+-   Interpret an ordination from a principal components analysis (PCA)
 
-Let’s dive in! 🚀 
+Let’s dive in! 🚀
 
 ## Setting up: Packages
 
-> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` we need for this prac.
+For some questions, we will be using the data sets from last practical. To avoid a lot of work, add today's code to the notebook you created for the first multivariate practical rather than make a new one. You can then easily re-run previous code to import data and give you some of the objects in R that you will need for today's work.
 
-We'll also be using a new package, called `vegan`, which is XXX
+We'll again be using the package, called `vegan`, so ensure this is loaded.
 
 ```{r, eval=FALSE}
 install.packages("dplyr")
@@ -53,8 +56,6 @@ install.packages("ggplot2")
 install.packages("vegan")
 ```
 
-> Remember to load the packages into R to use em!
-
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(dplyr)
 library(readr)
@@ -62,38 +63,325 @@ library(ggplot2)
 library(vegan)
 ```
 
-# Single hask for major setcions
-
-## Use a double hash for each question
-
-How to include an image
-
-![](images/Beach.jpeg){width=70%}
-
-This is how you... 
+ 
 ```{r}
-# Code you want to display
+HeavyMetals <- read.csv(file = "data/HeavyMetals.csv", header = TRUE) 
+HeavyMetals_vars <- select(HeavyMetals, -Site)
+HeavyMetals.sq <- sqrt(HeavyMetals_vars)
+Nutrients <- read.csv(file = "data/NutrientEnrichment.csv", header = TRUE)
+Nutrients_vars <- select(Nutrients, contains("Weed"))
+Nutrients.sq <- sqrt(Nutrients_vars)
 ```
 
-Example of a cloze question 
+# 5) Heavy metals in sediments (cluster analyses)
 
-The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
+![](images/harbour.jpg){width="70%"}
 
+Previously, you explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. To visualise the similarity among sites with a cluster diagram, we can use the `hclust` function.
 
-```{r solution1}
-# label chunk solution1,2,3, etc with solutions, and code you want to remove
+To do this for the heavy metal data set, we would use:
 
+```{r}
+HeavyMetals.cluster <- hclust(dist(HeavyMetals.sq, method = "euclidean"), method = "single")
 ```
 
-## Title of next question
+where HeavyMetal.sq is the square root transformed data we created earlier. `method = "euclidean"` in the `dist` function specifies the choice of similarity coefficient and `method = "single"` specifies the choice of linkage method.
 
+Finally plot the object that was created by the `hclust` function.
 
-Example of a cloze question 
-
-The p-value is `r cloze("0.011", c("0.011", "0.1", "11"))`. This indicates there is relatively `r cloze("low", c("low", "high"))` chance that there is no relationship between the presence of bacteria _H. influenzae_ and weeks.
-
-```{r solution1}
-# label chunk solution1,2,3, etc with solutions, and code you want to remove
-
+```{r}
+plot(HeavyMetals.cluster)
 ```
+
+We can make this a bit neater by plotting it as a dendrogram with all the samples lined up along the bottom.
+
+```{r}
+plot(as.dendrogram(HeavyMetals.cluster))
+```
+
+##5a) Which two samples (i.e., sampling sites) are most similar to one another `r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
+
+##5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons. {type=essay}
+
+We can also use a cluster diagram to display the relationships among variables.
+
+Methods as above except you need to make the heavy metals as rows and the stations as columns before running the cluster analysis (use the transpose function, `t`).
+
+```{r}
+HeavyMetals.cluster.trans <- hclust(dist(t(HeavyMetals_vars), method = "euclidean"), method = "single")
+
+plot(as.dendrogram(HeavyMetals.cluster.trans))
+```
+
+## 5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance? `r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
+
+# 6) Choosing whether to transform or standardise the data
+
+Multivariate data sets are often transformed prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but to vary the relative importance of variables that may be measured on different scales.
+
+In the heavy metals data set, the concentration of the metals vary widely with manganese having values up to 2470 while cobalt has values no higher than 15. Consequently, the similarity between samples using Euclidean distance will be very strongly influenced by manganese values and those metals with low concentrations will have little influence.
+
+If you wanted to create a plot to explore the composition of contaminants, not just their absolute concentrations, then it is a good idea to standardise the variables before creating any cluster diagrams. There are several ways to do this (e.g., divide by maximum value, divide by mean etc).
+
+Here, we will standardise each metal variable to a new version with a mean of zero and variance of 1. `decostand` comes from the package vegan, so remember to load that with `library(vegan)`.
+
+```{r}
+HeavyMetals.standardised <- decostand(HeavyMetals_vars, method = "standardize")
+```
+
+Any plots we create with this standardised data will have all metals having a similar influence on the similarity among samples and not be strongly influenced by just those variables with the highest concentrations.
+
+With the methods from above, create a cluster diagram to display the relationships among sites based on standardised metal concentrations.
+
+```{r}
+plot(as.dendrogram(hclust(dist(HeavyMetals.standardised, method = "euclidean"), method = "single")))
+```
+
+## 6a) Make some notes on how the relationships between sites are altered by standardising the variables. {type="essay"}
+
+For contrasts of species composition in community data sets (i.e., the abundance of many species in many samples) it is common to square root or log transform the abundance data prior to multivariate analyses. A more extreme standardisation is to convert the abundance data to presence/absence (i.e, 0 or 1) only.
+
+# 7) Nutrient enrichment experiment (multivariate hypothesis testing)
+
+![](images/53711279_1967294661.png){width="70%"}
+
+So far, we have been making plots to visualise differences among samples with multiple variables measured per sample, but have not run any formal statistical tests to determine whether any differences we found are likely to be due to chance sampling or not.
+
+There is a whole world of multivariate statistical tests, but we will show you just a couple to demonstrate how you can test hypotheses with multivariate data.
+
+In the nutrient enrichment experiment, we had three treatments (control, low and high nutrients) and 12 response variables (the abundance of each weed species). If we had measured just one variable, we would use a linear model (analysis of variance) to contrast that variable among treatments. With many variables measured, we can use multivariate analyses of variance based on the similarity matrix.
+
+Instead of partitioning the variation in the actual values of the variables (i.e., abundance of our each of the weed species), this analysis partitions the variation in the values of the similarity matrix among and within treatment groups.
+
+A good way to think of this is that if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level (i.e., within group similarities higher than among-group similarities).
+
+We will use the function `adonis2` in vegan. With species-abundance data as these, we will use the Bray-Curtis index to represent the similarity between samples:
+
+```{r}
+adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
+```
+
+Like with the previous model formulae you have seen in R, the dependent variables are left of the `~` symbol, and the independent variable are on the right (i.e. `Y ~ X` is aimed to predict Y from X).
+
+The output should look pretty familiar to you - very similar to an ANOVA table.
+
+## 7a) Is there evidence to reject the null hypothesis? 
+
+`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1","no, the F value is greater than 9"))`
+
+There are some important differences from the analyses of variance you ran with univariate data (one dependent variable).
+
+-   the analysis ran on similarities among samples, not the actual values of the original variables
+
+-   the probability of the test statistic produced (pseudo-F) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by permutation. From 999 permutations of the original data versus the treatment labels, it calculates how often a value of pseudo-F as large as yours would occur.
+
+We can save the output from `adonis2` and use a density plot to see just how likely our value of pseudo-F was.
+
+```{r}
+Nutrients_test <- adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
+
+densityplot(permustats(Nutrients_test))
+```
+
+This produces a frequency histogram of pseudo-F obtained from the 999 permutations of the raw data. This is best viewed as what would happen if the null hypothesis was true. The value you obtained is noted with the vertical black line.
+
+You should have output that shows that this null hypothesis is rejected - there is some difference in weed species composition among all three treatments. A next step is to try and understand which treatment differed from which. For various reasons, unlike some commercial software packages, the authors of vegan do not provide code for doing pairwise tests.
+
+A work around is to run separate pairwise tests using subsets of data with only two levels of a factor. The following code creates subsets of rows for each comparison (note that `!=` means “not equals to”“) and runs the permutational MANOVA again with just the rows with the weed variables.
+
+Remember that `filter` is the function for subsetting rows, and `select` is the function for subsetting columns - both from dplyr (need to load that package if you haven't for your current session).
+
+```{r}
+Nutrients_ControlvsLow <- filter(Nutrients, Treatment != "High")
+Nutrients_ControlvsLow_vars <- select(Nutrients_ControlvsLow, contains("Weed"))
+
+adonis2(Nutrients_ControlvsLow_vars ~ Nutrients_ControlvsLow$Treatment, permutations = 999, method = "bray")
+```
+
+```{r}
+Nutrients_ControlvsHigh <- filter(Nutrients, Treatment != "Low")
+Nutrients_ControlvsHigh_vars <- select(Nutrients_ControlvsHigh, contains("Weed"))
+
+adonis2(Nutrients_ControlvsHigh_vars ~ Nutrients_ControlvsHigh$Treatment, permutations = 999, method = "bray")
+```
+
+```{r}
+Nutrients_LowvsHigh <- filter(Nutrients, Treatment != "Control")
+Nutrients_LowvsHigh_vars <- select(Nutrients_LowvsHigh, contains("Weed"))
+
+adonis2(Nutrients_LowvsHigh_vars ~ Nutrients_LowvsHigh$Treatment, permutations = 999, method = "bray")
+```
+
+This approach has the problem of increasing the the risk of type 1 error with increasing numbers of tests being run. The simplest correction for this is called the Bonferonni correction, where the significance level is adjusted by the number of hypotheses being tested. In this example, you would multiply each P value by three before interpreting which comparisons are significant (in other words, α for each test becomes 0.05/3).
+
+## 7a) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments?
+
+Use the pair-wise tests to establish which treatments differ from which. {type="essay"}
+
+# 8) Species composition in rock pools (multivariate hypothesis testing)
+
+![](images/rock_pool.PNG){width="70%"}
+
+For your practical report, you want to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a permutational multivariate analysis of variance for this, modifying code that you just used for the nutrient enrichment experiment.
+
+# 9) Advanced statistics content!
+
+There is considerable current debate in the statistical literature about the best ways to analyse multivariate data sets like the one you just analysed. Analyses that partition variation in the similarity metrics have been criticised for:
+
+-   not accounting for the inevitable problems with homogeneity of variance that are present in environmental data sets. This means that highly abundant species have a very large influence.
+
+-   lacking an underlying model (i.e. you are not estimating any parameters from your data). This means that there aren't tests for interactions in a traditional sense, and normal diagnostics (like residual vs fitted plots) are not available. This is a problem because you can't check whether any transformations have actually improved your data.
+
+Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.edu.au/) is focussed on developing methods to better analyse these sorts of data, and they have released an R package 'mvabund' that uses model-based approaches to analyse multivariate data sets. David has even promoted his package with a [video](https://youtu.be/KnPkH6d89l4) drawing on the considerable talents of 80's pop star Rick Astley!
+
+![](images/rick-astley.jpg){width="150"} ![](images/mvabund_hex.png){width="150"}
+
+
+# 10) Principal components analysis
+
+PCA is a commonly used method to visualise data with many variables. We will use it to analyse differences in the shape of leaves.
+
+A plant physiologist is attempting to quantify differences in leaf shape between two species of tree. She recorded the following five measurements from ten leaves of each species:
+
+![](images/leaf.png)
+
+Read in the data from “Leafshape.csv”:
+
+```{r}
+Leaf_shape <- read.csv(file = "data/Leafshape.csv", header = TRUE)
+```
+
+First, have a look at the relationships among all five variables. Select just the columns with the length data then use the `pairs` function to make a series of scatter plots.
+
+```{r}
+Leaf_shape_vars <- select(Leaf_shape, -Species)
+
+pairs(Leaf_shape_vars) 
+```
+
+These relationships among variables can also be summarised numerically, by calculating the similarity matrix using the Pearson correlation coefficient.
+
+Check the correlations between the all five leaf measurements.
+
+```{r}
+cor(Leaf_shape_vars)
+```
+
+We obviously can’t plot these data in five dimensions, but if you look at just three of the five variables, you can get a sense of what PCA is trying to do - fit a new X-Y plane as close as possible to all points in 5 dimensional space.
+
+![](images/Test2.gif)
+
+## 9a) What makes this data set particularly suitable for PCA? `r cloze("there are multiple variables that are correlated with each other", c("there are multiple variables that are correlated with each other","there are lots of replicate samples","there are multiple variables measured","there two groups of samples that we want to contrast"))`
+
+To conduct a principal components analysis on the leaf data, we can use the `princomp` function in base stats.
+
+```{r}
+leaf.pca <- princomp(Leaf_shape_vars, cor = FALSE)
+```
+
+`cor. = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on the same scale. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
+
+Principal components analysis produces a lot of graphical and numerical output, which can explore by further examining the object (leaf.pca) we just created.
+
+## Producing a score plot
+
+This is the ordination of all 20 leaf samples in the new two-dimensional space defined by principal component 1 and 2.
+
+```{r}
+plot(leaf.pca$scores, pch = 16)
+```
+
+You can also produce a biplot with the relationships between the original variables and the principal components overlaid on the score plot.
+
+```{r}
+biplot(leaf.pca)
+```
+
+## Understanding how much variance is explained by each component
+
+PCA is aiming to represent as much variance as possible in the first few principal components. We can check whether it is doing a good job by exploring the summary of the `leaf.pca` object.
+
+```{r}
+summary(leaf.pca)
+```
+
+
+## 9b) Enter the proportion explained by the first two principal components
+PC1 `r cloze_numerical(0.83, tolerance = 0.01)`
+PC2 `r cloze_numerical(0.22, tolerance = 0.01)`
+
+These are also visualised by a **scree plot**. Note that the Y-axis presented is not the % of variation explained.
+
+```{r}
+screeplot(leaf.pca, type = 'lines')
+```
+
+## Understanding how the original variables relate to the principal components
+
+We gain further insight into the relationships among variables and help with interpreting our plot by examining the strength of the correlations between the original variables and the principal components.
+
+These relationships can be seen in the biplot (above) but also obtained numerically by extracting the loadings from the object produced by the PCA. Note that this output does not print very small values, so the empty cells can be considered close to zero (i.e., no correlation).
+
+```{r}
+loadings(leaf.pca)
+```
+
+## 9c) Which of the original variables is most strongly correlated with principal component 1? 
+
+`r cloze("Width 1", c("Width 1", "Width 2","Length 1","Length 2","Petiole length"))`
+
+## Producing a more effective plot to visualise the data
+
+Once you understand those issues, you want to produce a plot that addresses the question first posed by the researcher. This was to distinguish the shape of leaves from two species. We can do this by colour-coding the samples on the score plot.
+
+Extract the x and y coordinates from the pca object into a data frame.
+
+```{r}
+Leaf_xy <- data.frame(leaf.pca$scores)
+```
+
+Add the labels for the two species to this data
+
+```{r}
+Leaf_xy$Species <- Leaf_shape$Species
+```
+
+Create a scatter plot with points color coded by species.
+
+```{r}
+ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) + geom_point()
+```
+
+
+## 9d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
+
+## 9e) Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B. 
+
+`r cloze("Width 1 and Width 2", c("Width 1 and Width 2", "Width 1 and Total length", "Total length and Petiole length", "Only Width 1"))`
+
+
+# 10) Heavy metals in sediments (PCA)
+
+![](images/harbour.jpg){width="70%"}
+
+Using the heavy metal data, we can compare the output from cluster analysis, principal components analysis and multidimensional scaling.
+
+Modify your previous code to conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor= FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
+
+```{r solution}
+metals.pca <- princomp(HeavyMetals_vars, cor = TRUE)
+loadings(metals.pca)
+```
+
+
+## 10a) Which variable (i.e., metal) is most strongly correlated with the values of PC1? 
+
+`r cloze("Cr", c("Cr","Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
+
+##10b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type="essay"}
+
+
+
+
+
 
