@@ -1,12 +1,21 @@
 ---
 title: "Week 7-1 Multivariate methods"
-format: 
-  html:    
-    self-contained: true
-editor_options: 
+output:
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: Week 7-1 Multivariate methods
+editor_options:
   chunk_output_type: console
-html-math-method: mathml
 ---
+
+```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+# webr counter
+source('../../R/webr-counter.R')
+library(moodlequiz)
+```
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
@@ -29,6 +38,8 @@ library(vegan)
 
 ## Introduction
 
+<h3>Introduction</h3>
+
 Multivariate analysis refers to statistical techniques used to analyse data that involves **multiple variables at once**, helping to understand **relationships among them**. For example, in ecology, multivariate methods can be used to visualise differences in **species composition** across sites 
 This week's practicals provide an introduction to some of the graphical and analytical techniques used for multivariate data sets (those with more than one dependent variable).
 
@@ -43,6 +54,8 @@ We will go over some considerations before making these plots such as **transfor
 
 ## Key learning objectives
 
+<h3>Key learning objectives</h3>
+
 At the end of today's practical, you should be able to:
 
 -   Calculate a variety of **similarity/dissimilarity coefficients** to represent the differences among samples (or variables) in multivariate data sets
@@ -53,6 +66,8 @@ At the end of today's practical, you should be able to:
 Let’s dive in! 🚀
 
 ## Setting up: Materials
+
+<h3>Setting up: Materials</h3>
 
 Everything you need for this prac is on Moodle
 
@@ -70,6 +85,8 @@ We will be working with various datasets collected. These are in the folder `dat
 You will work in the relevant Quarto document for this prac. Within each Quarto doc there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
 
 ## Setting up: Packages
+
+<h3>Setting up: Packages</h3>
 
 We'll also be using a new package, called `vegan`, which includes a range of tools for visualising and analysing community data in ecology, but useful for all sorts of multivariate data sets. Uncomment the last line of code and install it on your machine
 
@@ -109,6 +126,9 @@ Beaches |>
 
 ## 1a) What are the samples and what are the variables?
 
+<h3>1a) What are the samples and what are the variables?</h3>
+
+
 **Questions:**
 
 - **What are the samples?** `r cloze("the beaches", c("the beaches", "sediment sizes","current speeds", "wave height", "slope"))`
@@ -123,6 +143,9 @@ Beaches <- read_csv(file = "data/Beaches.csv")
 ```
 
 ## 1b) Summarise the relationships among samples using the Pearson correlation coefficient
+
+<h3>1b) Summarise the relationships among samples using the Pearson correlation coefficient</h3>
+
 
 To obtain the **Pearson correlation coefficient**:
 
@@ -144,6 +167,9 @@ This is a **similarity matrix** that summarises the **relationships among beache
 -   **What is the value of the coefficient if two samples are identical?** `r cloze("1.0000000", c("1.0000000","0.9940330","0.8935143","0.8474139"))`
 
 ## 1c) Summarise the relationships among samples using Euclidean distance
+
+<h3>1c) Summarise the relationships among samples using Euclidean distance</h3>
+
 
 The Euclidean distance for each pair of samples is defined as:
 
@@ -269,15 +295,27 @@ HeavyMetals.mds$stress
 
 ## 2a) What does the stress value represent?
 
+<h3>2a) What does the stress value represent?</h3>
+
+
+
 `r cloze("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", c("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", "a measure of how well the variables are correlated", "a measure of whether the data are normally distributed", "a measure of how close together all the samples are on the plot", "a statistical test contrasting samples in 2D space"))`
 
 > Let's interpret the plot with the very simple rule that those **points that are closest together are the most similar**.
 
 ## 2b) Which site is least similar to any other site?
 
+<h3>2b) Which site is least similar to any other site?</h3>
+
+
+
 `r cloze("S1", c("S1", "S9","S6", "S2"))`
 
 ## Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type=essay}
+
+<h3>Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site?</h3>
+
+
 
 **2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site?**
 
@@ -352,6 +390,10 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
 
 ## Does the ordination distinguish between experimental treatments? Describe the patterns in the plot {type=essay}
 
+<h3>Does the ordination distinguish between experimental treatments? Describe the patterns in the plot</h3>
+
+
+
 **3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot**
 
 # 4) Species composition in rock pools
@@ -413,26 +455,23 @@ Rock_pools_vars_std <- decostand(Rock_pools_vars, method= "max")
 
 Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats.
 
-```{r solution}
-# Run a MDS 
-Rock_pools.mds <- metaMDS(Rock_pools_vars_std, distance = "bray", autotransform = FALSE, trace=FALSE)
+```{r}
 
-# Extract points
-Rock_pools_xy <- data.frame(Rock_pools.mds$points)
-
-# Extract habitat label
-Rock_pools_xy$habitat <- Rock_pools$habitat
-
-# Visualise points with labels
-ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) + 
-  geom_point()
 ```
 
 ## Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? {type=essay}
 
+<h3>Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? </h3>
+
+
+
 **4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats?**
 
 ## How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? {type=essay}
+
+<h3>How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? </h3>
+
+
 
 **4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set?**
 
@@ -476,7 +515,11 @@ as.dendrogram(HeavyMetals.cluster) |> plot()
 
 `r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
 
-## Does the cluster analysis suggest any effects of the sewage dump {type=essay}
+## Does the cluster analysis suggest any effects of the sewage dump? State reasons. {type=essay}
+
+<h3>Does the cluster analysis suggest any effects of the sewage dump? State reasons.</h3>
+
+
 
 **5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons.**
 
@@ -496,7 +539,6 @@ as.dendrogram(HeavyMetals.cluster.trans) |> plot()
 ```
 
 **5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
-
 `r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
 
 # 6) Choosing whether to transform or standardise the data

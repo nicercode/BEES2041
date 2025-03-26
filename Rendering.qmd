@@ -30,7 +30,7 @@ quarto::quarto_render(file_student)
 
 ## Render as moodle quiz
 ```{r}
-# file_moodle_quiz <- generate_moodle_quiz(file, webr = FALSE)
+file_moodle_quiz <- generate_moodle_quiz(file, webr = FALSE)
 rmarkdown::render(file_moodle_quiz)
   
 ```
