@@ -313,11 +313,7 @@ HeavyMetals.mds$stress
 
 ## Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type=essay}
 
-<h3>Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site?</h3>
-
-
-
-**2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site?**
+<h3> 2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site?</h3>
 
 # 3) Nutrient enrichment experiment
 
@@ -390,11 +386,7 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
 
 ## Does the ordination distinguish between experimental treatments? Describe the patterns in the plot {type=essay}
 
-<h3>Does the ordination distinguish between experimental treatments? Describe the patterns in the plot</h3>
-
-
-
-**3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot**
+<h3>3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot</h3>
 
 # 4) Species composition in rock pools
 
@@ -461,19 +453,12 @@ Using the same methods as for the previous questions, produce a MDS plot to visu
 
 ## Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? {type=essay}
 
-<h3>Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? </h3>
+<h3>4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? </h3>
 
-
-
-**4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats?**
 
 ## How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? {type=essay}
 
-<h3>How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? </h3>
-
-
-
-**4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set?**
+<h3> 4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? </h3>
 
 # 5) Cluster analysis: Heavy metals in sediments
 
@@ -515,14 +500,6 @@ as.dendrogram(HeavyMetals.cluster) |> plot()
 
 `r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
 
-## Does the cluster analysis suggest any effects of the sewage dump? State reasons. {type=essay}
-
-<h3>Does the cluster analysis suggest any effects of the sewage dump? State reasons.</h3>
-
-
-
-**5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons.**
-
 **Dendogram of variables**
 
 We can also use a cluster diagram to display the relationships among variables.
@@ -538,8 +515,13 @@ HeavyMetals.cluster.trans <-
 as.dendrogram(HeavyMetals.cluster.trans) |> plot()
 ```
 
-**5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
+**5b) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
+
 `r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
+
+## Does the cluster analysis suggest any effects of the sewage dump? State reasons. {type=essay}
+
+<h3> 5c) Does the cluster analysis suggest any effects of the sewage dump? State reasons.</h3>
 
 # 6) Choosing whether to transform or standardise the data
 
@@ -570,5 +552,5 @@ dist(HeavyMetals.standardised, method = "euclidean") |>
 
 ## Make some notes on how the relationships between sites are altered by standardising the variables {type=essay}
 
-**6a) Make some notes on how the relationships between sites are altered by standardising the variables.**
+<h3>6a) Make some notes on how the relationships between sites are altered by standardising the variables.</h3>
 
