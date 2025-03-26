@@ -12,19 +12,6 @@ html-math-method: mathml
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = FALSE, 
                       message = FALSE)
-
-# Set the working directory
-rprojroot::has_file("BEES2041-code.Rproj") |>
-  rprojroot::find_root() |>
-  file.path("week 7/Wk7-moodle") |>
-  setwd()
-
-# remotes::install_github("numbats/moodlequiz")
-library(moodlequiz)
-
-# Packages for prac
-library(kableExtra)
-library(vegan)
 ```
 
 ## Introduction
@@ -109,9 +96,9 @@ Beaches |>
 
 **Questions:**
 
-- What are the samples? `r cloze("the beaches", c("the beaches", "sediment sizes","current speeds", "wave height", "slope"))`
+- What are the samples? ???
 
-- What are the variables? `r cloze("the measures taken from each beach", c("the measures taken from each beach", "the beaches"))`
+- What are the variables? ???
 
 **First, let's load the data into R**
 
@@ -135,11 +122,11 @@ This is a **similarity matrix** that summarises the **relationships among beache
 
 **Questions:**
 
--   **What is the similarity between Beach 1 and 3 as defined by the Pearson correlation coefficient?** `r cloze("0.8935143", c("1.0000000","0.9940330","0.8935143","0.8474139"))`
+-   **What is the similarity between Beach 1 and 3 as defined by the Pearson correlation coefficient?** ???
 
--   **What is the similarity between Beach 2 and 3 as defined by the Pearson correlation coefficient?** `r cloze("0.8474139", c("1.0000000","0.9940330","0.8935143","0.8474139"))`
+-   **What is the similarity between Beach 2 and 3 as defined by the Pearson correlation coefficient?** ???
 
--   **What is the value of the coefficient if two samples are identical?** `r cloze("1.0000000", c("1.0000000","0.9940330","0.8935143","0.8474139"))`
+-   **What is the value of the coefficient if two samples are identical?** ???
 
 ## 1c) Summarise the relationships among samples using Euclidean distance
 
@@ -167,10 +154,10 @@ This is also a **similarity matrix**, but now using a different measure (**Eucli
 **Questions:**
 
 - What is the similarity between Beach 1 and 2 as defined by Euclidean difference? 
-`r cloze("5.321128", c("0.000000","5.321128","9.582881","4.314673"))`
+???
 
 - What is the value of the coefficient if two samples are identical? 
-`r cloze("0.000000", c("0.000000","5.321128","9.582881","4.314673"))`
+???
 
 # 2) Heavy metals in sediments
 
@@ -265,21 +252,15 @@ HeavyMetals.mds$stress
 
 **Questions:**
 
-## 2a) What does the stress value represent?
-
 **2a) What does the stress value represent?**
 
-`r cloze("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", c("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", "a measure of how well the variables are correlated", "a measure of whether the data are normally distributed", "a measure of how close together all the samples are on the plot", "a statistical test contrasting samples in 2D space"))`
+???
 
 > Let's interpret the plot with the very simple rule that those **points that are closest together are the most similar**.
 
-## 2b) Which site is least similar to any other site?
-
 **2b) Which site is least similar to any other site?**
 
-`r cloze("S1", c("S1", "S9","S6", "S2"))`
-
-## 2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type="essay"}
+???
 
 **2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site?**
 
@@ -352,8 +333,6 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
   geom_point()
 ```
 
-## 3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot {type=essay}
-
 **3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot**
 
 # 4) Species composition in rock pools
@@ -415,26 +394,11 @@ Rock_pools_vars_std <- decostand(Rock_pools_vars, method= "max")
 
 Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats.
 
-```{r solution}
-# Run a MDS 
-Rock_pools.mds <- metaMDS(Rock_pools_vars_std, distance = "bray", autotransform = FALSE, trace=FALSE)
+```{r}
 
-# Extract points
-Rock_pools_xy <- data.frame(Rock_pools.mds$points)
-
-# Extract habitat label
-Rock_pools_xy$habitat <- Rock_pools$habitat
-
-# Visualise points with labels
-ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) + 
-  geom_point()
 ```
 
-## 4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? {type=essay}
-
 **4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats?**
-
-## 4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? {type=essay}
 
 **4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set?**
 
@@ -474,13 +438,9 @@ as.dendrogram(HeavyMetals.cluster) |> plot()
 
 **Questions:**
 
-## 5a) Which two samples (i.e., sampling sites) are most similar to one another?
-
 **5a) Which two samples (i.e., sampling sites) are most similar to one another?** 
 
-`r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
-
-## 5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons. {type=essay}
+???
 
 **5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons.**
 
@@ -499,10 +459,8 @@ HeavyMetals.cluster.trans <-
 as.dendrogram(HeavyMetals.cluster.trans) |> plot()
 ```
 
-## 5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?
-
 **5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
-`r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
+???
 
 # 6) Choosing whether to transform or standardise the data
 
@@ -530,8 +488,6 @@ dist(HeavyMetals.standardised, method = "euclidean") |>
   as.dendrogram() |> 
   plot()
 ```
-
-## 6a) Make some notes on how the relationships between sites are altered by standardising the variables. {type="essay"}
 
 **6a) Make some notes on how the relationships between sites are altered by standardising the variables.**
 
