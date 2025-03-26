@@ -1,5 +1,5 @@
 ---
-title: "Week 7-1 Multivariate methods"
+title: "Week 7-2 Multivariate methods"
 format: 
   html:    
     self-contained: true
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
   rprojroot::find_root() |>
-  file.path("week 7/Wk7-moodle") |>
+  file.path("week 7/Wk7-2-moodle") |>
   setwd()
 
 # remotes::install_github("numbats/moodlequiz")
@@ -28,7 +28,7 @@ First, we will learn how to run a formal hypothesis test on multivariate data (p
 
 Second, we will get an introduction to principal components analysis (PCA), a widely used technique to visualise multivariate data.
 
-![](images/nature14140-sf2.jpg){width="70%"}
+![](images/nature14140-sf2.jpg){width=70%}
 
 For some questions, we will be using the data sets from last practical. To avoid a lot of work, add today's code to the notebook you created for the first multivariate practical rather than make a new one. You can then easily re-run previous code to import data and give you some of the objects in R that you will need for today's work.
 
@@ -50,28 +50,18 @@ For some questions, we will be using the data sets from last practical. To avoid
 We'll again be using the package, called `vegan`, so ensure this is loaded.
 
 ```{r, eval=FALSE}
-install.packages("dplyr")
-install.packages("readr")
-install.packages("ggplot2")
-install.packages("vegan")
+# install.packages("tidyverse")
+# install.packages("vegan")
 ```
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
-library(dplyr)
-library(readr)
-library(ggplot2)
+library(tidyverse)
 library(vegan)
-```
-
-```{r}
-Nutrients <- read.csv(file = "data/NutrientEnrichment.csv", header = TRUE)
-Nutrients_vars <- select(Nutrients, contains("Weed"))
-Nutrients.sq <- sqrt(Nutrients_vars)
 ```
 
 # 7) Nutrient enrichment experiment (multivariate hypothesis testing)
 
-![](images/53711279_1967294661.png){width="70%"}
+![](images/53711279_1967294661.png){width=70%}
 
 So far, we have been making plots to visualise differences among samples with multiple variables measured per sample, but have not run any formal statistical tests to determine whether any differences we found are likely to be due to chance sampling or not.
 
@@ -83,7 +73,20 @@ Instead of partitioning the variation in the actual values of the variables (i.e
 
 A good way to think of this is that if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level (i.e., within group similarities higher than among-group similarities).
 
-We will use the function `adonis2` in vegan:
+First we need to load the `NutrientEnrichment.csv`, wrangle and transform it for this next part:  
+
+```{r}
+# Load data
+Nutrients <- read_csv(file = "data/NutrientEnrichment.csv")
+
+# Select weeds only
+Nutrients_vars <- select(Nutrients, contains("Weed"))
+
+# Transform data
+Nutrients.sq <- sqrt(Nutrients_vars)
+```
+
+We will use the function `adonis2()` in vegan:
 
 ```{r}
 adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
@@ -144,12 +147,12 @@ This approach has the problem of increasing the the risk of type 1 error with in
 
 ## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments?
 
-Use the pair-wise tests to establish which treatments differ from which. {type="essay"}
+Use the pair-wise tests to establish which treatments differ from which. {type=essay}
 
 
 # 8) Species composition in rock pools (multivariate hypothesis testing)
 
-![](images/rock_pool.PNG){width="70%"}
+![](images/rock_pool.PNG){width=70%}
 
 For your practical report, you want to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a permutational multivariate analysis of variance for this, modifying code that you just used for the nutrient enrichment experiment.
 
@@ -164,7 +167,8 @@ There is considerable current debate in the statistical literature about the bes
 
 Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.edu.au/) is focussed on developing methods to better analyse these sorts of data, and they have released an R package 'mvabund' that uses model-based approaches to analyse multivariate data sets. David has even promoted his package with a [video](https://youtu.be/KnPkH6d89l4) drawing on the considerable talents of 80's pop star Rick Astley!
 
-![](images/rick-astley.jpg){width="150"} ![](images/mvabund_hex.png){width="150"}
+![](images/rick-astley.jpg){width="150"} 
+![](images/mvabund_hex.png){width="150"}
 
 # 10) Principal components analysis
 
@@ -177,7 +181,7 @@ A plant physiologist is attempting to quantify differences in leaf shape between
 Read in the data from “Leafshape.csv”:
 
 ```{r}
-Leaf_shape <- read.csv(file = "data/Leafshape.csv", header = TRUE)
+Leaf_shape <- read_csv(file = "data/Leafshape.csv")
 ```
 
 First, have a look at the relationships among all five variables. Select just the columns with the length data then use the `pairs` function to make a series of scatter plots.
@@ -282,7 +286,7 @@ Create a scatter plot with points color coded by species.
 ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) + geom_point()
 ```
 
-## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type="essay"}
+## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
 
 ## 10e) Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.
 
@@ -290,11 +294,19 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) + geom_point()
 
 # 11) Heavy metals in sediments (PCA)
 
-![](images/harbour.jpg){width="70%"}
+![](images/harbour.jpg){width=70%}
 
 Using the heavy metal data, we can compare the output from cluster analysis, principal components analysis and multidimensional scaling.
 
-Modify your previous code to conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor= FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
+```{r}
+# Load data
+HeavyMetals <- read_csv(file = "data/HeavyMetals.csv")  
+
+# Remove the Site variable
+HeavyMetals_vars <- select(HeavyMetals, -Site)
+```
+
+Conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor= FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
 
 ```{r solution}
 metals.pca <- princomp(HeavyMetals_vars, cor = TRUE)
@@ -305,12 +317,12 @@ loadings(metals.pca)
 
 `r cloze("Cr", c("Cr","Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
 
-##11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type="essay"}
+##11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
 
 
 # 12) Cave hydrology
 
-![](images/caves.jpg){width="70%"}
+![](images/caves.jpg){width=70%}
 
 Professor Andy Baker (School of BEES, UNSW) works in caves to better understand the history of Australia's climate and how climate affects valuable groundwater resources. He looks at the geochemistry of stalagmites to reconstruct climate histories and impacts of fire, and flows of water underground to understand recharge of groundwater (i.e., how do rainfall events top up these important reserves of freshwater?).
 
@@ -319,7 +331,7 @@ He has collected over 10 years of data from loggers in Harrie Wood Cave in the S
 There were over 40,000 observations in the original data set, collected from nine loggers (labelled HW_2b, HW_4b etc.). Here is a version of the data set that has removed the rows that lacked data for all of the nine loggers in the same time period (>11000 observations).
 
 ```{r}
-Caves <- read.csv(file = "data/Caves.csv", header = TRUE)
+Caves <- read_csv(file = "data/Caves.csv")
 ```
 
 To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (the from columns HW-2b, HW_4b etc.). So that R handles years and dates nicely, first format the date column as a date, not character.
@@ -338,8 +350,8 @@ The `alpha` argument makes the points transparent - useful when there are very m
 
 Modify your previous code to create a PCA plot that visualises the variation across years with data from all nine loggers. Remember that you'll need to subset the columns to only include the drip data (from columns HW-2b, HW_4b etc.) and bring back the year column into a data frame that has the x and y coordinate values from the ordination plot.
 
-```{r solution 1}
-Caves_vars <- Caves %>%
+```{r solution1}
+Caves_vars <- Caves |>
   select(contains("HW"))
 
 caves.pca <- princomp(Caves_vars, cor = FALSE)
@@ -349,7 +361,7 @@ summary(caves.pca)
 loadings(caves.pca)
 ```
 
-```{r solution 2}
+```{r solution2}
 Caves_xy <- data.frame(caves.pca$scores)
 
 Caves_xy$Year <- as.character(Caves$Year)
