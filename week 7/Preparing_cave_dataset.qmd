@@ -1,0 +1,73 @@
+---
+title: "Cave"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+```
+
+### Create a version of Andy's cave hydrology data set to provide to students
+
+```{r}
+Cave_hydrology <- read.csv("Cave_hydrology.csv")
+```
+
+Remove rows that do not have data for all drips
+
+```{r}
+Caves <- Cave_hydrology %>%
+  drop_na(HW_2b) %>%
+  drop_na(HW_4b) %>%
+  drop_na(HW_5b) %>%
+  drop_na(HW_6b) %>%
+  drop_na(HW_7b) %>%
+  drop_na(HW_8b) %>%
+  drop_na(HW_9b) %>%
+  drop_na(HW_13b) %>%
+  drop_na(HW_15b)
+```
+
+Separate date and time
+
+```{r}
+Caves <- Caves %>%
+  separate_wider_delim(Date_time,
+                       delim = " ",
+                       names = c("Date", "Time"),
+                       cols_remove = FALSE) %>%
+  separate_wider_delim(Date, delim = "/",
+                       names = c("Day", "Month", "Year"),
+                       cols_remove = FALSE)    
+```
+
+Save to csv
+
+```{r}
+write.csv(Caves, file = "Wk7-moodle/data/Caves.csv")
+```
+
+### Start practical
+
+Import data
+
+The csv file has time series data which is the total number of drips counted by nine different loggers in a cave. The data is collected in 15 minute intervals and there is over 10 years of data here. It is cleaned and has data gaps.
+
+The project was started by BEES Honours student Monika Markowska and the first year of hydrology data was published in 2015. We carried on with the data collection and a subset of this data was analysed again by BEES Honours student Rebecca Chapman.
+
+If you can use the data, what I would suggest is:
+
+-   Plotting the data against time. The students will see that the amount of water dripping into the cave increases and decreases consistently (it occurs after large rain events)
+
+-   If they plot frequency histograms of each drip site they will see high kurtosis and a ‘heavy tail’ -  this is typical of hydrology time series with few high values (e.g. floods) and lots of zeros (drought).
+
+-   If the regress any two time series it will look quite messy. There will be a general trend but lots of times when the correlation is poor. That is because the water reaches the drips sites at different times after rain, there are some complexities in flow path, etc. Essentially, 15 min is not the best data to use (and also it has high kurtosis).
+
+-   Get the students to sum the data to weekly or monthly totals and then plot the histograms and regressions again. The data should have less kurtosis and the regressions will be stronger.  
+
+-   This is also good data if you need something for autocorrelation tests. The individual data will be strongly temporally autocorrelated, with differences between sites (depending on the water flow path and how much water is stored there)
+
+-   Need a correlation statistic? Kendall’s tau is what I would suggest for temporally autocorrelated data.
+
+And finally, what did we do with the data. Monika ran a PCA through the data to find similarly behaving drips, and better, Rebecca used functional analysis (functional PCA) and there is data and R code on GitHub. And we’d plot the principal / functional components against time to understand the hydrology.
