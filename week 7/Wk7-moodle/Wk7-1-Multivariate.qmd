@@ -211,18 +211,17 @@ Before we interpret the MDS plot, we should check the stress value.
 HeavyMetals.mds$stress
 ```
 
-## 2a) What does the stress value represent? 
+## 2a) What does the stress value represent?
 
 `r cloze("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", c("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", "a measure of how well the variables are correlated", "a measure of whether the data are normally distributed", "a measure of how close together all the samples are on the plot", "a statistical test contrasting samples in 2D space"))`
 
 If you are satisfied that the plot effectively visualises the similarity among samples, go ahead and interpret the plot with the very simple rule that those points that are closest together are the most similar.
 
-## 2b) Which site is least similar to any other site? 
+## 2b) Which site is least similar to any other site?
 
 `r cloze("S1", c("S1", "S9","S6", "S2"))`
 
-## 2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type=essay}
-
+## 2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type="essay"}
 
 # 3) Nutrient enrichment experiment
 
@@ -268,7 +267,6 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) + geom_point()
 
 ##3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot {type=essay}
 
-
 # 4) Species composition in rock pools
 
 ![](images/rock_pool.PNG){width="70%"}
@@ -277,42 +275,35 @@ On the Maroubra field trip, multivariate data were collected that contrasted the
 
 We can use a MDS plot to visualise differences in species composition between the samples taken.
 
-Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats (rockpool vs emergent).
-
 Read the Maroubra data into into R.
 
 ```{r}
-Rock_pools <- read.csv(file = "Rock_pools_2025.csv", header = TRUE)
+Rock_pools <- read.csv(file = "data/Rock_pools_2025.csv", header = TRUE)
 ```
 
 Look at the data frame so that you are familiar with the structure of the data collected and know what are the samples, what are the variables and how the samples are grouped by the habitat treatment.
 
-The first column holds a unique identifier for each quadrat sampled (the combination of data sheet and quadrat on that sheet).
+The first four columns are labels for class (am or pm), group ID, plot number and habitat (rock pool or emergent). The next columns are abundance of all the species recorded:
 
-These data have been entered by your friendly demonstrators in a long format, with species as a single variable and their abundance values in a second column. To get this ready for multivariate analyses we need to rearrange this data so that each species is a separate variable that holds the abundance values.
+-   red, brown and green algae
 
-We can use the tidyverse function `pivot.wider` to rearrange this data set into a wide format.
+-   several species of gastropods (*Nerita, Cellana, Austrocochlea, Bembicium* and *Morula*)
 
-```{r}
-Rock_pools_wide <- Rock_pools %>%
- pivot_wider(id_cols = 1:2, 
- names_from = species,
- values_from = abundance,
- values_fill=0)
-```
+-   a seastar (*Patiriella*)
 
--   `id_cols` defines which variables uniquely identify each sample (in our case, the first two columns with quadrat ID and habitat)
+-   a sea squirt (*Pyrua*)
 
--   `names_from` is the variables that holds all the values that we want to become new variables
+-   an anemone (*Actinia*)
 
--   `values_from` is the variable that holds the all the data that will fill in each new variable
+-   barnacles (unidentified)
 
--   `values_fill` allows us to put in a zero for any missing combinations (i.e., if a species wasn't listed in a quadrat it will fill in a zero).
 
-Next, we need to remove the first two columns to end up with a data frame that just has the variables for each species.
+Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats (rockpool vs emergent).
+
+First, you will need to make a subset of the data with just the abundance data for the species recorded.
 
 ```{r}
-Rock_pools_vars <- select(Rock_pools_wide, -Quadrat_ID, -habitat)
+Rock_pools_vars <- select(Rock_pools, -class, -group_id, -plot_number, -habitat)
 ```
 
 Some of the variables are % cover (the red, brown and green algae) and some are counts of individual animals. Clearly 100% cover is not equivalent to 100 snails, so we can standardise these variables to ensure each variable is on the same scale.
@@ -325,7 +316,20 @@ Rock_pools_vars_std <- decostand(Rock_pools_vars, method= "max")
 
 Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats.
 
-##4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? {type=essay}
+```{r solution}
+Rock_pools.mds <- metaMDS(Rock_pools_vars_std, distance = "bray", autotransform = FALSE, trace=FALSE)
+
+Rock_pools_xy <- data.frame(Rock_pools.mds$points)
+
+Rock_pools_xy$habitat <- Rock_pools$habitat
+
+ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) + geom_point()
+```
+
+
+## 4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? {type=essay}
+
+## 4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? {type=essay}
 
 
 # 5) Heavy metals in sediments (cluster analyses)
