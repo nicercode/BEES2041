@@ -1,0 +1,63 @@
+---
+title: "Maroubra data check"
+format: html
+editor: source
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+### Read in data
+
+```{r}
+maroubra <- read_xlsx("assessment/data/2041_rock_pools.xlsx") |> rename(barnacles = barnicles) # correct typo
+```
+
+### General checks
+
+```{r}
+str(maroubra)
+summary(maroubra)
+```
+
+
+## 1) Gastropod abundance vs. species and height on the shore
+
+### Check distributions of gastropods
+
+- `pyura` may contain outlier of 6 counts
+
+```{r}
+histogram <- function(data, species, ...){
+  ggplot(data, aes(x = {{species}})) + 
+  geom_histogram(...) + 
+  theme_classic()
+}
+
+# Get gastropod names
+gastropod_sp <- maroubra |> 
+  select(nerita:barnacles) |> 
+  names()
+
+# Create histograms
+walk(gastropod_sp,
+    ~{
+      species_sym <- sym(.x)
+      histogram(maroubra, !!species_sym)
+    })
+```
+
+### Compute abundance
+
+```{r}
+
+```
+
+## 2) Species composition in rockpool vs emergent habitats.
+
+```{r}
+
+```
+
