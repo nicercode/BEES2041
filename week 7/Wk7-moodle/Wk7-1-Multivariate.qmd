@@ -405,17 +405,21 @@ ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) + geom_point()
 
 ![](images/harbour.jpg){width=70%}
 
-You first explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. To visualise the similarity among sites with a cluster diagram, we can use the `hclust` function.
+You first explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. To visualise the similarity among sites with a **cluster diagram**, we can use the `hclust` function.
 
-To do this for the heavy metal data set, we would use:
+To do this for the heavy metal data set, we would use `hclust()`:
 
 ```{r}
-HeavyMetals.cluster <- hclust(dist(HeavyMetals.sq, method = "euclidean"), method = "single")
+HeavyMetals.cluster <- dist(HeavyMetals.sq, method = "euclidean") |> hclust(method = "single")
 ```
 
-where HeavyMetal.sq is the square root transformed data we created earlier. `method = "euclidean"` in the `dist` function specifies the choice of similarity coefficient and `method = "single"` specifies the choice of linkage method.
+Let's talk through this code: 
 
-Finally plot the object that was created by the `hclust` function.
+- HeavyMetal.sq is the square root transformed data we created earlier. 
+- `method = "euclidean"` in the `dist()` function specifies the choice of similarity coefficient
+- `method = "single"` specifies the choice of linkage method in `hclust()`.
+
+Finally, let's plot the object that was created by the `hclust` function.
 
 ```{r}
 plot(HeavyMetals.cluster)
@@ -424,47 +428,66 @@ plot(HeavyMetals.cluster)
 We can make this a bit neater by plotting it as a dendrogram with all the samples lined up along the bottom.
 
 ```{r}
-plot(as.dendrogram(HeavyMetals.cluster))
+as.dendrogram(HeavyMetals.cluster) |> plot()
 ```
 
-##5a) Which two samples (i.e., sampling sites) are most similar to one another `r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
+## 5a) 
 
-##5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons. {type=essay}
+**Questions:**
+
+## 5a) Which two samples (i.e., sampling sites) are most similar to one another
+
+**5a) Which two samples (i.e., sampling sites) are most similar to one another** 
+
+`r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
+
+## 5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons. {type=essay}
 
 We can also use a cluster diagram to display the relationships among variables.
 
-Methods as above except you need to make the heavy metals as rows and the stations as columns before running the cluster analysis (use the transpose function, `t`).
+The workflow is the same as above except you need to make the heavy metals as rows and the stations as columns before running the cluster analysis (use the transpose function, `t()`).
 
 ```{r}
-HeavyMetals.cluster.trans <- hclust(dist(t(HeavyMetals_vars), method = "euclidean"), method = "single")
+HeavyMetals.cluster.trans <- 
+  t(HeavyMetals_vars) |> 
+  dist(method = "euclidean") |> 
+  hclust(method = "single")
 
-plot(as.dendrogram(HeavyMetals.cluster.trans))
+as.dendrogram(HeavyMetals.cluster.trans) |> plot()
 ```
 
-## 5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance? `r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
+## 5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?
+
+**5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
+`r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
 
 # 6) Choosing whether to transform or standardise the data
 
-Multivariate data sets are often transformed prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but to vary the relative importance of variables that may be measured on different scales.
+Multivariate data sets are often **transformed** prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but **to vary the relative importance of variables** that may be measured on **different scales**.
 
-In the heavy metals data set, the concentration of the metals vary widely with manganese having values up to 2470 while cobalt has values no higher than 15. Consequently, the similarity between samples using Euclidean distance will be very strongly influenced by manganese values and those metals with low concentrations will have little influence.
+For contrasts of species composition in community data sets (i.e., the abundance of many species in many samples) it is common to **square root** or **log transform** the abundance data prior to multivariate analyses. A more extreme standardisation is to convert the abundance data to presence/absence (i.e, 0 or 1) only.
 
-If you wanted to create a plot to explore the composition of contaminants, not just their absolute concentrations, then it is a good idea to standardise the variables before creating any cluster diagrams. There are several ways to do this (e.g., divide by maximum value, divide by mean etc).
+In the heavy metals data set, the concentration of the metals vary widely with manganese having values up to 2470, while cobalt has values no higher than 15. Consequently, the similarity between samples using Euclidean distance will be very strongly influenced by manganese values and those metals with low concentrations will have little influence.
 
-Here, we will standardise each metal variable to a new version with a mean of zero and variance of 1. `decostand` comes from the package vegan, so remember to load that with `library(vegan)`.
+If you wanted to create a plot to **explore the composition of contaminants**, not just their **absolute concentrations**, then it is a good idea to **standardise** the variables before creating any cluster diagrams. There are several ways to do this (e.g., divide by maximum value, divide by mean etc).
+
+Here, we will **standardise** each metal variable so each will have a mean of zero and variance of 1 using the `decostand()` 
 
 ```{r}
 HeavyMetals.standardised <- decostand(HeavyMetals_vars, method = "standardize")
 ```
 
-Any plots we create with this standardised data will have all metals having a similar influence on the similarity among samples and not be strongly influenced by just those variables with the highest concentrations.
+Any plots we create with this **standardised** data will have **all metals having a similar influence on the similarity** among samples and not be strongly influenced by just those variables with the highest concentrations.
 
-With the methods from above, create a cluster diagram to display the relationships among sites based on standardised metal concentrations.
+Let's create a cluster diagram to display the relationships among sites based on standardised metal concentrations.
 
 ```{r}
-plot(as.dendrogram(hclust(dist(HeavyMetals.standardised, method = "euclidean"), method = "single")))
+dist(HeavyMetals.standardised, method = "euclidean") |> 
+  hclust(method = "single") |> 
+  as.dendrogram() |> 
+  plot()
 ```
 
 ## 6a) Make some notes on how the relationships between sites are altered by standardising the variables. {type="essay"}
 
-For contrasts of species composition in community data sets (i.e., the abundance of many species in many samples) it is common to square root or log transform the abundance data prior to multivariate analyses. A more extreme standardisation is to convert the abundance data to presence/absence (i.e, 0 or 1) only.
+
