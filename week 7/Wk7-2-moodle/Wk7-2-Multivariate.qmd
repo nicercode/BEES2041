@@ -88,7 +88,7 @@ Nutrients.sq <- sqrt(Nutrients_vars)
 
 We will use the function `adonis2()` in vegan:
 
-```{r}
+```{r, results='hide'}
 adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
 ```
 
@@ -108,7 +108,7 @@ There are some important differences from the analyses of variance you ran with 
 
 We can save the output from `adonis2` and use a density plot to see just how likely our value of pseudo-F was.
 
-```{r}
+```{r, results='hide'}
 Nutrients_test <- adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
 
 densityplot(permustats(Nutrients_test))
@@ -122,21 +122,21 @@ A work around is to run separate pairwise tests using subsets of data with only 
 
 Remember that `filter` is the function for subsetting rows, and `select` is the function for subsetting columns - both from dplyr (need to load that package if you haven't for your current session).
 
-```{r}
+```{r, results='hide'}
 Nutrients_ControlvsLow <- filter(Nutrients, Treatment != "High")
 Nutrients_ControlvsLow_vars <- select(Nutrients_ControlvsLow, contains("Weed"))
 
 adonis2(Nutrients_ControlvsLow_vars ~ Nutrients_ControlvsLow$Treatment, permutations = 999, method = "bray")
 ```
 
-```{r}
+```{r, results='hide'}
 Nutrients_ControlvsHigh <- filter(Nutrients, Treatment != "Low")
 Nutrients_ControlvsHigh_vars <- select(Nutrients_ControlvsHigh, contains("Weed"))
 
 adonis2(Nutrients_ControlvsHigh_vars ~ Nutrients_ControlvsHigh$Treatment, permutations = 999, method = "bray")
 ```
 
-```{r}
+```{r, results='hide'}
 Nutrients_LowvsHigh <- filter(Nutrients, Treatment != "Control")
 Nutrients_LowvsHigh_vars <- select(Nutrients_LowvsHigh, contains("Weed"))
 
@@ -186,7 +186,7 @@ Leaf_shape <- read_csv(file = "data/Leafshape.csv")
 
 First, have a look at the relationships among all five variables. Select just the columns with the length data then use the `pairs` function to make a series of scatter plots.
 
-```{r}
+```{r, results='hide'}
 Leaf_shape_vars <- select(Leaf_shape, -Species)
 
 pairs(Leaf_shape_vars) 
@@ -196,7 +196,7 @@ These relationships among variables can also be summarised numerically, by calcu
 
 Check the correlations between the all five leaf measurements.
 
-```{r}
+```{r, results='hide'}
 cor(Leaf_shape_vars)
 ```
 
@@ -222,13 +222,13 @@ Principal components analysis produces a lot of graphical and numerical output, 
 
 This is the ordination of all 20 leaf samples in the new two-dimensional space defined by principal component 1 and 2.
 
-```{r}
+```{r, results='hide'}
 plot(leaf.pca$scores, pch = 16)
 ```
 
 You can also produce a biplot with the relationships between the original variables and the principal components overlaid on the score plot.
 
-```{r}
+```{r, results='hide'}
 biplot(leaf.pca)
 ```
 
@@ -236,7 +236,7 @@ biplot(leaf.pca)
 
 PCA is aiming to represent as much variance as possible in the first few principal components. We can check whether it is doing a good job by exploring the summary of the `leaf.pca` object.
 
-```{r}
+```{r, results='hide'}
 summary(leaf.pca)
 ```
 
@@ -246,7 +246,7 @@ PC1 `r cloze_numerical(0.83, tolerance = 0.01)` PC2 `r cloze_numerical(0.22, tol
 
 These are also visualised by a **scree plot**. Note that the Y-axis presented is not the % of variation explained.
 
-```{r}
+```{r, results='hide'}
 screeplot(leaf.pca, type = 'lines')
 ```
 
@@ -256,7 +256,7 @@ We gain further insight into the relationships among variables and help with int
 
 These relationships can be seen in the biplot (above) but also obtained numerically by extracting the loadings from the object produced by the PCA. Note that this output does not print very small values, so the empty cells can be considered close to zero (i.e., no correlation).
 
-```{r}
+```{r, results='hide'}
 loadings(leaf.pca)
 ```
 
@@ -282,7 +282,7 @@ Leaf_xy$Species <- Leaf_shape$Species
 
 Create a scatter plot with points color coded by species.
 
-```{r}
+```{r, results='hide'}
 ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) + geom_point()
 ```
 
@@ -340,7 +340,7 @@ To understand the data set, plot the patterns in drip numbers through time for j
 Caves <- mutate(Caves, Date = as.Date(Date, format = "%d/%m/%Y"))
 ```
 
-```{r}
+```{r, results='hide'}
 ggplot(Caves, aes(Date, HW_4b)) + geom_point(alpha=0.05)
 ```
 
