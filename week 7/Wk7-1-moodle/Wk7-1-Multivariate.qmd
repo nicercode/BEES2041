@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE,
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
   rprojroot::find_root() |>
-  file.path("week 7/Wk7-moodle") |>
+  file.path("week 7/Wk7-1-moodle") |>
   setwd()
 
 # remotes::install_github("numbats/moodlequiz")
@@ -35,7 +35,7 @@ This week's practicals provide an introduction to some of the graphical and anal
 
 Today we we will focus on two graphical techniques: 
 
-- **multidimensional scaling (MDS)**
+- **multi-dimensional scaling (MDS)**
 - **cluster diagrams**
 
 We will go over some considerations before making these plots such as **transformations** and choices of **similarity measures**.
@@ -87,8 +87,7 @@ library(vegan)
 ```
 
 # 1) Similarity coefficients
-
-<h3> 1) Similarity coefficients</h3>
+## 1) Similarity coefficients
 
 Many techniques for visualising and analysing multivariate data start with **calculating the similarity between two samples**, based on the values for all variables measured from those samples.
 
@@ -278,9 +277,8 @@ HeavyMetals.mds$stress
 
 `r cloze("S1", c("S1", "S9","S6", "S2"))`
 
-## Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type=essay}
+## 2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type=essay}
 
-**2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site?**
 
 # 3) Nutrient enrichment experiment
 
@@ -351,9 +349,7 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
   geom_point()
 ```
 
-## Does the ordination distinguish between experimental treatments? Describe the patterns in the plot {type=essay}
-
-**3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot**
+## 3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot {type=essay}
 
 # 4) Species composition in rock pools
 
@@ -429,13 +425,9 @@ ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) +
   geom_point()
 ```
 
-## Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? {type=essay}
+## 4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? {type=essay}
 
-**4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats?**
-
-## How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? {type=essay}
-
-**4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set?**
+## 4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? {type=essay}
 
 # 5) Cluster analysis: Heavy metals in sediments
 
@@ -477,9 +469,7 @@ as.dendrogram(HeavyMetals.cluster) |> plot()
 
 `r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
 
-## Does the cluster analysis suggest any effects of the sewage dump {type=essay}
-
-**5b) Does the cluster analysis suggest any effects of the sewage dump? State reasons.**
+## 5b) Does the cluster analysis suggest any effects of the sewage dump {type=essay}
 
 **Dendogram of variables**
 
@@ -527,7 +517,5 @@ dist(HeavyMetals.standardised, method = "euclidean") |>
   plot()
 ```
 
-## Make some notes on how the relationships between sites are altered by standardising the variables {type=essay}
-
-**6a) Make some notes on how the relationships between sites are altered by standardising the variables.**
+## 6a) Make some notes on how the relationships between sites are altered by standardising the variables {type=essay}
 
