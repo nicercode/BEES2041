@@ -16,6 +16,7 @@ library(moodlequiz)
 ```
 
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = FALSE, 
@@ -38,6 +39,8 @@ library(vegan)
 ## Introduction
 
 <h3>Introduction</h3>
+
+
 
 Multivariate analyses are techniques used to explore or analyse data that involve **multiple variables at once**, helping to understand **relationships among them**. In the environmental sciences, for example, multivariate methods are commonly used to to visualise differences in **species composition** across sites, or understand relationships among many correlated abiotic variables to describe sites or samples.
 
@@ -214,6 +217,12 @@ This is also a **similarity matrix**, but now using a different measure (**Eucli
 
 # 2) Heavy metals in sediments
 
+## 2) Heavy metals in sediments
+
+<h3>2) Heavy metals in sediments</h3>
+
+
+
 ![](images/harbour.jpg){width=70%} <br>
 
 Twelve sites in an estuary were sampled for the concentrations of eight heavy metals [(Clarke and Warwick, 1994)](https://www.researchgate.net/profile/Aimeric-Blaud/post/Can_anyone_help_me_in_understanding_and_clearly_interpreting_ANOSIM_Analysis_of_Similarityand_SIMPER_Similarity_percentage_analysisresults/attachment/59d63f3ec49f478072ea9897/AS%3A273777156395016%401442284968397/download/PRIMER-E.pdf). The sites were aligned along a linear transect with the middle of the transect closest to a sewage dumping area (i.e., 1 and 12 furthest from dump, 6 closest to the dump).
@@ -332,6 +341,12 @@ HeavyMetals.mds$stress
 
 # 3) Nutrient enrichment experiment
 
+## 3) Nutrient enrichment experiment
+
+<h3>3) Nutrient enrichment experiment</h3>
+
+
+
 ![](images/53711279_1967294661.png){width=70%} <br>
 
 The effect of nutrient enhancement on the composition of weed species on a farm was investigated. Ten replicate plots were established for each of three treatments: 
@@ -406,6 +421,12 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
 
 
 # 4) Species composition in rock pools
+
+## 4) Species composition in rock pools
+
+<h3>4) Species composition in rock pools</h3>
+
+
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
@@ -482,6 +503,12 @@ Using the same methods as for the previous questions, produce a MDS plot to visu
 
 # 5) Cluster analysis: Heavy metals in sediments
 
+## 5) Cluster analysis: Heavy metals in sediments
+
+<h3>5) Cluster analysis: Heavy metals in sediments</h3>
+
+
+
 ![](images/harbour.jpg){width=70%}
 
 You first explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. 
@@ -520,12 +547,6 @@ as.dendrogram(HeavyMetals.cluster) |> plot()
 
 `r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
 
-## 5b) Does the cluster analysis suggest any effects of the sewage dump {type=essay}
-
-<h3>5b) Does the cluster analysis suggest any effects of the sewage dump </h3>
-
-
-
 **Dendogram of variables**
 
 We can also use a cluster diagram to display the relationships among variables.
@@ -545,7 +566,19 @@ as.dendrogram(HeavyMetals.cluster.trans) |> plot()
 
 `r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
 
+## 5c) Does the cluster analysis suggest any effects of the sewage dump {type=essay}
+
+<h3>5c) Does the cluster analysis suggest any effects of the sewage dump </h3>
+
+
+
 # 6) To transform or to standardise?
+
+## 6) To transform or to standardise?
+
+<h3>6) To transform or to standardise?</h3>
+
+
 
 Multivariate data sets are often **transformed** prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but **to vary the relative importance of variables** that may be measured on **different scales**.
 

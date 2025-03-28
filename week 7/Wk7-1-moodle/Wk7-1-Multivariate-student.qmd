@@ -68,7 +68,6 @@ library(vegan)
 ```
 
 # 1) Similarity coefficients
-## 1) Similarity coefficients
 
 Many techniques for visualising and analysing multivariate data start with **calculating the similarity between two samples**, based on the values for all variables measured from those samples.
 
@@ -262,7 +261,6 @@ HeavyMetals.mds$stress
 
 
 # 3) Nutrient enrichment experiment
-
 ![](images/53711279_1967294661.png){width=70%} <br>
 
 The effect of nutrient enhancement on the composition of weed species on a farm was investigated. Ten replicate plots were established for each of three treatments: 
@@ -334,6 +332,8 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
 
 # 4) Species composition in rock pools
 
+## 4) Species composition in rock pools
+
 ![](images/rock_pool.PNG){width=70%} <br>
 
 On the Maroubra field trip, multivariate data were collected to investigate the species composition of the intertidal community living in rock pools to neighbouring rocky habitats that were that were emergent at low tide.
@@ -401,6 +401,8 @@ Using the same methods as for the previous questions, produce a MDS plot to visu
 
 # 5) Cluster analysis: Heavy metals in sediments
 
+## 5) Cluster analysis: Heavy metals in sediments
+
 ![](images/harbour.jpg){width=70%}
 
 You first explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. 
@@ -439,8 +441,6 @@ as.dendrogram(HeavyMetals.cluster) |> plot()
 
 ???
 
-## 5b) Does the cluster analysis suggest any effects of the sewage dump 
-
 **Dendogram of variables**
 
 We can also use a cluster diagram to display the relationships among variables.
@@ -459,6 +459,8 @@ as.dendrogram(HeavyMetals.cluster.trans) |> plot()
 **5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
 
 ???
+
+## 5c) Does the cluster analysis suggest any effects of the sewage dump 
 
 # 6) To transform or to standardise?
 
