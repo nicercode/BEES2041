@@ -18,34 +18,34 @@ rprojroot::has_file("BEES2041-code.Rproj") |>
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
+library(vegan)
 ```
 
 ## Introduction
 
-In this practical, we will continue our look at methods to analyses and visualise complex, multivariate data sets - ones where more than one response variable has been measured from each replicate sample.
+In this practical, we will continue our look at methods to analyses and visualise complex, **multivariate data sets** - ones where **more than one response variable has been measured from each replicate sample**.
 
-First, we will learn how to run a formal hypothesis test on multivariate data (permutational multivariate analysis of variance). This will be used to contrast species composition in and out of rock pools from the class data set collected at Maroubra.
+First, we will learn how to run a **hypothesis test** on multivariate data (permutational multivariate analysis of variance or **PERMANOVA**). This will be used to test for differences in species composition in and out of rock pools from the class data set collected at Maroubra.
 
-Second, we will get an introduction to principal components analysis (PCA), a widely used technique to visualise multivariate data.
+Second, we will get an introduction to p**rincipal components analysis (PCA)**, a widely used technique to visualise multivariate data.
 
 ![](images/nature14140-sf2.jpg){width=70%}
 
-For some questions, we will be using the data sets from last practical. To avoid a lot of work, add today's code to the notebook you created for the first multivariate practical rather than make a new one. You can then easily re-run previous code to import data and give you some of the objects in R that you will need for today's work.
 
 ## Key learning objectives
 
 At the end of today's practicals, you should be able to:
 
--   Understand the logic behind permutational MANOVA
--   Understand the aims of principal components analysis (PCA)
--   Interpret an ordination from a principal components analysis (PCA)
--   Explore the output from PCA to understand relationships among variables
+-   Understand the logic behind **permutational MANOVA**
+-   Understand the purpose of a **principal components analysis (PCA)**
+-   Interpret an ordination from a **principal components analysis (PCA)**
+-   Explore the output from PCA to **understand relationships among variables**
 
 Let’s dive in! 🚀
 
 ## Setting up: Packages
 
-For some questions, we will be using the data sets from last practical. To avoid a lot of work, add today's code to the notebook you created for the first multivariate practical rather than make a new one. You can then easily re-run previous code to import data and give you some of the objects in R that you will need for today's work.
+For some exercises below, we will be using the datasets from last practical. To avoid repeating yourself and duplicating your code, **add today's code to the notebook you created for the first multivariate practical** rather than creating a new Quarto document. This way, you can then easily re-run previous code to import data and create the objects that you will need for today's work.
 
 We'll again be using the package, called `vegan`, so ensure this is loaded.
 
@@ -63,17 +63,21 @@ library(vegan)
 
 ![](images/53711279_1967294661.png){width=70%}
 
-So far, we have been making plots to visualise differences among samples with multiple variables measured per sample, but have not run any formal statistical tests to determine whether any differences we found are likely to be due to chance sampling or not.
+So far, we have been making plots to visualise differences among samples with multiple variables measured per sample, but have not run any statistical tests to determine whether any differences we found are likely to be due to chance sampling or not.
 
 There is a whole world of multivariate statistical tests, but we will show you just a couple to demonstrate how you can test hypotheses with multivariate data.
 
-In the nutrient enrichment experiment, we had three treatments (control, low and high nutrients) and 12 response variables (the abundance of each weed species). If we had measured just one variable, we would use a linear model (analysis of variance) to contrast that variable among treatments. With many variables measured, we can use multivariate analyses of variance based on the similarity matrix.
+In the nutrient enrichment experiment, we had: 
+- three treatments (control, low and high nutrients)
+- 12 response variables (the abundance of each weed species).
 
-Instead of partitioning the variation in the actual values of the variables (i.e., abundance of our each of the weed species), this analysis partitions the variation in the values of the similarity matrix among and within treatment groups.
+ If we had measured just one variable, we would use a linear model and ANOVA to contrast that variable among treatments. With many variables measured, we use **multivariate analyses of variance based on the similarity matrix**.
 
-A good way to think of this is that if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level (i.e., within group similarities higher than among-group similarities).
+Instead of partitioning the variation in the actual values of the variables (i.e., abundance of our each of the weed species) as in a ANOVA, this analysis **partitions the variation in the values of the similarity matrix** among and within treatment groups.
 
-First we need to load the `NutrientEnrichment.csv`, wrangle and transform it for this next part:  
+An another way to think of this is that **if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level** (i.e., within group similarities higher than among-group similarities).
+
+Let's load the `NutrientEnrichment.csv`, wrangle and transform it for analysis:  
 
 ```{r}
 # Load data
@@ -86,60 +90,85 @@ Nutrients_vars <- select(Nutrients, contains("Weed"))
 Nutrients.sq <- sqrt(Nutrients_vars)
 ```
 
-We will use the function `adonis2()` in vegan:
+We will use the function `adonis2()` in `vegan`. This function perfoms an ANOVA on the similiarity matrix of your choosing:
 
 ```{r, results='hide'}
 adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
 ```
 
-Like with the previous model formulae you have seen in R, the dependent variables are left of the `~` symbol, and the independent variable are on the right (i.e. `Y ~ X` is aimed to predict Y from X). `method = "bray"` tells vegan to use the Bray-Curtis index to represent the similarity between samples, recommended for species-abundance data.
+Let's talk through this code:
 
-The output should look pretty familiar to you - very similar to an ANOVA table.
+- Similar to the model formulae you have seen in `lm()` , the **response** variable are left of the `~` symbol, and the **predictors** variable are on the right (i.e. `Y ~ X` is aimed to predict Y from X). 
+- `method = "bray"` tells vegan to use the Bray-Curtis index to represent the similarity between samples, recommended for species-abundance data.
+
+The output should look pretty familiar to you - very similar to an ANOVA table right?
 
 ## 7a) Is there evidence to reject the null hypothesis?
 
 `r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1","no, the F value is greater than 9"))`
 
-There are some important differences from the analyses of variance you ran with univariate data (one dependent variable).
+There are some key differences from a univariate (one predictor variable) ANOVA vs a multivariate one. With multivariate data:
 
--   the analysis ran on similarities among samples, not the actual values of the original variables
+-  the analysis is ran on similarities among samples, not the actual values of the original variables
 
--   the probability of the test statistic produced (pseudo-F) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by permutation. From 999 permutations of the original data versus the treatment labels, it calculates how often a value of pseudo-F as large as yours would occur.
+- the probability of the test statistic produced (`pseudo-F`) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by **permutation**. From `permutations = 999` of the original data vs the treatment labels, it calculates how often a value of `pseudo-F` as large as yours would occur.
 
 We can save the output from `adonis2` and use a density plot to see just how likely our value of pseudo-F was.
 
 ```{r, results='hide'}
 Nutrients_test <- adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
 
-densityplot(permustats(Nutrients_test))
+permustats(Nutrients_test) |> densityplot()
 ```
 
-This produces a frequency histogram of pseudo-F obtained from the 999 permutations of the raw data. This is best viewed as what would happen if the null hypothesis was true. The value you obtained is noted with the vertical black line.
+This produces a frequency histogram of `pseudo-F` obtained from the 999 permutations of the raw data. **This is best viewed as what would happen if the null hypothesis was true** (no similarities between our variables). The `pseudo-F` value you obtained is noted with the vertical black line.
 
-You should have output that shows that this null hypothesis is rejected - there is some difference in weed species composition among all three treatments. A next step is to try and understand which treatment differed from which. For various reasons, unlike some commercial software packages, the authors of vegan do not provide code for doing pairwise tests.
+You should have output that shows that this null hypothesis is rejected. This means that: 
 
-A work around is to run separate pairwise tests using subsets of data with only two levels of a factor. The following code creates subsets of rows for each comparison (note that `!=` means “not equals to”“) and runs the permutational MANOVA again with just the rows with the weed variables.
+ > there is some difference in weed species composition among all three treatments. 
+ 
+**Multivariate contrasts**
 
-Remember that `filter` is the function for subsetting rows, and `select` is the function for subsetting columns - both from dplyr (need to load that package if you haven't for your current session).
+ Our next step is to try and understand **which treatment differed from which** e.g contrasts. There is not function to do this, a workaround is to run separate pairwise tests using subsets of data with only two levels of `Treatment`. 
+
+We will use `filter()` to subset rows, and `select()` for subsetting columns for our pairwise comparisons.  The following code creates subsets of rows for each comparison (note that `!=` means “not equals to”) and runs the **permutational MANOVA** again with just the rows with the weed variables.
+
+**Subset analysis for Control and Low**
 
 ```{r, results='hide'}
+# Filter treatment is not "High"
 Nutrients_ControlvsLow <- filter(Nutrients, Treatment != "High")
+
+# Select columns containing the word "weed"
 Nutrients_ControlvsLow_vars <- select(Nutrients_ControlvsLow, contains("Weed"))
 
+# Perform a PERMANOVA using subset data
 adonis2(Nutrients_ControlvsLow_vars ~ Nutrients_ControlvsLow$Treatment, permutations = 999, method = "bray")
 ```
 
+**Subset analysis for Control and High**
+
 ```{r, results='hide'}
+# Filter treatment is not "Low"
 Nutrients_ControlvsHigh <- filter(Nutrients, Treatment != "Low")
+
+# Select columns containing the word "weed"
 Nutrients_ControlvsHigh_vars <- select(Nutrients_ControlvsHigh, contains("Weed"))
 
+# Perform a PERMANOVA using subset data
 adonis2(Nutrients_ControlvsHigh_vars ~ Nutrients_ControlvsHigh$Treatment, permutations = 999, method = "bray")
 ```
 
+**Subset analysis for High and Low**
+
 ```{r, results='hide'}
+# Filter treatment is not "Control"
 Nutrients_LowvsHigh <- filter(Nutrients, Treatment != "Control")
+
+# Select columns containing the word "weed"
 Nutrients_LowvsHigh_vars <- select(Nutrients_LowvsHigh, contains("Weed"))
 
+# Perform a PERMANOVA using subset data
 adonis2(Nutrients_LowvsHigh_vars ~ Nutrients_LowvsHigh$Treatment, permutations = 999, method = "bray")
 ```
 
