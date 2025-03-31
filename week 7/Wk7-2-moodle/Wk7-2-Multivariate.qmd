@@ -374,10 +374,15 @@ HeavyMetals <- read_csv(file = "data/HeavyMetals.csv")
 HeavyMetals_vars <- select(HeavyMetals, -Site)
 ```
 
+**Exercise:**
+
 Conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor= FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
 
 ```{r solution}
+# Perform PCA
 metals.pca <- princomp(HeavyMetals_vars, cor = TRUE)
+
+# Extract loadings from PCA
 loadings(metals.pca)
 ```
 
@@ -385,7 +390,7 @@ loadings(metals.pca)
 
 `r cloze("Cr", c("Cr","Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
 
-##11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
+## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
 
 
 # 12) Cave hydrology
@@ -396,43 +401,55 @@ Professor Andy Baker (School of BEES, UNSW) works in caves to better understand 
 
 He has collected over 10 years of data from loggers in Harrie Wood Cave in the Snowy Mountains which count the total number of drips in 15 minute intervals (published recently by an Honours student - Chapman *et al.* 2024 [*Journal of Hydrology*](https://linkinghub.elsevier.com/retrieve/pii/S0022169424001781)).
 
-There were over 40,000 observations in the original data set, collected from nine loggers (labelled HW_2b, HW_4b etc.). Here is a version of the data set that has removed the rows that lacked data for all of the nine loggers in the same time period (>11000 observations).
-
+There were over 40,000 observations in the original data set, collected from nine loggers (labelled HW_2b, HW_4b etc.). Here is a version of the dataset that has removed the rows that lacked data for all of the nine loggers in the same time period (>11000 observations).
+**Load data**
 ```{r}
 Caves <- read_csv(file = "data/Caves.csv")
 ```
 
-To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (the from columns HW-2b, HW_4b etc.). So that R handles years and dates nicely, first format the date column as a date, not character.
-
+To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (the from columns HW-2b, HW_4b etc.). Let's format the date column as a date, not character so that R handles years and dates nicely. 
+**Wrangle data**
 ```{r}
 Caves <- mutate(Caves, Date = as.Date(Date, format = "%d/%m/%Y"))
 ```
+
+**Visualise data**
+
+Let's visualise the plot the patterns in drip numbers through time for just one of the loggers (`HW_4b`)
 
 ```{r, results='hide'}
 ggplot(Caves, aes(Date, HW_4b)) + geom_point(alpha=0.05)
 ```
 
-The `alpha` argument makes the points transparent - useful when there are very many points plotted on top of each other.
 
 ## 12a) Using PCA to visualise variation among years 
 
-Modify your previous code to create a PCA plot that visualises the variation across years with data from all nine loggers. Remember that you'll need to subset the columns to only include the drip data (from columns HW-2b, HW_4b etc.) and bring back the year column into a data frame that has the x and y coordinate values from the ordination plot.
+**Exercise:**
+
+- Create a PCA plot that visualises the variation across years with data from all nine loggers. Remember that you'll need to subset the columns to only include the drip data (from columns HW-2b, HW_4b etc.) 
+- Bring back the year column into a data frame that has the x and y coordinate values from the ordination plot.
 
 ```{r solution1}
+# Select data variables only
 Caves_vars <- Caves |>
   select(contains("HW"))
 
+# Perform PCA
 caves.pca <- princomp(Caves_vars, cor = FALSE)
 
+# ook at output
 summary(caves.pca)
 
+# Extract loadings
 loadings(caves.pca)
-```
 
-```{r solution2}
+# Extract scores for ordination
 Caves_xy <- data.frame(caves.pca$scores)
 
+# Create a year column so we can label them
 Caves_xy$Year <- as.character(Caves$Year)
 
-ggplot(Caves_xy, aes(Comp.1, Comp.2, colour = Year)) + geom_point()
+# Create ordination plot
+ggplot(Caves_xy, aes(Comp.1, Comp.2, colour = Year)) + 
+  geom_point()
 ```
