@@ -1,0 +1,491 @@
+---
+title: "Week 7-1 Multivariate methods"
+format: 
+  html:    
+    self-contained: true
+editor_options: 
+  chunk_output_type: console
+html-math-method: mathml
+---
+
+## Introduction
+
+Multivariate analyses are techniques used to explore or analyse data that involve **multiple variables at once**, helping to understand **relationships among them**. In the environmental sciences, for example, multivariate methods are commonly used to to visualise differences in **species composition** across sites, or understand relationships among many correlated abiotic variables to describe sites or samples.
+
+This week's practicals provide an introduction to some of the graphical and analytical techniques used for multivariate data sets (those with more than one dependent variable).
+
+Today we we will focus on two graphical techniques: 
+
+- **multi-dimensional scaling (MDS)**
+- **cluster diagrams**
+
+We will go over some considerations before making these plots such as **transformations** and choices of **similarity measures**.
+
+![](images/mds.jpg){width=50%}  <br>
+
+## Key learning objectives
+
+At the end of today's practical, you should be able to:
+
+-   Calculate a variety of **similarity/dissimilarity coefficients** to represent the differences among samples (or variables) in multivariate data sets
+-   Create and interpret an **multi-dimenional scaling (MDS)** plot
+-   Create and interpret **cluster diagrams** to summarise the relationships among samples or variables
+-   Understand that data may need to be **transformed or standardised** before making graphs
+
+Let’s dive in! 🚀
+
+## Setting up: Materials
+
+Everything you need for this prac is on Moodle
+
+1.  Download this week's materials zip file from Moodle, from the course page
+2.  Unzip the file by:
+
+-   MacOS: Double clicking the zipfile
+-   Windows: Right click on the zip file and click "Extract All"
+
+3.  Move the extracted folder into the folder where you store materials for `BEES2041/`
+4.  **Click on the Rstudio project file, eg. `Wk7-Multivariate.Rproj`** to open the RStudio project and you're in!!!
+
+We will be working with various datasets collected. These are in the folder `data/`.
+
+You will work in the relevant Quarto document for this prac. Within each Quarto doc there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
+
+## Setting up: Packages
+
+We'll also be using a new package, called `vegan`, which includes a range of tools for visualising and analysing community data in ecology, but useful for all sorts of multivariate data sets. Uncomment the last line of code and install it on your machine
+
+```{r, eval=FALSE}
+# install.packages("tidyverse")
+# install.packages("vegan")
+```
+
+> Remember to load the packages into R to use em!
+
+```{r, results='hide', warning=FALSE, message=FALSE}
+library(tidyverse)
+library(vegan)
+```
+
+# 1) Similarity coefficients
+
+Many techniques for visualising and analysing multivariate data start with **calculating the similarity between two samples**, based on the values for all variables measured from those samples.
+
+There are many ways to do this, but if you understand a few of them you can get the general idea that the **similarity (or difference) between two samples can be represented by a single number (a value of a similarity coefficient)**.
+
+![](images/Beach.jpeg){width=70%} <br>
+
+Let's take a look at this **multivariate dataset** collected by a physical geographer who was contrasting beach profiles at three beaches around a coral atoll.
+
+Using the same methods at each site, the following data were collected from each beach:
+
+```{r, echo=FALSE}
+Beaches <- read_csv(file = "data/Beaches.csv")
+
+Beaches
+```
+
+## 1a) What are the samples and what are the variables?
+
+**Questions:**
+
+- **What are the samples?** ???
+
+- **What are the variables?** ???
+
+**First, let's load the data into R**
+
+```{r}
+# Load data
+Beaches <- read_csv(file = "data/Beaches.csv")
+```
+
+## 1b) Summarise the relationships among samples using the Pearson correlation coefficient
+
+To obtain the **Pearson correlation coefficient**:
+
+-   Use the `cor()` function
+
+```{r, results='hide'}
+# Compute Pearson correlation coefficients 
+cor(Beaches)
+```
+
+This is a **similarity matrix** that summarises the **relationships among beaches**.
+
+**Questions:**
+
+-   **What is the similarity between Beach 1 and 3 as defined by the Pearson correlation coefficient?** ???
+
+-   **What is the similarity between Beach 2 and 3 as defined by the Pearson correlation coefficient?** ???
+
+-   **What is the value of the coefficient if two samples are identical?** ???
+
+## 1c) Summarise the relationships among samples using Euclidean distance
+
+The Euclidean distance for each pair of samples is defined as:
+
+$$
+d(y_1,y_2) = \sum_{j=1}^{p}\sqrt{(y_{1j} - y_{2j})^2}
+$$
+
+where $y_1$ and $y_2$ are the values of variable $j$ in sample 1 and 2; $p$ is  the number of variables
+
+-   Use the `dist()` function with `method = "euclidean", diag = TRUE`
+-   You need to flip the dataset on its side so that the samples are rows for distance analysis. We can do so by **transposing** the matrix first, using the `t()` function, i.e. `(t(Beaches))`
+
+```{r, results='hide'}
+# Transposes the Beaches data
+t(Beaches)
+
+# Compute similarity matrix using Euclidean distance 
+dist(t(Beaches), method = "euclidean", diag = TRUE)
+```
+
+This is also a **similarity matrix**, but now using a different measure (**Euclidean distance**) to quantify the similarities among beaches.
+
+**Questions:**
+
+- What is the similarity between Beach 1 and 2 as defined by Euclidean difference? 
+???
+
+- What is the value of the coefficient if two samples are identical? 
+???
+
+# 2) Heavy metals in sediments
+
+![](images/harbour.jpg){width=70%} <br>
+
+Twelve sites in an estuary were sampled for the concentrations of eight heavy metals [(Clarke and Warwick, 1994)](https://www.researchgate.net/profile/Aimeric-Blaud/post/Can_anyone_help_me_in_understanding_and_clearly_interpreting_ANOSIM_Analysis_of_Similarityand_SIMPER_Similarity_percentage_analysisresults/attachment/59d63f3ec49f478072ea9897/AS%3A273777156395016%401442284968397/download/PRIMER-E.pdf). The sites were aligned along a linear transect with the middle of the transect closest to a sewage dumping area (i.e., 1 and 12 furthest from dump, 6 closest to the dump).
+
+We will measure the similarity among sites, then use an **ordination plot** to display the **relationships among samples**.
+
+**Let's load the data into R**
+
+Read the data set, `HeavyMetals.csv`, into R and have a look at it’s structure (samples as rows, variables as columns).
+
+```{r}
+# Load data
+HeavyMetals <- read_csv(file = "data/HeavyMetals.csv")  
+
+# Inspect data
+HeavyMetals
+```
+
+**Data wrangling**
+
+The first column is the name of each site. We don’t want to use the site numbers in our multivariate analysis, so need remove the Site variable using `select()`
+
+```{r}
+# Remove the Site variable
+HeavyMetals_vars <- select(HeavyMetals, -Site)
+```
+
+**Data transformation**
+
+Before we calculate the similarity among sites, we will perform a **square root transformation** the data using `sqrt()`. This will **reduce the influence of very large values** (more on the reasons for transformations later in this practical).
+
+```{r}
+# Square roott every value in the data
+HeavyMetals.sq <- sqrt(HeavyMetals_vars)
+```
+
+**Compute similarity matrix**
+
+Now we can use the `dist()` function again to calculate to create the **similarity matrix**, using the **Euclidean distance** as our similarity coefficient.
+
+```{r}
+# Compute similarity matrix using Euclidean distance
+HeavyMetals.dis <- dist(HeavyMetals.sq, method = "euclidean")
+```
+
+The numbers in this **similarity matrix** are then used to create a **multi-dimensional scaling** (MDS) plot to visualise the differences among sites. These are introduced in the lectures and you can also read the short tutorial on [Environmental Computing](https://environmentalcomputing.net/graphics/multivariate-vis/mds/).
+
+**Multi-dimensional scaling**
+
+We use the function `metaMDS()` from the package `vegan` to create a MDS plot
+
+```{r}
+HeavyMetals.mds <- metaMDS(HeavyMetals.dis, autotransform = FALSE, trace=FALSE)
+```
+
+- the `autotransform` argument tells the function not to further transform the data
+- the `trace` argument stops it giving us all the details of the process trying to find the best solution.
+
+**Visualise your MDS**
+
+To view the ordination plot, call `plot()` on the object we just created.
+
+```{r, results='hide'}
+plot(HeavyMetals.mds)
+```
+
+While this shows each site as a dot and their relationships, it isn't much use yet because we don't know which site is which. 
+
+To get a nicer plot, we can extract the x and y coordinates from the MDS into a new data frame, add labels for each site, and plot with `ggplot`.
+
+```{r, results='hide'}
+# Extract the points
+Metals_xy <- data.frame(HeavyMetals.mds$points)
+
+# Extract the Site labels
+Metals_xy$Site <- HeavyMetals$Site
+
+# Visualise with ggplot
+ggplot(Metals_xy, aes(MDS1, MDS2)) + 
+  geom_text(aes(label=Site)) + 
+  theme_classic()
+```
+
+Before you interpret the MDS plot, check the **stress value**.
+
+```{r, results='hide'}
+HeavyMetals.mds$stress
+```
+
+**Questions:**
+
+## 2a) What does the stress value represent?
+
+???
+
+> Let's now interpret the plot with the very simple rule that those **points that are closest together are the most similar**.
+
+## 2b) Which site is least similar to any other site?
+
+???
+
+## 2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? 
+
+
+# 3) Nutrient enrichment experiment
+![](images/53711279_1967294661.png){width=70%} <br>
+
+The effect of nutrient enhancement on the composition of weed species on a farm was investigated. Ten replicate plots were established for each of three treatments: 
+
+- control (no nutrients), 
+- low nutrient dose added
+- high nutrient dose added. 
+
+After 12 weeks, all weed seedlings were identified and counted. Twelve species of weeds were recorded.
+
+> Let's produce a MDS plot to display the relationships among samples.
+
+**Load the data into R**
+
+First, read in the datafile `NutrientEnrichment.csv`
+
+```{r}
+Nutrients <- read_csv(file = "data/NutrientEnrichment.csv")
+
+Nutrients
+```
+
+**Data wrangling**
+
+As for the metals data set, we first need to `select()` the columns that have **dependent variables** (the abundance of each weed). The first two columns (`Treatment` and `Replicate`) are labels that we will use for plotting.
+
+We can use `contains()` within the `select()` function to pull out all columns that include `Weed` in the column name.
+
+```{r}
+Nutrients_vars <- select(Nutrients, contains("Weed"))
+```
+
+**Data transformation**
+
+We can apply a **square root transformation** to the data to reduce the influence of very large values (more on the reasons for transformations later).
+
+```{r}
+Nutrients.sq <- sqrt(Nutrients_vars)
+```
+
+**Calculate similarity and perform MDS**
+
+Instead of creating a similarity matrix and doing the MDS in two steps as you did for the heavy metals data, the function `metaMDS()` is able to compute dissimilarities and perform MDS directly from the dataframe in one function. 
+
+```{r}
+Nutrients.mds <- metaMDS(Nutrients.sq, 
+                         distance = "bray", 
+                         autotransform = FALSE, 
+                         trace=FALSE) 
+```
+
+**Visualise MDS**
+
+We can plot the ordination as you did previously for the heavy metals data set by extracting the x and y coordinates of the points, adding the treatment information from the original data set, and plotting with each point coloured by treatment.
+
+```{r, results='hide'}
+# Extract points
+Nutrients_xy <- data.frame(Nutrients.mds$points)
+
+# Extract treatment labels
+Nutrients_xy$Treatment <- Nutrients$Treatment
+
+# Visualise the MDS
+ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) + 
+  geom_point()
+```
+
+## 3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot 
+
+# 4) Species composition in rock pools
+
+## 4) Species composition in rock pools
+
+![](images/rock_pool.PNG){width=70%} <br>
+
+On the Maroubra field trip, multivariate data were collected to investigate the species composition of the intertidal community living in rock pools to neighbouring rocky habitats that were that were emergent at low tide.
+
+> We can use a MDS plot to visualise differences in **species composition** between the samples taken.
+
+**Load data**
+
+Read the Maroubra data into into R.
+
+```{r}
+# Load data
+Rock_pools <- read_csv("data/Rock_pools_2025.csv")
+```
+
+Look at the data frame so that you are familiar with: 
+
+- the structure of the data collected,
+- what are the samples,
+- what are the variables,
+- how the samples are grouped by the habitat treatment.
+
+The first four columns are labels for `class` (am or pm), `group_id`, `plot_number` and `habitat` (rock_pool or emergent). The next columns are abundance of all the species recorded:
+
+-   red, brown and green algae
+-   several species of gastropods (*Nerita, Cellana, Austrocochlea, Bembicium* and *Morula*)
+-   a seastar (*Patiriella*)
+-   a sea squirt (*Pyrua*)
+-   an anemone (*Actinia*)
+-   barnacles (unidentified)
+
+**Exercise:**
+
+Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats (rockpool vs emergent).
+
+**Data wrangle**
+
+First, you will need to make a subset of the data with just the abundance data for the species recorded.
+
+```{r}
+Rock_pools_vars <- select(Rock_pools, -class, -group_id, -plot_number, -habitat)
+```
+
+**Data standarisation**
+
+Some of the variables are % cover (the red, brown and green algae) and some are counts of individual animals. _100% cover is not equivalent to 100 snails_, so we can **standardise** these variables to ensure they are on the same scale.
+
+We can use the function `decostand()` from `vegan` to **standardise** each variable by the maximum value of that variable. This function will give us variables having values between 0 and 1. No need to do any other transformations!
+
+```{r}
+Rock_pools_vars_std <- decostand(Rock_pools_vars, method= "max")
+```
+
+**Exercise:**
+
+Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats.
+
+```{r}
+
+```
+
+## 4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? 
+
+## 4b) How confident are you that the MDS plot effectively represents the relationships among all samples in the multivariate data set? 
+
+# 5) Cluster analysis: Heavy metals in sediments
+
+## 5) Cluster analysis: Heavy metals in sediments
+
+![](images/harbour.jpg){width=70%}
+
+You first explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. 
+
+**Cluster analysis**
+
+To visualise the similarity among sites with a **cluster diagram**, we can use the `hclust()` function:
+
+```{r}
+HeavyMetals.cluster <- dist(HeavyMetals.sq, method = "euclidean") |> hclust(method = "single")
+```
+
+Let's talk through this code: 
+
+- `HeavyMetal.sq` is the square root transformed data we created earlier. 
+- `method = "euclidean"` in the `dist()` function specifies the choice of similarity coefficient
+- `method = "single"` specifies the choice of linkage method in `hclust()`.
+
+Finally, make a plot of the object that was created by the `hclust` function.
+
+```{r, results='hide'}
+plot(HeavyMetals.cluster)
+```
+
+**Dendogram of cluster analysis**
+
+We can make this a bit neater by plotting it as a dendrogram with all the samples lined up along the bottom.
+
+```{r, results='hide'}
+as.dendrogram(HeavyMetals.cluster) |> plot()
+```
+
+**Questions:**
+
+**5a) Which two samples (i.e., sampling sites) are most similar to one another?** 
+
+???
+
+**Dendogram of variables**
+
+We can also use a cluster diagram to display the relationships among variables.
+
+The workflow is the same as above except you need to make the heavy metals as rows and the stations as columns before running the cluster analysis (use the transpose function, `t()`).
+
+```{r, results='hide'}
+HeavyMetals.cluster.trans <- 
+  t(HeavyMetals_vars) |> 
+  dist(method = "euclidean") |> 
+  hclust(method = "single")
+
+as.dendrogram(HeavyMetals.cluster.trans) |> plot()
+```
+
+**5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
+
+???
+
+## 5c) Does the cluster analysis suggest any effects of the sewage dump 
+
+# 6) To transform or to standardise?
+
+Multivariate data sets are often **transformed** prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but **to vary the relative importance of variables** that may be measured on **different scales**.
+
+For contrasts of species composition in community data sets (i.e., the abundance of many species in many samples) it is common to **square root** or **log transform** the abundance data prior to multivariate analyses. A more extreme standardisation is to convert the abundance data to presence/absence (i.e, 0 or 1) only.
+
+In the heavy metals data set, the concentration of the metals vary widely with manganese having values up to 2470, while cobalt has values no higher than 15. Consequently, the similarity between samples using Euclidean distance will be very strongly influenced by manganese values and those metals with low concentrations will have little influence.
+
+If you wanted to create a plot to **explore the composition of contaminants**, not just their **absolute concentrations**, then it is a good idea to **standardise** the variables before creating any cluster diagrams. There are several ways to do this (e.g., divide by maximum value, divide by mean etc).
+
+Here, we will **standardise** each metal variable so each will have a mean of zero and variance of 1 using the `decostand()` function from `vegan`.
+
+```{r}
+HeavyMetals.standardised <- decostand(HeavyMetals_vars, method = "standardize")
+```
+
+Any plots we create with this **standardised** data will have **all metals having a similar influence on the similarity** among samples and not be strongly influenced by just those variables with the highest concentrations.
+
+Create a cluster diagram to display the relationships among sites based on standardised metal concentrations.
+
+```{r, results='hide'}
+dist(HeavyMetals.standardised, method = "euclidean") |> 
+  hclust(method = "single") |> 
+  as.dendrogram() |> 
+  plot()
+```
+
+## 6a) Make some notes on how the relationships between sites are altered by standardising the variables 
+

@@ -9,7 +9,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+```{r,  echo=FALSE, message=FALSE, warning=FALSE, fig.show=FALSE}
 # webr counter
 source('../../R/webr-counter.R')
 library(moodlequiz)

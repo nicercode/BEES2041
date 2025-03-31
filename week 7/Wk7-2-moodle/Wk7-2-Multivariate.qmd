@@ -33,7 +33,7 @@ First, we will learn how to run a **hypothesis test** on multivariate data (perm
 
 Second, we will get an introduction to p**rincipal components analysis (PCA)**, a widely used technique to visualise multivariate data.
 
-![](images/nature14140-sf2.jpg){width=70%}
+![](images/nature14140-sf2.jpg){width=70%} <br>
 
 
 ## Key learning objectives
@@ -66,13 +66,14 @@ library(vegan)
 # 7) Nutrient enrichment experiment (multivariate hypothesis testing)
 ## 7) Nutrient enrichment experiment (multivariate hypothesis testing)
 
-![](images/53711279_1967294661.png){width=70%}
+![](images/53711279_1967294661.png){width=70%} <br>
 
 So far, we have been making plots to visualise differences among samples with multiple variables measured per sample, but have not run any statistical tests to determine whether any differences we found are likely to be due to chance sampling or not.
 
 There is a whole world of multivariate statistical tests, but we will show you just a couple to demonstrate how you can test hypotheses with multivariate data.
 
 In the nutrient enrichment experiment, we had: 
+
 - three treatments (control, low and high nutrients)
 - 12 response variables (the abundance of each weed species).
 
@@ -122,7 +123,7 @@ There are some key differences from a univariate (one predictor variable) ANOVA 
 
 - the probability of the test statistic produced (`pseudo-F`) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by **permutation**. From `permutations = 999` of the original data vs the treatment labels, it calculates how often a value of `pseudo-F` as large as yours would occur.
 
-**Visualise PERMANOVA**
+## Visualise PERMANOVA
 
 We can save the output from `adonis2` and use a density plot to see just how likely our value of pseudo-F was.
 
@@ -185,7 +186,7 @@ adonis2(Nutrients_LowvsHigh_vars ~ Nutrients_LowvsHigh$Treatment, permutations =
 
 The problem with this approach is increasing the the risk of **false positives**. False positives are also called **type 1 errors**. The idea is, with increasing numbers of pairwise tests being run, by chance, we will detect a statistically significant treatment difference even though the underlying populations may not be different. 
 
-![](images/type_1_errors.png){width=60%}
+![](images/type_1_errors.png){width=60%} <br>
 
 The simplest correction for this is called the **Bonferonni correction**, where the significance level (α =0.05) is **adjusted by the number of hypotheses being tested**. 
 
@@ -196,9 +197,9 @@ In this example, we will **multiply each P value by three (we have three differe
 
 # 8) Species composition in rock pools (multivariate hypothesis testing)## 8) Species composition in rock pools (multivariate hypothesis testing)
 
-![](images/rock_pool.PNG){width=70%}
+![](images/rock_pool.PNG){width=70%} <br>
 
-For your practical report, you want to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a permutational multivariate analysis of variance for this, modifying code that you just used for the nutrient enrichment experiment.
+For your practical report, you want to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a **permutational multivariate analysis of variance** for this, modifying code that you just used for the nutrient enrichment experiment.
 
 
 # 9) Advanced statistics content!
@@ -213,7 +214,7 @@ There is considerable current debate in the statistical literature about the bes
 Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.edu.au/) is focussed on developing methods to better analyse these sorts of data, and they have released an R package 'mvabund' that uses model-based approaches to analyse multivariate data sets. David has even promoted his package with a [video](https://youtu.be/KnPkH6d89l4) drawing on the considerable talents of 80's pop star Rick Astley!
 
 ![](images/rick-astley.jpg){width="150"} 
-![](images/mvabund_hex.png){width="150"}
+![](images/mvabund_hex.png){width="150"} <br>
 
 # 10) Principal components analysis
 ## 10) Principal components analysis (PCA)
@@ -222,7 +223,7 @@ Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.e
 
 A plant physiologist is attempting to quantify **differences in leaf shape between two species of tree**. She recorded the following five measurements from ten leaves of each species:
 
-![](images/leaf.png)
+![](images/leaf.png) <br>
 
 **Load data**
 
@@ -258,7 +259,7 @@ cor(Leaf_shape_vars)
 
 We obviously can’t plot these data in five dimensions, but if you look at just three of the five variables, you can get a sense of what PCA is trying to do - **fit a new X-Y plane as close as possible to all points in 5 dimensional space**.
 
-![](images/Test2.gif)
+![](images/Test2.gif) <br>
 
 ## 10a) What makes this data set particularly suitable for PCA?
 
@@ -362,7 +363,7 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) +
 # 11) Heavy metals in sediments (PCA)
 ## 11) Heavy metals in sediments (PCA)
 
-![](images/harbour.jpg){width=70%}
+![](images/harbour.jpg){width=70%} <br>
 
 Using the heavy metal data, we can compare the output from cluster analysis, principal components analysis and multidimensional scaling.
 
@@ -395,7 +396,7 @@ loadings(metals.pca)
 
 # 12) Cave hydrology
 
-![](images/caves.jpg){width=70%}
+![](images/caves.jpg){width=70%} <br>
 
 Professor Andy Baker (School of BEES, UNSW) works in caves to better understand the history of Australia's climate and how climate affects valuable groundwater resources. He looks at the geochemistry of stalagmites to reconstruct climate histories and impacts of fire, and flows of water underground to understand recharge of groundwater (i.e., how do rainfall events top up these important reserves of freshwater?).
 
