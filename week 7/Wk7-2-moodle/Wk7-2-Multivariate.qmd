@@ -113,15 +113,17 @@ Let's talk through this code:
 
 The output should look pretty familiar to you - very similar to an ANOVA table right?
 
-## 7a) Is there evidence to reject the null hypothesis?
-
-`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1","no, the F value is greater than 9"))`
-
 There are some key differences from a univariate (one predictor variable) ANOVA vs a multivariate one. With multivariate data:
 
 -  the analysis is ran on similarities among samples, not the actual values of the original variables
 
 - the probability of the test statistic produced (`pseudo-F`) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by **permutation**. From `permutations = 999` of the original data vs the treatment labels, it calculates how often a value of `pseudo-F` as large as yours would occur.
+
+
+## 7a) Is there evidence to reject the null hypothesis?
+
+`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1","no, the F value is greater than 9"))`
+
 
 ## Visualise PERMANOVA
 
@@ -265,7 +267,7 @@ We obviously can’t plot these data in five dimensions, but if you look at just
 
 `r cloze("there are multiple variables that are correlated with each other", c("there are multiple variables that are correlated with each other","there are lots of replicate samples","there are multiple variables measured","there two groups of samples that we want to contrast"))`
 
-**Run a PCA**
+## Run a PCA
 
 To conduct a principal components analysis on the leaf data, we can use the `princomp()` function in base stats.
 
