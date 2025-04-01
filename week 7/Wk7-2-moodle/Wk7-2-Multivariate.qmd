@@ -51,16 +51,18 @@ Let’s dive in! 🚀
 
 For some exercises below, we will be using the datasets from last practical. To avoid repeating yourself and duplicating your code, **add today's code to the notebook you created for the first multivariate practical** rather than creating a new Quarto document. This way, you can then easily re-run previous code to import data and create the objects that you will need for today's work.
 
-We'll again be using the package, called `vegan`, so ensure this is loaded.
+We'll again be using the package, called `vegan` and will introduce a new package called `plotly` that will help us visualise multi-dimensional data!
 
 ```{r, eval=FALSE}
 # install.packages("tidyverse")
 # install.packages("vegan")
+# install.packages("ploty")
 ```
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
 library(vegan)
+library(plotly)
 ```
 
 # 7) Nutrient enrichment experiment (multivariate hypothesis testing)
@@ -261,7 +263,20 @@ cor(Leaf_shape_vars)
 
 We obviously can’t plot these data in five dimensions, but if you look at just three of the five variables, you can get a sense of what PCA is trying to do - **fit a new X-Y plane as close as possible to all points in 5 dimensional space**.
 
-![](images/Test2.gif) <br>
+<!-- ![](images/Test2.gif) <br> -->
+
+```{r}
+fig <- plot_ly(Leaf_shape, x = ~Width_2, y = ~Leaf_length, z = ~Width_1, color = ~Species, colors = c('#BF382A', '#0C4B8E'))
+
+fig <- fig |>  
+  add_markers() |> 
+  layout(scene = list(xaxis = list(title = 'Width_2'),
+                     yaxis = list(title = 'Leaf_length'),
+                     zaxis = list(title = 'Width_1')))
+
+fig
+```
+
 
 ## 10a) What makes this data set particularly suitable for PCA?
 
