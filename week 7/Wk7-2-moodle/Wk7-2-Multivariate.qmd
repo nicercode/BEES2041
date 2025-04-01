@@ -263,12 +263,12 @@ cor(Leaf_shape_vars)
 
 We obviously can’t plot these data in five dimensions, but if you look at just three of the five variables, you can get a sense of what PCA is trying to do - **fit a new X-Y plane as close as possible to all points in 5 dimensional space**.
 
-<!-- ![](images/Test2.gif) <br> -->
-
 ```{r}
-fig <- plot_ly(Leaf_shape, x = ~Width_2, y = ~Leaf_length, z = ~Width_1, color = ~Species, colors = c('#BF382A', '#0C4B8E'))
+# Map variables to axes and set colours
+leaf_fig <- plot_ly(Leaf_shape, x = ~Width_2, y = ~Leaf_length, z = ~Width_1, color = ~Species, colors = c('#BF382A', '#0C4B8E'))
 
-fig <- fig |>  
+# Create interactive plot and add axes labels
+fig |>  
   add_markers() |> 
   layout(scene = list(xaxis = list(title = 'Width_2'),
                      yaxis = list(title = 'Leaf_length'),
@@ -276,7 +276,6 @@ fig <- fig |>
 
 fig
 ```
-
 
 ## 10a) What makes this data set particularly suitable for PCA?
 
@@ -411,6 +410,24 @@ loadings(metals.pca)
 ## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
 
 
+## 11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? 
+
+```{r, solution2}
+# Standardise variables
+hm_std <- vegan::decostand(HeavyMetals_vars, "max")
+
+# Grab Site labels
+hm_std$Site <- HeavyMetals$Site
+
+# Create mapping of variables
+hm_fig <- plot_ly(hm_std, x = ~Ni, y = ~Cr, z = ~Pb, 
+                    color = ~Site)
+
+# Generate interactive plot
+ hm_fig |>  
+  add_markers()
+```
+
 # 12) Cave hydrology
 
 ![](images/caves.jpg){width=70%} <br>
@@ -436,7 +453,8 @@ Caves <- mutate(Caves, Date = as.Date(Date, format = "%d/%m/%Y"))
 Let's visualise the plot the patterns in drip numbers through time for just one of the loggers (`HW_4b`)
 
 ```{r, results='hide'}
-ggplot(Caves, aes(Date, HW_4b)) + geom_point(alpha=0.05)
+ggplot(Caves, aes(Date, HW_4b)) + 
+  geom_point(alpha=0.05)
 ```
 
 
@@ -469,5 +487,7 @@ Caves_xy$Year <- as.character(Caves$Year)
 
 # Create ordination plot
 ggplot(Caves_xy, aes(Comp.1, Comp.2, colour = Year)) + 
-  geom_point()
+  geom_point() + 
+  theme_minimal()
 ```
+
