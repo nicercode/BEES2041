@@ -232,12 +232,13 @@ In this example, we will **multiply each P value by three (we have three differe
 
 ## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}
 
-<h3>7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}</h3>
+<h3>7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. </h3>
 
 
 
 
-# 8) Species composition in rock pools (multivariate hypothesis testing)## 8) Species composition in rock pools (multivariate hypothesis testing)
+# 8) Species composition in rock pools (multivariate hypothesis testing)
+## 8) Species composition in rock pools (multivariate hypothesis testing)
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
@@ -450,7 +451,7 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) +
 
 ## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
 
-<h3>10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}</h3>
+<h3>10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? </h3>
 
 
 
@@ -499,7 +500,7 @@ Conduct a PCA on the heavy metal data. Given that the variables were measured on
 
 ## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
 
-<h3>11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}</h3>
+<h3>11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? </h3>
 
 
 

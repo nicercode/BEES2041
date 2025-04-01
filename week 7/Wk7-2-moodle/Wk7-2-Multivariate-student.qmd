@@ -199,7 +199,8 @@ In this example, we will **multiply each P value by three (we have three differe
 ## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. 
 
 
-# 8) Species composition in rock pools (multivariate hypothesis testing)## 8) Species composition in rock pools (multivariate hypothesis testing)
+# 8) Species composition in rock pools (multivariate hypothesis testing)
+## 8) Species composition in rock pools (multivariate hypothesis testing)
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
