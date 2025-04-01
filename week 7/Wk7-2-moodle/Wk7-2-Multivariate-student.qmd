@@ -1,21 +1,11 @@
 ---
 title: "Week 7-2 Multivariate methods"
-output:
-  moodlequiz::moodlequiz:
-    replicates: 1
-moodlequiz:
-  category: Week 7-2 Multivariate methods
-editor_options:
+format: 
+  html:    
+    self-contained: true
+editor_options: 
   chunk_output_type: console
 ---
-
-```{r,  echo=FALSE, message=FALSE, warning=FALSE}
-# webr counter
-source('../../R/webr-counter.R')
-library(moodlequiz)
-```
-
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -37,10 +27,6 @@ library(vegan)
 
 ## Introduction
 
-<h3>Introduction</h3>
-
-
-
 In this practical, we will continue our look at methods to analyses and visualise complex, **multivariate data sets** - ones where **more than one response variable has been measured from each replicate sample**.
 
 First, we will learn how to run a **hypothesis test** on multivariate data (permutational multivariate analysis of variance or **PERMANOVA**). This will be used to test for differences in species composition in and out of rock pools from the class data set collected at Maroubra.
@@ -52,10 +38,6 @@ Second, we will get an introduction to p**rincipal components analysis (PCA)**, 
 
 ## Key learning objectives
 
-<h3>Key learning objectives</h3>
-
-
-
 At the end of today's practicals, you should be able to:
 
 -   Understand the logic behind **permutational MANOVA**
@@ -66,10 +48,6 @@ At the end of today's practicals, you should be able to:
 Let’s dive in! 🚀
 
 ## Setting up: Packages
-
-<h3>Setting up: Packages</h3>
-
-
 
 For some exercises below, we will be using the datasets from last practical. To avoid repeating yourself and duplicating your code, **add today's code to the notebook you created for the first multivariate practical** rather than creating a new Quarto document. This way, you can then easily re-run previous code to import data and create the objects that you will need for today's work.
 
@@ -89,10 +67,6 @@ library(plotly)
 
 # 7) Nutrient enrichment experiment (multivariate hypothesis testing)
 ## 7) Nutrient enrichment experiment (multivariate hypothesis testing)
-
-<h3>7) Nutrient enrichment experiment (multivariate hypothesis testing)</h3>
-
-
 
 ![](images/53711279_1967294661.png){width=70%} <br>
 
@@ -150,18 +124,10 @@ There are some key differences from a univariate (one predictor variable) ANOVA 
 
 ## 7a) Is there evidence to reject the null hypothesis?
 
-<h3>7a) Is there evidence to reject the null hypothesis?</h3>
-
-
-
-`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1","no, the F value is greater than 9"))`
+???
 
 
 ## Visualise PERMANOVA
-
-<h3>Visualise PERMANOVA</h3>
-
-
 
 We can save the output from `adonis2` and use a density plot to see just how likely our value of pseudo-F was.
 
@@ -230,11 +196,7 @@ The simplest correction for this is called the **Bonferonni correction**, where 
 
 In this example, we will **multiply each P value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
 
-## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}
-
-<h3>7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}</h3>
-
-
+## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. 
 
 
 # 8) Species composition in rock pools (multivariate hypothesis testing)## 8) Species composition in rock pools (multivariate hypothesis testing)
@@ -246,10 +208,6 @@ For your practical report, you want to accompany the text and figures that contr
 
 # 9) Advanced statistics content!
 ## 9) Advanced statistics content!
-
-<h3>9) Advanced statistics content!</h3>
-
-
 
 There is considerable current debate in the statistical literature about the best ways to analyse multivariate data sets like the one you just analysed. Analyses that partition variation in the similarity metrics have been criticised for:
 
@@ -264,10 +222,6 @@ Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.e
 
 # 10) Principal components analysis
 ## 10) Principal components analysis (PCA)
-
-<h3>10) Principal components analysis (PCA)</h3>
-
-
 
 **PCA** is a commonly used method to **visualise data with many variables**. In this example, we will use it to analyse differences in the shape of leaves.
 
@@ -325,17 +279,9 @@ leaf_fig |>
 
 ## 10a) What makes this data set particularly suitable for PCA?
 
-<h3>10a) What makes this data set particularly suitable for PCA?</h3>
-
-
-
-`r cloze("there are multiple variables that are correlated with each other", c("there are multiple variables that are correlated with each other","there are lots of replicate samples","there are multiple variables measured","there two groups of samples that we want to contrast"))`
+???
 
 ## Run a PCA
-
-<h3>Run a PCA</h3>
-
-
 
 To conduct a principal components analysis on the leaf data, we can use the `princomp()` function in base stats.
 
@@ -351,10 +297,6 @@ Principal components analysis produces a lot of graphical and numerical output, 
 
 ## Producing a score plot
 
-<h3>Producing a score plot</h3>
-
-
-
 This is the ordination of all 20 leaf samples in the new **two-dimensional space defined by principal component 1 and 2**.
 
 ```{r, results='hide'}
@@ -369,10 +311,6 @@ biplot(leaf.pca)
 
 ## Understanding how much variance is explained by each component
 
-<h3>Understanding how much variance is explained by each component</h3>
-
-
-
 PCA is aiming to **represent as much variance as possible in the first few principal components**. We can check whether it is doing a good job by exploring the `summary()` of the `leaf.pca` object.
 
 ```{r, results='hide'}
@@ -381,12 +319,8 @@ summary(leaf.pca)
 
 ## 10b) Enter the proportion explained by the first two principal components
 
-<h3>10b) Enter the proportion explained by the first two principal components</h3>
-
-
-
-- PC1: `r cloze_numerical(0.83, tolerance = 0.01)` 
-- PC2: `r cloze_numerical(0.22, tolerance = 0.01)`
+- PC1: ??? 
+- PC2: ???
 
 **Visualise variance explained by princpal components**
 
@@ -398,10 +332,6 @@ screeplot(leaf.pca, type = 'lines')
 
 ## Understanding how the original variables relate to the principal components
 
-<h3>Understanding how the original variables relate to the principal components</h3>
-
-
-
 We gain further insight into the **relationships among variables** and help with interpreting our plot by examining the **strength of the correlations between the original variables and the principal components**.
 
 These relationships can be seen in the **biplot** above but also obtained numerically by extracting the **loadings** from the PCA. Note that this output does not print very small values, so the empty cells can be considered close to zero (i.e., no correlation).
@@ -412,17 +342,9 @@ loadings(leaf.pca)
 
 ## 10c) Which of the original variables is most strongly correlated with principal component 1?
 
-<h3>10c) Which of the original variables is most strongly correlated with principal component 1?</h3>
-
-
-
-`r cloze("Width 1", c("Width 1", "Width 2","Length 1","Length 2","Petiole length"))`
+???
 
 ## Producing a more effective plot to visualise the data
-
-<h3>Producing a more effective plot to visualise the data</h3>
-
-
 
 Let's produce a plot that addresses the question first posed by the researcher. Recall that she wants to quantify **differences in leaf shape between two species of tree**. We can do this by colour coding the samples on the score plot.
 
@@ -448,26 +370,14 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) +
   theme_classic()
 ```
 
-## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
-
-<h3>10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}</h3>
-
-
+## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? 
 
 ## 10e) Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.
 
-<h3>10e) Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.</h3>
-
-
-
-`r cloze("Width 1 and Width 2", c("Width 1 and Width 2", "Width 1 and Total length", "Total length and Petiole length", "Only Width 1"))`
+???
 
 # 11) Heavy metals in sediments (PCA)
 ## 11) Heavy metals in sediments (PCA)
-
-<h3>11) Heavy metals in sediments (PCA)</h3>
-
-
 
 ![](images/harbour.jpg){width=70%} <br>
 
@@ -491,24 +401,12 @@ Conduct a PCA on the heavy metal data. Given that the variables were measured on
 
 ## 11a) Which variable (i.e., metal) is most strongly correlated with the values of PC1?
 
-<h3>11a) Which variable (i.e., metal) is most strongly correlated with the values of PC1?</h3>
+???
 
-
-
-`r cloze("Cr", c("Cr","Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
-
-## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
-
-<h3>11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}</h3>
-
-
+## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? 
 
 
 ## 11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)
-
-<h3>11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)</h3>
-
-
 
 ```{r, solution2}
 # Standardise variables
@@ -557,10 +455,6 @@ ggplot(Caves, aes(Date, HW_4b)) +
 
 
 ## 12a) Using PCA to visualise variation among years 
-
-<h3>12a) Using PCA to visualise variation among years </h3>
-
-
 
 **Exercise:**
 

@@ -263,6 +263,8 @@ cor(Leaf_shape_vars)
 
 We obviously can’t plot these data in five dimensions, but if you look at just three of the five variables, you can get a sense of what PCA is trying to do - **fit a new X-Y plane as close as possible to all points in 5 dimensional space**.
 
+We can also create a interactive 3D plot to try visualise this plane
+
 ```{r}
 # Map variables to axes and set colours
 leaf_fig <- plot_ly(Leaf_shape, x = ~Width_2, y = ~Leaf_length, z = ~Width_1, color = ~Species, colors = c('#BF382A', '#0C4B8E'))
