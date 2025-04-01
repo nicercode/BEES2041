@@ -429,6 +429,7 @@ hm_fig <- plot_ly(hm_std, x = ~Ni, y = ~Cr, z = ~Pb,
 ```
 
 # 12) Cave hydrology
+## 12) Cave hydrology
 
 ![](images/caves.jpg){width=70%} <br>
 
@@ -437,12 +438,14 @@ Professor Andy Baker (School of BEES, UNSW) works in caves to better understand 
 He has collected over 10 years of data from loggers in Harrie Wood Cave in the Snowy Mountains which count the total number of drips in 15 minute intervals (published recently by an Honours student - Chapman *et al.* 2024 [*Journal of Hydrology*](https://linkinghub.elsevier.com/retrieve/pii/S0022169424001781)).
 
 There were over 40,000 observations in the original data set, collected from nine loggers (labelled HW_2b, HW_4b etc.). Here is a version of the dataset that has removed the rows that lacked data for all of the nine loggers in the same time period (>11000 observations).
+
 **Load data**
 ```{r}
 Caves <- read_csv(file = "data/Caves.csv")
 ```
 
 To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (the from columns HW-2b, HW_4b etc.). Let's format the date column as a date, not character so that R handles years and dates nicely. 
+
 **Wrangle data**
 ```{r}
 Caves <- mutate(Caves, Date = as.Date(Date, format = "%d/%m/%Y"))

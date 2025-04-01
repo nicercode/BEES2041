@@ -21,7 +21,8 @@ library(moodlequiz)
 knitr::opts_chunk$set(
   echo = TRUE, 
   results = 'hide',
-  fig.show= 'hide'
+  fig.show= 'hide',
+  warning = FALSE
 )
 
 # Set the working directory
@@ -529,6 +530,8 @@ hm_fig <- plot_ly(hm_std, x = ~Ni, y = ~Cr, z = ~Pb,
 
 # 12) Cave hydrology
 
+<h3>12) Cave hydrology</h3>
+
 ![](images/caves.jpg){width=70%} <br>
 
 Professor Andy Baker (School of BEES, UNSW) works in caves to better understand the history of Australia's climate and how climate affects valuable groundwater resources. He looks at the geochemistry of stalagmites to reconstruct climate histories and impacts of fire, and flows of water underground to understand recharge of groundwater (i.e., how do rainfall events top up these important reserves of freshwater?).
@@ -536,6 +539,7 @@ Professor Andy Baker (School of BEES, UNSW) works in caves to better understand 
 He has collected over 10 years of data from loggers in Harrie Wood Cave in the Snowy Mountains which count the total number of drips in 15 minute intervals (published recently by an Honours student - Chapman *et al.* 2024 [*Journal of Hydrology*](https://linkinghub.elsevier.com/retrieve/pii/S0022169424001781)).
 
 There were over 40,000 observations in the original data set, collected from nine loggers (labelled HW_2b, HW_4b etc.). Here is a version of the dataset that has removed the rows that lacked data for all of the nine loggers in the same time period (>11000 observations).
+
 **Load data**
 ```{r}
 Caves <- read_csv(file = "data/Caves.csv")
