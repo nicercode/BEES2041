@@ -268,13 +268,11 @@ We obviously can’t plot these data in five dimensions, but if you look at just
 leaf_fig <- plot_ly(Leaf_shape, x = ~Width_2, y = ~Leaf_length, z = ~Width_1, color = ~Species, colors = c('#BF382A', '#0C4B8E'))
 
 # Create interactive plot and add axes labels
-fig |>  
+leaf_fig |>  
   add_markers() |> 
   layout(scene = list(xaxis = list(title = 'Width_2'),
                      yaxis = list(title = 'Leaf_length'),
                      zaxis = list(title = 'Width_1')))
-
-fig
 ```
 
 ## 10a) What makes this data set particularly suitable for PCA?
@@ -410,7 +408,7 @@ loadings(metals.pca)
 ## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
 
 
-## 11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? 
+## 11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)
 
 ```{r, solution2}
 # Standardise variables
