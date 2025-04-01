@@ -7,24 +7,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE, 
-  results = 'hide',
-  fig.show= 'hide'
-)
-
-# Set the working directory
-rprojroot::has_file("BEES2041-code.Rproj") |>
-  rprojroot::find_root() |>
-  file.path("week 7/Wk7-2-moodle") |>
-  setwd()
-
-# remotes::install_github("numbats/moodlequiz")
-library(moodlequiz)
-library(vegan)
-```
-
 ## Introduction
 
 In this practical, we will continue our look at methods to analyses and visualise complex, **multivariate data sets** - ones where **more than one response variable has been measured from each replicate sample**.
