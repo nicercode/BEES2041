@@ -56,7 +56,7 @@ We'll again be using the package, called `vegan` and will introduce a new packag
 ```{r, eval=FALSE}
 # install.packages("tidyverse")
 # install.packages("vegan")
-# install.packages("ploty")
+# install.packages("plotly")
 ```
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
@@ -194,7 +194,7 @@ The problem with this approach is increasing the the risk of **false positives**
 
 The simplest correction for this is called the **Bonferonni correction**, where the significance level (α =0.05) is **adjusted by the number of hypotheses being tested**. 
 
-In this example, we will **multiply each P value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
+In this example, we will **divide the threshold signifance valuye by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
 
 ## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}
 
@@ -319,8 +319,8 @@ summary(leaf.pca)
 
 ## 10b) Enter the proportion explained by the first two principal components
 
-- PC1: `r cloze_numerical(0.83, tolerance = 0.01)` 
-- PC2: `r cloze_numerical(0.22, tolerance = 0.01)`
+- PC1: `r cloze_numerical(0.9, tolerance = 0.01)` 
+- PC2: `r cloze_numerical(0.06, tolerance = 0.01)`
 
 **Visualise variance explained by princpal components**
 
@@ -397,7 +397,10 @@ Conduct a PCA on the heavy metal data. Given that the variables were measured on
 
 ```{r solution}
 # Perform PCA
-metals.pca <- princomp(HeavyMetals_vars, cor = TRUE)
+std.HM <- decostand(HeavyMetals_vars, method = "max")
+std.HM 
+
+metals.pca <- princomp(std.HM, cor = FALSE)
 
 # Extract loadings from PCA
 loadings(metals.pca)
