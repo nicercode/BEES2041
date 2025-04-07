@@ -67,3 +67,6 @@ BEES2041.Rproj
 # Ignore ignore folder
 ignore/
 
+# Week 8 large files
+large-files/ 
+
