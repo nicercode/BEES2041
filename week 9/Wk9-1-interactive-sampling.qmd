@@ -20,7 +20,8 @@ library(kableExtra)
 
 ```{r}
 # Load data
-glasshouse <- read_sheet("https://docs.google.com/spreadsheets/d/1uKWIN4AhAnNMzr9-qF9AetaLobWeIkVAufd0m5ZOJ5A/edit?gid=0#gid=0") |> 
+glasshouse <- read_sheet("https://docs.google.com/spreadsheets/d/1uKWIN4AhAnNMzr9-qF9AetaLobWeIkVAufd0m5ZOJ5A/edit?gid=0#gid=0", 
+                         sheet = "randomise") |> 
   clean_names()
 ```
 
