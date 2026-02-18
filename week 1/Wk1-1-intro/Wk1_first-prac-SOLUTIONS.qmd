@@ -73,7 +73,7 @@ str(stalagmite_data_nice_names)
 
 Integer because the values are whole numbers
 
-**Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `?as.integer()` , you may need to install/load the package `dplyr`** )
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `?as.integer` , you may need to install/load the package `dplyr`** )
 
 ```{r}
 # Without dplyr
@@ -104,7 +104,7 @@ skim(stalagmite_data_nice_names_corrected_age)
 
 ## Sydney Beaches
 
-![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
 
 > We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 
