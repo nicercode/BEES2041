@@ -1,11 +1,11 @@
 ---
 title: "Week 1 First Practical"
-output: 
+output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
   category: "Week 1-1 stalagmite and beaches"
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -25,7 +25,7 @@ library(janitor)
 
 syd_beach_data <- read_csv(here("R/Wk1/data/sydneybeaches.csv")) |> clean_names()
 
-# Used in final question for readable code 
+# Used in final question for readable code
 syd_beaches <- c("Clovelly Beach", "Coogee Beach", "Gordons Bay East", "Little Bay Beach","Malabar Beach", "Maroubra Beach","South Maroubra Beach","South Maroubra Rockpool", "Bondi Beach","Bronte Beach", "Tamarama Beach")
 ```
 
@@ -71,14 +71,14 @@ Using the functions you've learned so far in this prac, try answer the following
 
 ##  What type of variable is `lamina_thickness_mm`?
 
-**What type of variable is `lamina_thickness_mm`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
+**What type of variable is `lamina_thickness_mm`?** `r cloze("numeric", c("complex number", "integer", "numeric", "character"))`
 
 # Sydney Beaches
 
 <h2>Sydney Beaches</h2>
-  
+
 ![Image credit: Amazing Aerial](coogee-beach.jpeg){width="100%"}
-  
+
 <br>
 
 Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
@@ -91,13 +91,13 @@ First, read in the data.
 
 **Check the structure to make sure the variable types were assigned correctly.**
 
-## Which of these variables were assigned incorrectly? 
+## Which of these variables were assigned incorrectly?
 
 **Which of these variables were assigned incorrectly?** `r cloze("enterococci_cfu_per_100ml", colnames(syd_beach_data))`
 
 **Change `Enterococci_cfu_per_100ml` to an integer variable.**
 
-## Primer to plot 
+## Primer to plot
 
 Use this newly formatted data to visualise the amount of bacteria found at each `Site.`
 
