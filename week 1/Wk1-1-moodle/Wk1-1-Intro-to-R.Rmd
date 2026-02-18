@@ -309,4 +309,4 @@ ggplot(data = mtcars, aes(x = `r cloze("am", colnames(mtcars))`, y = `r cloze("m
 
 
 **Question:**
-`r cloze("Manual", c("Automatic", "Manual"))` cars `r cloze("tend to", c("are always", "tend to"))` have `r cloze("higher", c("higher", "lower"))` mileage. 
+Manual cars `r cloze("tend to", c("are always", "tend to"))` have `r cloze("higher", c("higher", "lower"))` mileage.

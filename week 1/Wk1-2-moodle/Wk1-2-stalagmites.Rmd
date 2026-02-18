@@ -285,7 +285,7 @@ stalagmites_sites |>
 
 <h3>BONUS</h3>
 
-R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to use you the possibilities of R!
+R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to show you the possibilities of R!
 
 
 ```{r, warning=FALSE}
