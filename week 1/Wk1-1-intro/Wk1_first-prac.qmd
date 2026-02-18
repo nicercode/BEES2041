@@ -68,7 +68,7 @@ Using the functions you've learned so far in this prac, try answer the following
 
 **What is a more suitable variable type for `lam_age_bp_0_1950ad`?**
 
-**Write some code to change the variable type of `lam_age_bp_0_1950ad`?** (Try: `?as.integer()` , you may need to install/load the package `dplyr`)
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`?** (Try: `?as.integer` , you may need to install/load the package `dplyr`)
 
 ```{r}
 
