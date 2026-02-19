@@ -22,7 +22,7 @@ library(janitor)
 library(readxl)
 library(leaflet)
 
-# Read data from maintainer perspective
+# Read data from the maintainer's perspective
 stalagmites_data <- read_csv(here("week 1/Wk1-2-moodle/data/stalagmites/Laminated stalagmite Dataset.csv")) |> clean_names()
 stalagmites_sites <- read_xlsx(here("week 1/Wk1-2-moodle/data/stalagmites/Tables.xlsx")) |> clean_names()
 
@@ -40,13 +40,13 @@ stalagmites_sites <- stalagmites_sites |>
 
 <br>
 
-Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
+Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalagmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability over time.
 
 This section builds off two papers published by Andy and his team:
 
-- Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. <https://doi.org/10.1029/2020RG000722> (see file `doc/Baker et al 2021 Reviews of Geophysics.pdf`
+- Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. <https://doi.org/10.1029/2020RG000722> (See file `doc/Baker et al 2021 Reviews of Geophysics.pdf`.)
 
-- Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `doc/Baker et al 2015.pdf`)
+- Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (See file `doc/Baker et al 2015.pdf`.)
 
 **Activity:**
 
