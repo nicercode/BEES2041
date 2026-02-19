@@ -142,7 +142,7 @@ stalagmites_data <- stalagmites_data |>
 
 <h3>Figure 5</h3>
 
-Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis
+Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis. Note: Do not worry about adding the curve.
 
 ![Figure 5](baker-fig5.png)
 
