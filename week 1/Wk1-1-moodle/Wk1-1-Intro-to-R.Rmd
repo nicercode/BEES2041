@@ -20,7 +20,7 @@ library(moodlequiz)
 
 <h3>R Refresher</h3>
 
-Learning to code in R is like learning to speaking a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive - let's get started!
+Learning to code in R is like learning to speak a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive - let's get started!
 
 ![R then and now, Artwork by @allison_horst](R-then-and-now.png){width=600}
 
@@ -28,7 +28,7 @@ Learning to code in R is like learning to speaking a new language. Here we will 
 
 <h3>Code and Comments</h3>
 
-Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line with spit out or "return" a solution.
+Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line will spit out or "return" a solution.
 
 <div id="r-editor-2565">
 6 + 3

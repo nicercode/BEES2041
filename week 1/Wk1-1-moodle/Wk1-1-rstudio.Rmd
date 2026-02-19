@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 
 ## Installing or updating R and RStudio
 
-If you haven't already, please install the latest versions of R and RStudio. If you've previously had R or Rstudio installed, we request you update these to the latest version. These are available from:
+If you haven't already, please install the latest versions of R and RStudio. If you've previously had R or RStudio installed, we request you update these to the latest version. These are available from:
 
 * Install R (version 4.4 or newer) from https://cran.csiro.au
 * Install Rstudio (latest) from https://www.rstudio.com/products/rstudio/download/.
@@ -42,7 +42,7 @@ Sometimes Windows machines don't connect the latest version, even though you've 
 
 <h2>Getting Started in RStudio</h2>
 
-R Studio is an integrated development environment (IDE) that allows you to write and run code and visualise data all in one place.
+RStudio is an integrated development environment (IDE) that allows you to write and run code and visualise data all in one place.
 
 We will use this program throughout the course and over time you will really know your way around! But first let's get you set up for success...
 
@@ -67,17 +67,17 @@ When you open `Wk1-intro.Rproj`, you will be greeted by three panels:
 
 -   The interactive **R console** (entire left pane)
 
-This is where R lives, and where it will responds and return the outputs you create using code
+This is where R lives, and where it will respond and return the outputs you create using code
 
 -   **Environment**/History (upper right pane)
 
-This is where all the objects you create will live. The **History** tab is the running tab of all the R code you run, note that is history is not saved but don't worry we have another way of saving code which we'll talk about later!
+This is where all the objects you create will live. The **History** tab is the running tab of all the R code you run. Note that this history is not saved, but don't worry—we have another way of saving code which we'll talk about later!
 
 -   **Files**/Plots/Packages/Help/Viewer (lower right pane)
 
 This is where you can see the files in the project. The **Plots** tab is where you will view the plots that you create, the **Packages** tab is where you can see the R packages you have installed and **Help tab** is where we can pull up help files (more on this later!)
 
-**Tip:** Its a really good sanity check to look at the top right corner of RStudio. If you can see you are in the folder `Wk1-1 intro` we are off to a gooooood start!
+**Tip:** It's a really good sanity check to look at the top right corner of RStudio. If you can see you are in the folder `Wk1-1 intro` we are off to a good start!
 
 ![Are you in a RStudio project?](are-you-in-the-project.png){width=80%}
 
