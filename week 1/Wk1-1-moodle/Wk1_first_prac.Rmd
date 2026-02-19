@@ -81,7 +81,7 @@ Using the functions you've learned so far in this prac, try answer the following
 
 <br>
 
-Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences collected a dataset containing water quality measurements for Sydney beaches. It includes records of enterococci levels (cfu per 100ml) across a number of years, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
 
 > We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 

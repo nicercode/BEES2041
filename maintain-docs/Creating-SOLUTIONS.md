@@ -6,9 +6,9 @@
 4. `</pre>` replace ```
 5. `</div>` replace with nothing
 6. `<br>`
-7. Check set up check for needed dependencies
-8. Manually go through `moodlequiz::cloze(...)`, retain the answer as plain text and remove option options.
-9. Knit to check answers
+7. Check the setup for required dependencies
+8. Manually review `moodlequiz::cloze(...)`, retain the answer as plain text, and remove extra options.
+9. Knit the document to verify answers
 
 
 

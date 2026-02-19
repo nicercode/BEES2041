@@ -13,5 +13,5 @@ assignees: ''
 ## .qmds
 -[]
 
-### use a header for each seperate .qmd
+### use a header for each separate .qmd
 -[]

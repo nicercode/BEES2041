@@ -27,7 +27,7 @@ Andy asked us to cross check his results, your goal is reproduce some key figure
 
 > In some code chunks, we've given you some partialy completed R code, these are hints, complete the rest of the code before you run them
 
-## Setting up 
+## Setting up
 
 Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don’t have.
 
@@ -66,14 +66,14 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 -   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
 -   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
-Check the structure of the dataset, including the names of the columns. 
+Check the structure of the dataset, including the names of the columns.
 
 ```{r}
 names(stalagmites_data)
 ```
 
 
-> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. 
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here.
 
 
 ```{r}
@@ -88,17 +88,17 @@ stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv"
 The code below get’s you started. You’ll need to fill in the spaces indicated by XXX.
 
 ```{r}
-ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) + 
+ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) +
   geom_XXX()
 ```
 
 You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
 
-The `filter()` function and the `!` exclusion operator could be useful here.
+The `filter()` function could be useful here.
 
 ```{r}
-stalagmites_data <- stalagmites_data |> 
-  filter(!XXX)
+stalagmites_data <- stalagmites_data |>
+  filter(lamina_thickness_mm < XXX)
 ```
 
 > Now let's go ahead and make some plots. We're going to try and recreate figures similar to Figure 3, 5, 10 in Baker et al 2021. Don't worry about getting them exact, just close.
@@ -118,7 +118,7 @@ stalagmites_data |>
 ```
 
 
-**Question: Interpret this plot, what does this visualisation tell us? [ANSWER IN MOODLE]** 
+**Question: Interpret this plot, what does this visualisation tell us? [ANSWER IN MOODLE]**
 
 
 ### Figure 3
@@ -133,7 +133,7 @@ Have a go at creating this plot.
 
 ```{r}
 # Transform data
-transformed_stalagmites_data <- stalagmites_data |> 
+transformed_stalagmites_data <- stalagmites_data |>
   mutate(log10_1_lamina_thickness_mm = log10(lamina_thickness_mm + 1))
 
 # Create plot
@@ -141,7 +141,7 @@ transformed_stalagmites_data |>
   filter( XXX) |>
   ggplot(aes(x = lam_age_bp_0_1950ad, y = XXX)) +
   geom_line() +
-  labs() + 
+  labs() +
   theme_classic()
 ```
 
@@ -153,7 +153,7 @@ transformed_stalagmites_data |>
   geom_line() +
   scale_y_log10() +
   theme_classic() +
-  labs("Years BP", y = "Growth rate (mm/yr)") + 
+  labs(x = "Years BP", y = "Growth rate (mm/yr)") +
   facet_wrap( ~ entity_id, scales = "free")
 ```
 
@@ -163,23 +163,23 @@ The annual growth of all lamina samples are highly variable
 
 ### Figure 10
 
-Have a go at creating this plot. 
+Have a go at creating this plot.
 
 ![Figure 10](images/baker-fig10.png)
 
 You'll need to extract data for the samples numbers in black with `seq_id` before plotting. Using the **`%in%`** operator to filter for specific sequences.
 
 ```{r}
-# Check vector of seq_id that you want 
+# Check vector of seq_id that you want
 ids <- c(85, 1004, 385, 217.1, 1008.1, 128, 465, 217.2, 1007.2, 128,  466, 1009.2, 1003.1, 1006)
 
 # Create plot
-transformed_stalagmites_data |> 
-  filter(seq_id %in% ids) |> 
+transformed_stalagmites_data |>
+  filter(seq_id %in% ids) |>
   ggplot(aes(x =XXX , y = XXX)) +
   geom_line() +
   facet_wrap( ~ seq_id, scales = "free") +
-  labs("Years BP", y = "Growth rate (mm/yr)")
+  labs(x = "Years BP", y = "Growth rate (mm/yr)")
 ```
 
 
@@ -210,7 +210,7 @@ stalagmites_sites <- stalagmites_sites |> filter(! )
 **Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
 
 ```{r}
-stalagmites_sites <- stalagmites_sites |> 
+stalagmites_sites <- stalagmites_sites |>
   mutate(lat = XXX ),
          long = XXX )
 ```
@@ -225,7 +225,7 @@ world_coordinates <- map_data("world")
 # create world map using ggplot() function
 ggplot(stalagmites_sites, aes(long, lat)) +
   geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
-           aes(long, lat, map_id = region)) +  
+           aes(long, lat, map_id = region)) +
   coord_quickmap() +
   theme_classic()
 ```
