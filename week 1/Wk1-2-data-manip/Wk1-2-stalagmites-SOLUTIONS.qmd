@@ -27,7 +27,7 @@ Andy asked us to cross check his results, your goal is reproduce some key figure
 
 > In some code chunks, we've given you some partialy completed R code, these are hints, complete the rest of the code before you run them
 
-## Setting up 
+## Setting up
 
 Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don’t have.
 
@@ -66,14 +66,14 @@ This dataset contains laminated stalagmite measurements, with 40,279 records. It
 -   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
 -   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
-Check the structure of the dataset, including the names of the columns. 
+Check the structure of the dataset, including the names of the columns.
 
 ```{r}
 names(stalagmites_data)
 ```
 
 
-> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. 
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here.
 
 
 ```{r}
@@ -86,7 +86,7 @@ stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv"
 **Question: Did you notice any errors in the dataset? There is one really weird value in `lamina_thickness_mm`. Which is it? Try spot it using `geom_boxplot()`**
 
 ```{r}
-ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) + 
+ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) +
   geom_boxplot()
 ```
 
@@ -95,7 +95,7 @@ You check with Andy and he confirms an error in the data entry for this point. C
 The `filter()` function could be useful here.
 
 ```{r}
-stalagmites_data <- stalagmites_data |> 
+stalagmites_data <- stalagmites_data |>
   filter(!lamina_thickness_mm > 60)
 ```
 
@@ -111,12 +111,12 @@ stalagmites_data |>
   ggplot(aes(x = lamina_thickness_mm)) +
   geom_histogram(bins = 150, fill = "orange", col = "black") +
   theme_classic() +
-  labs("Annual lamnina growth rate (mm)", y = "Number") +
+  labs(x = "Annual lamina growth rate (mm)", y = "Number") +
   xlim(c(0, 1.2))
 ```
 
 
-**Question: Interpret this plot, what does this visualisation tell us?** 
+**Question: Interpret this plot, what does this visualisation tell us?**
 
 The majority of annual lamina growth in stalagmites is really slowly
 
@@ -132,17 +132,17 @@ Have a go at creating this plot.
 
 ```{r}
 # Transform data
-transformed_stalagmites_data <- stalagmites_data |> 
-  mutate(log10_1_lamina_thickness_mm = log10( + 1))
+transformed_stalagmites_data <- stalagmites_data |>
+  mutate(log10_1_lamina_thickness_mm = log10(lamina_thickness_mm + 1))
 
 # Create plot
-stalagmites_data |>
-  filter() |>
-  ggplot(aes(x = lam_age_bp_0_1950ad, y = )) +
+transformed_stalagmites_data |>
+  filter(entity_id == 85) |>
+  ggplot(aes(x = lam_age_bp_0_1950ad, y = log10_1_lamina_thickness_mm)) +
   geom_line() +
-  labs() + 
+  labs(x = "Years BP", y = expression("Growth rate (log, mm yr^{-1})")) +
   theme_classic()
-`````
+```
 
 2. Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
 
@@ -150,7 +150,7 @@ stalagmites_data |>
 stalagmites_data |>
   ggplot(aes(lam_age_bp_0_1950ad, y = lamina_thickness_mm)) +
   geom_line() +
-  facet_wrap( ~ entity_id, scales = "free") +
+  facet_wrap(~ entity_id, scales = "free") +
   theme_classic() +
   labs("Years BP", y = "Growth rate (mm/yr)")
 ```
@@ -162,7 +162,7 @@ The annual growth of all lamina samples are highly variable
 
 ### Figure 10
 
-Have a go at creating this plot. 
+Have a go at creating this plot.
 
 ![Figure 10](images/baker-fig10.png)
 
@@ -171,8 +171,8 @@ You'll need to extract data for the samples numbers in black with `seq_id` befor
 ```{r}
 ids <- c(85, 1004, 385, 217.1, 1008.1, 128, 465, 217.2, 1007.2, 128,  466, 1009.2, 1003.1, 1006)
 
-stalagmites_data |> 
-  filter(seq_id %in% ids) |> 
+stalagmites_data |>
+  filter(seq_id %in% ids) |>
   ggplot(aes(lam_age_bp_0_1950ad, lamina_thickness_mm)) +
   geom_line() +
   scale_y_log10() +
@@ -210,7 +210,7 @@ stalagmites_sites <- stalagmites_sites |> filter(!row_number() == 1)
 **Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
 
 ```{r}
-stalagmites_sites <- stalagmites_sites |> 
+stalagmites_sites <- stalagmites_sites |>
   mutate(lat = as.numeric(lat),
          long = as.numeric(long))
 ```
@@ -225,7 +225,7 @@ world_coordinates <- map_data("world")
 # create world map using ggplot() function
 ggplot(stalagmites_sites, aes(long, lat)) +
   geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
-           aes(long, lat, map_id = region)) +  
+           aes(long, lat, map_id = region)) +
   # geom_point(colour = "red") +
   # geom_text(colour = "red", aes(label = site_name), nudge_y = 2) +
   coord_quickmap() +
