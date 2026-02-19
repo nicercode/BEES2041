@@ -44,7 +44,7 @@ stalagmite_data_nice_names <- stalagmite_data |> janitor::clean_names()
 stalagmite_data_nice_names
 ```
 
-Using the functions you've learned so far in this prac, try answer the following questions:
+Using the functions you've learned so far in this prac (remember you can get help with functions using `?function`, e.g. `?mean`), try answer the following questions:
 
 **Questions:**
 

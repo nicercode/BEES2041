@@ -131,7 +131,9 @@ mean(x, na.rm = FALSE)
 
 **Try:** adjusting the value for the `na.rm` argument so you can take a mean of a series of number where a missing value is present.
 
-## Data types in R 
+**Tip:** If you ever need help with a function, you can run `?function_name` (e.g. `?mean`) and it will bring up the Help tab with the documentation for that function. There are usually helpful examples at the bottom of the help file.
+
+## Data types in R
 
 <h3>Data types in R</h3>
 
