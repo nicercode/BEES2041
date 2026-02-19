@@ -17,7 +17,7 @@ library(moodlequiz)
 
 Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand how y varies with some predictor x.
 
-In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. Moreover, that we can estimate a confidence interval around the mean, within which we believe the ture mean to occur.
+In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. Moreover, that we can estimate a confidence interval around the mean, within which we believe the true mean to occur.
 
 Linear models then allow us to test whether the true mean varies with another variable.
 
@@ -56,7 +56,7 @@ Everything you need for this practical is on Moodle
 4.  Go into the folder `Wk3-1-materials` created by extracting the zip.
 5.  Click on the `Wk3-1-linear-models.Rproj` to open the RStudio project and you're in!!!
 
-We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+We will be working with real-world datasets collected by researchers in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
 **Setting up: Packages:**
 
@@ -129,7 +129,7 @@ The slope is ???. This indicates that as `log10_rainfall` ???, `log10_leaf_mass_
 
 ## The confidence interval
 
-For a nicer output you can also use `parameters(towers_fit)`. This function convienently, gives us the **95% confidence intervals** of our coefficients.  
+For a nicer output you can also use `parameters(towers_fit)`. This function conveniently gives us the **95% confidence intervals** of our coefficients.  
 
 ```{r}
 parameters(towers_fit)
@@ -195,7 +195,7 @@ Generally, *F*-statistic increases with the ???. A large *F*-statistic means tha
 
 ## Calculating and visualising predicted means 
 
-Okay thats enough theory for the day... let's have go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
+Okay thats enough theory for the day... let's have a go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
 
 ```{r}
 means_towers <- estimate_means(towers_fit, by = "log10_rainfall")
@@ -269,7 +269,7 @@ library(easystats)
 data_martino <- read_csv("data/martino-fish-smr.csv")
 ```
 
-We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is categorical variable.
+We are primarily interested in how `smr` - a continuous variable changes with `temp_treatment` - a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is a categorical variable.
 
 ![Using a linear model with categorial and continuous variables](pics/lm-anova.png){width=60%} <br>
 
@@ -343,7 +343,7 @@ Let's take a look at the `parameters()` / `summary()` output. Looks different hu
 parameters(fit_martino)
 ```
 
-Unlike previous examples, we have an extra row in the output! This is because our model is  fitting each `temp_treatment` group as x predictors.  
+Unlike previous examples, we have an extra row in the output! This is because our model is fitting each `temp_treatment` group as x predictors.  
 
 ![Categorical variables becomes multiple predictors in a linear model](pics/lm-multiple-predictors.png){width=60%} <br>
 Importantly: 
