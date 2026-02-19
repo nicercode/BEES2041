@@ -52,7 +52,7 @@ penguins |>
 **Try**: Using a series of pipes `|>`, create a dataset that:
 
 -   only contains female penguins in 2007
--   where their are body masses \> 4000
+-   where their body masses are \> 4000
 -   create a new ratio variable between bill depth and bill length
 -   retain only species, island and your ratio variable
 

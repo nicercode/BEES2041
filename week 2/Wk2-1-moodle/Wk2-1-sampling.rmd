@@ -80,7 +80,7 @@ To get us started, let's consider a real question that a researcher might ask ab
 
 ![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
 
-This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
+This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behaviour, and performance of sea turtle hatchlings.
 
 You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
 
@@ -205,7 +205,7 @@ qnorm(p, mean = 0, sd = 1, lower.tail = TRUE)
 
 Modifying the code above, what is the value corresponding to a probability of 0.25 in the standard normal distribution? 
 
-You should get -0.6744898
+You should get -0.6744898.
 
 ## Chance sampling
 
@@ -498,7 +498,7 @@ As the CI on the mean is 57.5-82.76, we can conclude that mean time it takes for
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
-You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and pvalue are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
+You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and p-value are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
 
 **Question: How likely is that two samples of baby turtles come from the same population?**
 
