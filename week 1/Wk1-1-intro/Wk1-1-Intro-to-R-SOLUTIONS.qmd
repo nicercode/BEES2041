@@ -1,8 +1,8 @@
 ---
 title: Week 1 - working with R
-format: html 
+format: html
 editor: visual
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -27,7 +27,7 @@ Learning to code in R is like learning to speaking a new language. Here we will 
 Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line with spit out or "return" a solution.
 
 ```{r}
-6 + 3 
+6 + 3
 ```
 
 Much like a calculator, R uses **operators** like `+`, `-`, `*`, `/` to do maths. The brackets `( )` are used to group together some calculations and set the order of operations.
@@ -36,13 +36,13 @@ As we write code in this course, its often useful to add **comments** throughout
 
 ```{r}
 # Addition
-6 + 3 
+6 + 3
 
 # Subtraction
-100 * 5 
+100 * 5
 
 # Some complicated math
-(8651 - 734) / (4 * 9) 
+(8651 - 734) / (4 * 9)
 ```
 
 **Question:** What does R do when you run code that contains comments?
@@ -57,10 +57,10 @@ The "assignment" operator `<-`. Its used for creating objects in R. It looks lik
 
 ```{r}
 # Insert the value 13 into the object my_lucky_number
-my_lucky_number <- 13 
+my_lucky_number <- 13
 
 # Ask R what is stored in `my_lucky_number`
-my_lucky_number 
+my_lucky_number
 ```
 
 > Some folks like to use `=` instead of `<-` to assign things in R, this is a matter of personal preference - but its good practice to choose style and be consistent throughout.
@@ -106,7 +106,7 @@ Take this next example, I've added a NA in a series of numbers. NA represents a 
 
 ```{r}
 # Add a missing value (`NA`) in `x`
-x <- c(1, 2, 3, 4, 5, NA, 7, 8, 9) 
+x <- c(1, 2, 3, 4, 5, NA, 7, 8, 9)
 
 # Calculate the mean of what is stored in `x`
 mean(x, na.rm = FALSE)
@@ -115,6 +115,8 @@ mean(x, na.rm = FALSE)
 > R didn't like that right?
 
 **Try:** adjusting the value for the `na.rm` argument so you can take a mean of a series of number where a missing value is present.
+
+**Tip:** If you ever need help with a function, you can run `?function_name` (e.g. `?mean`) and it will bring up the Help tab with the documentation for that function. There are usually helpful examples at the bottom of the help file.
 
 ## Data types in R
 
@@ -135,7 +137,7 @@ There are 4 common data types in R:
 
 ```{r}
 # Put some types of cats in `cats`
-cats <- c("calico", "tabby", "black") # Character 
+cats <- c("calico", "tabby", "black") # Character
 
 class(cats)
 ```
@@ -209,7 +211,7 @@ Another common and object data type is a **list**. Lists are objects which can c
 We create lists using the `list()` function. Here I am creating a list and giving each **element** of my list a name (`car_data`, `cat_types`, `did_i_go_for_a_walk`). Notice I am using the `=` here to store objects into element.
 
 ```{r}
-cats <- c("calico", "tabby", "black") 
+cats <- c("calico", "tabby", "black")
 went_for_a_walk <- c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
 
 useful_info <- list(cat_types = cats, # first element
@@ -267,7 +269,7 @@ Cars with more cylinders tend to weigh more than cars with fewer cylinders.
 
 ``` r
 # Specify the data, the x-variable and the y-variable
-ggplot(data = mtcars, aes(x = am, y = mpg, group = am)) +  
+ggplot(data = mtcars, aes(x = am, y = mpg, group = am)) +
   geom_boxplot() # Create boxplot
 ```
 

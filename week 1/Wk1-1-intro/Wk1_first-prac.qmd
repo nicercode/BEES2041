@@ -1,9 +1,9 @@
 ---
 title: "Week 1 First Practical"
 author: Put your name here
-format: html 
+format: html
 editor: visual
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
