@@ -78,7 +78,7 @@ library(parameters)
 
 To get us started, let's consider a real question that a researcher might ask about a population mean.
 
-![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
+![Image: Davey Dor](pics/DaveyDor.jpeg){width=80%}
 
 This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behaviour, and performance of sea turtle hatchlings.
 

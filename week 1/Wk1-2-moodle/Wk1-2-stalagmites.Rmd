@@ -36,7 +36,7 @@ stalagmites_sites <- stalagmites_sites |>
 
 [Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width=100%}
 
 <br>
 

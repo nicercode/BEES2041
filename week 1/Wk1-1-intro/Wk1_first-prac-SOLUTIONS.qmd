@@ -24,7 +24,7 @@ library(ggplot2)
 
 ## Stalagmite data
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width=100%}
 
 Stalagmites are mineral formations that grow in caves, preserving environmental records in their layered structure. Paleoclimatologists from the [Climate Change Research Centre](https://www.unsw.edu.au/research/ccrc) collected this data. The thickness of each lamina reflects past climate conditions—thicker layers often indicate wetter periods, while thinner ones suggest drier times. By analysing lamina thickness and age, scientists can reconstruct past climate patterns, track seasonal variations, and identify historical environmental events.\
 \
@@ -104,7 +104,7 @@ skim(stalagmite_data_nice_names_corrected_age)
 
 ## Sydney Beaches
 
-![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences collected a dataset containing water quality measurements for Sydney beaches. It includes records of enterococci levels (cfu per 100ml) across a number of years, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width=100%}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences collected a dataset containing water quality measurements for Sydney beaches. It includes records of enterococci levels (cfu per 100ml) across a number of years, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
 
 > We want to try to answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 
