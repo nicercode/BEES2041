@@ -9,7 +9,7 @@ format:
 
 ![Bringing all your R skills together!](images/witches.png){width=60%} <br>
 
-In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both **fixed effects** — the overall trends we're interested in — and **random effects** — addional variation due to these groupings.
+In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both **fixed effects** — the overall trends we're interested in — and **random effects** — additional variation due to these groupings.
 
 # Fixed and Random effects
 
@@ -57,7 +57,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-> We will be using two new package todays called `glmmTMB` and `remotes`. Uncomment the last two lines in the next code block to install it in your own devices.
+> We will be using two new packages for today called `glmmTMB` and `remotes`. Uncomment the last two lines in the next code block to install it in your own devices.
 
 ```{r, eval=FALSE}
 # install.packages("tidyverse")
@@ -83,7 +83,7 @@ library(glmmTMB)
 
 Random factors are hard to get your head around, and are best explained with examples. The data we will analyse here are **counts of invertebrates at 3-4 sites pristine and modified sites in each of 7 (randomly chosen) estuaries**.
 
-**Our research question is: How does total inverebrate counts differ between pristine and modified sites across all estuaries?**
+**Our research question is: How does total invertebrate counts differ between pristine and modified sites across all estuaries?**
 
 Here the estuaries are the **random effect**, as there are **a large number of possible estuaries**, and we only sampled a few from the wider population of them, but we would like to make inference about estuaries in general.
 
@@ -119,10 +119,10 @@ fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estua
 ```
 
 - `Total` is our numeric, continuous response variable (y) 
-- `Modification` is our categorial predictor variable (x)
-- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting an intercpet that is allowed to vary by Estuary (mean `Total` at each `Estuary`).
+- `Modification` is our categorical predictor variable (x)
+- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting an intercept that is allowed to vary by Estuary (mean `Total` at each `Estuary`).
 
-> Technically `Total` count data, but it's distribution doesn't really resemble a Poisson distribution. A Normal distribution fits it quite well so we can use a normal repsonse here.
+> Technically `Total` count data, but its distribution doesn't really resemble a Poisson distribution. A Normal distribution fits it quite well so we can use a normal response here.
 
 We can proceed with checking our model fit before looking at the model's output. Things are looking okay!
 
@@ -135,7 +135,7 @@ Not perfect, but good enough! Let's move on to the next step.
 
 ## Compute estimated means
 
-By now, you are familar with `estimate_means()` and `estimate_contrasts()`. For mixed models, we need to use a different function `estimate_expectations()` to compute means for each level of our predictors and random effect. 
+By now, you are familiar with `estimate_means()` and `estimate_contrasts()`. For mixed models, we need to use a different function `estimate_expectations()` to compute means for each level of our predictors and random effect. 
 
 ```{r}
 means_by_mod_estuaries <- estimate_expectation(fit_estuaries)  
@@ -183,7 +183,7 @@ There are three things that might be new to you in this code:
 
 ## Test for an effect of `Modification`
 
-Since this is a simple model with 1 fixed effect, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a signficant difference between `Modified` and `Pristine` sites. The numbers are the same.
+Since this is a simple model with 1 fixed effect, we can use the `parameters()` output but if you prefer, you can also use `estimate_contrasts()` to see whether we have a significant difference between `Modified` and `Pristine` sites. The numbers are the same.
 
 ```{r}
 parameters(fit_estuaries)
@@ -196,7 +196,7 @@ estimate_contrasts(fit_estuaries)
 
 The `Intercept` represents the ??? `Total` number of invertebrates from the ??? site.
 
-**2. Intepret the `Modification [Pristine]` cofficient and p-value**
+**2. Interpret the `Modification [Pristine]` coefficient and p-value**
 
 The `Modification [Pristine]` coefficient is ???. This value represents the mean difference in `Total` number of invertebrates between `Modified` and `Pristine` sites. The value is ??? which means the mean in `Total` is ??? for `Pristine` sites.
 
@@ -204,7 +204,7 @@ The `Modification [Pristine]` coefficient is ???. This value represents the mean
 
 ![**Urchin grazing**](images/Urchins.jpg){width=60%} <br>
 
-In the last prac, we worked with this sea urchin dataset. This data was collected marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. 
+In the last prac, we worked with this sea urchin dataset. This data was collected by marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. 
 
 To study how urchins affect the communities on the rocky reef, researchers set up five experimental treatments on the sea floor:
 
@@ -273,7 +273,7 @@ Here is the code to:
 
 - read in the `data/urchins.csv` dataset. 
 - log transform the y variable (`BareRock`) as it is a percentage and will be right skewed. 
-- setting the `Quadrat` variable as a factor/catergorical variable as it is recorded as integers.
+- setting the `Quadrat` variable as a factor/categorical variable as it is recorded as integers.
 
 ```{r}
 # Read in data 
@@ -292,7 +292,7 @@ Now fit the model with the random effect of `Quadrat`.
 
 **Questions:**
 
-**1. Compare the output of `parameters(fit_urchins)` and the `paramaters()` output of your mixed model. How did included the random effect of `Quadrat` change the model output?** 
+**1. Compare the output of `parameters(fit_urchins)` and the `parameters()` output of your mixed model. How did including the random effect of `Quadrat` change the model output?** 
 
 Broadly speaking, the CI of the mixed models are ???. Corresponding, the p values are ???.
 
@@ -347,7 +347,7 @@ Let's look at the relationship between **tree height** and **leaf area**.
 
 Data Dan has asked you to: 
 
-- estimate **how much the total leaf area of the tree increases with it's height**, 
+- estimate **how much the total leaf area of the tree increases with its height**, 
 - estimate the **likely leaf area of a random tree that is 10m tall**, 
 
 The data in the BAAD dataset contains information on the sizes of tree parts for a number of species at different locations around the world. The data comes from a number of studies. 
@@ -409,7 +409,7 @@ What do you see?
 
 - the line provides a good fit to the data
 - the confidence intervals around the mean are **narrow**, so narrow that we can barely see them! This indicates that the model is confident in its predictions about the mean relationship.
-- however...there's a lot of **unexplained variation** in the data (above and below the line). So any given tree is likely could have a leaf area that is quite different from the mean.
+- however...there's a lot of **unexplained variation** in the data (above and below the line). So any given tree could likely have a leaf area that is quite different from the mean.
 
 In fact, for a tree of 10m tall plant (log10 = 1), you could see a leaf area anywhere from 0.2 to 2.4 log10 units. Back transforming this gives a range of m2 leaf from 
 ```{r}
@@ -435,7 +435,7 @@ In the code above, the model terms:
 > Let's plot this mixed model fit and compare it to our first simple model (without any random effects).
 
 ```{r}
-# Estimate the predictiosn for the model for height x species
+# Estimate the predictions for the model for height x species
 means_sp <- estimate_expectation(fit_rs)
 
 # Estimate marginal means for the model by height, averaging out species
@@ -462,7 +462,7 @@ Wow! The model with random slopes for species provides a much better fit to the 
 Just as we thought, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species! 
 The mixed model is able to capture the variation in the relationship between height and leaf area between species. 
 
-We can assess whether the variation in the data due to the random effect is signifcant by comparing the mixed model to the simple model. We can do this using an `anova()` test , which will tell us if the random slopes model is significantly better than the simple model. It is!
+We can assess whether the variation in the data due to the random effect is significant by comparing the mixed model to the simple model. We can do this using an `anova()` test , which will tell us if the random slopes model is significantly better than the simple model. It is!
 
 ```{r}
 anova(fit_simple, fit_rs)
@@ -558,7 +558,7 @@ It doesn't know that species can differ a lot from each other. This suggests les
 
 Another potential use of data from the BAAD is to quantify the **relationship between stem diameter and biomass**. 
 
-There is a lot of ineterest in estimate the amount of carbon stored in forests, and using growing trees to remove carbon from the atmosphere. Since biomass is mostly (~42%) carbon, we can use the biomass of a tree as a proxy for the amount of carbon stored in the tree.
+There is a lot of interest in estimating the amount of carbon stored in forests, and using growing trees to remove carbon from the atmosphere. Since biomass is mostly (~42%) carbon, we can use the biomass of a tree as a proxy for the amount of carbon stored in the tree.
 
 **Exercise:**
 

@@ -85,7 +85,7 @@ This is where you can see the files in the project. The **Plots** tab is where y
 
 <h3>Project organisation goes a long way</h3>
 
-Let's talk a bit about **RStudio projects** and why they make our data analysis live easier.
+Let's talk a bit about **RStudio projects** and why they make our data analysis life easier.
 
 A `.Rproj` file will keep all your ducks in a row, all your data and code scripts will now live under the house of `Wk1-1 intro`. This means pointing to data files will be **relative** to the project directory.
 
@@ -102,7 +102,7 @@ The `getwd()` function, tells you the 'address' or **file path** that you are cu
 
 > Let's go ahead and click on `Wk_1_first_prac.qmd`
 
-Clicking this file will open the the editor pane in the top right corner. This is where we will start writing our own R code for the rest of this prac.
+Clicking this file will open the editor pane in the top right corner. This is where we will start writing our own R code for the rest of this prac.
 
 ![Opening `Wk_1_first_prac.qmd`](open-qmd.png){width=60%}
 
@@ -126,7 +126,7 @@ When you ran the code in the first chunk, you might notice R was not happy. (It 
 
 ![R complains in red](first-error.png) <br> Getting errors in R are a common experience and they're totally harmless. The error messages usually gives you some clues as to what R is complaining about.
 
-> Here, R is tell us we don't have the R packages `readr` and `ggplot2` installed
+> Here, R is telling us we don't have the R packages `readr` and `ggplot2` installed
 
 <h4>Installing packages</h4>
 
@@ -142,7 +142,7 @@ You can click on the "Install" and that should take care of the error.
 
 **Try:** Alternatively, you can use the `install.packages()` function. We've given you the code as a **comment** in the chunk. Recall, that comments in R in are preceded with a `#` and R will ignore these lines.
 
-> Let's try uncommenting that line by deleting the `#`, then go ahead and run that line of code to install `readr` and `ggplot2`. Once you're done, comment out this line by putting a `#` at the start of the line once you are done, otherwise you will be installing those packages again every you run that chunk!
+> Let's try uncommenting that line by deleting the `#`, then go ahead and run that line of code to install `readr` and `ggplot2`. Once you're done, comment out this line by putting a `#` at the start of the line once you are done, otherwise you will be installing those packages again every time you run that chunk!
 
 **Importantly** you only need to install packages **ONCE**. This is different to **loading** packages into R using the `library()` function. You load packages once using `library()` for each Quarto doc right at the start of the document.
 
@@ -165,7 +165,7 @@ tidyverse_update()
 
 When you load the library, you'll get some output showing you what packages have been loaded:
 
-![Loading tidyvesre`](library_tidyverse.jpg){width=60%}
+![Loading tidyverse`](library_tidyverse.jpg){width=60%}
 
 We can now do the same for the `easystats` package:
 
@@ -214,4 +214,4 @@ stalagmite_data
 
 > Note that `read_csv()` will always return your data as a tibble data structure
 
-Now you are all set you proceed with the section!
+Now you are all set to proceed with the section!

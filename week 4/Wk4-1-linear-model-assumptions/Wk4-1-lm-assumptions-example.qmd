@@ -29,7 +29,7 @@ Our learning objectives today are:
 
 Let’s dive in! 🚀
 
-![Image credit: ](images/r-learners.png){width="80%"} <br>
+![Image credit: ](images/r-learners.png){width=80%} <br>
 
 ## Setting up
 
@@ -71,7 +71,7 @@ library(easystats)
 
 ## Worked example - Isaac with leaves across climates
 
-![Remember Dr. Isaac Towers?! Image credit: Data Dan](images/isaac-plant-ecosystems.png){width="60%"} <br> We will be working with an example from Dr. Isaac Towers - a postdoc in the School of Biological, Earth & Environmental Sciences. Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall? His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478). We will be working with the data Isaac compiled for us. Recall, last week we ran a linear model using `log10_leaf_mass_per_area`, `log10_rainfall`, let's try run the same linear model again but with the raw, untransformed data.
+![Remember Dr. Isaac Towers?! Image credit: Data Dan](images/isaac-plant-ecosystems.png){width=60%} <br> We will be working with an example from Dr. Isaac Towers - a postdoc in the School of Biological, Earth & Environmental Sciences. Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall? His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478). We will be working with the data Isaac compiled for us. Recall, last week we ran a linear model using `log10_leaf_mass_per_area`, `log10_rainfall`, let's try run the same linear model again but with the raw, untransformed data.
 
 ## Read in data from a URL link
 

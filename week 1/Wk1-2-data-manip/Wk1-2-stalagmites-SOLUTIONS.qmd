@@ -9,9 +9,9 @@ editor_options:
 
 [Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width=100%}
 
-Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
+Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalagmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
 
 This section builds off two papers published by Andy and his team:
 
@@ -21,11 +21,11 @@ This section builds off two papers published by Andy and his team:
 
 **Activity:**
 
-Andy asked us to cross check his results, your goal is reproduce some key figures from the paper 2021 paper.
+Andy asked us to cross check his results, your goal is to reproduce some key figures from the 2021 paper.
 
 **Do these visualisations in your `Wk1-2-stalagmites.qmd` document**
 
-> In some code chunks, we've given you some partialy completed R code, these are hints, complete the rest of the code before you run them
+> In some code chunks, we've given you some partially completed R code, these are hints, complete the rest of the code before you run them
 
 ## Setting up
 
@@ -47,7 +47,7 @@ We've downloaded this into the folder at `data/stalagmites/Laminated stalagmite 
 
 Load this into R use the `read_csv()` function.
 
-The code below get's you started. You'll need to fill in the spaces indicated by XXX.
+The code below gets you started. You'll need to fill in the spaces indicated by XXX.
 
 
 ```{r}
@@ -193,7 +193,7 @@ The data with locations is in `data/stalagmites/Tables.xlsx`. It's an excel file
 stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()
 ```
 
-**Question: Did you notice any errors in the dataset? There is one row isn't data, which is it?**
+**Question: Did you notice any errors in the dataset? There is one row that isn't data, which is it?**
 
 First row
 

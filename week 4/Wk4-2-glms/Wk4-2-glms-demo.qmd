@@ -1,4 +1,4 @@
----
+﻿---
 title: "Week 4-2 Generalised linear models"
 format: 
   html:    
@@ -11,30 +11,30 @@ editor_options:
 
 ## Introduction
 
-In this session, we’ll explore **G**eneralized **L**inear **M**odels (**GLMs**), a powerful extension of linear regression that helps us analyse data where relationships aren’t strictly linear. **GLMs** allow us to model different types of responses, making them a go-to tool for many real-world problems.
+In this session, we'll explore **G**eneralized **L**inear **M**odels (**GLMs**), a powerful extension of linear regression that helps us analyse data where relationships aren't strictly linear. **GLMs** allow us to model different types of responses, making them a go-to tool for many real-world problems.
 
-We’ll focus on two key types of data:
+We'll focus on two key types of data:
 
-- **Binomial** data – useful for modeling **probabilities**, like whether an event happens or not (e.g., predicting invasive species presence/absence, or organism surival).
-- **Count** data – great for modeling things that happen a certain number of times, like the number of visits to a nesting site or the number of species in a sample.
+- **Binomial** data -- useful for modeling **probabilities**, like whether an event happens or not (e.g., predicting invasive species presence/absence, or organism survival).
+- **Count** data -- great for modeling things that happen a certain number of times, like the number of visits to a nesting site or the number of species in a sample.
 
-We’ll learn how to choose the right model, check if our models fit well, interpret results, . By the end, you’ll be equipped to apply GLMs to your own data!
+We'll learn how to choose the right model, check if our models fit well, interpret results. By the end, you'll be equipped to apply GLMs to your own data!
 
 ![Artwork by @allison_horst](images/error-comic.png){width=70%}
 <br>
 
 ## Key learning objectives
 
-Our learning objective today are:
+Our learning objectives today are:
 
-- **understand** different probability distribution
+- **understand** different probability distributions
 - **understand** the concept of a link function
 - **run** a generalised linear regression (GLM) in R using `glm()`
 - **interpret** the output of a GLM using:
 - **extract** the mean and confidence interval for the slope and intercept of the regression line
 - **plot** the data and the regression line with confidence intervals
 
-Let’s dive in! 🚀 
+Let's dive in! 🚀 
 
 ## Setting up: Materials
 
@@ -71,15 +71,15 @@ The standard linear models we used previously make several rather strict assumpt
 
 - residuals are normally distributed
 - constant variance, and 
-- a linear repsonses. 
+- a linear response. 
 
 We learned to transform data and  which can help us fit a better linear model but in many cases, this is not enough to fulfill the assumptions of a linear model. 
 
-In these situations,  a **G**eneralized **L**inear **M**odel (**GLM**) is often a good toool. 
+In these situations,  a **G**eneralized **L**inear **M**odel (**GLM**) is often a good tool. 
 
-**Probablity distributions**
+**Probability distributions**
 
-GLMs are a generalisation of linear models that allow us to model different types of responses. As data scientists, we need to choose an appropiate distribution that represents our data. For example: 
+GLMs are a generalisation of linear models that allow us to model different types of responses. As data scientists, we need to choose an appropriate distribution that represents our data. For example: 
 
 - if the response variable is **binary** (e.g., presence/absence), we might use a **binomial** distribution.
 
@@ -114,7 +114,7 @@ The binomial distribution is used to represent **the number of successes in a fi
 
 The **binomial distribution** generates a series of 0s and 1s, where 1 represents a success.
 
-For example, we can draw 10 numbers (**trials**) from the **binomal distribution** with a **probability of success** of 0.9. You can change the `prob` value and see how that affects **outcome** of the trials
+For example, we can draw 10 numbers (**trials**) from the **binomial distribution** with a **probability of success** of 0.9. You can change the `prob` value and see how that affects **outcome** of the trials
 
 ```{r}
 rbinom(n = 10, size = 1, prob = 0.9)
@@ -130,7 +130,7 @@ Setting $g(\mu_y) = \eta$ and rearranging gives
 
 $$\mu_y = \frac{e^{\eta}}{1+e^{\eta}}$$
 
-So our mean repsonse is obtained via a transformation of $x$ , creating a model than has a non-linear response, but is still based ona  linear model in $x$. 
+So our mean response is obtained via a transformation of $x$, creating a model that has a non-linear response, but is still based on a linear model in $x$. 
 
 It may help to visualise this. Let's plot 
 
@@ -179,7 +179,7 @@ p1 + p2
 
 Now imagine drawing random numbers, where the* *probability of success** is given by the mean of the response variable, $\mu_y$. This is the process we assume has generated the data we observe in the field.
 
-The plot below shows data which were drawn from such a model The black dashed line shows the true relationship between the linear predictor $x$ and the mean of the response variable. The dots show the obseravtions. 
+The plot below shows data which were drawn from such a model The black dashed line shows the true relationship between the linear predictor $x$ and the mean of the response variable. The dots show the observations. 
 
 ```{r, echo=FALSE}
 # Simulate data
@@ -244,7 +244,7 @@ Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. S
 
 ## Worked Example: Crabs along the beach
 
-Let's apply the theory we learned about with some data collected by some students our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
+Let's apply the theory we learned about with some data collected by some students in our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
 
 The response variable is **discrete**: 
 
@@ -266,7 +266,7 @@ data_crabs
 
 ## Look at raw data
 
-Its always good practice to take a look at your raw data, especially your response and explanatory/predictor variable.
+It's always good practice to take a look at your raw data, especially your response and explanatory/predictor variable.
 
 ```{r}
 ggplot(data_crabs, aes(x = Dist, y = CrabPres)) + 
@@ -318,9 +318,9 @@ ggplot(crab_means, aes(x = Dist, y = Probability)) +
 
 **Exercises:**
 
-- Fit an approaiate model for the presence/absence of Galumna sp. `pa` as a function of substrate density `SubsDens` as follows, using the `glm()` function and the `family` argument
+- Fit an appropriate model for the presence/absence of Galumna sp. `pa` as a function of substrate density `SubsDens` as follows, using the `glm()` function and the `family` argument
 - You may need to make some plots to help you answer the following questions
-- Use your model output to elp you answer the questions
+- Use your model output to help you answer the questions
 
 ```{r}
 
@@ -356,7 +356,7 @@ Medical researchers collected data on the presence of the bacteria H. influenzae
 
 - load the bacteria dataset.
 - you'll need to convert the `y` variable to a binary format 
-- Fit an appropiate model for this type of data
+- Fit an appropriate model for this type of data
 - Use the output to answer the following questions
 
 ```{r}
@@ -375,7 +375,7 @@ The ??? value for the slope indicates that the probability of detecting the bact
 
 3. **What is the p-value for the slope `week` represent?**
 
-The p-value for the slope `week` represents the probabilty there is ??? relationship between the ??? with ???.
+The p-value for the slope `week` represents the probability there is ??? relationship between the ??? with ???.
 
 4. **What does the p-value for the slope `week` mean then?**
 
@@ -450,11 +450,11 @@ p1 + p2
 
 As you can see from the plot above, the mean of the response variable is a non-linear function of $x$, and the average rate of events increases exponentially with the linear predictor. 
 
-In other words, the higher $x$, the more events are predicted to occur in a given preiod. 
+In other words, the higher $x$, the more events are predicted to occur in a given period. 
 
 ## Response distribution
 
-Now imagine drawing random numbers, where the avarerage rate of events is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
+Now imagine drawing random numbers, where the average rate of events is given by $\mu_y$. In any one period, you could have fewer, or more than $\mu_y$ by chance. But overall, the number of events will follow $\mu_y$. 
 
 ```{r, echo = FALSE}
 # Simulate data
@@ -515,14 +515,14 @@ We can extract the slope of the fitted model above using the `parameters()` func
 parameters(model)
 ```
 
-Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% Confidnce interval.
+Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 0.8$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% confidence interval.
 
 
 ## Worked Example: Slugs during revegetation
 
 ![Ya snailed it!](images/snails.jpg){width=60%}
 
-Let's work with some data collected by some students in our department who wanted to investigate **how the abundnace of slbus varied under two experimental treatemnts**. 
+Let's work with some data collected by some students in our department who wanted to investigate **how the abundance of slugs varied under two experimental treatments**. 
 
 The response variable is **discrete**: 
 
@@ -588,7 +588,7 @@ The dataset contains the number of trees of the species _Faramea occidentalis_  
 **Exercises:**
 
 - Load the dataset into R
-- Fit an appropiate model for this type of data
+- Fit an appropriate model for this type of data
 - Use the output to answer the following questions
 - You may need to make some plots to help answer the questions
 
@@ -619,7 +619,7 @@ Using the `mites` data, try model the abundance of the species `Galumna` as a fu
 **Exercises:**
 
 - Load the dataset into R
-- Fit an appropiate model for this type of data
+- Fit an appropriate model for this type of data
 - Use the output to answer the following questions
 - You may need to make some plots to help answer the questions
 

@@ -20,7 +20,7 @@ library(moodlequiz)
 
 Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
 
-> We are want try answer the question: **How does bill length scale with body mass in Palmer Penguins?**
+> We want to try to answer the question: **How does bill length scale with body mass in Palmer Penguins?**
 
 **Over to you - using the code from Isaac's study above, try to**: 
 
@@ -93,7 +93,7 @@ There is a `r cloze("positive", c("positive","negative"))` relationship between 
 
 - A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm)
 
-3. Yikes, looks like by rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
+3. Yikes, looks like rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
 
 The confidence intervals for the slope tell us that the true population mean for the slope lies between
 `r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
@@ -195,13 +195,13 @@ Linear regressions are incredibly flexible. Not only can we use them to make inf
 > Recall the differences between  **discrete** or **categorical** variables. 
 
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){width=60%} <br>
-From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperatures treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
+From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperature treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
 ![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%} <br>
 
 > Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
 
-Let's read in the Jasmine's data. This is in your `"data/"` folder. 
+Let's read in Jasmine's data. This is in your `"data/"` folder. 
 
 ## Setting up
 
@@ -387,7 +387,7 @@ The `F value` is relatively `r cloze("large", c("small","large"))`. This means t
 
 The reference island is `r cloze("Biscoe", c("Biscoe", "Dream", "Torgersen"))`
 
-3. Which two islands should the biggest mean difference in flipper length?
+3. Which two islands showed the biggest mean difference in flipper length?
 
 The biggest mean difference was observed between `r cloze("Torgersen island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))`
 

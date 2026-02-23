@@ -16,7 +16,7 @@ if (INST == FALSE) opts_chunk$set(fig.keep = 'none', results = 'hide')
 format = 'html' # note tables formatted for Latex so may not be great in html
 ```
 
-The second practical provides an introduction to two further graphical techniques for presenting patterns in multivariate data (principal components analysis, PCA, and multidimensional scaling, MDS). These are forms of ordination, which aim to represent the relationships among many samples (or variables) in two dimensional space. ou will also be introduced to an example of a formal hypothesis test using multivariate data. 
+The second practical provides an introduction to two further graphical techniques for presenting patterns in multivariate data (principal components analysis, PCA, and multidimensional scaling, MDS). These are forms of ordination, which aim to represent the relationships among many samples (or variables) in two dimensional space. You will also be introduced to an example of a formal hypothesis test using multivariate data. 
 
 
 **6) Analysis of leaf shape**
@@ -40,7 +40,7 @@ pairs(Leaf.shape[,2:6]) # the [,2:6] code ensures that the Species labels in the
 ```
 
 
-Thes relationships can also be summarised numerically, by calculating the similarity matrix using the Pearson correlation coefficient.
+These relationships can also be summarised numerically, by calculating the similarity matrix using the Pearson correlation coefficient.
 
 Check the correlations between the all five leaf measurements.
 
@@ -380,11 +380,11 @@ adonis(Nutrients[c(0:10,21:30),] ~ Treatment[c(0:10,21:30)], permutations = 999,
 ![](figs/rock_pool.png)
 
 
-On the Maroubra field trip, one group collected multivariate data that contrasted the species composition of the intertidal community living in rock pools to neighbouring rocky habitats that were that were emergent at low tide.
+On the Maroubra field trip, one group collected multivariate data that contrasted the species composition of the intertidal community living in rock pools to neighbouring rocky habitats that were emergent at low tide.
 
 We can use a MDS plot to visualise differences in species composition between the habitats, and a multivariate statistical test to determine whether the observed differences were larger than those expected by chance.
 
-Read the Maroubra data into into R...
+Read the Maroubra data into R...
 
 ```{r}
 RockPools = read.csv(file = "Maroubra_rock_pools.csv", header = TRUE) 

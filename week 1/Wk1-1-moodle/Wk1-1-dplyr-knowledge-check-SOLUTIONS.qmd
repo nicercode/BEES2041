@@ -11,7 +11,7 @@ format: html
 
 Write a few sentences describing the differences in object structure and the functions you used to determine these differences.
 
-**Answer:** `mtcars` is a `dataframe` and `penguins` is a tibble (`tbl_df/tbl/data.frame`). `str(mtcars)` and `str(penguins)` tells us the object
+**Answer:** `mtcars` is a `dataframe` and `penguins` is a tibble (`tbl_df/tbl/data.frame`). `str(mtcars)` and `str(penguins)` tell us the objects
 
 **Try:** Use the function `filter()` to extract all penguins that have body masses greater than 4000g
 

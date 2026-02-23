@@ -244,7 +244,7 @@ Things to aim for:
 Things to avoid:
 
 - overly complex figures that can't be easily interpreted by the reader
-- just using what ever figure the statistical software program produces as its default - you nearly always need to tidy these up before they are ready for presentation.
+- just using whatever figure the statistical software program produces as its default - you nearly always need to tidy these up before they are ready for presentation.
 - missing axis labels
 - missing units on the axes
 - a title (text to describe the figure is held in the figure legend, below the figure). You can put brief titles to label figures if your figure has multiple panels, eg Fig 1a), Fig 1b) like the example above.

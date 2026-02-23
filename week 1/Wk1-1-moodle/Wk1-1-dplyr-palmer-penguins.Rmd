@@ -18,7 +18,7 @@ library(moodlequiz)
 
 <h3>Data manipulations with Penguins!</h3>
 
-The purpose of this section is to get some hands-on experience with data manipulation an R package **`dplyr`**. You will learn about what **pipes** are in R and some key **data manipulation verbs**!
+The purpose of this section is to get some hands-on experience with data manipulation with an R package **`dplyr`**. You will learn about what **pipes** are in R and some key **data manipulation verbs**!
 
 Recall from the previous page that an R package is a set of related functions and data that can be loaded into R to help you get a specific job done. 
 
@@ -36,7 +36,7 @@ The `penguins` dataset is from the `palmerpenguins` the R package so we will als
 
 Let's go ahead and install these two packages for the browser and two other supplementary packages called `janitor` and `skimr` which we will use a little later
 
-> Note if you refresh the browser or check any answers as you are doing the challenges, you will need to install and load `dplyr` and `palmerpengins` again. 
+> Note if you refresh the browser or check any answers as you are doing the challenges, you will need to install and load `dplyr` and `palmerpenguins` again. 
 
 <div id="r-editor-110"><pre>
 install.packages(c("dplyr","palmerpenguins", "janitor", "skimr"))
@@ -55,7 +55,7 @@ penguins
 </pre>
 </div>
 
-> Notice anything different in how R is presenting the `pengiuns` data compared to `mtcars`?
+> Notice anything different in how R is presenting the `penguins` data compared to `mtcars`?
 
 ## But first, have you met the pipe?
 
@@ -246,9 +246,9 @@ penguins |>
 
 <h3>Compute group summaries</h3>
 
-When working with data, we often want know certain summaries about groups in our data. For example, we may need to report on the average tree canopy cover for each study sites or median house prices of different states. These are classic examples of the **split-apply-combine** paradigm. We want to split our data by group, apply a type of calculation on each of these subgroups and then bring these seperate parts together again. 
+When working with data, we often want to know certain summaries about groups in our data. For example, we may need to report on the average tree canopy cover for each study sites or median house prices of different states. These are classic examples of the **split-apply-combine** paradigm. We want to split our data by group, apply a type of calculation on each of these subgroups and then bring these separate parts together again. 
 
-![Schematic showing splitting og data by group, applying some sort of operation, then combining the results together](split-apply-combine.png){width=80%}
+![Schematic showing splitting of data by group, applying some sort of operation, then combining the results together](split-apply-combine.png){width=80%}
 <br>
 
 In `dplyr`, the `group_by()` and `summarise()` functions are powerful tools for us to obtain group-level insights. 
@@ -286,7 +286,7 @@ penguins |>
 </pre>
 </div>
 
-Without the pipe, you would need to save the output for each step which createsintermediary objects in your environment that will won't need and the code is a bit harder to read as you need to track what object is going into each step
+Without the pipe, you would need to save the output for each step which creates intermediary objects in your environment that you won't need and the code is a bit harder to read as you need to track what object is going into each step
 
 <div id="r-editor-129"><pre>
 # Filter for the target pengins we want
@@ -313,13 +313,13 @@ target_sample_mass_corrected_analysis_ready <-
 
 <h3>Variable names</h3>
 
-Its often easier to collect data in a spreadsheet that is human-readable e.g. column names that look like this `Date`, `Species`, `Island` `Body Mass (g)`, however these are actually very difficult for machines, like R, to read. 
+It's often easier to collect data in a spreadsheet that is human-readable e.g. column names that look like this `Date`, `Species`, `Island` `Body Mass (g)`, however these are actually very difficult for machines, like R, to read. 
 
 Machine readable names have some of the following attributes: 
 
 - all in lower case, this makes coding easier!
 - do not contain spaces or special characters
-- words are separated by underscores `_` or hypthens `-`
+- words are separated by underscores `_` or hyphens `-`
 
 The `janitor` R package has a really useful function `clean_names()` that can translate human-readable column names to machine-friendly ones. Let's take it for spin on the `penguins_raw` dataset which is the original, pre-processed version of the `penguins`. 
 
@@ -334,7 +334,7 @@ clean_names(penguins_raw) # HUZZAH!
 
 <h3>Getting familiar with your data</h3>
 
-Before launching into any data cleaning or analysis, its good practice to get familiar with your data. Looking at the simple plots and tabulating variables if interest are some of the ways to check your data for any data entry errors or issues. 
+Before launching into any data cleaning or analysis, it's good practice to get familiar with your data. Looking at the simple plots and tabulating variables if interest are some of the ways to check your data for any data entry errors or issues. 
 
 <h4>Categorical variables</h4>
 

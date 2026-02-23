@@ -8,7 +8,7 @@ editor_options:
 
 ## Overview
 
-![](images/trees.png){width="60%"}
+![](images/trees.png){width=60%}
 
 Professor Angela Moles, a professor here at UNSW, used an open-source dataset of maximum height data for 7084 plant species and site combinations to provide the first global, cross-species quantification of the latitudinal gradient in plant height. (You can read more about the original study at [doi:10.1111/j.1365-2745.2009.01526.x](doi.org/10.1111/j.1365-2745.2009.01526.x) or in `docs/Journal of Ecology - 2009 - Moles - Global patterns in plant height.pdf`)
 
@@ -34,7 +34,7 @@ We are going to use this data to do a bit of preliminary analyses and see if we 
 
 ## Assembling the Data
 
-Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and seperator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
+Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and separator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
 
 ```{r}
 
@@ -74,7 +74,7 @@ Make a plot to assess the distribution of `height`
 
 ## Data transformation
 
-It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform `height` and assign this update into a new data frame.
+It is common to transform your data when it's heavily skewed as in `height`, can you `log10()` transform `height` and assign this update into a new data frame.
 
 ```{r}
 

@@ -62,7 +62,7 @@ If you can use the data, what I would suggest is:
 
 -   If they plot frequency histograms of each drip site they will see high kurtosis and a ‘heavy tail’ -  this is typical of hydrology time series with few high values (e.g. floods) and lots of zeros (drought).
 
--   If the regress any two time series it will look quite messy. There will be a general trend but lots of times when the correlation is poor. That is because the water reaches the drips sites at different times after rain, there are some complexities in flow path, etc. Essentially, 15 min is not the best data to use (and also it has high kurtosis).
+-   If they regress any two time series it will look quite messy. There will be a general trend but lots of times when the correlation is poor. That is because the water reaches the drips sites at different times after rain, there are some complexities in flow path, etc. Essentially, 15 min is not the best data to use (and also it has high kurtosis).
 
 -   Get the students to sum the data to weekly or monthly totals and then plot the histograms and regressions again. The data should have less kurtosis and the regressions will be stronger.  
 

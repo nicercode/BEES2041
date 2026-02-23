@@ -102,7 +102,7 @@ Nutrients.sq <- sqrt(Nutrients_vars)
 
 **Run a PERMANOVA**
 
-We will use the function `adonis2()` in `vegan`. This function perfoms an ANOVA on the similiarity matrix of your choosing:
+We will use the function `adonis2()` in `vegan`. This function performs an ANOVA on the similarity matrix of your choosing:
 
 ```{r, results='hide'}
 adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
@@ -117,7 +117,7 @@ The output should look pretty familiar to you - very similar to an ANOVA table r
 
 There are some key differences from a univariate (one predictor variable) ANOVA vs a multivariate one. With multivariate data:
 
--  the analysis is ran on similarities among samples, not the actual values of the original variables
+-  the analysis is run on similarities among samples, not the actual values of the original variables
 
 - the probability of the test statistic produced (`pseudo-F`) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by **permutation**. From `permutations = 999` of the original data vs the treatment labels, it calculates how often a value of `pseudo-F` as large as yours would occur.
 
@@ -188,13 +188,13 @@ Nutrients_LowvsHigh_vars <- select(Nutrients_LowvsHigh, contains("Weed"))
 adonis2(Nutrients_LowvsHigh_vars ~ Nutrients_LowvsHigh$Treatment, permutations = 999, method = "bray")
 ```
 
-The problem with this approach is increasing the the risk of **false positives**. False positives are also called **type 1 errors**. The idea is, with increasing numbers of pairwise tests being run, by chance, we will detect a statistically significant treatment difference even though the underlying populations may not be different. 
+The problem with this approach is increasing the risk of **false positives**. False positives are also called **type 1 errors**. The idea is, with increasing numbers of pairwise tests being run, by chance, we will detect a statistically significant treatment difference even though the underlying populations may not be different. 
 
 ![](images/type_1_errors.png){width=60%} <br>
 
-The simplest correction for this is called the **Bonferonni correction**, where the significance level (α =0.05) is **adjusted by the number of hypotheses being tested**. 
+The simplest correction for this is called the **Bonferroni correction**, where the significance level (α =0.05) is **adjusted by the number of hypotheses being tested**. 
 
-In this example, we will **divide the threshold signifance valuye by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
+In this example, we will **divide the threshold significance value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
 
 ## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}
 
@@ -322,7 +322,7 @@ summary(leaf.pca)
 - PC1: `r cloze_numerical(0.9, tolerance = 0.01)` 
 - PC2: `r cloze_numerical(0.06, tolerance = 0.01)`
 
-**Visualise variance explained by princpal components**
+**Visualise variance explained by principal components**
 
 These are also visualised by a **scree plot**. Note that the Y-axis presented is not the % of variation explained.
 

@@ -49,7 +49,7 @@ Before we start making graphs and analysing data, we need to have a plan for sto
 R Studio notebooks are files that include:  
 * plain text where you can write down the number of the questions, add explanations that will describe to you what any bits of code are doing  
 * executable R code. These are put into the notebook file as "chunks" and are easily distinguished from your text explanations  
-* the output of any any code that you run (analyses, graphics etc.)
+* the output of any code that you run (analyses, graphics etc.)
 
 There is obviously lots more to learn about how R works, but we can get started straight away and learn that as we go. If you haven't used R before, have a read of our advice for [Getting started with R](http://environmentalcomputing.net/getting-started-with-r/) after the practical.
 
@@ -63,7 +63,7 @@ Understanding the relationship between populations and the samples used to estim
 
 Import the data file 'Population.csv' into R.
 
-While you can do this with the menus, it is best to have a line of code to this so that you can repeat your work very quickly later on (e.g. if you make a mess of things).
+While you can do this with the menus, it is best to have a line of code to do this so that you can repeat your work very quickly later on (e.g. if you make a mess of things).
 
 To this create a chunk of code in your notebook (Insert > R at the top right of your notebook file), copy the following line of code into your empty chunk.
 
@@ -71,7 +71,7 @@ To this create a chunk of code in your notebook (Insert > R at the top right of 
 Population <- read.csv(file = "Population.csv", header = T)
 ```
 
-You can execute the code with the little green arrow to the right of the chunk. In this case, `read.csv` is the function that imports a .csv file. The data has been assigned (the <- symbol) to an object in R called Population. This object is a data frame and will now be visible in the Data window on the top right. There are other sorts of objects in R that we will learn as we go along, but we will use data frames through out the course. These are just like spreadsheets where every column is a variable and every row is an observation.
+You can execute the code with the little green arrow to the right of the chunk. In this case, `read.csv` is the function that imports a .csv file. The data has been assigned (the <- symbol) to an object in R called Population. This object is a data frame and will now be visible in the Data window on the top right. There are other sorts of objects in R that we will learn as we go along, but we will use data frames throughout the course. These are just like spreadsheets where every column is a variable and every row is an observation.
 
 The Sampling data frame consists of just one column named 'Size' with 200 individual measurements. Imagine these as the sizes of... *[insert your favourite animal, vegetable or mineral]*.
 
@@ -117,7 +117,7 @@ $$\sigma^2= \sum_{i=1}^{N}\frac{(X_{i}-\mu )^{2}}{N}$$
 
 The built in `var` function gives you the variance of a sample (slightly different formula), so we need to write some code to get the population variance. By doing this, hopefully you will see population variance as a measure of how much individual data points differ, on average, from the population mean.
 
-Create a new chunk which will calculate the population variance according that formula above, and assign it to an object pop.var.
+Create a new chunk which will calculate the population variance according to that formula above, and assign it to an object pop.var.
 
 
 ```{r,eval=F}
@@ -362,9 +362,9 @@ The `t.test` function can be used again to run the independent samples *t*-test.
 t.test(Mass~Treatment, data = Corn, alternative = "two.sided", var.equal = TRUE)
 ```
 
-The `Mass~Treatment` part is a model formula, with the dependent (Y) variable on the left of the ~ and the independent (X) variable on the right. You will see these agan in later weeks.
+The `Mass~Treatment` part is a model formula, with the dependent (Y) variable on the left of the ~ and the independent (X) variable on the right. You will see these again in later weeks.
 
-The output gives you the two sample means, the *t* value, the degrees of freedom, the P value and a condfidence interval for the difference between the means. If this confidence interval overlaps zero, then there is little support for a difference. The two arguments specify a two-sided test and one that assumes equal variances.
+The output gives you the two sample means, the *t* value, the degrees of freedom, the P value and a confidence interval for the difference between the means. If this confidence interval overlaps zero, then there is little support for a difference. The two arguments specify a two-sided test and one that assumes equal variances.
 
 Interpret the probability and draw conclusions.
 
@@ -398,7 +398,7 @@ For a paired *t*-test, *t* is:
 
 $$t = \frac{\bar{d}-0}{SE_{d}}$$
 
-Obviously the zero goes away, but we have shown it here to illustrate how this is really just another version of the one sample *t*- test you ran in question 3. Your are comparing a sample of differences to an expected value of zero.
+Obviously the zero goes away, but we have shown it here to illustrate how this is really just another version of the one sample *t*- test you ran in question 3. You are comparing a sample of differences to an expected value of zero.
 
 Calculate the differences between each pair of samples (i.e., new-old for each sample).
 
@@ -463,7 +463,7 @@ More help with paired *t*-tests on the Environmental Computing site [here](http:
 
 Data often need transforming to new scales to meet the assumptions of normality and homogeneity of variance that are required by parametric tests (*t*-tests, analyses of variance etc.).
 
-A physiologist was interested in how lizards coped with low temperatures in the alpine zone. He compared the temperature of 20 microhabitats in which lizards were recorded to 20 sites chosen at random within the habitat. The resultant temperature data are file 'Lizard_distribution.csv'.
+A physiologist was interested in how lizards coped with low temperatures in the alpine zone. He compared the temperature of 20 microhabitats in which lizards were recorded to 20 sites chosen at random within the habitat. The resultant temperature data are in the file 'Lizard_distribution.csv'.
 
 ```{r} 
 Lizard_distribution <- read.csv(file = "Lizard_distribution.csv", header = T)

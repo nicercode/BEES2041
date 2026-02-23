@@ -324,7 +324,7 @@ Now, you can look at the results from the ANCOVA.
 anova(Gastropods.ANCOVA)
 ```
 
-You will have a test of whether abundance varied among species (Species factor), whether abundance varied with distance from rockpools (Distance factor), and whether the slopes of the abundance vs distance relationships varied among species (Species x distance interction).
+You will have a test of whether abundance varied among species (Species factor), whether abundance varied with distance from rockpools (Distance factor), and whether the slopes of the abundance vs distance relationships varied among species (Species x distance interaction).
 
 Results from ANCOVA are best visualised as scatterplots with the data from each of the levels of the categorical factor presented with different symbols. As above, but now with the three lines of fit for each species. The three lines of best fit are obtained from separate linear models of abundance vs distance for each species.
 

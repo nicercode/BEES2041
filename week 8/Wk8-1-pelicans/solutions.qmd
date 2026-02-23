@@ -113,7 +113,7 @@ evaluate_model(fit_rf_top, peli_labelled_train, peli_labelled_test)
 
 # Extension
 
-Is many trees (the randome forest) better than single decision tree?
+Is many trees (the random forest) better than single decision tree?
 
 ```{r}
 fit_rf_single <- ranger(is_pelican ~ ., data = peli_labelled_train,   num.trees =1)

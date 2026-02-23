@@ -36,7 +36,7 @@ library(parameters)
 
 To get us started, let's consider a real question that a researcher might ask about a population mean.
 
-![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
+![Image: Davey Dor](pics/DaveyDor.jpeg){width=80%}
 
 This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
 
@@ -68,7 +68,7 @@ Imagine we have a continuous variable that captures something about the natural 
 
 The normal distribution is a continuous probability distribution that is symmetrical around the mean, $\mu$. It is defined by two parameters:
 
--   the mean, $\mu$:, which gives the centre of the distribution, and
+-   the mean, $\mu$, which gives the centre of the distribution, and
 -   standard deviation, $\sigma$, which describes how spread out the distribution is.
 
 The normal distribution is often denoted by $N(\mu, \sigma)$. The standard normal distribution is a normal distribution with a mean of 0 and a standard deviation of 1, which can be denoted, by $N(0, 1)$.
@@ -347,7 +347,7 @@ confint(fit)
 
 The values calculated here should be the same as those calculated manually above (with some rounding error).
 
-unpackaging the code above,
+Unpacking the code above,
 
 -   `lm()` function fits a linear model to the data.
 -   `time_to_surface ~ 1` tells R to fit a model with the mean of the time to surface as the response variable, and no predictors.
@@ -356,7 +356,7 @@ unpackaging the code above,
 
 **The easystats package makes it even easier**
 
-While we can calculate confidence intervals using the `coef()` and `confint` functions, the package `parameters` from `easystats` provides a more better formatted output.
+While we can calculate confidence intervals using the `coef()` and `confint` functions, the package `parameters` from `easystats` provides a better formatted output.
 
 
 ```{r}
@@ -401,15 +401,15 @@ Confidence intervals around the mean are a powerful tool in our analysis toolbox
 
 To answer this, Davey can look at confidence intervals. The confidence interval tells us the range of possible values for the mean of the population. If the critical value is within the confidence interval, then the mean of the population is likely to be less than or greater than the critical value. If the critical value is outside the confidence interval, then the mean of the population is likely to be greater than or less than the critical value.
 
-As the CI on the mean is 57.5-82.76, we can conclude that mean time it takes for baby turtles to reach the surface is likely to be greater than 20 mins.
+As the CI on the mean is 57.5-82.76, we can conclude that the mean time it takes for baby turtles to reach the surface is likely to be greater than 20 mins.
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
 You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and pvalue are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
 
-**Question: How likely is that two samples of baby turtles come from the same population?**
+**Question: How likely is it that two samples of baby turtles come from the same population?**
 
-This is equivalent to asking if the confidence intervals for the two samples overlap. If the confidence intervals overlap, then the means of the two samples may come from the same population. If the confidence intervals do not overlap, then the means of the two samples are unlikely to come from different populations.
+This is equivalent to asking if the confidence intervals for the two samples overlap. If the confidence intervals overlap, then the means of the two samples may come from the same population. If the confidence intervals do not overlap, then the means of the two samples are unlikely to come from the same population.
 
 **Question: How does the mean time it takes for baby turtles to reach the surface change with the size of the turtles?**
 
@@ -469,7 +469,7 @@ The standard error of any statistic is the standard deviation of the statistic's
 
 And the formula for the confidence interval is: $$x \pm t_{0.05, n-1} SE$$
 
-You can see from the above, the standard error of the mean decreases as the sample size increases. This is because the standard error is inversely proportional to the square root of the sample size. The larger the sample size, the smaller the SE and the smaller the more reliable the mean of the sample will be.
+You can see from the above, the standard error of the mean decreases as the sample size increases. This is because the standard error is inversely proportional to the square root of the sample size. The larger the sample size, the smaller the SE and the more reliable the mean of the sample will be.
 
 This is why sample size is so important in statistics. The more we sample, the better our mean represents the population, and
 

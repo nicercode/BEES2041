@@ -26,7 +26,7 @@ In this practical, we’ll explore how to fit and interpret linear models, using
 
 ## Key learning objectives
 
-Our learning objective today are:
+Our learning objectives today are:
 
 - **run** a **linear regression** in R using `lm()`
 - **interpret** the output of a **linear regression** using:
@@ -85,11 +85,11 @@ library(palmerpenguins)
 ## Worked example - Isaac with leaves across climates
 
 ![Meet Dr. Isaac Towers! Image credit: Data Dan](isaac-plant-ecosystems.png){width=60%} <br>
-From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478) We will be working with the data Isaac compiled for us. 
+From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478). We will be working with the data Isaac compiled for us. 
 
 > Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall?
 
-Let's read in the Isaac's data. This is in your `"data/"` folder. 
+Let's read in Isaac's data. This is in your `"data/"` folder. 
 
 ```{r, message=FALSE}
 data_towers <- read_csv("data/towers-2024.csv")
@@ -147,7 +147,7 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 ![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](r2-and-f-value.png){width=60%}
 
 <br>
-> There are two metrics we are use to assess our model fit
+> There are two metrics we use to assess our model fit
 
 The **R^2 value** describes how much variation is explained by your model:
 
@@ -195,7 +195,7 @@ Generally, as the *F*-statistic increases the `r cloze("p-value", c("the interce
 
 ## Calculating and visualising predicted means 
 
-Okay thats enough theory for the day... let's have a go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
+Okay that's enough theory for the day... let's have a go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
 
 ```{r}
 means_towers <- estimate_means(towers_fit, by = "log10_rainfall")
@@ -236,7 +236,7 @@ Voilà!!! Let's talk through this code:
     - `fill = "grey"`, colour our ribbon in grey
 - `geom_line(data = means_towers, aes(y = Mean), col = "#EB8240", linewidth = 1)`, plot the line for our model predictions
   - `aes(y = Mean)`, create the line using the mean values of our y variable (`log10_leaf_mass_per_area`) 
-  - `col = "#EB8240"`, set a custom colour using [hexademical (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ)
+  - `col = "#EB8240"`, set a custom colour using [hexadecimal (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ)
   - `linewidth = 1` controls the thickness of the line
   
 Feel free to tinker with all these options to create a plot that helps us answer the question: **How does a leaf's mass per area change with rainfall?**
@@ -252,7 +252,7 @@ Feel free to tinker with all these options to create a plot that helps us answer
 
 Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
 
-> We are want try answer the question: **How does bill length scale with body mass in Palmer Penguins?**
+> We want to try to answer the question: **How does bill length scale with body mass in Palmer Penguins?**
 
 **Over to you - using the code from Isaac's study above, try to**: 
 
@@ -325,9 +325,9 @@ There is a `r cloze("positive", c("positive","negative"))` relationship between 
 
 - A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm)
 
-3. Yikes, looks like by rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
+3. Yikes, looks like rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
 
-The confidence intervals for the slope tells us that the true population mean for the slope lies between
+The confidence intervals for the slope tell us that the true population mean for the slope lies between
 `r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
 
 4. Let's try understand the *R^2* and *F*-statistic values from your model. What are they telling us?
@@ -427,13 +427,13 @@ Linear regressions are incredibly flexible. Not only can we use them to make inf
 > Recall the differences between  **discrete** or **categorical** variables. 
 
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){width=60%} <br>
-From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperatures treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
+From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperature treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
 ![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%} <br>
 
 > Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
 
-Let's read in the Jasmine's data. This is in your `"data/"` folder. 
+Let's read in Jasmine's data. This is in your `"data/"` folder. 
 
 ## Setting up
 
@@ -486,7 +486,7 @@ Once we have these values, we can calculate the `F-value` - a ratio between the 
 In other words, the `F-value` is the ratio of signal to noise: 
 
 - **larger** values indicate a **stronger** signal
-- **smaller** values means that we have more **noise** in our data.
+- **smaller** values mean that we have more **noise** in our data.
 
 From there, we use the *F*-statistic to retrieve the probability of observing our effect in a hypothetical (and boring) world where nothing is expected to happen - just like we did in earlier examples. 
 
@@ -579,13 +579,13 @@ Voilà!!! Let's talk through this code:
 <!--     - `fill = "grey"`, colour our ribbon in grey -->
 <!-- - `geom_line(data = means_towers, aes(y = Mean), col = "#EB8240", linewidth = 1)`, plot the line for our model predictions -->
 <!--   - `aes(y = Mean)`, create the line using the mean values of our y variable (`log10_leaf_mass_per_area`)  -->
-<!--   - `col = "#EB8240"`, set a custom colour using [hexademical (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ) -->
+<!--   - `col = "#EB8240"`, set a custom colour using [hexadecimal (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ) -->
 <!--   - `linewidth = 1` controls the thickness of the line -->
 
 # LM categorical (Penguins)
 
 
-## Do prenguins differ in their flipper length across islands?
+## Do penguins differ in their flipper length across islands?
 
 ![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png){width=75%}
 
@@ -657,7 +657,7 @@ The `F value` is relatively `r cloze("large", c("small","large"))`. This means t
 
 The reference island is `r cloze("Biscoe", c("Biscoe", "Dream", "Torgersen"))`
 
-3. Which two islands should the biggest mean difference in flipper length?
+3. Which two islands showed the biggest mean difference in flipper length?
 
 The biggest mean difference was observed between `r cloze("Torgersen island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))`
 
@@ -759,7 +759,7 @@ ggplot(group_means_spray, aes(x = spray, y = Mean)) +
 
 1. Our `F value` of the `anova()` output is not very big (34.70), what might this mean? 
 
-A relatively small value in our `F value` means that there relatively we have have more `r cloze("noise relative to signal", c("noise relative to signal", "signal relative to noise"))` in our data. 
+A relatively small value in our `F value` means that we have relatively more `r cloze("noise relative to signal", c("noise relative to signal", "signal relative to noise"))` in our data. 
 
 2. Interpret the intercept of your model. What does it represent?
 

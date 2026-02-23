@@ -164,7 +164,7 @@ fit_rf <- ranger(Coral ~ ., data = coral_labelled_train)
 evaluate(fit_rf, coral_labelled_train, coral_labelled_test)
 ```
 
-This is good, still a drop between trinaing and testing, but now model is making predictions where erro4 4in cover is 13%.
+This is good, still a drop between training and testing, but now the model is making predictions where error in cover is 13%.
 
 ## Is RF better than regression using lm with all covars
 

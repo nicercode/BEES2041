@@ -46,7 +46,7 @@ library(ggplot2)
 
 <h2>Stalagmite data</h2>
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width=100%}
 
 <br>
 
@@ -77,7 +77,7 @@ Using the functions you've learned so far in this prac, try answer the following
 
 <h2>Sydney Beaches</h2>
 
-![Image credit: Amazing Aerial](coogee-beach.jpeg){width="100%"}
+![Image credit: Amazing Aerial](coogee-beach.jpeg){width=100%}
 
 <br>
 
@@ -105,7 +105,7 @@ To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` 
 
 -   Exclude a potential outlier or not ;) - try both!
 
--   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(nterococci_cfu_per_100ml + 1`) - try both!
+-   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(Enterococci_cfu_per_100ml + 1`) - try both!
 
 -   Try `geom_boxplot()` and `geom_violin()` with `geom_point()`
 
@@ -113,9 +113,9 @@ To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` 
 
 **Why did we need to transform the data?**
 
-## What does the shape of the violin plot tells us about the data? {type=essay}
+## What does the shape of the violin plot tell us about the data? {type=essay}
 
-**What does the shape of the violin plot tells us about the data?**
+**What does the shape of the violin plot tell us about the data?**
 
 ## ...and finally, where would you recommend Sydney-siders to go swimming?
 
