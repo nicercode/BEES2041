@@ -34,7 +34,7 @@ We are going to use this data to do a bit of preliminary analyses and see if we 
 
 ## Assembling the Data
 
-Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and seperator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
+Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and separator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
 
 ```{r}
 
@@ -74,7 +74,7 @@ Make a plot to assess the distribution of `height`
 
 ## Data transformation
 
-It is common to transform your data when its heavily skewed as in `height`, can you `log10()` transform `height` and assign this update into a new data frame.
+It is common to transform your data when it's heavily skewed as in `height`, can you `log10()` transform `height` and assign this update into a new data frame.
 
 ```{r}
 

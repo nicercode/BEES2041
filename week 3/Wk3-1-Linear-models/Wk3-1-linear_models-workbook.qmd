@@ -6,7 +6,7 @@ editor_options:
 ---
 
 
-Enter you worked code below. Add new chunks as needed.
+Enter your worked code below. Add new chunks as needed.
 
 ```{r}
 

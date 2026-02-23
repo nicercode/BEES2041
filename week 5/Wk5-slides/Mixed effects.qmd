@@ -1,5 +1,5 @@
 ---
-title: "Making plots for linear rgression ppt"
+title: "Making plots for linear regression ppt"
 format: html
 ---
 
@@ -17,7 +17,7 @@ Intercepts- and/or slopes-as-outcomes
 Growth curve models (possibly Latent GCM)
 
 
-Choosing level of compelxity
+Choosing level of complexity
 
 - be guided by questions of interest
 - be guided by the data --> is there enough data to estimate the parameters of interest?

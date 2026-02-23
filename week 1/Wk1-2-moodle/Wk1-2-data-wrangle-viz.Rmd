@@ -54,7 +54,7 @@ Everything you need for this practical is on Moodle
 4.  Go into the folder `Wk1-2-materials` created by extracting the zip.
 5.  **Click on the `Wk1-2-data-manip.Rproj`** to open the RStudio project and you're in!!!
 
-We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+We will be working with real-world datasets collected by researchers in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
 Each dataset is associated with its own Quarto document (`Wk1-2-plant-height.qmd`, `Wk1-2-stalagmites.qmd`). Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
 
@@ -67,7 +67,7 @@ Each dataset is associated with its own Quarto document (`Wk1-2-plant-height.qmd
 Before we dive into that data, let's think about the kinds of plots we can make 
 and what data visualisation means.
 
-| "A picture is worth a thousands words."
+| "A picture is worth a thousand words."
 
 The choice of your visualisation can have a huge impact on the key message you want to give to the viewer. Consider: **What is it that I want to convey?** As the storyteller, you then need to select appropriate plots to convey your message. 
 <br>
@@ -87,7 +87,7 @@ library(palmerpenguins)
 
 <h4>The data</h4>
 
-> Remember the `palmerpengiuns`? They will also be joining us in this prac.
+> Remember the `palmerpenguins`? They will also be joining us in this prac.
 
 
 <div id=`r class_id()`><pre>
@@ -101,7 +101,7 @@ penguins
 
 <h4>Activity</h4>
 
-For each question below, work with your fellow classmates to determine a suitable data visualation. Think about:
+For each question below, work with your fellow classmates to determine a suitable data visualisation. Think about:
 
 - what are the key variables of interest 
 - what are type of variable(s) are you working with e.g numeric or grouping/categorical?
@@ -223,7 +223,7 @@ Boxplots depict the range of numeric values along the `y` axis and the groups yo
   - The top of the box is the third quartile (third quartile, 75th percentile). 
 - the **vertical lines** are the whiskers. 
   - the bottom line extends to the minimum, no further than first quartile - 1.5 x IQR 
-  - the top line extends to the maxium, no further than third quartile + 1.5 x IQR 
+  - the top line extends to the maximum, no further than third quartile + 1.5 x IQR 
 - outliers that exist beyond these bounds are marked as **dots**
 
 Here's the code to create a boxplot for each species:

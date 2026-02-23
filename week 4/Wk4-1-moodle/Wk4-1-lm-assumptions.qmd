@@ -22,19 +22,19 @@ library(moodlequiz)
 
 ## Introduction
 
-In the previous practical, we learned about using linear models to understand how `y` varies with a continuous `x` variable and a discrete `x` variable ...but how do we know our models are any good? Can we evaluate the validity of our linears models? 
+In the previous practical, we learned about using linear models to understand how `y` varies with a continuous `x` variable and a discrete `x` variable ...but how do we know our models are any good? Can we evaluate the validity of our linear models? 
 
 In this practical, we will 
 
-- build on what we learned last week, fitting linear modeles.
-- explore approaches to assess how well our model fits the data, and ways on how to improve our model fits using transformation. 
-- practice interpretating the outputs of models. 
+- build on what we learned last week, fitting linear models.
+- explore approaches to assess how well our model fits the data, and ways to improve our model fits using transformation. 
+- practice interpreting the outputs of models. 
 
 Throughout we will work with various real-world datasets. By the end of today, you’ll have a solid foundation for applying these techniques to models you will be fitting in your own work.
 
 ## Key learning objectives
 
-Our learning objective today are:
+Our learning objectives today are:
 
 - **run** a **linear regression** in R using `lm()`
 - **interpret** the output of a **linear regression** 
@@ -59,7 +59,7 @@ Everything you need for this prac is on Moodle
 
 We will be working with various datasets collected. These are in the folder `data/`.
 
-You will work in the relevant Quarto document for this prac. Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
+You will work in the relevant Quarto document for this prac. Within each Quarto doc there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
 
 **Setting up: Packages:**
 
@@ -127,7 +127,7 @@ summary(towers_og_fit)
 
 ## Check model assumptions
 
-Recall from lectures this week that the assumptions of a linear model assumes:
+Recall from lectures this week that the assumptions of a linear model are:
 
 1. **Linear** relationship between `x` and `y` 
 2. **Residuals** are **normally** distributed
@@ -136,9 +136,9 @@ Recall from lectures this week that the assumptions of a linear model assumes:
 5. **Independence** of points (sampling design)
 6. Our **samples represent the population** of interest? (sampling design)
 
-The last two assumptions has to do with the sampling design. You can only check the validity of these by carefully considering the how data was collection. Let's assume that Isaac has done a good job in collecting his data and that the last two assumptions are met.
+The last two assumptions have to do with the sampling design. You can only check the validity of these by carefully considering how the data was collected. Let's assume that Isaac has done a good job in collecting his data and that the last two assumptions are met.
 
-We can check the remaining assumptions (1-4) using the the outputs of `check_model()`.
+We can check the remaining assumptions (1-4) using the outputs of `check_model()`.
 
 > Note, you may need to click on "Zoom" to give the plots some room to breathe
 
@@ -146,7 +146,7 @@ We can check the remaining assumptions (1-4) using the the outputs of `check_mod
 check_model(towers_og_fit)
 ```
 
-In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Data Data goes through how to use the four main plots neccessary for checking the assumptions of a liner model: 
+In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Data Dan goes through how to use the four main plots necessary for checking the assumptions of a linear model: 
 
 1. **Linearity**
     - Check the relationship between fitted values and residuals
@@ -169,7 +169,7 @@ In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Dat
 
 Generally speaking, model checks are pretty standard and not very exciting. Typically
 
-> Usually we don't include these in a publication or final report. You could include them in Supplementary information. We just need to say and explain what checks were done and how you amended your data if neccessary to improve fit
+> Usually we don't include these in a publication or final report. You could include them in Supplementary information. We just need to say and explain what checks were done and how you amended your data if necessary to improve fit
 
 ## Make some adjustments to improve model fit
 
@@ -197,7 +197,7 @@ data_towers_transformed
 
 ## Fit model again
 
-Let's try fit out model again using our transformed variables.
+Let's try fit our model again using our transformed variables.
 
 ```{r}
 towers_transformed_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers_transformed)
@@ -236,17 +236,17 @@ ggplot(data_towers, aes(x = rainfall, y = leaf_mass_per_area)) +
   )
 ```
 
-Here we can see the issues identified by the mdoel checks in the plot:
+Here we can see the issues identified by the model checks in the plot:
 
 - **Linearity**: The line goes outside the data, and even predicts a negative value at high rainfall. 
-- **Homogeneity of variance**: The residuals do not have constant variance.  Data are much mroe spread towards the left of the plot than the right.
-- **Normality of residuals**: The residuals are not normally distributed. They are skewed to have much larger deparures above compared to below the line.
-- **Influential observations**: There are some points with really high y valkues that are likely having a disproportinate effect on the line
+- **Homogeneity of variance**: The residuals do not have constant variance.  Data are much more spread towards the left of the plot than the right.
+- **Normality of residuals**: The residuals are not normally distributed. They are skewed to have much larger departures above compared to below the line.
+- **Influential observations**: There are some points with really high y values that are likely having a disproportionate effect on the line
 
 
 ## Plot of transformed data
 
-Here's a plot of the fitted model using the transformed data. Wow, what a difference! You can see the difference in the fit. The irmpoved fit of the model and meeting of asusmptions mean we can more condiently make interpretations on the relationship between rainfall and leaf mass per area based aropund the fitted model.
+Here's a plot of the fitted model using the transformed data. Wow, what a difference! You can see the difference in the fit. The improved fit of the model and meeting of assumptions mean we can more confidently make interpretations on the relationship between rainfall and leaf mass per area based around the fitted model.
 
 ```{r}
 # Estimate means and confidence intervals
@@ -273,7 +273,7 @@ For the remainder of the practical, we will get you to:
 - load a dataset
 - fit a linear model
 - check their assumptions
-- make changes to the data to improve the model fit and adherance to assumptions
+- make changes to the data to improve the model fit and adherence to assumptions
 - make some interpretations on the results of the model
 
 We have not provided the step-by-step instructions / R code for you to complete these exercises. Use the knowledge you've gained so far and apply them here. Make use of your saved code from the previous pracs and the worked example above if you need some guidance. 
@@ -683,7 +683,7 @@ Run the suitable analysis. Check your model assumptions and make any data adjust
 
 2. What is the probability that there is no relationship between fish larvae density and water flow velocity?
 
-The probability that there is no relationship between fish larvae density and bwater flow velocity is `r cloze("0.023", c("0.05", "0.023", "< .001"))`
+The probability that there is no relationship between fish larvae density and water flow velocity is `r cloze("0.023", c("0.05", "0.023", "< .001"))`
 
 3. How many more fish larvae are present for every unit increase in flow velocity?
 

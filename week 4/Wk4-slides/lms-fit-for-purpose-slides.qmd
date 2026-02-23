@@ -1,5 +1,5 @@
 ---
-title: "Making plots for linear rgression ppt"
+title: "Making plots for linear regression ppt"
 format: html
 ---
 
@@ -529,7 +529,7 @@ dev.off()
 In the co`urse so far, we've introduced
 
 - estimating the mean and confidence intervals around the mean for a population
-- How we can use linear mdoels to invetsigate whether the mean of a variable is varying with some predictor x, be it a continuous or categorical variable.
+- How we can use linear models to investigate whether the mean of a variable is varying with some predictor x, be it a continuous or categorical variable.
 - How to run linear models, including
   - how to run model and access the results
   - what various parts of the output mean
@@ -544,10 +544,10 @@ Confidence intervals tell us how uncertain we are
 
 Our inferences 
 
-Warton: "There are assumptions when making inferences—you need to know what they are and to what extent violations of them are important (to the validity and effiency of your inferences). Independence, mean, and variance assumptions tend to be important for validity, distributional assumptions not so much, but skew and outliers can reduce eﬃciency.
+Warton: "There are assumptions when making inferences—you need to know what they are and to what extent violations of them are important (to the validity and efficiency of your inferences). Independence, mean, and variance assumptions tend to be important for validity, distributional assumptions not so much, but skew and outliers can reduce eﬃciency.
 
 Bias
-Effiency -- an efficient estimator provides more precise estimates of the parameter.
+Efficiency -- an efficient estimator provides more precise estimates of the parameter.
 
 sampling from the population of interest.
 

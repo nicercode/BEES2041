@@ -6,7 +6,7 @@ editor_options:
 ---
 
 
-# Commmunicating results
+# Communicating results
 
 It is worth reminding ourselves that we are learning statistics so that we can answer questions in the life and earth sciences. Unless you want to keep the answers to yourself, we need to be able to communicate the results of statistical analyses to a broader audience. Given that statistics has a reputation for being able to trick and confuse people, simple and effective communication of results is a necessary skill for research scientists.
 
@@ -144,7 +144,7 @@ report(penguin_fit)
 
 This text is a good starting point for writing up the results of your analysis. However, you'd need to edit it slightly. For example, in you might
 
-- inclde the proper names for variables, not the column names from your data frame. e.g. bill length instead of `bill_length_mm`
+- include the proper names for variables, not the column names from your data frame. e.g. bill length instead of `bill_length_mm`
 - remove the adjusted R^2 value if you don't think it's relevant
 - remove the intercept, if that is not of interest in this analysis
 
@@ -165,7 +165,7 @@ penguin_species_fit <- lm(bill_length_mm ~ species, data = penguins)
 summary(penguin_species_fit)
 ```
 
-Running `report` directly on fit will give you a summary of the model, including the coefficients, standard errors, t-values, and p-values. Howerver, with a single catgeorcial predictor, people tend to report result of ANOVA table. 
+Running `report` directly on fit will give you a summary of the model, including the coefficients, standard errors, t-values, and p-values. However, with a single categorical predictor, people tend to report the result of the ANOVA table. 
 
 Recall, we can run `anova(fit)` to get the ANOVA table for the model. This will give you the F-statistic and p-value for the overall model. 
 ```{r}
@@ -205,7 +205,7 @@ Things to aim for:
 Things to avoid:
 
 - overly complex figures that can't be easily interpreted by the reader
-- just using what ever figure the statistical software program produces as its default - you nearly always need to tidy these up before they are ready for presentation.
+- just using whatever figure the statistical software program produces as its default - you nearly always need to tidy these up before they are ready for presentation.
 - missing axis labels
 - missing units on the axes
 - a title (text to describe the figure is held in the figure legend, below the figure). You can put brief titles to label figures if your figure has multiple panels, eg Fig 1a), Fig 1b) like the example above.
@@ -266,7 +266,7 @@ ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) +
   labs(x = "Body mass (grams)", y = "Bill length (mm)") 
 ```
 
-We can make the legend nicer for a format report with further tweaking using the `colour` and `shapes` argument. We have to specify the title for both colour and shapes because those are the settings we set to vary by `island`.
+We can make the legend nicer for a formal report with further tweaking using the `colour` and `shapes` argument. We have to specify the title for both colour and shapes because those are the settings we set to vary by `island`.
 
 ```{r}
 ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm)) + 
@@ -345,7 +345,7 @@ Remember that you should always present measures of variation associated with th
 
 Both have the exact same means, but differ in their variance. The one on the left has lower variation within groups relative to the variation between groups, would have a higher value of a test statistic used to contrast the two groups (t in a t-test or F in an ANOVA) and would be more likely to find a significant difference between the groups (lower P value). Consequently, the interpretation of these two is very different, but it is only possible to get this understanding from the figure if the variation is also shown.
 
-Bar plots with error bars are commonly used but keep in mind that they have some limitations - in particular, they are unable to show the underlying distribution of the data very effectively. Error bars are presented as equal is size (+ or - from the mean) even when the underlying data are very skewed.
+Bar plots with error bars are commonly used but keep in mind that they have some limitations - in particular, they are unable to show the underlying distribution of the data very effectively. Error bars are presented as equal in size (+ or - from the mean) even when the underlying data are very skewed.
 
 **Create error bars**
 
@@ -488,7 +488,7 @@ There are some handy hints for nicely formatting tables [here](https://imgur.com
 
 **Inside your Quarto notebook**
 
-If you want your table output to print nicely in your notebook, we can enlist two extra packages `kableExtra`. We'll use `parameters` to tidy our model output and `kableExtra`to  decorate your table so it looks nice in the end. You will need to install `kableExtra` if you want to do the following. 
+If you want your table output to print nicely in your notebook, we can enlist the extra package `kableExtra`. We'll use `parameters` to tidy our model output and `kableExtra` to decorate your table so it looks nice in the end. You will need to install `kableExtra` if you want to do the following. 
 
 ```{r}
 penguin_fit |>

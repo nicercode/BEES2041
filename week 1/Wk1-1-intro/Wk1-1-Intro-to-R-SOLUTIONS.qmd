@@ -16,7 +16,7 @@ library(ggplot2)
 
 ### R Refresher
 
-Learning to code in R is like learning to speaking a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive - let's get started!
+Learning to code in R is like learning to speak a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive - let's get started!
 
 ![R then and now, Artwork by @allison_horst](R-then-and-now.png){width="600"}
 
@@ -24,7 +24,7 @@ Learning to code in R is like learning to speaking a new language. Here we will 
 
 ### Code and Comments
 
-Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line with spit out or "return" a solution.
+Think of the code you will write in this course as instructions. Each time you tell R to run or **"execute"** your code, R will interpret your instructions and do stuff accordingly. Try running these few lines of code. Notice how each line will spit out or "return" a solution.
 
 ```{r}
 6 + 3
@@ -32,7 +32,7 @@ Think of the code you will write in this course as instructions. Each time you t
 
 Much like a calculator, R uses **operators** like `+`, `-`, `*`, `/` to do maths. The brackets `( )` are used to group together some calculations and set the order of operations.
 
-As we write code in this course, its often useful to add **comments** throughout our code to give it some context. R treats any text that follows a `#` and on the same line as a comment. Comments help organise your thoughts and serve as a reminder to you and your collaborators of what is happening in your code script. Here I've added some comments to the code above. Run the following code, what do you notice when the comments are run?
+As we write code in this course, it's often useful to add **comments** throughout our code to give it some context. R treats any text that follows a `#` and on the same line as a comment. Comments help organise your thoughts and serve as a reminder to you and your collaborators of what is happening in your code script. Here I've added some comments to the code above. Run the following code, what do you notice when the comments are run?
 
 ```{r}
 # Addition
@@ -53,7 +53,7 @@ R reads the comment and does nothing.
 
 ### Assignment operator
 
-The "assignment" operator `<-`. Its used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side).
+The "assignment" operator `<-`. It's used for creating objects in R. It looks like an arrow right? Think of it as inserting the code on the back of the arrow (right hand side) into the object on the pointy end of the arrow (left hand side).
 
 ```{r}
 # Insert the value 13 into the object my_lucky_number
@@ -63,11 +63,11 @@ my_lucky_number <- 13
 my_lucky_number
 ```
 
-> Some folks like to use `=` instead of `<-` to assign things in R, this is a matter of personal preference - but its good practice to choose style and be consistent throughout.
+> Some folks like to use `=` instead of `<-` to assign things in R, this is a matter of personal preference - but it's good practice to choose a style and be consistent throughout.
 
 **Try:** See for yourself! Change the `<-` to a `=` in the code above and input a different lucky number. Did it work?
 
-When creating objects in R, there are few general rules naming things. Object names:
+When creating objects in R, there are a few general rules for naming things. Object names:
 
 1.  should only contain letters, numbers, and only dot or underscore characters e.g. `river_data_2005`
 
@@ -100,7 +100,7 @@ mean(x)
 
 **Try:** Join another set of numbers to x and compute the mean
 
-Functions have **"arguments"**, these are **inputs** to a function that is needed to perform it's task. Think of these as the various settings of a coffee machine. As an example, the `mean()` function has an argument called `na.rm` for removing missing values. By default, the value is always set to false `na.rm = FALSE` but we can change the defaults to adjust the behaviour of a function.
+Functions have **"arguments"**, these are **inputs** to a function that is needed to perform its task. Think of these as the various settings of a coffee machine. As an example, the `mean()` function has an argument called `na.rm` for removing missing values. By default, the value is always set to false `na.rm = FALSE` but we can change the defaults to adjust the behaviour of a function.
 
 Take this next example, I've added a NA in a series of numbers. NA represents a missing value. Try taking a mean of x now
 
@@ -169,7 +169,7 @@ str(went_for_a_walk)
 
 ### Object types in R
 
-Some far we have been working with **vectors**. They are the simplest object in R, `cats`, `water_ml`, `went_for_a_walk` as you seen above are all one dimensional and contains bits of data.
+So far we have been working with **vectors**. They are the simplest object in R, `cats`, `water_ml`, `went_for_a_walk` as you've seen above are all one dimensional and contain bits of data.
 
 **Data frame** is data stored in a table. Think of these like a single spreadsheet, a grid of rows and columns. Usually variables (the attributes you are interested in) are arranged as columns and observations for each entity you are collecting data for are arranged as rows.
 
@@ -198,7 +198,7 @@ mtcars
 -   What data type is `cyl`? numeric but technically an integer
 -   What data type is `wt`? numeric but technically a double
 -   How many variables are there in `mtcars`? 11
--   How many obsevations are there in `mtcars`? 32
+-   How many observations are there in `mtcars`? 32
 
 **Try:** The `dim()` function to answer the last two questions efficiently
 
@@ -206,7 +206,7 @@ mtcars
 
 ## Object types in R 2
 
-Another common and object data type is a **list**. Lists are objects which can contain a mix of elements, which makes them very flexible.
+Another common object data type is a **list**. Lists are objects which can contain a mix of elements, which makes them very flexible.
 
 We create lists using the `list()` function. Here I am creating a list and giving each **element** of my list a name (`car_data`, `cat_types`, `did_i_go_for_a_walk`). Notice I am using the `=` here to store objects into element.
 
@@ -232,7 +232,7 @@ What happens when you don't provide a name to an element? The element is unnamed
 
 Now that you have the basics under your belt, let's try looking at our data using plots! We will be using functions from an R package called `ggplot2`. R packages are shareable tools and contain functions and data that are not shipped in the base version of R. There are *MANY* R packages out there, this is the beauty of R. Over time, you will find the right R packages for you and add them to your data science tool belt.
 
-To make use `ggplot2` we need to first install it so we can use it in R
+To make use of `ggplot2` we need to first install it so we can use it in R
 
 ```{r}
 install.packages("ggplot2") # Installation might take a few seconds
@@ -254,7 +254,7 @@ ggplot(data = mtcars, aes(x = cyl, y = wt, group = cyl)) +  # Point to data and 
 Let's talk through the code:
 
 -   `ggplot(data = mtcars)` tells `ggplot`, that we are working with the mtcars data frame
--   `aes()` is short **aesthetics**, within this function is where we tell `ggplot` what variables we want to work with.
+-   `aes()` is short for **aesthetics**, within this function is where we tell `ggplot` what variables we want to work with.
     -   `x = cyl` tells the function that we want to place `cyl` on the x axis
     -   `y = wt` tells the function that we want to place `wt` on the y axis
     -   `group = cyl` tells the function that we want to treat `cyl` as a grouping variable. This means we want to compare between cars with different number of cylinders (4, 6, 8)

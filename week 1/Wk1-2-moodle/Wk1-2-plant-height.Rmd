@@ -102,7 +102,7 @@ The species with the extreme value for `height` is: `r cloze("Pseudotsuga menzie
 
 <h3>Data transformation</h3>
 
-It is common to transform your data when its heavily skewed as in `height`.
+It is common to transform your data when it's heavily skewed as in `height`.
 
 > Can you `log10()` transform `height` and assign this update into a new data frame?
 

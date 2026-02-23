@@ -75,7 +75,7 @@ Everything you need for this prac is on Moodle
 
 We will be working with various datasets collected. These are in the folder `data/`.
 
-You will work in the relevant Quarto document for this prac. Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
+You will work in the relevant Quarto document for this prac. Within each Quarto doc there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
 
 ## Setting up: Packages
 
@@ -103,7 +103,7 @@ library(glmmTMB)
 
 Already, you have seen how linear models can analyse data with continuous predictor variables (regression) and categorical predictor variables (ANOVA), but they can also use a combination of categorical and continuous variables. These are known as **analyses of covariance** (**ANCOVA**). 
 
-These models can get as complex as you like, but we will look at the simplest version of these - let's look at thesimplest scenario: a model with **one categorical and one continuous predictor**.
+These models can get as complex as you like, but we will look at the simplest version of these - let's look at the simplest scenario: a model with **one categorical and one continuous predictor**.
 
 To explore this analysis, let's look at some data from marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. 
 
@@ -121,7 +121,7 @@ There were 8 replicates per treatment. The % cover of algae and bare rock were m
 
 The following file has the data for the % cover of bare rock, `data/Urchins.csv`
 
-Read this data in and save it as an object. We're also going to log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
+Read this data in and save it as an object. We're also going to log transform the y variable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
 
 
 ```{r}
@@ -279,7 +279,7 @@ Two factors are crossed when every category (level) of one factor co-occurs in t
 
 A factor is nested within another factor when each category of the first factor co-occurs with only one category of the other. In other words, an observation has to be within one category of Factor 2 in order to have a specific category of Factor 1. All combinations of categories are not represented.
 
-There are also intermediate designs that are partially crossed, where some levels of one factor occur in several (but not all) levels of the second factor. These designs have often been taught as separate problems with different ways to carry out analyses of variance (ANOVAs) depending on if you have crossed or nested factors. Using mixed models with the package lme4, we can think if all of these in one framework, where nested and crossed designs are modelled in the same way. Thinking about factors as crossed or nested is simplified to careful labelling of factor levels - more on this later.
+There are also intermediate designs that are partially crossed, where some levels of one factor occur in several (but not all) levels of the second factor. These designs have often been taught as separate problems with different ways to carry out analyses of variance (ANOVAs) depending on if you have crossed or nested factors. Using mixed models with the package lme4, we can think of all of these in one framework, where nested and crossed designs are modelled in the same way. Thinking about factors as crossed or nested is simplified to careful labelling of factor levels - more on this later.
 
 Fitting a model with a fixed effect and several random effects
 

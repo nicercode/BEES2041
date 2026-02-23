@@ -1,5 +1,5 @@
 ---
-title: "Making plots for linear rgression ppt"
+title: "Making plots for linear regression ppt"
 format: html
 ---
 
@@ -138,7 +138,7 @@ p2b <- p0 +
 
 ## Intro slide - Regression and ANOVA
 
-use rgression plot from above 
+use regression plot from above 
 
 Now make Anova plot 
 ```{r}
@@ -533,7 +533,7 @@ ggsave("output/scatter_lm_panel_r2_f_p.png", pz, height = 5, width = 3, bg = "tr
 
 ```
 
-## Evaluating fit - F distrbution
+## Evaluating fit - F distribution
 
 ```{r}
 df1 <- 1
@@ -575,7 +575,7 @@ ggsave("output/F-dist.png", p, height = 2, width = 2, bg = "transparent")
 ## pval
 
 
-Variatioon among samples when B0 = 0
+Variation among samples when B0 = 0
 
 ```{r}
 

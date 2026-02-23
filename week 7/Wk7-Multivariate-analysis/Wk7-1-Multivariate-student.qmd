@@ -10,11 +10,11 @@ html-math-method: mathml
 
 ## Introduction
 
-Multivariate analyses are techniques used to explore or analyse data that involve **multiple variables at once**, helping to understand **relationships among them**. In the environmental sciences, for example, multivariate methods are commonly used to to visualise differences in **species composition** across sites, or understand relationships among many correlated abiotic variables to describe sites or samples.
+Multivariate analyses are techniques used to explore or analyse data that involve **multiple variables at once**, helping to understand **relationships among them**. In the environmental sciences, for example, multivariate methods are commonly used to visualise differences in **species composition** across sites, or understand relationships among many correlated abiotic variables to describe sites or samples.
 
 This week's practicals provide an introduction to some of the graphical and analytical techniques used for multivariate data sets (those with more than one dependent variable).
 
-Today we we will focus on two graphical techniques: 
+Today we will focus on two graphical techniques: 
 
 - **multi-dimensional scaling (MDS)**
 - **cluster diagrams**
@@ -28,7 +28,7 @@ We will go over some considerations before making these plots such as **transfor
 At the end of today's practical, you should be able to:
 
 -   Calculate a variety of **similarity/dissimilarity coefficients** to represent the differences among samples (or variables) in multivariate data sets
--   Create and interpret an **multi-dimenional scaling (MDS)** plot
+-   Create and interpret an **multi-dimensional scaling (MDS)** plot
 -   Create and interpret **cluster diagrams** to summarise the relationships among samples or variables
 -   Understand that data may need to be **transformed or standardised** before making graphs
 
@@ -174,7 +174,7 @@ HeavyMetals
 
 **Data wrangling**
 
-The first column is the name of each site. We don’t want to use the site numbers in our multivariate analysis, so need remove the Site variable using `select()`
+The first column is the name of each site. We don’t want to use the site numbers in our multivariate analysis, so we need to remove the Site variable using `select()`
 
 ```{r}
 # Remove the Site variable
@@ -192,7 +192,7 @@ HeavyMetals.sq <- sqrt(HeavyMetals_vars)
 
 **Compute similarity matrix**
 
-Now we can use the `dist()` function again to calculate to create the **similarity matrix**, using the **Euclidean distance** as our similarity coefficient.
+Now we can use the `dist()` function again to create the **similarity matrix**, using the **Euclidean distance** as our similarity coefficient.
 
 ```{r}
 # Compute similarity matrix using Euclidean distance
@@ -334,13 +334,13 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
-On the Maroubra field trip, multivariate data were collected to investigate the species composition of the intertidal community living in rock pools to neighbouring rocky habitats that were that were emergent at low tide.
+On the Maroubra field trip, multivariate data were collected to investigate the species composition of the intertidal community living in rock pools to neighbouring rocky habitats that were emergent at low tide.
 
 > We can use a MDS plot to visualise differences in **species composition** between the samples taken.
 
 **Load data**
 
-Read the Maroubra data into into R.
+Read the Maroubra data into R.
 
 ```{r}
 # Load data
@@ -375,7 +375,7 @@ First, you will need to make a subset of the data with just the abundance data f
 Rock_pools_vars <- select(Rock_pools, -class, -group_id, -plot_number, -habitat)
 ```
 
-**Data standarisation**
+**Data standardisation**
 
 Some of the variables are % cover (the red, brown and green algae) and some are counts of individual animals. _100% cover is not equivalent to 100 snails_, so we can **standardise** these variables to ensure they are on the same scale.
 
@@ -425,7 +425,7 @@ Finally, make a plot of the object that was created by the `hclust` function.
 plot(HeavyMetals.cluster)
 ```
 
-**Dendogram of cluster analysis**
+**Dendrogram of cluster analysis**
 
 We can make this a bit neater by plotting it as a dendrogram with all the samples lined up along the bottom.
 
@@ -439,7 +439,7 @@ as.dendrogram(HeavyMetals.cluster) |> plot()
 
 ???
 
-**Dendogram of variables**
+**Dendrogram of variables**
 
 We can also use a cluster diagram to display the relationships among variables.
 

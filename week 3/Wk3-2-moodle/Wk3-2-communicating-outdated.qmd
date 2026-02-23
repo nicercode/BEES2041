@@ -26,7 +26,7 @@ class_id <- function() {
 }
 ```
 
-# Communication your results
+# Communicating your results
 
 It is worth reminding ourselves that we are learning statistics so that we can answer questions in the life and earth sciences. Unless you want to keep the answers to yourselves, we need to be able to communicate the results of statistical analyses to a broader audience. Given that statistics has a reputation for being able to trick and confuse people, simple and effective communication of results is a necessary skill for research scientists.
 
@@ -75,8 +75,8 @@ TODO:
 - gt for nice tables in html (ambitious)
 
 ## Exercises
-- Look at [Basham et al](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2010.02202.x), how did they make a tablular result for X 
-- Look at [Buswell et al](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2745.2010.01759.x) how did they make a tablular resul for X
+- Look at [Basham et al](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2010.02202.x), how did they make a tabular result for X 
+- Look at [Buswell et al](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2745.2010.01759.x) how did they make a tabular result for X
 - Make useful model output tables for towers and martino or palmer penguins
 
 # Creating plots for your results

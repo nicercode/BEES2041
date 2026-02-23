@@ -26,7 +26,7 @@ In this practical, we’ll explore how to fit and interpret linear models, using
 
 ## Key learning objectives
 
-Our learning objective today are:
+Our learning objectives today are:
 
 - **run** a **linear regression** in R using `lm()`
 - **interpret** the output of a **linear regression** using:
@@ -85,11 +85,11 @@ library(palmerpenguins)
 ## Worked example - Isaac with leaves across climates
 
 ![Meet Dr. Isaac Towers! Image credit: Data Dan](pics/isaac-plant-ecosystems.png){width=60%} <br>
-From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478) We will be working with the data Isaac compiled for us. 
+From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478). We will be working with the data Isaac compiled for us. 
 
 > Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall?
 
-Let's read in the Isaac's data. This is in your `"data/"` folder. 
+Let's read in Isaac's data. This is in your `"data/"` folder. 
 
 ```{r, message=FALSE}
 data_towers <- read_csv("data/towers-2024.csv")
@@ -147,7 +147,7 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 ![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](pics/r2-and-f-value.png){width=60%}
 
 <br>
-> There are two metrics we are use to assess our model fit
+> There are two metrics we use to assess our model fit
 
 The **R^2 value** describes how much variation is explained by your model:
 
@@ -195,7 +195,7 @@ Generally, *F*-statistic increases with the ???. A large *F*-statistic means tha
 
 ## Calculating and visualising predicted means 
 
-Okay thats enough theory for the day... let's have a go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
+Okay that's enough theory for the day... let's have a go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
 
 ```{r}
 means_towers <- estimate_means(towers_fit, by = "log10_rainfall")
@@ -233,12 +233,12 @@ Voilà!!! Let's talk through this code:
     - `fill = "grey"`, colour our ribbon in grey
 - `geom_line(data = means_towers, aes(y = Mean), col = "#EB8240", linewidth = 1)`, plot the line for our model predictions
   - `aes(y = Mean)`, create the line using the mean values of our y variable (`log10_leaf_mass_per_area`) 
-  - `col = "#EB8240"`, set a custom colour using [hexademical (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ)
+  - `col = "#EB8240"`, set a custom colour using [hexadecimal (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ)
   - `linewidth = 1` controls the thickness of the line
   
 Feel free to tinker with all these options to create a plot that helps us answer the question: **How does a leaf's mass per area change with rainfall?**
 
-> Let's get you to try run a linear model, interpret the output and create a plot with a familar dataset! 
+> Let's get you to try run a linear model, interpret the output and create a plot with a familiar dataset! 
 
 
 # LM categorical (Fish)
@@ -250,13 +250,13 @@ Linear regressions are incredibly flexible. Not only can we use them to make inf
 > Recall the differences between  **discrete** or **categorical** variables. 
 
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](pics/continuous-discrete.png){width=60%} <br>
-From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperatures treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
+From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperature treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
 ![Introducing marine biologist - Dr. Jasmine Martino!](pics/jasmine-fish.png){width=60%} <br>
 
 > Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
 
-Let's read in the Jasmine's data. This is in your `"data/"` folder. 
+Let's read in Jasmine's data. This is in your `"data/"` folder. 
 
 ## Setting up
 
@@ -273,7 +273,7 @@ We are primarily interested in how `smr` - a continuous variable changes with `t
 
 ![Using a linear model with categorial and continuous variables](pics/lm-anova.png){width=60%} <br>
 
-Let's fit a model for `smr` using `temp_treatment` as a precitor:
+Let's fit a model for `smr` using `temp_treatment` as a predictor:
 
 ```{r}
 fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
@@ -306,10 +306,10 @@ For both the predictor (`temp_treatment`) and `Residuals` we can do some maths (
 
 Once we have these values, we can calculate the `F-value` - a ratio between the `Mean sq` of the predictor (`temp_treatment`) and the `Mean sq` for the `Residuals`. 
 
-In other words, the `F-value` is ratio of signal to noise: 
+In other words, the `F-value` is the ratio of signal to noise: 
 
 - **larger** values indicate a **stronger** signal
-- **smaller** values means that we have a **noise** in our data.
+- **smaller** values mean that we have more **noise** in our data.
 
 From there, we use the *F*-statistic to retrieve the probability of observing our effect in a hypothetical (and boring) world where nothing is expected to happen - just like we did in earlier examples. 
 
@@ -362,7 +362,7 @@ data_martino$temp_treatment |>  unique()
 
 > What if we want to change the reference group from temp_treatment [20C] to temp_treatment [28C]? 
 
-We can use the `estimate_constrasts()` function to give us pairwise comparisons between all groups. Try it out
+We can use the `estimate_contrasts()` function to give us pairwise comparisons between all groups. Try it out
 
 ```{r}
 estimate_contrasts(fit_martino, contrast = "temp_treatment")

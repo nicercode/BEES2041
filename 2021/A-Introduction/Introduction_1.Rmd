@@ -13,7 +13,7 @@ Understanding the relationship between populations and the samples used to estim
 
 Import the data file 'Population.csv' into R.
 
-While you can do this with the menus, it is best to have a line of code to this so that you can repeat your work very quickly later on (e.g. if you make a mess of things).
+While you can do this with the menus, it is best to have a line of code to do this so that you can repeat your work very quickly later on (e.g. if you make a mess of things).
 
 To this create a chunk of code in your notebook (Insert \> R at the top right of your notebook file), copy the following line of code into your empty chunk.
 
@@ -21,7 +21,7 @@ To this create a chunk of code in your notebook (Insert \> R at the top right of
 Population <- read.csv(file = "Population.csv", header = T)
 ```
 
-You can execute the code with the little green arrow to the right of the chunk. In this case, `read.csv` is the function that imports a .csv file. The data has been assigned (the \<- symbol) to an object in R called Population. This object is a data frame and will now be visible in the Data window on the top right. There are other sorts of objects in R that we will learn as we go along, but we will use data frames through out the course. These are just like spreadsheets where every column is a variable and every row is an observation.
+You can execute the code with the little green arrow to the right of the chunk. In this case, `read.csv` is the function that imports a .csv file. The data has been assigned (the \<- symbol) to an object in R called Population. This object is a data frame and will now be visible in the Data window on the top right. There are other sorts of objects in R that we will learn as we go along, but we will use data frames throughout the course. These are just like spreadsheets where every column is a variable and every row is an observation.
 
 The Sampling data frame consists of just one column named 'Size' with 200 individual measurements. Imagine these as the sizes of... *[insert your favourite animal, vegetable or mineral]*.
 

@@ -1,4 +1,4 @@
-D. Multivariate analyses 1
+﻿D. Multivariate analyses 1
 =======================================
 Similarity coefficients and cluster analyses. Week 11
 ------------------------
@@ -292,12 +292,12 @@ plot(as.dendrogram(Nutrient.cluster))
 **4c)** "The dendrogram clearly shows that adding nutrients affects the abundance of weeds" True or false? Explain with reasons.
 
     
-**4d)** There are many distance measures that can be used to describe the similarity between samples. The `dist()` fuction in R has "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". Try a few of these and see if the structure of the dendogram changes much. You will need to replace the `method = "euclidean` argument.
+**4d)** There are many distance measures that can be used to describe the similarity between samples. The `dist()` function in R has "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". Try a few of these and see if the structure of the dendrogram changes much. You will need to replace the `method = "euclidean` argument.
 
 Make some notes on how sensitive the cluster diagrams were to the choice of similarity coefficient.
 
 
-**4e)** The structure of dendrograms can also be sensitive to algorithm used to construct the tree (the linkage method). In the previous example, you used the single linkage method. The `hclust()` function in R has several available: "ward", "single", "complete", "average", "mcquitty", "median" or "centroid". Try a few of these and see if the structure of the dendogram changes much. You will need to replace the `method = `single` argument.
+**4e)** The structure of dendrograms can also be sensitive to algorithm used to construct the tree (the linkage method). In the previous example, you used the single linkage method. The `hclust()` function in R has several available: "ward", "single", "complete", "average", "mcquitty", "median" or "centroid". Try a few of these and see if the structure of the dendrogram changes much. You will need to replace the `method = `single` argument.
 
 Make some notes on how sensitive the cluster diagrams were to the choice of linkage method.
   

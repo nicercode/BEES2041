@@ -1,5 +1,5 @@
 ---
-title: "Making plots for linear rgression ppt"
+title: "Making plots for linear regression ppt"
 format: html
 ---
 
