@@ -246,7 +246,7 @@ data |>
 
 The sampling distribution of the mean shows us that just by chance, your sample mean could be a lot higher or lower than the true population mean.
 
-OK, so what? Well, using some fancy mathematics, statisticians have shown that if for a variety of situations, the distribution of the sample means follows a normal distribution. This is the central limit theorem. Moreover, the standard deviation of the sample means is equal to the standard deviation of the population divided by the square root of the sample size. *This is really cool*, because it means that **we can estimate the range of possible values for the mean of the population, based on the mean and standard deviation of the population**.
+OK, so what? Well, using some fancy mathematics, statisticians have shown that if for a variety of situations, the distribution of the sample means follows a normal distribution. This is the central limit theorem. Moreover, the standard deviation of the sample means is equal to the standard deviation of the population divided by the square root of the sample size. *This is really cool*, because it means that **we can estimate the range of possible values for the mean of the population, based on the mean and standard deviation of the sample**.
 
 This is how confidence intervals are built. We estimate the mean of the sample, then add a dose of uncertainty, based on some assumptions about the distribution of the sample means.
 
@@ -405,7 +405,7 @@ As the CI on the mean is 57.5-82.76, we can conclude that the mean time it takes
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
-You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and pvalue are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
+You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and p-value are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
 
 **Question: How likely is it that two samples of baby turtles come from the same population?**
 
