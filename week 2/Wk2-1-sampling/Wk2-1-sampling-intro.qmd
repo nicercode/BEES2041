@@ -340,8 +340,8 @@ In practice, Davey can use the `lm()` function in R to estimate the confidence i
 fit <- lm(time_to_surface ~ 1, data = baby_turtles)
 
 # Extract the estimates of the mean and confidence interval for the mean
-coef(fit)
-confint(fit)
+coef(fit) # Estimate for the mean
+confint(fit) # Estimate for the confidence interval
 ```
 
 

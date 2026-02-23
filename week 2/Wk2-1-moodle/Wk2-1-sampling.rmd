@@ -440,7 +440,7 @@ unpackaging the code above,
 
 -   `lm()` function fits a linear model to the data.
 -   `time_to_surface ~ 1` tells R to fit a model with the mean of the time to surface as the response variable, and no predictors.
--   `coef()` function extracts the estimates of the mean and confidence interval for the mean from the model.
+-   `coef()` function extracts the estimate of the mean from the model.
 -   `confint()` function calculates the confidence interval for the mean.
 
 **The easystats package makes it even easier**
