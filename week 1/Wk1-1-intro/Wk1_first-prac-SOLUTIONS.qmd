@@ -83,7 +83,7 @@ stalagmite_data_nice_names_corrected_age <- stalagmite_data_nice_names
 stalagmite_data_nice_names_corrected_age$lam_age_bp_0_1950ad <- as.integer(stalagmite_data_nice_names_corrected_age$lam_age_bp_0_1950ad)
 
 # dplyr
-# install.packages(dplyr)
+# install.packages("dplyr")
 library(dplyr)
 stalagmite_data_nice_names_corrected_age <- stalagmite_data_nice_names |> 
   mutate(lam_age_bp_0_1950ad = as.integer(lam_age_bp_0_1950ad))
@@ -96,7 +96,7 @@ stalagmite_data_nice_names_corrected_age
 ```{r}
 summary(stalagmite_data_nice_names_corrected_age)
 
-# install.packages(skimr)
+# install.packages("skimr")
 library(skimr)
 skim(stalagmite_data_nice_names_corrected_age)
 
@@ -135,7 +135,7 @@ syd_beach_data_corrected_entero <- syd_beach_data
 syd_beach_data_corrected_entero$enterococci_cfu_per_100ml <- as.integer(syd_beach_data_corrected_entero$enterococci_cfu_per_100ml)
 
 # dplyr
-# install.packages(dplyr)
+# install.packages("dplyr")
 library(dplyr)
 syd_beach_data_corrected_entero <- syd_beach_data |> 
   mutate(enterococci_cfu_per_100ml = as.integer(enterococci_cfu_per_100ml))
