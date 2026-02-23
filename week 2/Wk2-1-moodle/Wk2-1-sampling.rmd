@@ -51,7 +51,7 @@ Everything you need for this practical is on Moodle
 4.  Go into the folder `Wk2-1-materials` created by extracting the zip.
 5.  Click on the `Wk2-1-Sampling.Rproj` to open the RStudio project and you're in!!!
 
-We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+We will be working with real-world datasets collected by researchers in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
 **Packages:**
 
@@ -80,7 +80,7 @@ To get us started, let's consider a real question that a researcher might ask ab
 
 ![Image: Davey Dor](pics/DaveyDor.jpeg){width="80%"}
 
-This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behavior, and performance of sea turtle hatchlings.
+This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behaviour, and performance of sea turtle hatchlings.
 
 You can read more about Davey and his research [here](https://www.unsw.edu.au/science/our-schools/bees/about-us/our-people/postgraduate-research-students/davey-dor-grs-profile), and about emergence times in his journal article at the *Proceedings of the Royal Society* [here](https://royalsocietypublishing.org/doi/10.1098/rspb.2024.1702).
 
@@ -156,7 +156,7 @@ x <- seq(-8, 8, by = 0.01)
 # Now create a dataframe with two normal distributions
 # Standard normal
 data_1 <- tibble(x, label = paste("N", mu_1, sd_1), density = dnorm(x, mean = mu_1, sd = sd_1))
-# Differernt normal
+# Different normal
 data_2 <- tibble(x, label = paste("N", mu_2, sd_2), density = dnorm(x, mean = mu_2, sd = sd_2))
 
 # combine
@@ -205,7 +205,7 @@ qnorm(p, mean = 0, sd = 1, lower.tail = TRUE)
 
 Modifying the code above, what is the value corresponding to a probability of 0.25 in the standard normal distribution? 
 
-You should get -0.6744898
+You should get -0.6744898.
 
 ## Chance sampling
 
@@ -498,7 +498,7 @@ As the CI on the mean is 57.5-82.76, we can conclude that mean time it takes for
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
-You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and pvalue are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
+You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and p-value are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
 
 **Question: How likely is that two samples of baby turtles come from the same population?**
 
@@ -599,7 +599,7 @@ library(parameters)
 
 <h3> Lead contamination in soils</h3>
 
-An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by local community. Safety guidelines dictate that lead concentrations in soil should not exceed 400mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with a X-ray Fluorescence (pXRF) spectrometer.
+An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by the local community. Safety guidelines dictate that lead concentrations in soil should not exceed 400mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with an X-ray Fluorescence (pXRF) spectrometer.
 
 ![Collecting soil samples](https://media.news.climate.columbia.edu/wp-content/uploads/2018/09/soil-sampling-1300x975.avif){width=50%}
 
@@ -636,7 +636,7 @@ What are the mean and confidence intervals for the school garden soil lead conce
 
 <h3>Palmer penguins</h3>
 
-The Palmer penguins dataset contains data on the size of different penguins. A biologist was writing a field guide about the different species and thought to include some infomation on the size of the penguins. Below we'll focus on the bill length of the different species of penguins. However, you can also explore other variables in the dataset using the same methods.
+The Palmer penguins dataset contains data on the size of different penguins. A biologist was writing a field guide about the different species and thought to include some information on the size of the penguins. Below we'll focus on the bill length of the different species of penguins. However, you can also explore other variables in the dataset using the same methods.
 
 Recall the data from the `palmerpenguins` package.
 
@@ -767,4 +767,4 @@ Download these and save them into the same folder as the practical material.
 
 Today you've learned how to estimate the mean of a population, and how confident you can be in your estimate.
 
-In general, there's relative few instances where researchers only have one group of data, and want to estimate the mean of only that one population. In most cases we have two or more groups of data, and we want to estimate the difference between the means of the populations. This is what we started doing with the penguins data above. Next week we'll be looking at how we can compare the means of populations to each other, using a linear model, by including some predictor, x. The foundations you've learned today are the basis for this.
+In general, there are relatively few instances where researchers only have one group of data and want to estimate the mean of only that one population. In most cases, we have two or more groups of data, and we want to estimate the difference between the means of the populations. This is what we started doing with the penguins data above. Next week we'll be looking at how we can compare the means of populations to each other, using a linear model, by including some predictor, x. The foundations you've learned today are the basis for this.

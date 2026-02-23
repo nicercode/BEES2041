@@ -1,6 +1,6 @@
 ---
 title: "Week 1-1 Data manipulation and visualisation"
-output: 
+output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
@@ -22,12 +22,12 @@ library(janitor)
 library(readxl)
 library(leaflet)
 
-# Read data from maintainer perspective
+# Read data from the maintainer's perspective
 stalagmites_data <- read_csv(here("week 1/Wk1-2-moodle/data/stalagmites/Laminated stalagmite Dataset.csv")) |> clean_names()
 stalagmites_sites <- read_xlsx(here("week 1/Wk1-2-moodle/data/stalagmites/Tables.xlsx")) |> clean_names()
 
 # Set up for moodle
-stalagmites_sites <- stalagmites_sites |> 
+stalagmites_sites <- stalagmites_sites |>
   mutate(lat = as.numeric(lat),
          long = as.numeric(long))
 ```
@@ -40,13 +40,13 @@ stalagmites_sites <- stalagmites_sites |>
 
 <br>
 
-Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
+Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalagmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability over time.
 
 This section builds off two papers published by Andy and his team:
 
--   Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. https://doi.org/10.1029/2020RG000722 (see file `doc/Baker et al 2021 Reviews of Geophysics.pdf`
+- Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. <https://doi.org/10.1029/2020RG000722> (See file `doc/Baker et al 2021 Reviews of Geophysics.pdf`.)
 
--   Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `doc/Baker et al 2015.pdf`)
+- Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (See file `doc/Baker et al 2015.pdf`.)
 
 **Activity:**
 
@@ -56,9 +56,9 @@ Andy asked us to cross check his results, your goal is reproduce some key figure
 
 > In some code chunks, we've given you some partialy completed R code, these are hints, complete the rest of the code before you run them
 
-## Setting up 
+## Setting up
 
-Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have. 
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have.
 
 
 ```{r}
@@ -73,7 +73,7 @@ library(readxl)
 
 <h3>Loading data</h3>
 
-The data is available at https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639
+The data is available at <https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639>
 
 We've downloaded this into the folder at `data/stalagmites/Laminated stalagmite Dataset.csv`
 
@@ -93,19 +93,19 @@ stalagmites_data <- read_csv("data/XXX")
 
 This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
 
--   `entity_id`: Identifier for the stalagmite sample.
--   `seq_id`: Sequence identifier (likely referring to sample grouping).
--   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
--   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
+- `entity_id`: Identifier for the stalagmite sample.
+- `seq_id`: Sequence identifier (likely referring to sample grouping).
+- `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
+- `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
-Check the structure of the dataset, including the names of the columns. 
+Check the structure of the dataset, including the names of the columns.
 
 ```{r}
 names(stalagmites_data)
 ```
 
 
-> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here. 
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here.
 
 
 ```{r}
@@ -123,7 +123,7 @@ stalagmites_data <- read_csv("data/XXX") |>
 The code below get's you started. You'll need to fill in the spaces indicated by XXX.
 
 ```{r, eval=FALSE}
-ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) + 
+ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) +
   geom_XXX()
 ```
 
@@ -132,7 +132,7 @@ You check with Andy and he confirms an error in the data entry for this point. C
 The `filter()` function and the `!` exclusion operator could be useful here.
 
 ```{r, eval=FALSE}
-stalagmites_data <- stalagmites_data |> 
+stalagmites_data <- stalagmites_data |>
   filter(! XXX )
 ```
 
@@ -142,9 +142,10 @@ stalagmites_data <- stalagmites_data |>
 
 <h3>Figure 5</h3>
 
-Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis
+Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis. Note: Do not worry about adding the curve.
 
 ![Figure 5](baker-fig5.png)
+
 ```{r, eval=FALSE}
 stalagmites_data |>
   ggplot(aes(x = lamina_thickness_mm)) +
@@ -154,7 +155,7 @@ stalagmites_data |>
   xlim()
 ```
 
-**Question: Interpret this plot, what does this visualisation tell us?** 
+**Question: Interpret this plot, what does this visualisation tell us?**
 
 The annual lamina growth rate is  `r cloze("very slow", c("very fast", "very slow"))` in the majority of samples.
 
@@ -174,15 +175,15 @@ Have a go at creating this plot.
 
 ```{r, eval=FALSE}
 # Transform data
-transformed_stalagmites_data <- stalagmites_data |> 
-  mutate(log10_1_lamina_thickness_mm = log10(lamina_thickness_mm + 1))
+transformed_stalagmites_data <- stalagmites_data |>
+  mutate(log10_1_lamina_thickness_mm = log10(XXX + 1))
 
 # Create plot
 transformed_stalagmites_data |>
-  filter( XXX ) |>
-  ggplot(aes(x = lam_age_bp_0_1950ad, y = XXX )) +
+  filter(XXX) |>
+  ggplot(aes(x = lam_age_bp_0_1950ad, y = XXX)) +
   geom_line() +
-  labs() + 
+  labs() +
   theme_classic()
 ```
 
@@ -194,7 +195,7 @@ transformed_stalagmites_data |>
   geom_line() +
   scale_y_log10() +
   theme_classic() +
-  labs("Years BP", y = "Growth rate (mm/yr)") + 
+  labs("Years BP", y = "Growth rate (mm/yr)") +
   facet_wrap( ~ entity_id, scales = "free")
 ```
 
@@ -206,7 +207,7 @@ The annual growth of all lamina samples are `r cloze("highly variable", c("very 
 
 <h3>Figure 10</h3>
 
-Have a go at creating this plot. 
+Have a go at creating this plot.
 
 ![Figure 10](baker-fig10.png)
 
@@ -215,12 +216,12 @@ Have a go at creating this plot.
 You'll need to extract data for the samples numbers in black with `seq_id` before plotting. Using the **`%in%`** operator to filter for specific sequences.
 
 ```{r, eval=FALSE}
-# Check vector of seq_id that you want 
+# Check vector of seq_id that you want
 ids <- c(85, 1004, 385, 217.1, 1008.1, 128, 465, 217.2, 1007.2, 128,  466, 1009.2, 1003.1, 1006)
 
 # Create plot
-transformed_stalagmites_data |> 
-  filter(seq_id %in% ids) |> 
+transformed_stalagmites_data |>
+  filter(seq_id %in% ids) |>
   ggplot(aes(x = XXX ,y = XXX)) +
   geom_line() +
   facet_wrap( ~ seq_id, scales = "free") +
@@ -228,7 +229,7 @@ transformed_stalagmites_data |>
 ```
 
 
-##  Figure 2
+## Figure 2
 
 <h3>Figure 2</h3>
 
@@ -261,7 +262,7 @@ stalagmites_sites <- stalagmites_sites |> filter(! )
 **Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
 
 ```{r, eval = FALSE}
-stalagmites_sites <- stalagmites_sites |> 
+stalagmites_sites <- stalagmites_sites |>
   mutate(lat = XXX),
          long = XXX)
 ```
@@ -278,7 +279,7 @@ stalagmites_sites |>
   ggplot(
     aes(long, lat)) +
   geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
-           aes(long, lat, map_id = region)) +  
+           aes(long, lat, map_id = region)) +
   coord_quickmap() +
   theme_classic()
 ```
@@ -303,6 +304,6 @@ leaflet() |>
         stalagmites_sites$entity_id_1000_sisal_entity_id,
         stalagmites_sites$site_name
       )
-  )	|>
+  ) |>
   addScaleBar()
 ```

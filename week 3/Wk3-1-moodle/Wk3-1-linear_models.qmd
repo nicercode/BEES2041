@@ -56,7 +56,7 @@ Everything you need for this practical is on Moodle
 4.  Go into the folder `Wk3-1-materials` created by extracting the zip.
 5.  Click on the `Wk3-1-linear-models.Rproj` to open the RStudio project and you're in!!!
 
-We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+We will be working with real-world datasets collected by researchers in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
 **Setting up: Packages:**
 
@@ -129,7 +129,7 @@ The slope is `r cloze("negative", c("negative", "positive"))`. This indicates th
 
 ## The confidence interval
 
-For a nicer output you can also use `parameters(towers_fit)`. This function convienently, gives us the **95% confidence intervals** of our coefficients.  
+For a nicer output you can also use `parameters(towers_fit)`. This function conveniently gives us the **95% confidence intervals** of our coefficients.
 
 ```{r}
 parameters(towers_fit)
@@ -195,7 +195,7 @@ Generally, as the *F*-statistic increases the `r cloze("p-value", c("the interce
 
 ## Calculating and visualising predicted means 
 
-Okay thats enough theory for the day... let's have go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
+Okay thats enough theory for the day... let's have a go at estimating the means and confidence intervals for our y variable (`log10_leaf_mass_per_area`) for a range of values of x (`log10_rainfall`) using our linear model. We use `estimate_means(towers_fit, by = "log10_rainfall")` for this.
 
 ```{r}
 means_towers <- estimate_means(towers_fit, by = "log10_rainfall")
@@ -241,7 +241,7 @@ Voilà!!! Let's talk through this code:
   
 Feel free to tinker with all these options to create a plot that helps us answer the question: **How does a leaf's mass per area change with rainfall?**
 
-> Let's get you to try run a linear model, interpret the output and create a plot with a familar dataset! 
+> Let's get you to try run a linear model, interpret the output and create a plot with a familiar dataset! 
 
 # LM continuous (Penguins)
 
@@ -319,7 +319,7 @@ penguins_model_predictions
 
 1. What does the slope tell us? 
 
-There is a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass
+There is a `r cloze("positive", c("positive","negative"))` relationship between bill length and body mass
 
 2. Let's try interpret the slope. 
 
@@ -327,7 +327,7 @@ There is a `r cloze("postive", c("postive","negative"))` relationship between bi
 
 3. Yikes, looks like by rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
 
-The confidence intervals for the slope tells us that the true population mean for slope lies between
+The confidence intervals for the slope tells us that the true population mean for the slope lies between
 `r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
 
 4. Let's try understand the *R^2* and *F*-statistic values from your model. What are they telling us?
@@ -338,7 +338,7 @@ The confidence intervals for the slope tells us that the true population mean fo
 
 5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
 
-The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("postive", c("postive","negative"))` relationship between bill length and body mass.
+The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("positive", c("positive","negative"))` relationship between bill length and body mass.
 
 # LM continuous (Ozone)
 
@@ -446,11 +446,11 @@ library(easystats)
 data_martino <- read_csv("data/martino-fish-smr.csv")
 ```
 
-We are primarily interested how `smr` - a continuous variable changes with `temp_treatment`- a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is a categorical variable.
+We are primarily interested in how `smr` - a continuous variable changes with `temp_treatment` - a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is a categorical variable.
 
 ![Using a linear model with categorial and continuous variables](lm-anova.png){width=60%} <br>
 
-Let's fit a model for `smr` using `temp_treatment` as a precitor:
+Let's fit a model for `smr` using `temp_treatment` as a predictor:
 
 ```{r}
 fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
@@ -520,7 +520,7 @@ Let's take a look at the `parameters()` / `summary()` output. Looks different hu
 parameters(fit_martino)
 ```
 
-Unlike previous examples, we have an extra row in the output! This is because our model is  fitting each `temp_treatment` group as x predictors.  
+Unlike previous examples, we have an extra row in the output! This is because our model is fitting each `temp_treatment` group as x predictors.
 
 ![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png){width=80%} <br>
 Importantly: 
@@ -539,7 +539,7 @@ data_martino$temp_treatment |>  unique()
 
 > What if we want to change the reference group from temp_treatment [20C] to temp_treatment [28C]? 
 
-We can use the `estimate_constrasts()` function to give us pairwise comparisons between all groups. Try it out
+We can use the `estimate_contrasts()` function to give us pairwise comparisons between all groups. Try it out
 
 ```{r}
 estimate_contrasts(fit_martino, contrast = "temp_treatment")

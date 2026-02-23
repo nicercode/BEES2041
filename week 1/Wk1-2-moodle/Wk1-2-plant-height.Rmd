@@ -1,6 +1,6 @@
 ---
 title: "Week 1-1 Data manipulation and visualisation"
-output: 
+output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
@@ -53,7 +53,7 @@ We are going to use this data to do a bit of preliminary analyses and see if we 
 
 <h3>Setting up</h3>
 
-Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have. 
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have.
 
 ```{r}
 # install.packages(c("tidyverse", "janitor"))
@@ -77,7 +77,7 @@ WOAH there are a LOT of variables in this data set. Sometimes it's nice to selec
 
 <h3>Check the distribution for `height`</h3>
 
-> Check the distribution of your data to make sure there are no potential outliers in your key variables. 
+> Check the distribution of your data to make sure there are no potential outliers in your key variables.
 
 <br><br>
 
@@ -89,7 +89,7 @@ WOAH there are a LOT of variables in this data set. Sometimes it's nice to selec
 
 <br><br>
 
-**Question: Is `height` left skewed or right skewed?** 
+**Question: Is `height` left skewed or right skewed?**
 
 The data is `r cloze("right", c("left", "right"))` skewed. (Right skew is where "The right tail is longer; the mass of the distribution is concentrated on the left of the figure" [Wikipedia](https://en.wikipedia.org/wiki/Skewness))
 <br><br>
@@ -102,7 +102,7 @@ The species with the extreme value for `height` is: `r cloze("Pseudotsuga menzie
 
 <h3>Data transformation</h3>
 
-It is common to transform your data when its heavily skewed as in `height`. 
+It is common to transform your data when its heavily skewed as in `height`.
 
 > Can you `log10()` transform `height` and assign this update into a new data frame?
 
@@ -110,7 +110,7 @@ It is common to transform your data when its heavily skewed as in `height`.
 
 <h3>The effects of latitude on plant height</h3>
 
-**Question: What should be the x variable and what should be the y variable?** 
+**Question: What should be the x variable and what should be the y variable?**
 
 - x variable: `r cloze("lat", colnames(plant_height))`
 - y variable: `r cloze("height", colnames(plant_height))`
@@ -135,7 +135,7 @@ A `r cloze("scatterplot", possible_choices)` is suited to visualise the relation
 
 **Question: 1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?**
 
-Plant height `r cloze("increases", c("increases", "decrease"))` from tropics to poles.
+Plant height `r cloze("decreases", c("increases", "decreases"))` from tropics to poles.
 
 > Now, we are going to try to answer our second question; Does plant height increase as **altitude** increases?
 
@@ -157,7 +157,7 @@ There are `r cloze("shorter", c("taller", "shorter"))` trees at higher altitudes
 
 <h3>Prac reflection</h3>
 
- **Question: Which parts of the coding and the tidyverse you've encountered so far did you find:** 
+ **Question: Which parts of the coding and the tidyverse you've encountered so far did you find:**
 
 - most exciting?
 - most challenging?

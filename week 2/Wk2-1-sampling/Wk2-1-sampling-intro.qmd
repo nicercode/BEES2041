@@ -44,7 +44,7 @@ You can read more about Davey and his research [here](https://www.unsw.edu.au/sc
 
 ## Turtle challenge
 
-The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this. So he decided to collect some data himself. 
+The first challenge a baby turtle faces, after hatching is to reach the surface of the sand. Davey wanted to know roughly how long this takes. Some people said it took a really long time. However, he couldn't find any data on this, so he decided to collect some data himself.
 
 Davey collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then burying the turtles again, as though they had just emerged from the nest.
 
@@ -52,7 +52,7 @@ Davey collected data on 10 baby turtles, using some collar accelerometers he att
 
 Now he wants to know the average time it takes for baby turtles to reach the surface.
 
-Davey could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. So he wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
+Davey could of course just take the average of the 10 turtles he has measured, but he knows that this is just a sample of the population of baby turtles. He wants to know how confident he can be that the average time he has calculated is the true average time for all baby turtles.
 
 What Davey needs is to estimate the confidence interval for the mean time it takes for baby turtles to reach the surface.
 
@@ -64,7 +64,7 @@ In MATH1041 (or equivalent), you learned about probability distributions, and ho
 
 ## Probability distributions
 
-Imagine we have a continuous variable that captures something about the natural world. Often (but not always) such variables follows a *normal distribution*.
+Imagine we have a continuous variable that captures something about the natural world. Often (but not always) such variables follow a *normal distribution*.
 
 The normal distribution is a continuous probability distribution that is symmetrical around the mean, $\mu$. It is defined by two parameters:
 
@@ -132,7 +132,7 @@ qnorm(p, mean = 0, sd = 1, lower.tail = TRUE)
 
 Modifying the code above, what is the value corresponding to a probability of 0.25 in the standard normal distribution? 
 
-You should get -0.6744898
+You should get -0.6744898.
 
 ## Chance sampling
 
