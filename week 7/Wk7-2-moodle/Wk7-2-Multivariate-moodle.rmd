@@ -21,8 +21,7 @@ library(moodlequiz)
 knitr::opts_chunk$set(
   echo = TRUE, 
   results = 'hide',
-  fig.show= 'hide',
-  warning = FALSE
+  fig.show= 'hide'
 )
 
 # Set the working directory
@@ -34,6 +33,7 @@ rprojroot::has_file("BEES2041-code.Rproj") |>
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 library(vegan)
+library(lattice)
 ```
 
 ## Introduction
@@ -79,7 +79,7 @@ We'll again be using the package, called `vegan` and will introduce a new packag
 ```{r, eval=FALSE}
 # install.packages("tidyverse")
 # install.packages("vegan")
-# install.packages("ploty")
+# install.packages("plotly")
 ```
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
@@ -229,17 +229,16 @@ The problem with this approach is increasing the risk of **false positives**. Fa
 
 The simplest correction for this is called the **Bonferroni correction**, where the significance level (α =0.05) is **adjusted by the number of hypotheses being tested**. 
 
-In this example, we will **multiply each P value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
+In this example, we will **divide the threshold significance value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
 
 ## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}
 
-<h3>7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. </h3>
+<h3>7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}</h3>
 
 
 
 
-# 8) Species composition in rock pools (multivariate hypothesis testing)
-## 8) Species composition in rock pools (multivariate hypothesis testing)
+# 8) Species composition in rock pools (multivariate hypothesis testing)## 8) Species composition in rock pools (multivariate hypothesis testing)
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
@@ -387,8 +386,8 @@ summary(leaf.pca)
 
 
 
-- PC1: `r cloze_numerical(0.83, tolerance = 0.01)` 
-- PC2: `r cloze_numerical(0.22, tolerance = 0.01)`
+- PC1: `r cloze_numerical(0.9, tolerance = 0.01)` 
+- PC2: `r cloze_numerical(0.06, tolerance = 0.01)`
 
 **Visualise variance explained by principal components**
 
@@ -452,7 +451,7 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) +
 
 ## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
 
-<h3>10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? </h3>
+<h3>10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}</h3>
 
 
 
@@ -501,7 +500,7 @@ Conduct a PCA on the heavy metal data. Given that the variables were measured on
 
 ## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
 
-<h3>11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? </h3>
+<h3>11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}</h3>
 
 
 
@@ -529,8 +528,11 @@ hm_fig <- plot_ly(hm_std, x = ~Ni, y = ~Cr, z = ~Pb,
 ```
 
 # 12) Cave hydrology
+## 12) Cave hydrology
 
 <h3>12) Cave hydrology</h3>
+
+
 
 ![](images/caves.jpg){width=70%} <br>
 
@@ -546,6 +548,7 @@ Caves <- read_csv(file = "data/Caves.csv")
 ```
 
 To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (the from columns HW-2b, HW_4b etc.). Let's format the date column as a date, not character so that R handles years and dates nicely. 
+
 **Wrangle data**
 ```{r}
 Caves <- mutate(Caves, Date = as.Date(Date, format = "%d/%m/%Y"))
