@@ -17,7 +17,7 @@ library(tidyverse)
 
 ## Lead contamination in soils
 
-An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by the local community. Safety guidelines dictate that lead concentrations in soil should not exceed 300mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with an X-ray Fluorescence (pXRF) spectrometer.
+An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by the local community. Safety guidelines dictate that lead concentrations in soil should not exceed 400mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with an X-ray Fluorescence (pXRF) spectrometer.
 
 ![Collecting soil samples](https://media.news.climate.columbia.edu/wp-content/uploads/2018/09/soil-sampling-1300x975.avif){width=50%}
 
