@@ -405,7 +405,7 @@ As the CI on the mean is 57.5-82.76, we can conclude that the mean time it takes
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
-You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and p-value are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
+You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and p-value are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter (the mean) to zero.
 
 **Question: How likely is it that two samples of baby turtles come from the same population?**
 
