@@ -333,7 +333,7 @@ This is how confidence intervals are built. We estimate the mean of the sample, 
 
 $$\hat{\mu_y} \pm \rm{Uncertainty}$$
 
-## Enter The t-distribution
+## Enter the t-distribution
 
 <h3>Enter the t-distribution</h3>
 
