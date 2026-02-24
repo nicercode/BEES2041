@@ -141,7 +141,7 @@ What are the mean and confidence intervals for the bill length of the Gentoo pen
 
 Based on the CIs, is there evidence that the bill length of the Gentoo penguins is different to the bill length of the Chinstrap penguins? 
 
-## finished
+## Finished
 
 Congrats, you've finished the practical!
 

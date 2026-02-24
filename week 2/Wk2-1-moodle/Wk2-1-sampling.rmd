@@ -490,11 +490,11 @@ From the data above, you can see the estimate of the mean time it takes for baby
 
 Confidence intervals around the mean are a powerful tool in our analysis toolbox. For example, Davey could ask:
 
-**Question: What is the probability that the mean time it takes for baby turtles to reach the surface is less than or greater than some critical value, e.g. 20 hrs?**
+**Question: Is it likely that the mean time it takes for baby turtles to reach the surface is greater than some value of interest, e.g. 50 hrs?**
 
-To answer this, Davey can look at confidence intervals. The confidence interval tells us the range of possible values for the mean of the population. If the critical value is within the confidence interval, then the mean of the population is likely to be less than or greater than the critical value. If the critical value is outside the confidence interval, then the mean of the population is likely to be greater than or less than the critical value.
+To answer this, Davey can look at confidence intervals. The confidence interval tells us the range of plausible values for the mean of the population. If the value of interest is less than the lower limit of the confidence interval, then the mean of the population is most likely to be greater than 50 hours.
 
-As the CI on the mean is 57.5-82.76, we can conclude that mean time it takes for baby turtles to reach the surface is likely to be greater than 20 mins.
+As the CI on the mean is 57.5-82.76, we can conclude that the mean time it takes for baby turtles to reach the surface is likely to be greater than 50 hours.
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
