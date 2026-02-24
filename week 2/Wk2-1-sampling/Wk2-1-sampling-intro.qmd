@@ -459,17 +459,17 @@ As explained in the course text book Warton 2024, technically one-sample & two-s
 
 ## Why sample size matters
 
-Recall the formula for the standard error of the mean:
+Recall the formula for the standard error (SE) of the mean:
 
 $$SE = \frac{\sigma}{\sqrt{n}}$$
 
 where $\sigma$ is the standard deviation of the population, and n is the sample size.
 
-The standard error of any statistic is the standard deviation of the statistic's value. So the SE is the standard deviation of the sample means.
+The standard error of any statistic is the standard deviation of the statistic's sampling distribution. So the SE of the mean is the standard deviation of the sample means.
 
 And the formula for the confidence interval is: $$x \pm t_{0.05, n-1} SE$$
 
-You can see from the above, the standard error of the mean decreases as the sample size increases. This is because the standard error is inversely proportional to the square root of the sample size. The larger the sample size, the smaller the SE and the more reliable the mean of the sample will be.
+You can see from the above, the standard error decreases as the sample size increases. This is because the standard error is inversely proportional to the square root of the sample size. The larger the sample size, the smaller the SE and the narrower the confidence limits around our estimate of the true mean.
 
 This is why sample size is so important in statistics. The more we sample, the better our mean represents the population, and
 
