@@ -252,9 +252,9 @@ This is how confidence intervals are built. We estimate the mean of the sample, 
 
 $$\bar{\mu_y} \pm \rm{Uncertainty}$$
 
-## Enter The t-distribution
+## Enter the t-distribution
 
-To estimate the uncertainty, we use the t-distribution. When the sample size is small (n \< 50), the sample standard deviation is a poor estimate of the population standard deviation, and using the normal distribution here would underestimate variability. The t-distribution accounts for this additional uncertainty by having heavier tails, which leads to wider confidence intervals and more conservative hypothesis testing.
+To estimate the uncertainty, we use the t-distribution. When the sample size is small (n \< 50), the sample standard deviation is a poor estimate of the population standard deviation, and using the normal distribution here would underestimate variability. The t-distribution accounts for this additional uncertainty by having heavier tails, which leads to wider confidence intervals and more conservative hypothesis testing. At larger sample sizes, the t-distribution looks more and more like the normal distribution.
 
 So the equation above becomes
 
