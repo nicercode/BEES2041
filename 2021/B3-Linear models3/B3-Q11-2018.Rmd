@@ -73,7 +73,7 @@ Now, you can look at the results from the ANCOVA.
 anova(Urchins.ANCOVA)
 ```
 
-You will have a test of whether the % cover of bare rock varied among treatments, with time (Day factor), and whether the slopes of the bare rock vs day relationships varied among treatments (Treatment x Day interction).
+You will have a test of whether the % cover of bare rock varied among treatments, with time (Day factor), and whether the slopes of the bare rock vs day relationships varied among treatments (Treatment x Day interaction).
 
 Results from ANCOVA are best visualised as scatterplots with the data from each of the levels of the categorical factor presented with different symbols (as above).
 

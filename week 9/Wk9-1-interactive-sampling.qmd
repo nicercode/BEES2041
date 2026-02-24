@@ -1,0 +1,56 @@
+---
+title: "Wk9-1-interactive-sampling"
+format: html
+---
+
+[Planning document](https://docs.google.com/document/d/1nyoeum7s1TqJdtmgDSEazBeR-kCIRXXUiwsy9S0hnZw/edit?usp=sharing)
+
+```{r}
+library(tidyverse)
+library(easystats)
+library(janitor)
+library(googlesheets4)
+library(patchwork)
+library(kableExtra)
+```
+
+# Importance of Randomisation (Fonti)
+
+[Data sheet](https://docs.google.com/spreadsheets/d/1uKWIN4AhAnNMzr9-qF9AetaLobWeIkVAufd0m5ZOJ5A/edit?usp=sharing)
+
+```{r}
+# Load data
+glasshouse <- read_sheet("https://docs.google.com/spreadsheets/d/1uKWIN4AhAnNMzr9-qF9AetaLobWeIkVAufd0m5ZOJ5A/edit?gid=0#gid=0", 
+                         sheet = "randomise") |> 
+  clean_names()
+```
+
+```{r}
+# Compute means
+glasshouse_model <- lm(total_score ~ treatment, data = glasshouse)
+
+glasshouse_output <- parameters(glasshouse_model)
+
+glasshouse_means <- estimate_means(glasshouse_model)
+```
+
+```{r}
+# Tabulate output
+glasshouse_output |> kable(digits = 2)
+```
+
+```{r}
+# Visualise effect
+p1 <- ggplot(glasshouse_means, aes(x = treatment, y = Mean)) + 
+  geom_col(aes(color = treatment, fill = treatment)) + 
+  geom_errorbar(data = glasshouse_means, aes(ymin = CI_low, ymax = CI_high, y = Mean), width = 0.2) +
+  theme_minimal() + 
+  scale_fill_manual(values = c("#007cbe", "#f4d58d")) + 
+  scale_color_manual(values = c("#007cbe", "#f4d58d")) 
+```
+
+```{r}
+p1 / wrap_table(glasshouse_output, panel = "full", space = "fixed")
+```
+
+

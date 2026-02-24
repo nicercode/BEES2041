@@ -1,0 +1,36 @@
+
+# Rendering various practical files from main .qmd
+
+```{r setup, include=FALSE}
+library(quarto)
+library(rmarkdown)
+library(tidyverse)
+
+source("R/remove_solutions.R")
+source("R/generate_moodle_quiz.R")
+
+file <- "week 7/Wk7-2-moodle/Wk7-2-Multivariate.qmd"
+
+## Rendering as html
+quarto::quarto_render(file)
+
+## Student copy
+file_student <- str_replace(file, ".qmd", "-student.qmd")
+lines <- readLines(file)
+
+# Remove solutions
+lines |>
+  remove_solutions() |>
+  remove_cloze() |>
+  write_lines(file_student)
+
+# check it runs
+quarto::quarto_render(file_student)
+```
+
+## Render as moodle quiz
+```{r}
+file_moodle_quiz <- generate_moodle_quiz(file, webr = FALSE)
+rmarkdown::render(file_moodle_quiz)
+  
+```

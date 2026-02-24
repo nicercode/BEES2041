@@ -22,12 +22,12 @@ coral_labelled_raw <-
 
 # Drop some variables
 coral_labelled <- 
-  coral_labelled_raw %>%
+  coral_labelled_raw |>
   mutate(
     class_num = as.character(class_num),
     dom_num = as.character(dom_num)
-    ) %>%
-  select(-`system:index`, -`.geo`) %>%
+    ) |>
+  select(-`system:index`, -`.geo`) |>
   select(
     # remove all outputs except coral
     -any_of(c("Algae", "Branching", "Inverts", "Massive", "Plate", "Rock", "Rubble", "Sand", "SoftCoral")), 
@@ -36,7 +36,7 @@ coral_labelled <-
     #c("class_num", "dom_num", "pa_branch", "pa_massive", "pa_plate", "pa_soft",
     )
 
-coral_labelled %>% write_csv("data/coral_labelled.csv")
+coral_labelled |> write_csv("data/coral_labelled.csv")
 ```
 
 Make training and testing sets
@@ -45,8 +45,8 @@ Make training and testing sets
 npoints <- nrow(coral_labelled)
 train_ids <- sample(npoints, 2/3 * npoints)
 
-coral_labelled_train <- coral_labelled %>% slice(train_ids)
-coral_labelled_test <-  coral_labelled %>% slice(-train_ids)
+coral_labelled_train <- coral_labelled |> slice(train_ids)
+coral_labelled_test <-  coral_labelled |> slice(-train_ids)
 ```
 
 Write a function to evaluate within sample and out of sample predictions. For now, simply look at R2 between observed and predicted
@@ -63,33 +63,33 @@ evaluate <- function(fit, data_train, data_test, ...) {
     pred <-  function(fit, data) predict(fit, newdata=data)
   
   # add within sample predictions
-  data_train <- data_train %>% mutate(group = "training",
+  data_train <- data_train |> mutate(group = "training",
     predicted = pred(fit,data_train))
   
   # add out of sample predictions
-  data_test <- data_test %>%  mutate(group = "testing",
+  data_test <- data_test |>  mutate(group = "testing",
     predicted =  pred(fit, data_test))
   
-  data_pred <-  rbind(data_train, data_test)  %>%
+  data_pred <-  rbind(data_train, data_test)  |>
     mutate(
       group = factor(group, levels = c("training", "testing"))
     )
 
   model_stats <- 
-    data_pred %>% 
-    group_by(group) %>% 
+    data_pred |> 
+    group_by(group) |> 
     summarise(
       r2 = cor(Coral, predicted)^2,
       RMSE = sqrt(sum((Coral - predicted)^2)/n())
-      ) %>% 
-    ungroup() %>%
+      ) |> 
+    ungroup() |>
     mutate(
       x = 0, y=100,
       stats = paste0("RMSE = ", format(RMSE, digits=2), ", R2 =", format(r2, digits=2))
     )
   
   # plot
-  data_pred %>%
+  data_pred |>
     ggplot(aes(Coral, predicted)) +
     geom_point() +
     geom_smooth(method="lm", formula = 'y ~ x') +
@@ -146,7 +146,7 @@ For comparison, here's an RF only 3 covariates.
 ```{r}
 fit_rf3 <- 
   ranger(Coral ~ ., 
-         data = coral_labelled_train %>% select(Coral, b1_p, b2_p, b3_p)
+         data = coral_labelled_train |> select(Coral, b1_p, b2_p, b3_p)
          )
 
 evaluate(fit_rf2, coral_labelled_train, coral_labelled_test)
@@ -164,7 +164,7 @@ fit_rf <- ranger(Coral ~ ., data = coral_labelled_train)
 evaluate(fit_rf, coral_labelled_train, coral_labelled_test)
 ```
 
-This is good, still a drop between trinaing and testing, but now model is making predictions where erro4 4in cover is 13%.
+This is good, still a drop between training and testing, but now the model is making predictions where error in cover is 13%.
 
 ## Is RF better than regression using lm with all covars
 
@@ -181,7 +181,7 @@ What are most important variables?
 ```{r}
 fit_rf <- ranger(Coral ~ ., data = coral_labelled_train, importance = "permutation")
 
-importance(fit_rf) %>% sort(decreasing = T)
+importance(fit_rf) |> sort(decreasing = T)
 ```
 
 Bigger number means more important for model.
@@ -191,11 +191,11 @@ What are most important models?
 ## How well could we do with just top 5 covars
 
 ```{r}
- top_vars <- importance(fit_rf) %>% sort(decreasing = T) %>% head(10) %>% names() 
+ top_vars <- importance(fit_rf) |> sort(decreasing = T) |> head(10) |> names() 
 
 fit_rf_top5 <- 
   ranger(Coral ~ ., 
-         data = coral_labelled_train %>% select(Coral, any_of(top_vars))
+         data = coral_labelled_train |> select(Coral, any_of(top_vars))
          )
 
 evaluate(fit_rf_top5, coral_labelled_train, coral_labelled_test)
@@ -208,7 +208,7 @@ evaluate(fit_rf_top5, coral_labelled_train, coral_labelled_test)
 
 fit_rf3 <- 
   ranger(Coral ~ ., 
-         data = coral_labelled_train %>% select(-dom_num,-class_num)
+         data = coral_labelled_train |> select(-dom_num,-class_num)
          )
 
 evaluate(fit_rf3, coral_labelled_train, coral_labelled_test)

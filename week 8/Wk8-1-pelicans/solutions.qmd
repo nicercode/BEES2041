@@ -1,7 +1,7 @@
 ---
 title: "Pelican classifcation"
 format: html
-editor: visual
+editor: source
 ---
 
 ## 
@@ -45,10 +45,10 @@ Load data
 peli_labelled_raw <- read_csv("data/trainingData.csv")
 
 peli_labelled <- 
-  peli_labelled_raw %>% 
+  peli_labelled_raw |> 
   mutate(
-    is_pelican = ifelse(Class==2, "pelican", "background") %>% as.factor()) %>%
-  select(is_pelican, everything()) %>% 
+    is_pelican = ifelse(Class==2, "pelican", "background") |> as.factor()) |>
+  select(is_pelican, everything()) |> 
   select(-Class)
 
 ```
@@ -60,8 +60,8 @@ Make training and testing
 npoints <- nrow(peli_labelled)
 train_ids <- sample(npoints, 0.75 * npoints)
 
-peli_labelled_train <- peli_labelled %>% slice(train_ids)
-peli_labelled_test <-  peli_labelled %>% slice(-train_ids)
+peli_labelled_train <- peli_labelled |> slice(train_ids)
+peli_labelled_test <-  peli_labelled |> slice(-train_ids)
 ```
 
 Single covariates
@@ -77,7 +77,7 @@ evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
 ```{r}
 fit_rf3 <- ranger(is_pelican ~ b1 + b2 + b3, data = peli_labelled_train)
 
-evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
+evaluate_model(fit_rf3, peli_labelled_train, peli_labelled_test)
 ```
 
 RF all covars
@@ -101,11 +101,11 @@ Reduced model (top 5 covariates)
 
 ```{r}
 
-top_vars <- importance(fit_rf) %>% sort(decreasing = T) %>% head(5) %>% names() 
+top_vars <- importance(fit_rf) |> sort(decreasing = T) |> head(5) |> names() 
 
 fit_rf_top <- 
   ranger(is_pelican ~ ., 
-         data = peli_labelled_train %>% select(is_pelican, any_of(top_vars))
+         data = peli_labelled_train |> select(is_pelican, any_of(top_vars))
          )
 
 evaluate_model(fit_rf_top, peli_labelled_train, peli_labelled_test)
@@ -113,7 +113,7 @@ evaluate_model(fit_rf_top, peli_labelled_train, peli_labelled_test)
 
 # Extension
 
-Is many trees (the randome forest) better than single decision tree?
+Is many trees (the random forest) better than single decision tree?
 
 ```{r}
 fit_rf_single <- ranger(is_pelican ~ ., data = peli_labelled_train,   num.trees =1)
@@ -140,11 +140,11 @@ evaluate_model(fit_glm, peli_labelled_train, peli_labelled_test)
 fit_rf1 <- ranger(is_pelican ~ ., data = peli_labelled_train, num.trees = 100)
 
 # load mosaic to predict onto
-data_mosaic <- readRDS("x_setup/predict/RasterWithPredictorsPelicans-0000011776-0000011776.rds") 
+data_mosaic <- readRDS("data/large-files/RasterWithPredictorsPelicans-0000011776-0000011776.rds") 
 
 # make predictions
 data_pred <- 
-  data_mosaic %>%
+  data_mosaic |>
   mutate(is_pelican = predict(fit_rf1, data = data_mosaic)$predictions)
 
 # Plot direct to file "output.png", works better than plotting to screen for big datastes 

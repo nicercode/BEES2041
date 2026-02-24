@@ -61,8 +61,12 @@ renv/
 renv*
 .Rprofile
 
-# Images
-images/
-
 # Ignore user changes to BEES2041.Rproj
 BEES2041.Rproj
+
+# Ignore ignore folder
+ignore/
+
+# Week 8 large files
+large-files/ 
+

@@ -15,4 +15,4 @@ assignees: ''
 
 **Describe what would the correction look like? Give example(s)**
 
-**For feedback and describe what would you like can be improved and what would improvement look like. Give examples(s)**
+**For feedback, describe what you would like to be improved and what the improvement would look like. Give examples.**

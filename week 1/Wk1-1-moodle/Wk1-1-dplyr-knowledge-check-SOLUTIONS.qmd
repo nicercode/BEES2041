@@ -5,58 +5,58 @@ format: html
 
 ## Knowledge Check
 
-### Take a look at the data =
+### Take a look at the data:
 
-**Question:** What do you notice that's different with how `mtcars` and `penguins` are presented in R? 
+**Question:** What differences do you notice in how `mtcars` and `penguins` are presented in R?
 
-Write a few sentences on what is different in the object structure and what functions you used to determine the main difference between the two datasets.
+Write a few sentences describing the differences in object structure and the functions you used to determine these differences.
 
-**Answer:** `mtcars` is a `dataframe` and `penguins` is a tibble (`tbl_df/tbl/data.frame`). `str(mtcars)` and `str(penguins)` tells us the object
+**Answer:** `mtcars` is a `dataframe` and `penguins` is a tibble (`tbl_df/tbl/data.frame`). `str(mtcars)` and `str(penguins)` tell us the objects
 
-**Try:** Use the function `filter()`to extract all penguins that have body masses greater than 4000g 
+**Try:** Use the function `filter()` to extract all penguins that have body masses greater than 4000g
 
 ```{r}
-penguins |> 
+penguins |>
   filter(body_mass_g > 4000)
 ```
 
-**Question:** How many penguins were heavier than 4kg?* *172**
+**Question:** How many penguins were heavier than 4kg? **172**
 
-**Question:** What would the code look like if you wanted to sort the data by species, increasing bill_length_mm and decreasing body mass? 
+**Question:** What would the code look like if you wanted to sort the data by species, increasing bill_length_mm and decreasing body mass?
 
 ```{r}
-penguins |> 
+penguins |>
   arrange(species, bill_length_mm, desc(body_mass_g))
 ```
 
 **Question:** How many penguins were recorded on Dream Island? **124**
 
-**Try**: Create a dataset where we only have the columns: species, island and integer variables
+**Try:** Create a dataset where we only have the columns: species, island and integer variables
 
 ```{r}
-penguins |> 
+penguins |>
   select(species, island, where(is.integer))
 ```
 
-**Try**: Can you give me the median bill_depth_mm for all species of penguins by sex? Watch out for missing values!
+**Try:** Can you calculate the median bill_depth_mm for all species of penguins by sex? Watch out for missing values!
 
 ```{r}
-penguins |> 
-  group_by(species, sex) |> 
+penguins |>
+  group_by(species, sex) |>
   summarise(med_bill_depth = median(bill_depth_mm, na.rm = TRUE))
 ```
 
-**Try**: Using a series of pipes `|>`, create a dataset that: 
+**Try**: Using a series of pipes `|>`, create a dataset that:
 
 - only contains female penguins in 2007
-- where their are body masses > 4000
+- where their body masses are > 4000
 - create a new ratio variable between bill depth and bill length
 - retain only species, island and your ratio variable
 
 ```{r}
-penguins |> 
-  filter(sex == "female", year == 2007, body_mass_g > 4000) |> 
-  mutate(bill_depth_length_ratio = bill_depth_mm / bill_length_mm) |> 
+penguins |>
+  filter(sex == "female", year == 2007, body_mass_g > 4000) |>
+  mutate(bill_depth_length_ratio = bill_depth_mm / bill_length_mm) |>
   select(species, island, ends_with("ratio"))
 ```
 

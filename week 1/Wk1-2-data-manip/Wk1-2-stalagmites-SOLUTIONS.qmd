@@ -1,145 +1,178 @@
 ---
-title: "Staligmite growth rates"
-format: html
-editor: visual
+title: "Week 1-1 Data manipulation and visualisation"
+output: html_document
+editor_options:
+  chunk_output_type: console
 ---
 
 # Overview
 
-Stalagmites are "a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings" (<https://en.wikipedia.org/wiki/Stalagmite>).
+[Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Labeled_speleothems.jpg/780px-Labeled_speleothems.jpg){fig-align="center"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width=100%}
 
-Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses Stalgmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
+Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalagmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability through time.
 
-This exercise builds off two papers published by Andy and his team
+This section builds off two papers published by Andy and his team:
 
--   Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. https://doi. org/10.1029/2020RG000722 (see file `data/staligmites/refs/Baker et al 2021 Reviews of Geophysics.pdf`
+-   Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. https://doi.org/10.1029/2020RG000722 (see file `doc/Baker et al 2021 Reviews of Geophysics.pdf`
 
--   Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `data/staligmites/refs/Baker et al 2015.pdf`)
+-   Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (see file `doc/Baker et al 2015.pdf`)
 
-# Aims
+**Activity:**
 
-Andy asked us to cross check his results by re-anlaysing the data. Your goal is reproduce some key figures from the paper 2021 paper.
+Andy asked us to cross check his results, your goal is to reproduce some key figures from the 2021 paper.
 
-# Assembling the data
+**Do these visualisations in your `Wk1-2-stalagmites.qmd` document**
+
+> In some code chunks, we've given you some partially completed R code, these are hints, complete the rest of the code before you run them
+
+## Setting up
+
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don’t have.
 
 ```{r}
+# install.packages(c("tidyverse", "janitor", "readxl"))
+
 library(tidyverse)
+library(janitor)
+library(readxl)
 ```
 
 ## Loading data
 
 The data is available at https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639
 
-We've downloaded this into the folder at `data/staligmites/Laminated stalagmite Dataset.csv`
+We've downloaded this into the folder at `data/stalagmites/Laminated stalagmite Dataset.csv`
 
-Load this into R use the `read_csv` function
+Load this into R use the `read_csv()` function.
+
+The code below gets you started. You'll need to fill in the spaces indicated by XXX.
+
 
 ```{r}
-data_stal <- read_csv("data/staligmites/Laminated stalagmite Dataset.csv")
+stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv")
 ```
+
 
 ## Data structure
 
-Check the structure of the dataset, including the names of the columns. The dataset gives records of lamina thickness through time for a series of different stalagmites.
+<h3>Data structure</h3>
 
-The variables provided are
+This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
 
--   `entity_id` : The ID of the satalgmite sampled.
+-   `entity_id`: Identifier for the stalagmite sample.
+-   `seq_id`: Sequence identifier (likely referring to sample grouping).
+-   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
+-   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
 
--   `seq_id` : The ID of the sequence taken through the sample
-
--   `lamina thickness (mm)` : The thickness of each layer. Which provides an indicator of growth rate.
-
--   `lam_age (BP, 0=1950AD)` : Years Before Present (=1950), corresponding to the age of the layer.
-
-## Data manipulation
-
-This dataset has some difficult variable names. Perhaps rename to something more R friendly? The function `clean_names()` from the package `janitor` may be useful here. You might need to install the package first.
+Check the structure of the dataset, including the names of the columns.
 
 ```{r}
-data_stal <- data_stal %>% janitor::clean_names()
+names(stalagmites_data)
 ```
 
-## Check distributions
 
-Do the properties of each variable seem reasonable?
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here.
+
 
 ```{r}
-data_stal %>%
-  ggplot(aes(x = lamina_thickness_mm)) + 
-  geom_histogram()
+stalagmites_data <- read_csv("data/stalagmites/Laminated stalagmite Dataset.csv") |>
+  clean_names()
 ```
 
-Did you notice any errors in the dataset? There is one really weird value. What is it?
+## Check the data
+
+**Question: Did you notice any errors in the dataset? There is one really weird value in `lamina_thickness_mm`. Which is it? Try spot it using `geom_boxplot()`**
 
 ```{r}
-
+ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) +
+  geom_boxplot()
 ```
 
-You check whit Andy and he confirms an error in the data entry for this point. Can you remove it?
+You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
 
-The `filter` function could be useful
+The `filter()` function could be useful here.
 
 ```{r}
-data_stal <- data_stal %>%  filter(lamina_thickness_mm < 10)
-
+stalagmites_data <- stalagmites_data |>
+  filter(!lamina_thickness_mm > 60)
 ```
 
-# Making plots
+> Now let's go ahead and make some plots. We're going to try and recreate figures similar to Figure 3, 5, 10 in Baker et al 2021. Don't worry about getting them exact, just close.
 
-Now let's go ahead and make some plots. We'regoing to try and recreate figures similar to Figure 3, 5, 10 in Baker et al 2021. Don't worry about getting them exact, just close.
+##  Figure 5
 
-### Figure 5
+Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document
 
-Have a go at creating this plot.
-
+![Figure 5](images/baker-fig5.png)
 ```{r}
-data_stal %>%
+stalagmites_data |>
   ggplot(aes(x = lamina_thickness_mm)) +
   geom_histogram(bins = 150, fill = "orange", col = "black") +
   theme_classic() +
-  labs("Annual lamnina growth rate (mm)", y = "Number") +
+  labs(x = "Annual lamina growth rate (mm)", y = "Number") +
   xlim(c(0, 1.2))
 ```
 
+
+**Question: Interpret this plot, what does this visualisation tell us?**
+
+The majority of annual lamina growth in stalagmites is really slowly
+
 ### Figure 3
 
-Have a go at creating this plot. I suggest trying for a single panel before making a bunch of panels.
+Have a go at creating this plot.
 
-Start with single sample. use the `filter` command to subset your data before plotting it.
+![Figure 3](images/baker-fig3.png)
+
+> Try making a single panel before making a bunch of panels.
+
+1. Start with single sample. Use the `filter()` function to subset your data before plotting it. You may need to log10 + 1 transform your y variable. Add some nice axes labels.
 
 ```{r}
-data_stal %>%
-  filter(seq_id == 85) %>%
-  ggplot(aes(lam_age_bp_0_1950ad, lamina_thickness_mm)) +
+# Transform data
+transformed_stalagmites_data <- stalagmites_data |>
+  mutate(log10_1_lamina_thickness_mm = log10(lamina_thickness_mm + 1))
+
+# Create plot
+transformed_stalagmites_data |>
+  filter(entity_id == 85) |>
+  ggplot(aes(x = lam_age_bp_0_1950ad, y = log10_1_lamina_thickness_mm)) +
   geom_line() +
-  scale_y_log10() +
-  facet_wrap( ~ seq_id, scales = "free") +
-  labs("Years BP", y = "Growth rate (mm/yr)")
+  labs(x = "Years BP", y = expression("Growth rate (log, mm yr^{-1})")) +
+  theme_classic()
 ```
 
-Now try making a panel of plots. Note the section in the intro on facetting will be helpful for multi panel plots.
+2. Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
 
 ```{r}
-data_stal %>%
+stalagmites_data |>
   ggplot(aes(lam_age_bp_0_1950ad, y = lamina_thickness_mm)) +
   geom_line() +
-  facet_wrap( ~ entity_id, scales = "free") +
+  facet_wrap(~ entity_id, scales = "free") +
   theme_classic() +
   labs("Years BP", y = "Growth rate (mm/yr)")
 ```
 
-### **Figure 10**
 
-Have a go at creating this plot. It's similar to the one above, but there's data for select values of seq_id
+**Question: Interpret this plot, what does this visualisation tell us?**
+
+The annual growth of all lamina samples are highly variable
+
+### Figure 10
+
+Have a go at creating this plot.
+
+![Figure 10](images/baker-fig10.png)
+
+You'll need to extract data for the samples numbers in black with `seq_id` before plotting. Using the **`%in%`** operator to filter for specific sequences.
 
 ```{r}
 ids <- c(85, 1004, 385, 217.1, 1008.1, 128, 465, 217.2, 1007.2, 128,  466, 1009.2, 1003.1, 1006)
 
-data_stal %>% 
-  filter(seq_id %in% ids) %>% 
+stalagmites_data |>
+  filter(seq_id %in% ids) |>
   ggplot(aes(lam_age_bp_0_1950ad, lamina_thickness_mm)) +
   geom_line() +
   scale_y_log10() +
@@ -147,70 +180,77 @@ data_stal %>%
   labs("Years BP", y = "Growth rate (mm/yr)")
 ```
 
-### Figure 2
+
+##  Figure 2
 
 Finally, can you plot a map of sample locations as in figure 2?
 
-The data with locations is in `data/staligmites/Tables.xlsx` . It's an excel file. We can read it in using the following code:
+![Figure 2](images/baker-fig2.png)
 
-```{r}
+The data with locations is in `data/stalagmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
 
-data_sites <- readxl::read_xlsx("data/staligmites/Tables.xlsx") %>% 
-  janitor::clean_names()
-
+```{r, eval=FALSE}
+stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()
 ```
 
-Are all variables correct type?
+**Question: Did you notice any errors in the dataset? There is one row that isn't data, which is it?**
+
+First row
 
 ```{r}
-data_sites %>%
-  ggplot(aes(lat, long)) + geom_point()
+stalagmites_sites |> filter(row_number() == 1)
+```
 
-data_sites <- data_sites %>%
+Exclude this row using the `filter`() function
+
+```{r}
+stalagmites_sites <- stalagmites_sites |> filter(!row_number() == 1)
+```
+
+**Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
+
+```{r}
+stalagmites_sites <- stalagmites_sites |>
   mutate(lat = as.numeric(lat),
          long = as.numeric(long))
-
 ```
 
-First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add code with points
+First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add points and site names with `geom_text()`
 
 ```{r}
-
 # create data for world coordinates using
 # map_data() function
 world_coordinates <- map_data("world")
 
 # create world map using ggplot() function
-ggplot(data_sites, aes(long, lat)) +
-  
-  # geom_map() function takes world coordinates
-  # as input to plot world map
-  geom_map(data = world_coordinates, map = world_coordinates,
+ggplot(stalagmites_sites, aes(long, lat)) +
+  geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
            aes(long, lat, map_id = region)) +
-  geom_point(col = "red") +
-  geom_text(col = "red", aes(label = site_name), nudge_y = 2) +
+  # geom_point(colour = "red") +
+  # geom_text(colour = "red", aes(label = site_name), nudge_y = 2) +
   coord_quickmap() +
   theme_classic()
-
 ```
 
-Second, we can use the package leaflet to create an interactive plot. The code is a little different
+### BONUS:
+
+R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to show you the possibilities of R!
 
 ```{r, keep}
+# install.packages("leaflet")
+
 library(leaflet)
 
-leaflet() %>%
-  addTiles() %>%
+leaflet() |>
+  addTiles() |>
   addMarkers(
-    lng = data_sites$long,
-    lat = data_sites$lat,
+    lng = stalagmites_sites$long,
+    lat = stalagmites_sites$lat,
     label =
       paste(
-        data_sites$entity_id_1000_sisal_entity_id,
-        data_sites$site_name
+        stalagmites_sites$entity_id_1000_sisal_entity_id,
+        stalagmites_sites$site_name
       )
-  )	%>%
+  )	|>
   addScaleBar()
-
-
 ```

@@ -1,0 +1,162 @@
+---
+title: "Week 2-1 Sampling from populations"
+output: html_document
+editor_options:
+  chunk_output_type: console
+---
+
+# Running tests on your laptop
+
+Let's now run some tests on your laptop to see if you can estimate the mean and confidence interval for some datasets. 
+
+Don't forget to load the packages you need to run the code below.
+
+```{r}
+library(tidyverse)
+```
+
+## Lead contamination in soils
+
+An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by the local community. Safety guidelines dictate that lead concentrations in soil should not exceed 300mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with an X-ray Fluorescence (pXRF) spectrometer.
+
+![Collecting soil samples](https://media.news.climate.columbia.edu/wp-content/uploads/2018/09/soil-sampling-1300x975.avif){width=50%}
+
+The data obtained are in the folder `data/` in the file `lead_contamination.csv`. Load the data using `read_csv` from the `tidyverse`.
+
+```{r}
+data <- read_csv("data/lead_contamination.csv")
+```
+
+And then calculate the 95% confidence intervals for the population mean. You should use the `lm()` function to fit a model to the data, and the `parameters()` function to extract the estimates of the mean and confidence interval for the mean. 
+
+```{r}
+lm_lead <- lm(lead_concentration ~ 1, data = data)
+parameters(lm_lead)
+```
+
+What are the mean and confidence intervals for the school garden soil lead concentration?
+
+-   mean: 
+-   lower CI: 
+-   upper CI: 
+
+**Based on the CI, is there evidence that soils from this garden exceeded the safety guidelines?** 
+
+## Palmer penguins
+
+The Palmer penguins dataset contains data on the size of different penguins. A biologist was writing a field guide about the different species and thought to include some information on the size of the penguins. Below we'll focus on the bill length of the different species of penguins. However, you can also explore other variables in the dataset using the same methods.
+
+Recall the data from the `palmerpenguins` package.
+
+```{r}
+library(palmerpenguins)
+
+penguins
+```
+
+## Chinstraps
+
+**Chinstraps**
+
+![Chinstrap penguin. Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg/440px-South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg){width=50%}
+
+
+Calculate the mean and 95% confidence intervals for the bill_length_mm of the Chinstrap penguins.
+
+You'll need to extract just the records for the Chinstrap species. Recall, you can filter the data using the `filter()` function from the `dplyr` package (which you have already loaded with the tidyverse).
+
+```{r}
+data_chinstrap <- penguins |> filter(species == "Chinstrap")
+```
+
+Now calculate the mean and confidence intervals for the bill length of the Chinstrap penguins.
+
+
+
+```{r}
+
+lm_chinstrap <- lm(bill_length_mm ~ 1, data = data_chinstrap)
+parameters(lm_chinstrap)
+```
+
+What are the mean and confidnece intervals for the bill length of the Chinstrap penguins?
+What are the mean and confidence intervals for the bill length of the Chinstrap penguins?
+
+-   mean: 
+-   lower CI: 
+-   upper CI: 
+
+## Adelie
+
+**Adelie**
+
+![Adelie penguin. Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg/800px-Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg){width=50%}
+
+Now what is the mean and confidence intervals for the bill length of the Adelie penguins?
+
+
+
+```{r}
+
+data_Adelie <- penguins |> filter(species == "Adelie")
+```
+
+Now calculate the mean and confidence intervals for the bill length of the Adelie penguins.
+
+
+```{r}
+
+lm_Adelie <- lm(bill_length_mm ~ 1, data = data_Adelie)
+parameters(lm_Adelie)
+```
+
+What are the mean and confidence intervals for the bill length of the Adelie penguins?
+
+-   mean: 
+-   lower CI: 
+-   upper CI: 
+
+Based on the CIs, is there evidence that the bill length of the Adelie penguins is different to the bill length of the Chinstrap penguins? 
+
+## Gentoo
+
+**Gentoos**
+
+![Gentoo penguin.  Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg/1202px-Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg){width=50%}
+
+Now what is the mean and confidence intervals for the bill length of the Gentoo penguins?
+
+
+
+```{r}
+data_Gentoo <- penguins |> filter(species == "Gentoo")
+```
+
+Now calculate the mean and confidence intervals for the bill length of the Gentoo penguins.
+
+
+
+```{r}
+lm_Gentoo <- lm(bill_length_mm ~ 1, data = data_Gentoo)
+parameters(lm_Gentoo)
+```
+
+What are the mean and confidence intervals for the bill length of the Gentoo penguins?
+
+-   mean: 
+-   lower CI: 
+-   upper CI: 
+
+Based on the CIs, is there evidence that the bill length of the Gentoo penguins is different to the bill length of the Chinstrap penguins? 
+
+## finished
+
+Congrats, you've finished the practical!
+
+You can find worked solutions to the practical [here]().
+
+Download these and save them into the same folder as the practical material.
+
+Today you've learned how to estimate the mean of a population, and how confident you can be in your estimate.
+
+In general, there are relatively few instances where researchers only have one group of data and want to estimate the mean of only that one population. In most cases, we have two or more groups of data, and we want to estimate the difference between the means of the populations. This is what we started doing with the penguins data above. Next week we'll be looking at how we can compare the means of populations to each other, using a linear model, by including some predictor, x. The foundations you've learned today are the basis for this.

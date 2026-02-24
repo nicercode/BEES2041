@@ -1,9 +1,9 @@
 ---
 title: "Week 1 First Practical"
 author: Put your name here
-format: html 
+format: html
 editor: visual
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -17,11 +17,11 @@ library(readr)
 library(ggplot2)
 ```
 
-> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
+> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in RStudio and answer the questions in Moodle as you go.
 
 ## Stalagmite data
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images/stalagmite.png){width=100%}
 
 Stalagmites are mineral formations that grow in caves, preserving environmental records in their layered structure. Paleoclimatologists from the [Climate Change Research Centre](https://www.unsw.edu.au/research/ccrc) collected this data. The thickness of each lamina reflects past climate conditions—thicker layers often indicate wetter periods, while thinner ones suggest drier times. By analysing lamina thickness and age, scientists can reconstruct past climate patterns, track seasonal variations, and identify historical environmental events.\
 \
@@ -44,7 +44,7 @@ stalagmite_data_nice_names <- stalagmite_data |> janitor::clean_names()
 stalagmite_data_nice_names
 ```
 
-Using the functions you've learned so far in this prac, try answer the following questions:
+Using the functions you've learned so far in this prac (remember you can get help with functions using `?function`, e.g. `?mean`), try to answer the following questions:
 
 **Questions:**
 
@@ -68,7 +68,7 @@ Using the functions you've learned so far in this prac, try answer the following
 
 **What is a more suitable variable type for `lam_age_bp_0_1950ad`?**
 
-**Write some code to change the variable type of `lam_age_bp_0_1950ad`?** (Try: `?as.integer()` , you may need to install/load the package `dplyr`)
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`?** (Try: `?as.integer` , you may need to install/load the package `dplyr`)
 
 ```{r}
 
@@ -82,9 +82,9 @@ Using the functions you've learned so far in this prac, try answer the following
 
 ## Sydney Beaches
 
-![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width="100%"}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+![Image credit: Amazing Aerial](images/coogee-beach.jpeg){width=100%}Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences collected a dataset containing water quality measurements for Sydney beaches. It includes records of enterococci levels (cfu per 100ml) across a number of years, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
 
-> We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
+> We want to try to answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 
 First, read in the data.
 
@@ -114,7 +114,7 @@ To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` 
 
 -   Exclude a potential outlier or not ;) - try both!
 
--   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(nterococci_cfu_per_100ml + 1`) - try both!
+-   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(Enterococci_cfu_per_100ml + 1`) - try both!
 
 -   Try `geom_boxplot()` and `geom_violin()` with `geom_point()`
 
@@ -128,6 +128,6 @@ ggplot(your_data, aes(x = x_variable, y = y_variable)) +
 
 **Why did we need to transform the data?**
 
-**What does the shape of the violin plot tells us about the data?**
+**What does the shape of the violin plot tell us about the data?**
 
 **...and finally, which Sydney beach would you go swimming?**

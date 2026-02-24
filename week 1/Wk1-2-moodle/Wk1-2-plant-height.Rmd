@@ -1,10 +1,10 @@
 ---
 title: "Week 1-1 Data manipulation and visualisation"
-output: 
+output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
-  category: "Week 1-2 data wrangle + viz"
+  category: "Week 1-2 plant height"
 editor_options:
   chunk_output_type: console
 ---
@@ -14,146 +14,152 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
+library(here)
+
+# Libraries for prac
+library(tidyverse)
+library(janitor)
+
+# Set up for quizes
+possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatterplot", "violin")
+
+# Data for quiz
+plant_height <- read_csv("data/plant_height/plantHeightSingleSpp.csv") |> clean_names()
 ```
 
-## Overview
+## Intro
 
-Angela Moles, a professor here at UNSW, used an open source data frame of maximum height data for 7084 plant species and site combinations to provide the first global, cross-species quantification of the latitudinal gradient in plant height. (You can read more about the original study at [doi:10.1111/j.1365-2745.2009.01526.x](doi.org/10.1111/j.1365-2745.2009.01526.x)).
+<h2>Overview</h2>
 
-We are going to use this data to do a bit of preliminary analyses and see if we can answer some questions about the patterns we find in the data.
+![Image credit: Hokitika New Zealand native forest title by Jihwi Jang, CC BY 2.0](trees.png){width=80%}
 
-When starting an analysis, it's important to first understand what exactly you want to learn from the data. That is, what question are you hoping to answer with your data. Asking clear, specific questions before starting analyses will help you stay on track and not over-analyse a data set.
+<br>
 
-The questions we will focus on for this practical are:
+Professor Angela Moles at UNSW used an open-source dataset of maximum height data for 7084 plant species and site combinations to provide the first global, cross-species quantification of the latitudinal gradient in plant height. (You can read more about the original study at [doi:10.1111/j.1365-2745.2009.01526.x](doi.org/10.1111/j.1365-2745.2009.01526.x) or in `docs/Journal of Ecology - 2009 - Moles - Global patterns in plant height.pdf`)
 
--   Does plant height vary across a longitudinal gradient?
+We are going to use this data to do a bit of preliminary analyses and see if we can answer two questions:
 
--   Do higher altitudes create taller plants?
+**1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?**
 
-In other words: If latitude or altitude increases, does plant height increase?
+**2. Are there taller plants at higher altitudes?**
 
-## Aims
+**Activities:**
 
--   Read in data and assemble it
+- Read in data and wrangle it suited for visualisation
 
--   Create a new column in assembled data set
+- Create data visualisation that can address the questions
 
--   Visualize patterns in the data
+- Draw some initial conclusions from the plots you create
 
--   Draw conclusions based off visualizations
+<h3>Setting up</h3>
+
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have.
+
+```{r}
+# install.packages(c("tidyverse", "janitor"))
+library(tidyverse)
+library(janitor)
+```
 
 ## Assembling the Data
 
-Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height`:
+Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and separator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
 
-```{r}
+WOAH there are a LOT of variables in this data set. Sometimes it's nice to select only the columns you need for your analysis. This can make things easier in the long-run. Luckily, `dplyr` can help with that!
 
-```
+**Question: Which columns are relevant to these 2 questions? Select all that apply**
 
-WOAH there are a LOT of variables in this data set. Sometimes it's nice to select only the columns you need for your analysis. This can make things easier in the long-run. Luckily, tidyverse can help with that!
+`r cloze(c("genus_species", "height", "lat", "alt"), c(colnames(plant_height)))`
 
-Remember, our main questions are:
+> Now, create a new data frame with only the relevant columns using `select()`
 
--   Does plant height increase as latitude increases?
+## Check the distribution for the data
 
--   Are plants from higher altitudes taller than plants from low altitudes?
+<h3>Check the distribution for `height`</h3>
 
-**Q**: Which columns are relevant to this question? Pick all that apply (answers in moodle).
+> Check the distribution of your data to make sure there are no potential outliers in your key variables.
 
-Now, create a new data frame with only the relevant columns.
+<br><br>
 
-```{r}
+**Question: What plot would be good for this check?**
 
-```
+`r cloze(c("boxplot", "histogram"), possible_choices)` are suitable to assess the distribution of `height`
 
-Check the structure of the data and make any necessary changes
+> Make a plot to assess the distribution of `height`
 
-```{r}
-str(data1)
-# looks alright! no changes to be made
-```
+<br><br>
 
-Since we will eventually want to run linear models to answer this question, we want to check to make sure our response variable is **normally distributed**. This means that the values of this variable are symmetrical around the mean. This creates that a shaped curve in a histogram.
+**Question: Is `height` left skewed or right skewed?**
 
-For example, in the iris data set, the variable Sepal.width is normally distributed but the variable Petal.width is not.
+The data is `r cloze("right", c("left", "right"))` skewed. (Right skew is where "The right tail is longer; the mass of the distribution is concentrated on the left of the figure" [Wikipedia](https://en.wikipedia.org/wiki/Skewness))
+<br><br>
 
-```{r}
-ggplot(iris, aes(Sepal.Width)) + geom_histogram()
+**Question: Which species is the extreme value? Is the extreme value a true outlier? (Do some research and see verify this value)**
 
-ggplot(iris, aes(Petal.Width)) + geom_histogram()
+The species with the extreme value for `height` is: `r cloze("Pseudotsuga menziesii", c("Dicksonia antarctica", "Eragrostis dielsii", "Pseudotsuga menziesii"))`. It `r cloze("is not", c("is indeed", "is not"))` a true outlier.
 
-```
+## Data transformation
 
-As you can see, sepal width in the iris data set shows frequencies that are symmetric around the mean (\~2.8) whereas petal width does not show that clear symmetry.
+<h3>Data transformation</h3>
 
-When the distribution of values does not show that clear bell curve, you need to transform it. We'll learn more about transforming data as the class progresses so don't worry if you don't fully understand how or why we do this yet.
+It is common to transform your data when it's heavily skewed as in `height`.
 
-Before visualizing the results, we should check to make sure that our response variable, height, is normally distributed.
+> Can you `log10()` transform `height` and assign this update into a new data frame?
 
-make a histogram like in the plot above to graph the distribution of height in the data set.
+## Visualisation
 
-```{r}
+<h3>The effects of latitude on plant height</h3>
+
+**Question: What should be the x variable and what should be the y variable?**
+
+- x variable: `r cloze("lat", colnames(plant_height))`
+- y variable: `r cloze("height", colnames(plant_height))`
+
+We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the `y`-axis. Then, we'll create the same figure using the `log10` transformed data to see how it changes the patterns.
+
+> Create a plot to visualise the relationship between latitude and height.
+
+<br><br>
+
+**Question: What type of plot is suited to visualise these two variables?**
+
+A `r cloze("scatterplot", possible_choices)` is suited to visualise the relationship between these two variables.
+
+> Let's take a look at the line of best fit! To add this to our figure, use `geom_smooth(method="lm")`.
+
+<br>
+
+> Now create the same plot but using your `log10()` transformed variable instead of `height` and include the line of best fit.
+
+<br><br>
+
+**Question: 1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?**
+
+Plant height `r cloze("decreases", c("increases", "decreases"))` from tropics to poles.
+
+> Now, we are going to try to answer our second question; Does plant height increase as **altitude** increases?
+
+## Altitude
+
+<h3>The effects of altitude on plant height</h3>
+
+We will continue to use the `log10` transformed `height`
+
+> Make a plot that can help us answer question 2. - add the line of best fit.
+
+<br><br>
+
+**Question: 2. Are there taller plants at higher altitudes?**
+
+There are `r cloze("shorter", c("taller", "shorter"))` trees at higher altitudes.
+
+## Prac reflection {type=essay}
+
+<h3>Prac reflection</h3>
+
+ **Question: Which parts of the coding and the tidyverse you've encountered so far did you find:**
+
+- most exciting?
+- most challenging?
 
 
-```
-
-Does this show a normal distribution like we saw in the iris variable sepal width?
-
-When running a linear model, height (our response variable) does not have a normal distribution. This means that we will have to take the `log10()` of height so that our response variable doesn't break assumptions of the model.
-
-Create a new column with the log10 of height named "log_height"
-
-```{r}
-
-```
-
-Does this show a more normal distribution?
-
-```{r}
-
-```
-
-## Visualization
-
-We'll first create a ggplot showing lat on the x-axis and height on the y-axis. Then, we'll create the same figure but using the log10 transformed data to see how it changes the patterns.
-
-Create a plot to visualize the relationship between latitude and height.
-
-Hint: What type of plot do you create when your predictor and response variable are both continuous numeric variables?
-
-```{r}
-
-```
-
-I'd like to see the line of best fit! To add this to our figure, use `+ geom_smooth(method="lm")`.
-
-```{r}
-
-```
-
-Now create the same plot but use log_height instead of height and include the line of best fit.
-
-```{r}
-
-```
-
-You can see the clear difference between the transformed and untransformed data. It's important to know when to transform data to better suit your model otherwise you may end up accidentally misinterpreting your results!
-
-**Moodle Q:**
-
-Does log10(height) increase as latitude increases?
-
-It actually seems to decrease as latitude increases!
-
-Now, we are going to try to answer our second question; Does plant height increase as **altitude** increases?
-
-We will continue to use the log10 of height (because it is still not normally distributed).
-
-Make a plot that can help us answer this question and add the line of best fit.
-
-```         
-```
-
-**Moodle Q:**
-
-Does log10(height) increase as latitude increases?

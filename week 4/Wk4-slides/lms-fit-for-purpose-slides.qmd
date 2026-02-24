@@ -1,0 +1,587 @@
+---
+title: "Making plots for linear regression ppt"
+format: html
+---
+
+
+
+# Setup
+
+Path
+
+```{r}
+setwd("week 4/Wk4-slides")
+```
+
+Libraries
+```{r}
+library(tidyverse)
+library(easystats)
+library(palmerpenguins)
+
+# Figure styling - function to set my own theme for the plots
+
+styling <- function(p, background = "white") {
+  theme_classic() +
+    theme(
+      panel.background = element_rect(fill = background, color = NA), # Panel background
+      plot.background = element_rect(fill = background, color = NA), # Plot background
+      axis.title.x = element_text(margin = margin(t = 10)), # Adds space above X-axis title
+      axis.title.y = element_text(margin = margin(r = 10)), # Adds space to the right of Y-axis title
+      axis.text = element_blank(), # Axis tick labels
+      axis.title = element_text(size = 18), # Axis titles
+      plot.title = element_text(size = 18, face = "bold") # Plot title
+    )
+}
+```
+
+# Checks for linear regression
+
+Generate data, same as week 3 opening lecture
+
+```{r}
+## Generate data for simple example on intro slides
+n <- 20
+B0 <- 2
+B1 <- 1.5
+
+generate_data_reg <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 + B1 * x,
+    err = rnorm(n, sd = sigma),
+    y = y_hat + err,
+    error = lab
+  )
+}
+
+# plots generated with seed = 110
+data_gen_1_5 <- generate_data_reg(n, B0, B1, 1.1, "med", 110) |>
+  mutate(y_bar = mean(y))
+
+```
+
+
+
+```{r}
+fit <- lm(y ~ x, data = data_gen_1_5)
+
+# basic scatter
+p1 <- data_gen_1_5 |>
+  mutate(y_hat_lm = coef(fit)[1] + coef(fit)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  geom_smooth(method = "lm", se = FALSE, col = "#eb8240") +
+  styling()
+
+p1
+```
+
+
+## Linearity
+
+Contrast: Generate data from powerlaw
+
+```{r}
+generate_data_reg_power <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 - (x - 4)^B1,
+    y = y_hat + rnorm(n, sd = sigma),
+    error = lab
+  )
+}
+
+data_gen_bad <- generate_data_reg_power(n, 10, 2, 1.1, "med", 110)
+
+fit_bad <- lm(y ~ x, data = data_gen_bad)
+
+p2 <-
+  data_gen_bad |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  # geom_point(data = data_gen_bad, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  styling()
+
+
+p2_resid <-
+  p2 +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed") +
+  geom_line(aes(y = y_hat), col = "#eb8240", linetype = "dashed")
+
+p2_resid
+```
+
+```{r}
+check_fit_good <- check_model(fit, check = "linearity", size_title = 0, theme = "ggplot2::theme_minimal")
+
+check_fit_bad <- check_model(fit_bad, check = "linearity", size_title = 0, theme = "ggplot2::theme_minimal")
+
+p1_resid <- p1 +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed")
+
+ggsave("output/scatter_lm.png", p1, height = 2, width = 3)
+
+ggsave("output/scatter_lm_non_linear.png", p2, height = 2, width = 3)
+
+ggsave("output/scatter_lm_non_linear_resid.png", p2_resid, height = 2, width = 3)
+
+ggsave("output/scatter_lm_resid.png", p1_resid, height = 2, width = 3)
+
+
+png("output/check_model_linearity_good.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_good
+dev.off()
+
+png("output/check_model_linearity_bad.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_bad
+dev.off()
+
+```
+
+
+## Qq - non-normal distn
+
+Contrast: Generate data with non-normal residuals
+
+```{r}
+generate_data_reg_exp <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 + B1 * x,
+    err = 10^rnorm(n, sd = sigma),
+    y = y_hat + err-mean(err),
+    error = lab
+  )
+}
+
+data_gen_bad <- generate_data_reg_exp(n, B0, B1, 0.5, "med", 110)
+
+data_gen_bad |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red")
+
+fit_bad <- lm(y ~ x, data = data_gen_bad)
+
+p3 <-
+  data_gen_bad |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  # geom_point(data = data_gen_bad, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  geom_line(aes(y = y_hat), col = "#eb8240", linetype = "dashed") +
+  styling()
+
+
+p3_resid <-
+  p3 +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed")
+
+p3_resid
+```
+
+Show normal distn residuals
+
+```{r}
+p_norm <-
+  ggplot(data.frame(x = c(-3, 3)), aes(x = x)) +
+  geom_histogram(data = data_gen_1_5, aes(x = err, y = ..density..), bins = 7, fill = "purple", color = "black", alpha = 0.5) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1.1), color = "black") +
+  styling()
+
+p_norm
+
+
+ggsave("output/resid_norm.png", p_norm, height = 2, width = 3)
+```
+
+```{r}
+check_fit_good <- check_model(fit, check = "qq", size_title = 0, theme = "ggplot2::theme_minimal")
+
+check_fit_bad <- check_model(fit_bad, check = "qq", size_title = 0, theme = "ggplot2::theme_minimal")
+
+ggsave("output/scatter_lm_qq.png", p3, height = 2, width = 3)
+
+
+ggsave("output/scatter_lm_qq_bad_resid.png", p3_resid, height = 2, width = 3)
+
+
+png("output/check_model_qq_good.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_good
+dev.off()
+
+png("output/check_model_qq_bad.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_bad
+dev.off()
+
+
+
+
+
+```
+
+
+## Constant variance
+
+Contrast: Generate data with variance increasing with x
+
+```{r}
+generate_data_reg_heteroscedastic <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 + B1 * x,
+    y = y_hat + rnorm(n, sd = sigma * (x / 2)^2),
+    error = lab
+  )
+}
+
+data_gen_bad <- generate_data_reg_heteroscedastic(n, B0, B1, 0.5, "med", 110)
+
+data_gen_bad |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red")
+
+fit_bad <- lm(y ~ x, data = data_gen_bad)
+
+p3 <-
+  data_gen_bad |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  # geom_point(data = data_gen_bad, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  geom_line(aes(y = y_hat), col = "#eb8240", linetype = "dashed") +
+  styling()
+
+
+p3_resid <-
+  p3 +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed")
+
+p3_resid
+```
+
+```{r}
+check_fit_good <- check_model(fit, check = "homogeneity", size_title = 0, theme = "ggplot2::theme_minimal")
+
+check_fit_bad <- check_model(fit_bad, check = "homogeneity", size_title = 0, theme = "ggplot2::theme_minimal")
+
+ggsave("output/scatter_lm_homogeneity.png", p3, height = 2, width = 3)
+
+ggsave("output/scatter_lm_homogeneity_resid.png", p3_resid, height = 2, width = 3)
+
+png("output/check_model_homogeneity_good.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_good
+dev.off()
+
+png("output/check_model_homogeneity_bad.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_bad
+dev.off()
+
+```
+
+## Outliers
+
+Contrast: Generate data with large outliers
+
+```{r}
+generate_data_reg_outlier <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_hat = B0 + B1 * x,
+    err = rnorm(n, sd = sigma) + c(rep(0, n-1), 10),
+    y = y_hat + err,
+    error = lab
+  )
+}
+
+data_gen_bad <- generate_data_reg_outlier(n, B0, B1, 0.5, "med", 110)
+
+data_gen_bad |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red")
+
+fit_bad <- lm(y ~ x, data = data_gen_bad)
+
+p3 <-
+  data_gen_bad |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  # geom_point(data = data_gen_bad, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  geom_line(aes(y = y_hat), col = "#eb8240", linetype = "dashed") +
+  styling()
+
+p3_resid <-
+  p3 +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed")
+
+p3_resid
+```
+
+Show normal distn residuals
+
+
+```{r}
+check_fit_good <- check_model(fit, check = "outliers", size_title = 0, theme = "ggplot2::theme_minimal")
+
+check_fit_bad <- check_model(fit_bad, check = "outliers", size_title = 0, theme = "ggplot2::theme_minimal")
+
+
+ggsave("output/scatter_lm_outliers_bad_resid.png", p3_resid, height = 2, width = 3)
+
+
+png("output/check_model_outliers_good.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_good
+dev.off()
+
+png("output/check_model_outliers_bad.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_bad
+dev.off()
+
+
+
+
+
+```
+
+## Structure in sample
+
+
+Contrast: Generate data with dependence - X sampled with pseudo-replication
+
+```{r}
+generate_data_reg_dependence1 <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = rep(c(2, 2, 2, 3, 3, 3, 4), n)[1:n],
+    y_hat = B0 + B1 * x,
+    err = rnorm(n, sd = sigma),
+    y = y_hat + err,
+    error = lab
+  )
+}
+
+data_gen_bad <- generate_data_reg_dependence1(n, B0, B1, 0.5, "med", 110)
+
+data_gen_bad |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red")
+
+fit_bad <- lm(y ~ x, data = data_gen_bad)
+
+p3 <-
+  data_gen_bad |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y, col = as.character(x))) +
+  geom_point(size = 2) +
+  # geom_point(data = data_gen_bad, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  geom_line(aes(y = y_hat), col = "#eb8240", linetype = "dashed") +
+  styling() +
+  theme(legend.position = "none")
+
+ggsave("output/scatter_lm_dependence_bad1.png", p3, height = 2, width = 3)
+
+```
+
+
+Contrast: Generate data with dependence - range of X sampled at few sites
+
+```{r}
+generate_data_reg_dependence2 <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    B_j = B0 + rep(c(-2, 0.2, 2), n)[1:n],
+    y_hat = B_j + B1 * x,
+    err = rnorm(n, sd = sigma),
+    y = y_hat + err,
+    error = lab
+  )
+}
+
+data_gen_bad <- generate_data_reg_dependence2(n, B0, B1, 0.5, "med", 110)
+
+data_gen_bad |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red")
+
+fit_bad <- lm(y ~ x, data = data_gen_bad)
+
+p3 <-
+  data_gen_bad |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y, col = as.character(B_j))) +
+  geom_point(size = 2) +
+  # geom_point(data = data_gen_bad, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  geom_line(aes(y = y_hat), linetype = "dashed") +
+  styling() +
+  theme(legend.position = "none")
+  
+p3
+
+ggsave("output/scatter_lm_dependence_bad2.png", p3, height = 2, width = 3)
+
+
+
+```
+## Binomial data
+
+Contrast: Generate binomial data from surivival function
+
+```{r}
+generate_data_reg_binomial <- function(n, B0, B1, sigma, lab, seed) {
+  set.seed(seed)
+  tibble(
+    x = runif(n, 0, 4),
+    y_eta = B0 + B1 * (x - 3),
+    y_eta_err = y_eta + rnorm(n, sd = sigma),
+    # Convert to probability using logistic function
+    p = 1 / (1 + exp(-y_eta_err)),
+    # Generate binary response from Binomial distribution
+    y = rbinom(n, size = 1, prob = p),
+    error = lab
+  )
+}
+
+data_gen_bin <- generate_data_reg_binomial(n, 0, 2, 1.1, "med", 110)
+
+data_gen_bin |>
+  ggplot(aes(x = x, y = p)) +
+  geom_point(size = 2, col = "red")
+
+fit_bad <- lm(y ~ x, data = data_gen_bin)
+
+p3 <-
+  data_gen_bin |>
+  mutate(y_hat_lm = coef(fit_bad)[1] + coef(fit_bad)[2] * x) |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point(size = 2, col = "red") +
+  # geom_point(data = data_gen_bad, size = 2, col = "orange")  +
+  geom_line(aes(y = y_hat_lm), col = "#eb8240") +
+  styling()
+
+
+p3_resid <-
+  p3 +
+  geom_segment(aes(x = x, y = y, xend = x, yend = y_hat_lm), col = "purple", linetype = "dashed")
+
+p3_resid
+```
+
+```{r}
+check_fit_good <- check_model(fit, check = "qq", size_title = 0, theme = "ggplot2::theme_minimal")
+
+check_fit_bad <- check_model(fit_bad, check = "qq", size_title = 0, theme = "ggplot2::theme_minimal")
+
+ggsave("output/scatter_lm_non_normal.png", p3, height = 2, width = 3)
+
+ggsave("output/scatter_lm_non_qq_resid.png", p3_resid, height = 2, width = 3)
+
+
+png("output/check_model_qq_good.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_good
+dev.off()
+
+png("output/check_model_qq_bad.png", height = 2.5, width = 6, units = "in", res = 300)
+check_fit_bad
+dev.off()
+
+```
+
+# Check assumptions - two methods
+
+```{r}
+fit <- lm(bill_length_mm ~ body_mass_g,
+  data =
+    penguins
+)
+```
+
+Base R
+```{r}
+par(mfrow = c(2, 2))
+
+for(i in 1:4)
+plot(fit, i)
+```
+
+Easystats
+```{r}
+png("output/check_model.png", height = 12, width = 10, units = "in", res = 120)
+check_model(fit)
+dev.off()
+```
+
+
+----------------
+In the co`urse so far, we've introduced
+
+- estimating the mean and confidence intervals around the mean for a population
+- How we can use linear models to investigate whether the mean of a variable is varying with some predictor x, be it a continuous or categorical variable.
+- How to run linear models, including
+  - how to run model and access the results
+  - what various parts of the output mean
+  - how to interpret the results
+
+One of the most important things we can report on is strength of effect
+
+- Regression: slope, R2
+- ANOVA: F
+
+Confidence intervals tell us how uncertain we are
+
+Our inferences 
+
+Warton: "There are assumptions when making inferences—you need to know what they are and to what extent violations of them are important (to the validity and efficiency of your inferences). Independence, mean, and variance assumptions tend to be important for validity, distributional assumptions not so much, but skew and outliers can reduce eﬃciency.
+
+Bias
+Efficiency -- an efficient estimator provides more precise estimates of the parameter.
+
+sampling from the population of interest.
+
+independence assumption, an important assumption and one that is quite easily violated -- ortant assumption and one that is quite easily vi-
+olated. This is not something that is easy to check from the data; it is more about
+checking the study design
+
+
+ If
+the variance model is wrong, your standard errors will likely be wrong, and any
+subsequent inferences that are made from the statistic will not be valid (unless
+adjusted for, e.g. using resampling, as in Chap. 9). Violations of your variance model
+tend also to make your procedure less eﬃcient, so your estimates of the mean aren’t
+as good as they could have been
+
+
+So if you know your distributional assumptions
+are quite wrong (especially in terms of skewness and long-tailedness), you should
+try to do something about it, so that your inferences (tests, CIs) are more likely to
+pick up any signal in your data. One thing you could do is transform your data, as in
+the following section; another option is to use a diﬀerent analysis technique designed
+for data with your properties. 
+
+Key Point
+You don’t need to be too fussy when checking distributional assumptions on your model fit. Usually, we can use a model fitted to our data to construct a set of residuals that are supposed to be normally distributed if the model is correct. How carefully you check these residuals for normality depends on
+your sample size:
+
+- n <10 Be a bit fussy about the normality of residuals. They should look symmetric and not be long-tailed (i.e. on a normal quantile plot, points aren’t far above the line for large values and aren’t far below the line for small values).
+- 10 < n < 30 or big outliers/long-tailedness.
+- n >30 Don’t worry too much; just check you don’t have strong skew. You are pretty safe unless there is really strong skew or some quite large outliers.
+
+Why transform data? Usually, to change its shape, in particular, to get rid of strong skew and outliers.
+
+Fig 1.4
+
+
+

@@ -1,11 +1,11 @@
 ---
 title: "Week 1 First Practical"
-output: 
+output:
   moodlequiz::moodlequiz:
     replicates: 1
 moodlequiz:
   category: "Week 1-1 stalagmite and beaches"
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -25,13 +25,13 @@ library(janitor)
 
 syd_beach_data <- read_csv(here("R/Wk1/data/sydneybeaches.csv")) |> clean_names()
 
-# Used in final question for readable code 
+# Used in final question for readable code
 syd_beaches <- c("Clovelly Beach", "Coogee Beach", "Gordons Bay East", "Little Bay Beach","Malabar Beach", "Maroubra Beach","South Maroubra Beach","South Maroubra Rockpool", "Bondi Beach","Bronte Beach", "Tamarama Beach")
 ```
 
 <h1>Take your skills for a spin!</h1>
 
-> Note: The quiz questions on Moodle are the same as the ones in this Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
+> Note: The quiz questions on Moodle are the same as the ones in the Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
 
 <h2>Set up R packages</h2>
 
@@ -46,7 +46,7 @@ library(ggplot2)
 
 <h2>Stalagmite data</h2>
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width="100%"}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width=100%}
 
 <br>
 
@@ -92,12 +92,12 @@ Using the functions you've learned so far in this prac, try answer the following
 # Sydney Beaches
 
 <h2>Sydney Beaches</h2>
-  
-![Image credit: Amazing Aerial](coogee-beach.jpeg){width="100%"}
-  
+
+![Image credit: Amazing Aerial](coogee-beach.jpeg){width=100%}
+
 <br>
 
-Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of enviromental scientists from the School of Biological, Earth & Environmental Sciences. The dataset contains water quality measurements for Sydney beaches, It includes records of enterococci levels (cfu per 100ml) across a number of year, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences collected a dataset containing water quality measurements for Sydney beaches. It includes records of enterococci levels (cfu per 100ml) across a number of years, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
 
 > We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
 
@@ -107,13 +107,13 @@ First, read in the data.
 
 **Check the structure to make sure the variable types were assigned correctly.**
 
-## Which of these variables were assigned incorrectly? 
+## Which of these variables were assigned incorrectly?
 
 **Which of these variables were assigned incorrectly?** `r cloze("enterococci_cfu_per_100ml", colnames(syd_beach_data))`
 
 **Change `Enterococci_cfu_per_100ml` to an integer variable.**
 
-## Primer to plot 
+## Primer to plot
 
 Use this newly formatted data to visualise the amount of bacteria found at each `Site.`
 
@@ -121,7 +121,7 @@ To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` 
 
 -   Exclude a potential outlier or not ;) - try both!
 
--   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(nterococci_cfu_per_100ml + 1`) - try both!
+-   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(Enterococci_cfu_per_100ml + 1`) - try both!
 
 -   Try `geom_boxplot()` and `geom_violin()` with `geom_point()`
 
@@ -129,9 +129,9 @@ To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` 
 
 **Why did we need to transform the data?**
 
-## What does the shape of the violin plot tells us about the data? {type=essay}
+## What does the shape of the violin plot tell us about the data? {type=essay}
 
-**What does the shape of the violin plot tells us about the data?**
+**What does the shape of the violin plot tell us about the data?**
 
 ## ...and finally, where would you recommend Sydney-siders to go swimming?
 

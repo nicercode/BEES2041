@@ -1,0 +1,20 @@
+---
+title: "Week 3-1 linear models workbook"
+output: html_output
+editor_options:
+  chunk_output_type: console
+---
+
+
+Enter your worked code below. Add new chunks as needed.
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+

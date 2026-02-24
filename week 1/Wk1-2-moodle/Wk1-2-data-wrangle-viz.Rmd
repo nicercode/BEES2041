@@ -15,6 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
+reditor_count <- 1
+
+class_id <- function() {
+  reditor_count <<- reditor_count + 1
+  sprintf("r-editor-%d", reditor_count)
+}
+
+
 # Set up for multichoice question
 possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatterplot", "violin")
 ```
@@ -23,7 +31,9 @@ possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatter
 
 <h3>Data wrangling + visualisation</h3>
 
-Wrangling your data into the right format is a critical step to data visualisation and analysis. It is a scientist's bread and butter. Today, we will be working primarily with the packages `dplyr` and `ggplot2` and to apply the skills you've learned so far to make some publication-ready plots - let's get started!
+Wrangling your data into the right format is a critical step to data visualisation and analysis. It is a scientist's bread and butter. Great visualisations of data help us tell the story of our results.
+
+Today, we will be working primarily with the packages `dplyr` and `ggplot2` . You'll continue to build on skills from the first practical, to make some publication-ready plots  - let's get started!
 
 ![Artwork by @allison_horst](nice-R.png){width=70%}
 <br>
@@ -32,29 +42,55 @@ Wrangling your data into the right format is a critical step to data visualisati
 
 **Materials:**
 
-Everything you need for this prac is on Moodle
+Everything you need for this practical is on Moodle
 
-1. Download the `Wk1-2-materials` zip file from Moodle, from the course page
-2. Extract the zip file into your `BEES2041/` folder
-3. Unzip the file by: 
-  - MacOS: Double clicking the file `Wk-1-intro`
-  - Windows: Right click on the zip file and click "Extract All" 
-5. **Click on the `Wk-1-2-data-manip.Rproj`** to open the RStudio project and you're in!!!
+1.  Download the `Wk1-2-materials.zip` zip file from Moodle, from the course page
+2.  Extract the zip file into your `BEES2041/` folder
+3.  Unzip the file by:
 
-We will be working with real-world datasets collected by researched in the School of Biological, Earth & Environmental Sciences. These are in the `data/`.
+-   MacOS: Double clicking the zip file
+-   Windows: Right click on the zip file and click "Extract All"
+
+4.  Go into the folder `Wk1-2-materials` created by extracting the zip.
+5.  **Click on the `Wk1-2-data-manip.Rproj`** to open the RStudio project and you're in!!!
+
+We will be working with real-world datasets collected by researchers in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
 
 Each dataset is associated with its own Quarto document (`Wk1-2-plant-height.qmd`, `Wk1-2-stalagmites.qmd`). Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
 
-Before we dive in, let's consider what data visualisation means.
-
-<h3>Thinking about data visualisations</h3>
-
-A picture is worth a thousands words. The choice of your visualisation can have a huge impact on the key message you want to give to the viewer - consider: **What is it that I want to convey?**
-
-> Remember the `palmerpengiuns`? They will also be joining us in this prac.
 
 
-<div id="r-editor-01"><pre>
+## Thinking about data visualisation
+
+<h3>Thinking about data visualisations  (with penguins)</h3>
+
+Before we dive into that data, let's think about the kinds of plots we can make 
+and what data visualisation means.
+
+| "A picture is worth a thousand words."
+
+The choice of your visualisation can have a huge impact on the key message you want to give to the viewer. Consider: **What is it that I want to convey?** As the storyteller, you then need to select appropriate plots to convey your message. 
+<br>
+
+
+<h4>Packages</h4>
+
+> Let's load required packages for this section.
+
+
+<div id=`r class_id()`><pre>
+# install.packges(c("ggplot2", "palmerpenguins"))
+
+library(ggplot2)
+library(palmerpenguins)
+</pre></div>
+
+<h4>The data</h4>
+
+> Remember the `palmerpenguins`? They will also be joining us in this prac.
+
+
+<div id=`r class_id()`><pre>
 # install.packges(c("ggplot2", "palmerpenguins"))
 
 library(ggplot2)
@@ -63,16 +99,16 @@ library(palmerpenguins)
 penguins
 </pre></div>
 
-**Activity:** 
+<h4>Activity</h4>
 
-For each question below, work with your fellow classmates to determine a suitable data viz. Think about:
-  
+For each question below, work with your fellow classmates to determine a suitable data visualisation. Think about:
+
 - what are the key variables of interest 
 - what are type of variable(s) are you working with e.g numeric or grouping/categorical?
 - how to best represent that data using graphics 
 
 Get creative, feel free to put the white boards/pen and paper to good use!
-  
+
 > You can also use this [data-to-viz website](https://www.data-to-viz.com/) to explore and get inspired
 
 **Question: What type of plot would be suitable to answer the following questions (Select all that apply):**
@@ -85,11 +121,15 @@ Get creative, feel free to put the white boards/pen and paper to good use!
 
 > Now, let's properly introduce `ggplot2` to you.
 
-## ggplot2 
+<br> <br>
 
-`ggplot2` is package for creating graphics, based on [The Grammar of Graphics](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448/ref=as_li_ss_tl). You provide the data, speak to `ggplot2` about how to map variables to **aesthetics**, what **geometries** to you, and it takes care of the details.
+## ggplot2
+
+`ggplot2` is package for creating graphics, based on [The Grammar of Graphics](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448/ref=as_li_ss_tl). You provide the data, speak to `ggplot2` about how to map variables to **aesthetics**, what **geometries** you want, and any styling, it takes care of the details.
 
 ![Have you met `ggplot2`?](ggplot2-hex.png)
+
+<br><br>
 
 <h3>The recipe for a `ggplot()`</h3>
 
@@ -102,11 +142,13 @@ There are four core components to a `ggplot` :
 
 ![Image credit: Fonti Kar](ggplot2-basic-recipe.png){10%}
 
-<br> 
+<br>
 
-**Notice** instead of pipes `|>`, we use `+` to add layers of components to a plot. 
+**Notice** instead of pipes `|>`, ggplot uses `+` to add layers of components to a plot.
 
-Throughout the course, you'll learn to tweak these four components to create beautiful data vizzes. 
+Throughout the course, you'll learn to tweak these four components to create beautiful data vizzes.
+
+<br>
 
 > Let's try tackle these questions and plots together
 
@@ -114,27 +156,34 @@ Throughout the course, you'll learn to tweak these four components to create bea
 
 <h3>1. What is the distribution of bill depth of each penguin species?</h3>
 
-From the question, we know we need to work with `species` and `bill_depth_mm`, these will be our **aesthetics**. 
+From the question, we know we need to work with `species` and `bill_depth_mm`, these will be our **aesthetics**.
 
 - `species` is the grouping variable we want to detect differences, making it an "independent" or **"predictor"** variable. 
 - `bill_depth_mm` is the entity we want to use compare, making it a "dependent" or **"response"** variable. 
 
-> Let's make some histograms to view the distributions of `bill_depth_mm` of each species (boxplots/violins are valid choices too!). 
+> Let's make some histograms to view the distributions of `bill_depth_mm` of each species (boxplots/violins are valid choices too!).
 
-Histograms depict the range of numeric values along the `x` axis and the height of the bars represent the `count` of each value. Here's the code to create a histogram for each species: 
+We might need to reload the library here, only because we're doing this in the browser
 
-<div id="r-editor-01"><pre>
-ggplot(data = penguins, # `penguins` data 
-       aes(x = bill_depth_mm, # what I want to depict on the x axis 
-           group = species,  # group level comparisons using `species`
-           colour = species, # colour my histograms by `species`
-           fill = species)) + #  fill the bars of my histogram by `species`
-         geom_histogram() +  # create histogram
-         theme_minimal() # minimal styling
+<div id=`r class_id()`><pre>
+library(ggplot2)
+library(palmerpenguins)
+</pre></div>
+
+Histograms depict the range of numeric values along the `x` axis and the height of the bars represent the `count` of each value. Here's the code to create a histogram for each species:
+
+<div id=`r class_id()`><pre>
+ggplot(data = penguins,      # pass `penguins` data to ggplot
+      aes(x = bill_depth_mm, # what I want to depict on the x axis 
+          group = species,   # group level comparisons using `species`
+          colour = species,  # colour my histograms by `species`
+          fill = species)) + #  fill the bars of my histogram by `species`
+geom_histogram() +          # create histogram
+theme_minimal()             # minimal styling
 </pre></div>
 
 Let's talk through this code:
-  
+
 - `ggplot(data = penguins,`, specify what data frame you are working with 
 - `aes()` declaring what you want to show in plot
 - `x = bill_depth_mm`, specify what you want to show on the x axis
@@ -142,7 +191,21 @@ Let's talk through this code:
 - `colour = species`, set the colour to change by `species` e.g outline of bars
 - `fill = species`, set the fill to change by `species` e.g inside of bars
 - `geom_histogram()`, make a histogram
-- `theme_minimal()`, apply minimal styling
+- `theme_minimal()`, apply minimal styling.
+
+Note, we can also use the pipe to feed data into the `ggplot` function. The example below produces the same plot, but differs on the first two lines to the example above. We'll follow that approach below. 
+
+<div id=`r class_id()`><pre>
+penguins |>                   # pass `penguins` data to ggplot            
+  ggplot(     
+       aes(x = bill_depth_mm, # what I want to depict on the x axis 
+           group = species,   # group level comparisons using `species`
+           colour = species,  # colour my histograms by `species`
+           fill = species)) + #  fill the bars of my histogram by `species`
+  geom_histogram() +          # create histogram
+  theme_minimal()             # minimal styling
+</pre></div>
+
 
 ## How does bill length vary between islands
 
@@ -150,9 +213,9 @@ Let's talk through this code:
 
 This question is similar to Q1. We are working with `bill_length_mm` a numeric variable and `islands` a grouping/categorical variable
 
-> Let's make some boxplots to view the distributions of `bill_length_mm` of each island (histograms/violins are valid choices too!). 
+> Let's make some boxplots to view the distributions of `bill_length_mm` of each island (histograms/violins are valid choices too!).
 
-Boxplots depict the range of numeric values along the `y` axis and the groups you want to compare on the `x` axis represent the `count` of each value. 
+Boxplots depict the range of numeric values along the `y` axis and the groups you want to compare on the `x` axis represent the `count` of each value.
 
 - the **thick bold line** represents the **median** (50th percentile) 
 - the **box** represents the **interquartile range** and shows where the middle 50% of the data lies.
@@ -160,31 +223,36 @@ Boxplots depict the range of numeric values along the `y` axis and the groups yo
   - The top of the box is the third quartile (third quartile, 75th percentile). 
 - the **vertical lines** are the whiskers. 
   - the bottom line extends to the minimum, no further than first quartile - 1.5 x IQR 
-  - the top line extends to the maxium, no further than third quartile + 1.5 x IQR 
+  - the top line extends to the maximum, no further than third quartile + 1.5 x IQR 
 - outliers that exist beyond these bounds are marked as **dots**
 
-Here's the code to create a boxplot for each species: 
-  
-<div id="r-editor-01"><pre>
-penguins |> 
-  ggplot(data = , # `penguins` data 
-         aes(x = island, # what I want to depict on the x axis
-             y = bill_length_mm, # what I want to depict on the y axis 
-             group = island,  # group level comparisons using `island`  
-             colour = island)) + # colour my boxplots by `island`
-  geom_boxplot() +  # create boxplot
-  labs(x= "Bill length (mm) ", y = "Cbservation counts", title = "Distribution of bill length (mm) by island") +  # Add some nicer axes labels
-  theme_minimal() # minimal styling
+Here's the code to create a boxplot for each species:
+
+<div id=`r class_id()`><pre>
+penguins |>                    # pass `penguins` data to ggplot
+  ggplot(
+       aes(x = island,         # what I want to depict on the x axis
+           y = bill_length_mm, # what I want to depict on the y axis 
+           group = island,     # group level comparisons using `island`  
+           colour = island)) + # colour my boxplots by `island`
+  geom_boxplot() +             # create boxplot
+  labs(x= "Bill length (mm) ", # Add some nicer axes labels
+    y = "Cbservation counts", 
+    title = "Distribution of bill length (mm) by island") +  
+  theme_minimal()              # minimal styling
 </pre></div>
 
-**Notice** the code format didn't change very much from Q1. We've swapped out the all the variables and the `geom_`. We also removed the `fill` setting so we can see the thick bold line of each boxplot.
 
-We used the `labs()` function to create some nicer looking axes labels for the plot
+**Notice** the overall recipe didn't change very much from Q1, but we made some minor changes:
+
+- swapped out the all the variables and the `geom_`. 
+- removed the `fill` setting so we can see the thick bold line of each boxplot.
+- used the `labs()` function to create some nicer looking axes labels for the plot
 
 ## Which penguin species have the shortest flippers
 
 <h3>3. Which penguin species have the shortest flippers?</h3>
-Like Q1, we are interested in `species` comparisons in `flipper_length_mm`.
+    Like Q1, we are interested in `species` comparisons in `flipper_length_mm`.
 
 > Let's make some violin plots AND boxplots to view the distributions of `flipper_length_mm` of each species (histograms are a valid choice too!)
 
@@ -193,24 +261,24 @@ Violin plots combine aspects of density/histograms to show:
 - shape of the distribution (like a smoothed histogram)
 - density of the data (widest part is where most of the data is)
 
-<div id="r-editor-01"><pre>
-penguins |> 
-  ggplot(data = , # `penguins` data 
-         aes(x = species, # what I want to depict on the x axis
-             y = flipper_length_mm, # what I want to depict on the y axis 
-             group = species,  # group level comparisons using `species`  
-             colour = species)) + # colour violin by `species`
-  geom_violin(aes(fill = species), # create violin, fill the violins by `species`
-              alpha = 0.2, # set the transparency of fill
-              trim = FALSE) +  # don't crop violin
+<div id=`r class_id()`><pre>
+penguins |>                     # pass `penguins` data to ggplot
+  ggplot(
+         aes(x = species,       # what I want to depict on the x axis
+             y = flipper_length_mm,# what I want to depict on the y axis 
+             group = species,   # group level comparisons using `species`  
+             colour = species)) +  # colour violin by `species`
+  geom_violin(aes(fill = species),# create violin, fill the violins by `species`
+              alpha = 0.2,      # set the transparency of fill
+              trim = FALSE) +   # don't crop violin
 geom_boxplot(width = 0.1) + 
-  coord_flip() + # change axes orientation
-  theme_minimal() # minimal styling
+  coord_flip() +                # change axes orientation
+  theme_minimal()               # minimal styling
 </pre></div>
 
 Here, we are plotting **2 geometries** in one graphic. Think of `ggplots` like a cake, you can add components layer by layer e.g.  violins and then a boxplot. 
 
-Let's talk through the code a little: 
+Let's talk through the code a little:
 
 - **Notice** how we have also placed an `aes()` function within `geom_violin()`? This allows you to finely control the fill setting specifically to the violin plot. If you put `fill = species` in `ggplot(aes())`, the fill setting will roll out across layers of the graphic.
 
@@ -226,21 +294,21 @@ So far, we have been working with one numeric variable and one grouping/categori
 
 > Let's make a scatterplot + line plot to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species
 
-<div id="r-editor-01"><pre>
-penguins |> 
-  ggplot(data = , # `penguins` data 
-         aes(x = bill_depth_mm, # what I want to depict on the x axis
-             y = bill_length_mm, # what I want to depict on the y axis 
-             group = species,  # group level comparisons using `species`  
+<div id=`r class_id()`><pre>
+penguins |>                       # pass `penguins` data to ggplot
+  ggplot(
+         aes(x = bill_depth_mm,   # what I want to depict on the x axis
+             y = bill_length_mm,  # what I want to depict on the y axis 
+             group = species,     # group level comparisons using `species`  
              colour = species)) + # colour my points by `species`
-  geom_point() + # create scatterplot by `species`
-  geom_smooth(method = "lm", # draw line of best fit of linear model
-              se = FALSE) +  # don't display confidence interval
-  theme_minimal() # minimal styling
+  geom_point() +                  # create scatterplot by `species`
+  geom_smooth(method = "lm",      # draw line of best fit of linear model
+              se = FALSE) +       # don't display confidence interval
+  theme_minimal()                 # minimal styling
 </pre></div>
 
-Code explainer: 
-  
+Code explainer:
+
   - we specified our numeric variables of interest in  `aes(x = bill_depth_mm, y = bill_length_mm)`
 - we are still grouping and colouring by `species`
 - `geom_point()` adds points to the plot
@@ -256,19 +324,20 @@ This question expands on Q4. We want to recreate the scatter plot from above for
 
 > Let's make a scatterplot for each year to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species change over time
 
-<div id="r-editor-01"><pre>
-penguins |> 
-  ggplot(data = , # `penguins` data 
-         aes(x = bill_depth_mm, # what I want to depict on the x axis
-             y = bill_length_mm, # what I want to depict on the y axis 
-             group = species,  # group level comparisons using `species`  
+<div id=`r class_id()`><pre>
+penguins |>                    # pass `penguins` data to ggplot
+  ggplot(
+         aes(x = bill_depth_mm,   # what I want to depict on the x axis
+             y = bill_length_mm,  # what I want to depict on the y axis 
+             group = species,     # group level comparisons using `species`  
              colour = species)) + # colour my points by `species`
-  geom_point() + # create scatterplot by `species`
-  geom_smooth(method = "lm", # draw line of best fit of linear model
-              se = FALSE) +  # don't display confidence interval
-facet_wrap(~year) + # produce plot by year
-  theme_minimal() # minimal styling
+  geom_point() +                  # create scatterplot by `species`
+  geom_smooth(method = "lm",      # draw line of best fit of linear model
+              se = FALSE) +       # don't display confidence interval
+facet_wrap(~year) +               # produce plot by year
+  theme_minimal()                 # minimal styling
 </pre></div>
+
 
 ## Now, your turn!
 
@@ -283,16 +352,6 @@ Now that you are all geared up with `ggplot2` skills, let's have a go with worki
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
 
 ![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](ggplot2-cheatsheet.png)
-
-
-## Prac reflection {type=essay}
-
-<h3>Prac reflection</h3>
-
-**Which parts of the coding and tidyverse you've encountered so far did you find:**
-
-- most exciting?
-- most challenging?
 
 
 
