@@ -68,10 +68,13 @@ Using the functions you've learned so far in this prac (remember you can get hel
 
 **What is a more suitable variable type for `lam_age_bp_0_1950ad`?**
 
-**Write some code to change the variable type of `lam_age_bp_0_1950ad`?** (Try: `?as.integer` , you may need to install/load the package `dplyr`)
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`?** (Try: `mutate()` and `as.integer()`, you may need to install/load the package `dplyr` to use `mutate`)
+
+**Tip:** You can use `?as.integer` to bring up the help file (scroll down to the bottom for code examples).
 
 ```{r}
-
+stalagmite_data_nice_names_corrected_age <- stalagmite_data_nice_names |> 
+  mutate(XXX = as.integer(XXX))
 ```
 
 **Write some code to display a quick summary of this dataset** (Feel free to use additional packages! You may need to install and load them first)
