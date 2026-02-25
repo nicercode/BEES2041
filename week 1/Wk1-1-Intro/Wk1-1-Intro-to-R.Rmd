@@ -254,7 +254,7 @@ useful_info
 
 What happens when you don't provide a name to an element? `r cloze("The element is unnamed and R gives it a number", c("The element disappears", "R throws an error", "The element is unnamed and R gives it a number"))`
 
-## Visualising your data 1
+## Visualising your data
 
 <h3>Visualising your data</h3>
 
@@ -294,26 +294,746 @@ Let's talk through the code:
 
 Cars with more cylinders `r cloze("tend to", c("are always", "tend to"))` weigh `r cloze("more", c("more", "less"))` than cars with fewer cylinders.
 
+## 
+
+
+<h3>Data manipulations with Penguins!</h3>
+
+The purpose of this section is to get some hands-on experience with data manipulation with an R package **`dplyr`**. You will learn about what **pipes** are in R and some key **data manipulation verbs**!
+
+Recall from the previous page that an R package is a set of related functions and data that can be loaded into R to help you get a specific job done. 
+
+**Meet the penguins!**
+
+![The Palmer Archipelago penguins. Artwork by @allison_horst.](images\lter_penguins.png)
+
+> We will be working with the`palmerpenguins` data, which contains size measurements for three penguin species observed on three islands in the Palmer Archipelago, Antarctica.
+
+The `penguins` dataset is from the `palmerpenguins` the R package so we will also need to install and load that into R. 
+
+## Setting up
+
+<h3>Setting up</h3>
+
+Let's go ahead and install these two packages for the browser and two other supplementary packages called `janitor` and `skimr` which we will use a little later
+
+> Note if you refresh the browser or check any answers as you are doing the challenges, you will need to install and load `dplyr` and `palmerpenguins` again. 
+
+<div id="r-editor-110"><pre>
+install.packages(c("dplyr","palmerpenguins", "janitor", "skimr"))
+
+library(dplyr) 
+library(palmerpenguins) 
+library(janitor)
+library(skimr)
+</pre>
+</div>
+
+Let's take a look at the data!
+
+<div id="r-editor-111"><pre>
+penguins
+</pre>
+</div>
+
+> Notice anything different in how R is presenting the `penguins` data compared to `mtcars`?
+
+## But first, have you met the pipe?
+
+<h3>But first, have you met the pipe?</h3>
+
+Before diving into data wrangling, I want to introduce to you a very *special* operator, the pipe! **`|>`**. The pipe looks like a funnel on its side right? The pipe takes the code from the left side of it and passes it on to the code on the right side.  
+
+Let's talk through an example. I'd like to know how many unique `islands` there are in the `penguins` dataset. Typically, I would use: 
+
+- the `unique()` function which gives me the distinct values in a variable
+- the `length()` function which counts the number of elements in a vector
+
+The code would look like this: 
+
+<div id="r-editor-112"><pre>
+# Recall `$` allows you to select a variable from a data frame
+length(unique(penguins$island)) 
+</pre>
+</div>
+
+This is not very nice looking code, you have to read from inside out which is not very intuitive. There is where pipes come in handy. 
+
+<div id="r-editor-113"><pre>
+penguins$island |>  # Take the dataset
+  unique() |>  # Tell me the distinct values
+  length() # Tell me how long the vector is
+</pre>
+</div>
+
+Here you can read from top to bottom, left to right. You can see the order of steps! 
+
+> Importantly, the pipe pairs well with `dplyr` functions as it allows to do multiple data wrangling steps in one go which you will see more of below
+
+## Working with `dplyr`
+
+<h3>Working with `dplyr`</h3>
+
+> Learn more from [the dplyr guide](https://dplyr.tidyverse.org/articles/dplyr.html), its really comprehensive! 
+
+<h4>Extracting rows</h4>
+
+The `filter()` function allows you to take subsets of a data frame. You have to specify the **condition** for which rows to keep. 
+
+Take this example, the code below gives me data for only `penguins` from the `Dream` Island.
+
+<div id="r-editor-114"><pre>
+penguins |> 
+  filter(island == "Dream")
+</pre>
+</div>
+ 
+Let's walk through the code: 
+
+1. The`penguins` dataset is piped to the `filter()` function. 
+2. Within the `filter()` function is where we specify our condition. I've used the **equal-to operator** represented by `==` here to tell R, I only want rows from the variable `island` where it's value matches the word "Dream"
+
+We can create more specific conditions using **logical operators** `&`, `|`, `!` 
+
+Try these examples and see if you can understand the conditional statements
+
+> Give me the penguins **ONLY** from Dream island from the year 2008
+
+<div id="r-editor-115"><pre>
+penguins |> 
+  filter(island == "Dream" & year == 2008)
+
+# The above can also be written using commas instead
+penguins |> 
+  filter(island == "Dream", year == 2008)
+</pre>
+</div>
+
+> Give me all the penguins from Dream island *OR* from Torgersen island 
+
+<div id="r-editor-116"><pre>
+penguins |> 
+  filter(island == "Dream" | island == "Torgersen")
+</pre>
+</div>
+
+What if we want to filter on some numeric variable? This is where **relational operators** like `>` and `<` come in play. These are useful for selecting **ranges** in your data. 
+
+**Tip:** Pipe your filtered data into `summary()` to check if your code worked or not! 
+
+> Give me all the penguins where their bill size is **GREATER** than 16 AND **LESS** than 20
+
+<div id="r-editor-117"><pre>
+penguins |> 
+  filter(bill_depth_mm > 16 & bill_depth_mm < 20) 
+</pre>
+</div>
+
+> Give me all the penguins where their flipper length is **GREATER OR EQUAL TO** than 210 AND **LESS OR EQUAL TO** than 230
+
+<div id="r-editor-118"><pre>
+penguins |> 
+  filter(flipper_length_mm >= 210 & flipper_length_mm <= 230)
+</pre>
+</div>
+
+<h4>Keep or dropping columns</h4>
+
+Large datasets with many columns can be tricky to view in R so at times, it may be useful to discard columns that are not relevant for a particular task.
+
+The `select()` allows you to rapidly zoom in on the stack of data you are interested. 
+
+> Here, we are only keeping the columns `species`, `island`, `year` and `flipper_length_mm`
+
+<div id="r-editor-119"><pre>
+penguins |> 
+  select(species, island, year, flipper_length_mm)
+</pre>
+</div>
+
+You can use the colon operator `:` that is useful for selecting consecutive stacks of data.
+
+> Here we are keeping columns from `species` **through to** `bill_depth_mm`
+
+<div id="r-editor-120"><pre>
+penguins |> 
+  select(species:bill_depth_mm)
+</pre>
+</div>
+
+You can use other `dplyr` verbs such as `starts_with()`, `ends_with()`, `contains()` into make your selection more efficient and specific
+
+> Here, we are select columns that end with `_mm` 
+
+<div id="r-editor-121"><pre>
+penguins |> 
+  select(species, ends_with("_mm"))
+</pre>
+</div>
+
+Its also a handy way to rearrange the order of your columns. It is a matter of preference, data is nicer to navigate when we can see the grouping structure first like this: 
+
+<div id="r-editor-122"><pre>
+penguins |> 
+  select(species, island, sex, year, where(is.numeric))
+</pre>
+</div>
+
+<h4>Create and modify columns</h4>
+
+A common task with data analysis is making new variables. For example, a collaborator shared some temperature data from North America (ºF) and Europe (ºC) and you need a way to standardise these  so it can all go into the same analysis. This is where `mutate()` will be useful.
+
+> Here, we are taking the log to the base of 10 of `body_mass_g` so very heavy penguins and very light penguins can be viewed on a similar scale. 
+
+<div id="r-editor-123"><pre>
+penguins_log10mass <- penguins |> 
+  mutate(log_10_mass = log10(body_mass_g)) 
+
+penguins_log10mass
+</pre>
+</div>
+
+**Note** that we are **assigning** the updated data frame into an object `peguins_log10mass`, if you skip this step, your new variable won't be saved!
+
+<h4>Sorting by columns</h4>
+
+Sorting your data is a quick way to get a sense of data. The `dplyr` function for this is `arrange()`. 
+
+> Here, we are sorting the species and island, by default, `dplyr` sorts the dataset alphabetically
+
+<div id="r-editor-124"><pre>
+penguins |> 
+  arrange(species, island)
+</pre>
+</div>
+
+You can arrange your data by multiple variables too 
+
+> Here, we are sorting the species and island and body_mass_g by default, `dplyr` sorts the numeric variables in an increasing order
+
+<div id="r-editor-125"><pre>
+penguins |> 
+  arrange(species, island, body_mass_g)
+</pre>
+</div>
+
+You can use `desc()` if you want to sort a numeric variable in decreasing order too! 
+
+<div id="r-editor-126"><pre>
+penguins |> 
+  arrange(species, island, desc(body_mass_g))
+</pre>
+</div>
+
+<h3>Compute group summaries</h3>
+
+When working with data, we often want to know certain summaries about groups in our data. For example, we may need to report on the average tree canopy cover for each study sites or median house prices of different states. These are classic examples of the **split-apply-combine** paradigm. We want to split our data by group, apply a type of calculation on each of these subgroups and then bring these separate parts together again. 
+
+![Schematic showing splitting of data by group, applying some sort of operation, then combining the results together](images\split-apply-combine.png){width=80%}
 <br>
 
-## Visualising your data 2
+In `dplyr`, the `group_by()` and `summarise()` functions are powerful tools for us to obtain group-level insights. 
 
-**Question:** How does mileage `mpg` vary between different transmissions `am`? What would the `ggplot` code look like?
+Let's say I want to know how `body_mass_g` of penguins varied by `sex`, `year`, `island`. We can achieve this with 3 lines of code! We've set `mean(body_mass_g, na.rm = TRUE)` as some penguins didn't have body mass data. 
 
-```r
-# Specify the data, the x-variable and the y-variable
-ggplot(data = mtcars, aes(x = `r cloze("am", colnames(mtcars))`, y = `r cloze("mpg", colnames(mtcars))`, group = `r cloze("am", colnames(mtcars))`)) +
-  geom_boxplot() # Create boxplot
-```
+<div id="r-editor-127"><pre>
+penguins |> 
+  group_by(sex, year, island) |>  # tell dplyr what groups I am interested in
+  summarise(mean_body_mass = mean(body_mass_g, na.rm = TRUE)) # Calculate the average body mass and store that info in `mean_body_mass`
+</pre>
+</div
 
-**Try:** Change the code above and see for yourself!
+<h3>Using pipes with dplyr verbs</h3>
 
-<div id="r-editor-2577"><pre>
+> Notice how I used the pipe twice in the code above? This is the power of the pipe + `dplyr` combo as it allows you   to chain multiple steps together to get a data wrangling job done!
+
+Consider this example, let's say we want data for:
+
+- female Gentoo penguins 
+- that are larger than body masses greater or equal to 3500g
+- mass-corrected flipper and bill length (dividing flipper and bill length by mass)
+- the final dataset should only contain the mass-corrected flipper and bill length and year
+
+But with the pipe, you can take the output of one step and pipe it in as input to the next step. E.g. the code above becomes
+
+<div id="r-editor-128"><pre>
+penguins |> 
+  filter(sex == "female",  # Filter for the target pengins we want
+         species == "Gentoo",
+         body_mass_g > 3500) |> 
+  mutate(mass_corrected_flipper_length_mm = flipper_length_mm / body_mass_g, # Create some new variables for analysis
+         mass_corrected_bill_length_mm = bill_length_mm / body_mass_g) |> 
+  select(starts_with("mass_corrected"), year) # Keep only the variables we need for our statistical model
+</pre>
+</div>
+
+Without the pipe, you would need to save the output for each step which creates intermediary objects in your environment that you won't need and the code is a bit harder to read as you need to track what object is going into each step
+
+<div id="r-editor-129"><pre>
+# Filter for the target pengins we want
+target_sample <- filter(penguins, 
+                        sex == "female",
+                        species == "Gentoo",
+                        body_mass_g > 3500)
 
 
+# Create some new variables for analysis
+target_sample_mass_corrected <- mutate(target_sample, 
+                                       mass_corrected_flipper_length_mm = flipper_length_mm / body_mass_g, 
+                                       mass_corrected_bill_length_mm = bill_length_mm / body_mass_g)
+
+# Keep only the variables we need for our statistical model
+target_sample_mass_corrected_analysis_ready <- 
+  select(target_sample_mass_corrected, starts_with("mass_corrected"), year)
+</pre>
+</div>
+
+## Data hygiene
+
+<h2>Data hygiene</h2>
+
+<h3>Variable names</h3>
+
+It's often easier to collect data in a spreadsheet that is human-readable e.g. column names that look like this `Date`, `Species`, `Island` `Body Mass (g)`, however these are actually very difficult for machines, like R, to read. 
+
+Machine readable names have some of the following attributes: 
+
+- all in lower case, this makes coding easier!
+- do not contain spaces or special characters
+- words are separated by underscores `_` or hyphens `-`
+
+The `janitor` R package has a really useful function `clean_names()` that can translate human-readable column names to machine-friendly ones. Let's take it for spin on the `penguins_raw` dataset which is the original, pre-processed version of the `penguins`. 
+
+> Notice I am using the `names()` functions to grab all the column names of the `penguins_raw` dataset
+
+<div id="r-editor-130"><pre>
+names(penguins_raw)
+
+clean_names(penguins_raw) # HUZZAH! 
+</pre>
+</div>
+
+<h3>Getting familiar with your data</h3>
+
+Before launching into any data cleaning or analysis, it's good practice to get familiar with your data. Looking at the simple plots and tabulating variables if interest are some of the ways to check your data for any data entry errors or issues. 
+
+<h4>Categorical variables</h4>
+
+For categorical variables, you can take a look at the table of counts of each value using `group_by` and `count()`
+
+<div id="r-editor-131"><pre>
+penguins |> 
+  group_by(species) |> 
+  count()
+</pre>
+</div>
+
+<h4>Numeric variables</h4>
+
+For numeric variables, creating a quick histogram allows you to get a sense of the distribution of values. You can use `ggplot2` but here we are using the basic `hist()` function as its for quick viewing purposes. 
+ 
+<div id="r-editor-132"><pre>
+penguins$flipper_length_mm |> hist()
+
+# `ggplot2` alternative (need to install ggplot2 for the browser first though)
+#
+# library(ggplot2)
+# 
+# penguins |> 
+#   ggplot(aes(x = flipper_length_mm)) + 
+#   geom_histogram()
+</pre>
+</div>
+
+<h3>Summaries of whole dataset</h3>
+
+Finally, you can use the `summary()` function to get a quick overview of the range values and any missing data for every variable in your dataset all at once
+
+<div id="r-editor-133"><pre>
+summary(penguins)
+</pre>
+</div>
+
+The `skim()` function from the package  `skimr` creates mini data summary report along with histograms for you to get a sense of your data.
+
+<div id="r-editor-134"><pre>
+skim(penguins)
 </pre>
 </div>
 
 
-**Question:**
-Manual cars `r cloze("tend to", c("are always", "tend to"))` have `r cloze("higher", c("higher", "lower"))` mileage. 
+
+
+## Knowledge Check
+
+### Take a look at the data:
+
+**Question:** What differences do you notice in how `mtcars` and `penguins` are presented in R?
+
+Write a few sentences describing the differences in object structure and the functions you used to determine these differences.
+
+**Answer:** `mtcars` is a `dataframe` and `penguins` is a tibble (`tbl_df/tbl/data.frame`). `str(mtcars)` and `str(penguins)` tell us the objects
+
+**Try:** Use the function `filter()` to extract all penguins that have body masses greater than 4000g
+
+```{r}
+penguins |>
+  filter(body_mass_g > 4000)
+```
+
+**Question:** How many penguins were heavier than 4kg? **172**
+
+**Question:** What would the code look like if you wanted to sort the data by species, increasing bill_length_mm and decreasing body mass?
+
+```{r}
+penguins |>
+  arrange(species, bill_length_mm, desc(body_mass_g))
+```
+
+**Question:** How many penguins were recorded on Dream Island? **124**
+
+**Try:** Create a dataset where we only have the columns: species, island and integer variables
+
+```{r}
+penguins |>
+  select(species, island, where(is.integer))
+```
+
+**Try:** Can you calculate the median bill_depth_mm for all species of penguins by sex? Watch out for missing values!
+
+```{r}
+penguins |>
+  group_by(species, sex) |>
+  summarise(med_bill_depth = median(bill_depth_mm, na.rm = TRUE))
+```
+
+**Try**: Using a series of pipes `|>`, create a dataset that:
+
+- only contains female penguins in 2007
+- where their body masses are > 4000
+- create a new ratio variable between bill depth and bill length
+- retain only species, island and your ratio variable
+
+```{r}
+penguins |>
+  filter(sex == "female", year == 2007, body_mass_g > 4000) |>
+  mutate(bill_depth_length_ratio = bill_depth_mm / bill_length_mm) |>
+  select(species, island, ends_with("ratio"))
+```
+
+## Getting started with R and RStudio
+
+![](images\r-learners.png){width=70%}
+
+## Installing or updating R and RStudio
+
+If you haven't already, please install the latest versions of R and RStudio. If you've previously had R or RStudio installed, we request you update these to the latest version. These are available from:
+
+* Install R (version 4.4 or newer) from https://cran.csiro.au
+* Install Rstudio (latest) from https://www.rstudio.com/products/rstudio/download/.
+
+## Checking R version
+
+Make sure you have R version 4.4. or newer installed. The version of R should be displayed in the console when you open Rstudio. Alternatively you can type the following command into the console:
+
+```{r, eval=FALSE}
+getRversion()
+```
+
+![Check R version](images\check-Rversion.png){width=60%}
+
+Sometimes Windows machines don't connect the latest version, even though you've installed it. In that case, you need to go to `Tools` -> `Global options` and then change the R version used.
+
+![Check R version](images\change-Rversion.png){width=60%}
+
+## Getting Started in RStudio
+
+RStudio is an integrated development environment (IDE) that allows you to write and run code and visualise data all in one place.
+
+We will use this program throughout the course and over time you will really know your way around! But first let's get you set up for success...
+
+<h3>Setting up</h3>
+
+1. Create a folder in a meaningful location on your computer called `BEES2041`
+2. Download `Wk1-1-materials` from the course page in Moodle. This is a zip file.
+3. Unzip the file by:
+  - MacOS: Double clicking the file `Wk1-intro`
+  - Windows: Right click on the zip file and click "Extract All"
+4. Move the folder created, called `Wk1-intro`, into your course folder (`BEES2041`) you created in step 1.
+5. Within that folder, **Click on the `Wk1-intro.Rproj`** to open the RStudio project and you're in!!!
+
+<h3>The RStudio Layout</h3>
+
+Now that you're in RStudio, let's talk through all the panes and features you can see
+
+![RStudio layout](images\rstudio.png){width=100%}
+<br>
+
+When you open `Wk1-intro.Rproj`, you will be greeted by three panels:
+
+-   The interactive **R console** (entire left pane)
+
+This is where R lives, and where it will respond and return the outputs you create using code
+
+-   **Environment**/History (upper right pane)
+
+This is where all the objects you create will live. The **History** tab is the running tab of all the R code you run. Note that this history is not saved, but don't worry—we have another way of saving code which we'll talk about later!
+
+-   **Files**/Plots/Packages/Help/Viewer (lower right pane)
+
+This is where you can see the files in the project. The **Plots** tab is where you will view the plots that you create, the **Packages** tab is where you can see the R packages you have installed and **Help tab** is where we can pull up help files (more on this later!)
+
+**Tip:** It's a really good sanity check to look at the top right corner of RStudio. If you can see you are in the folder `Wk1-1 intro` we are off to a good start!
+
+![Are you in a RStudio project?](images\are-you-in-the-project.png){width=80%}
+
+> If you see `Project: (None)`, close RStudio and **Click on the `Wk1-intro.Rproj`**
+
+<h3>Project organisation goes a long way</h3>
+
+Let's talk a bit about **RStudio projects** and why they make our data analysis life easier.
+
+A `.Rproj` file will keep all your ducks in a row, all your data and code scripts will now live under the house of `Wk1-1 intro`. This means pointing to data files will be **relative** to the project directory.
+
+**Try**: To illustrate this, type the following code into the R console pane
+
+```{r, eval=TRUE}
+# Get your current location also know as 'working directory'
+getwd()
+```
+
+The `getwd()` function, tells you the 'address' or **file path** that you are currently in. Everyone will have different output because we all created the `BEES2041` folder in a unique location on our computers that makes sense to us. What is *critical* is the latest part `Wk1-intro`. We are **ALL** working in the project folder `Wk1-intro`! This minor little detail will make loading our own data into R a smooth process.
+
+## Hello, meet Quarto docs
+<h3>Hello, meet Quarto docs</h3>
+
+> Let's go ahead and click on `Wk_1_first_prac.qmd`
+
+Clicking this file will open the editor pane in the top right corner. This is where we will start writing our own R code for the rest of this prac.
+
+![Opening `Wk_1_first_prac.qmd`](images\open-qmd.png){width=60%}
+
+<br>
+
+`Wk_1_first_prac.qmd` is a **Quarto document** and its where you can write and format regular text alongside **code chunks** and any pretty figures/tables you produce into one beautiful, seamless page.
+
+The **code chunks** are the grey boxes with the header `{r}` at top left corner. This is where you will write R code.
+
+> Notice how the font is different in **code chunks**.
+
+**Try**: There are several ways to run code in a Quarto doc, its a matter of preference. You end up using a combination of these methods:
+
+1.  You can run **all code** within each of these chunks but clicking the **green play** on the top right hand corner
+2.  You can place your mouse cursor on a particular line and click on the **"Run"** button. This allows you to have more targeted control on what line of code to run.
+3.  OR you can use the keyboard shortcut **CMD/Ctrl + Enter**
+
+## Errors in R
+<h3>Errors in R</h3>
+
+When you ran the code in the first chunk, you might notice R was not happy. (It depends if you already have the packages installed.)
+
+![R complains in red](images\first-error.png) <br> Getting errors in R are a common experience and they're totally harmless. The error messages usually gives you some clues as to what R is complaining about.
+
+> Here, R is telling us we don't have the R packages `readr` and `ggplot2` installed
+
+<h4>Installing packages</h4>
+
+Let's go ahead and install these on your computer.
+
+Usually RStudio is clever enough to figure this out and will prompt you at the top of your Quarto doc like this:
+
+![Helpful prompt from Quarto](images\install-me.png)
+
+<br>
+
+You can click on the "Install" and that should take care of the error.
+
+**Try:** Alternatively, you can use the `install.packages()` function. We've given you the code as a **comment** in the chunk. Recall, that comments in R in are preceded with a `#` and R will ignore these lines.
+
+> Let's try uncommenting that line by deleting the `#`, then go ahead and run that line of code to install `readr` and `ggplot2`. Once you're done, comment out this line by putting a `#` at the start of the line once you are done, otherwise you will be installing those packages again every time you run that chunk!
+
+**Importantly** you only need to install packages **ONCE**. This is different to **loading** packages into R using the `library()` function. You load packages once using `library()` for each Quarto doc right at the start of the document.
+
+<h3>Install essential packages for this course</h3>
+
+In this course we're going to rely heavily on two packages, `tidyverse` and `easystats`. You'll learn more about these as we go through, but for now, let's just get them installed.
+
+Both these packages are in fact a collection of packages, so you may see quite a bit of installing happening.
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+
+Now let's check it loads, and also update any of the components, in case you already had them installed.
+
+```{r, eval=FALSE}
+library(tidyverse)
+tidyverse_update()
+```
+
+When you load the library, you'll get some output showing you what packages have been loaded:
+
+![Loading tidyverse`](images\library_tidyverse.jpg){width=60%}
+
+We can now do the same for the `easystats` package:
+
+```{r, eval=FALSE}
+install.packages("easystats")
+library(easystats)
+easystats_update()
+```
+
+<h3>Loading data into R</h3>
+
+Now that we have all the packages we need for this practical installed and loaded (yay!), let's get into some data!!
+
+The data you need for this practical lives in the `data/` folder that you can see in the **"Files" tab** in the bottom-left pane. There are 2 datasets in the folder:
+
+-   `Laminated stalagmite Dataset.csv`
+-   `sydneybeaches.csv`
+
+You can tell these are "comma-separated values" by the file type `.csv`.
+
+We are going to use the function `read_csv` to load the `Laminated stalagmite Dataset.csv` into R.
+
+```{r}
+stalagmite_data <- read_csv("data/Laminated stalagmite Dataset.csv")
+```
+
+Let's walk through the code:
+
+-   Within the `read_csv()` function is where we supply the 'address' or file path to `Laminated stalagmite Dataset.csv`. The file lives inside the `data/` folder so its path is `"data/Laminated stalagmite Dataset.csv"`
+-   We are using the `<-` operator to store this dataset into an object
+-   The object that holds the dataset is `stalagmite_data`
+
+> Its crucial to assign the output of `read_csv()` into an object, otherwise R won't hold it in memory for you to use
+
+**Notice:** In the "Environment" tab, we can now see `stalagmite_data` that we just created!
+
+![Your first data object in R](images\data-in-env.png)
+
+<br>
+
+Clicking on `stalagmite_data` in the "Environment" tab will give you a nice preview of the data. Alternatively, you can type and run the code for R to print the data into the "Console" pane.
+
+```{r}
+stalagmite_data
+```
+
+> Note that `read_csv()` will always return your data as a tibble data structure
+
+Now you are all set to proceed with the section!
+
+
+<h1>Take your skills for a spin!</h1>
+
+> Note: The quiz questions on Moodle are the same as the ones in the Quarto file. Please write and run code in this document in Rstudio and answer the questions in Moodle as you go.
+
+<h2>Set up R packages</h2>
+
+```{r, eval=FALSE}
+# install.packages(c("readr", "ggplot2", "dplyr", "skimr", "janitor"))
+library(readr)
+library(ggplot2)
+```
+
+
+# Stalagmite data
+
+<h2>Stalagmite data</h2>
+
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images\stalagmite.png){width=100%}
+
+<br>
+
+Stalagmites are mineral formations that grow in caves, preserving environmental records in their layered structure. Paleoclimatologists from the [Climate Change Research Centre](https://www.unsw.edu.au/research/ccrc) collected this data. The thickness of each lamina reflects past climate conditions—thicker layers often indicate wetter periods, while thinner ones suggest drier times. By analysing lamina thickness and age, scientists can reconstruct past climate patterns, track seasonal variations, and identify historical environmental events.
+
+This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
+
+-   `entity_id`: Identifier for the stalagmite sample.
+-   `seq_id`: Sequence identifier (likely referring to sample grouping).
+-   `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
+-   `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
+
+> You may find it helpful to use the function `clean_names()` from the `janitor` R package first before delving in. You may need to install this package first. Remember to use `library(janitor)` to load this package into R, put this code in the first R chunk!
+
+Using the functions you've learned so far in this prac, try answer the following questions:
+
+**Questions:**
+
+## How many rows and columns are in `stalagmite_data`?
+
+**How many rows and columns are in `stalagmite_data`?** Rows = `r cloze(40279)`, columns = `r cloze(4)`
+
+##  What type of variable is `lamina_thickness_mm`?
+
+**What type of variable is `lamina_thickness_mm`?** `r cloze("double", c("complex number", "integer", "logical", "numeric", "double"))`
+
+## What type of variable is `lam_age_bp_0_1950ad`
+
+**What type of variable is `lam_age_bp_0_1950ad`?** `r cloze("double", c("complex number", "integer", "logical", "numeric", "double"))`
+
+## What is a more suitable variable type for `lam_age_bp_0_1950ad`?
+
+**What is a more suitable variable type for `lam_age_bp_0_1950ad`?** `r cloze("integer", c("complex number", "integer", "logical", "numeric"))`
+
+## Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `mutate` and `as.integer()`, you may need to install/load the package `dplyr`** )
+
+**Write some code to change the variable type of `lam_age_bp_0_1950ad`? (Try: `mutate` and `as.integer()`, you may need to install/load the package `dplyr`** )
+
+## Write some code to display a quick summary of this dataset (Feel free to use additional packages! You may need to install and load them first)
+
+**Write some code to display a quick summary of this dataset (Feel free to use additional packages! You may need to install and load them first)**
+
+# Sydney Beaches
+
+<h2>Sydney Beaches</h2>
+
+![Image credit: Amazing Aerial](images\coogee-beach.jpeg){width=100%}
+
+<br>
+
+Sydney-siders LOVE their beaches and want to know the best swimming locations. A team of environmental scientists from the School of Biological, Earth & Environmental Sciences collected a dataset containing water quality measurements for Sydney beaches. It includes records of enterococci levels (cfu per 100ml) across a number of years, along with geographic coordinates. Enterococci levels are used as an indicator of water pollution and safety for swimming.
+
+> We want to try answer the question **which beach is the "cleanest" in Sydney?**, we'll be using the dataset `sydneybeaches.csv`
+
+First, read in the data.
+
+**Questions:**
+
+**Check the structure to make sure the variable types were assigned correctly.**
+
+## Which of these variables were assigned incorrectly?
+
+**Which of these variables were assigned incorrectly?** `r cloze("enterococci_cfu_per_100ml", colnames(syd_beach_data))`
+
+**Change `Enterococci_cfu_per_100ml` to an integer variable.**
+
+## Primer to plot
+
+Use this newly formatted data to visualise the amount of bacteria found at each `Site.`
+
+To make the plot, replace the terms `your_data`, `x_variable`, and `y_variable` with your choice of variables relevant to your question. Using the `dplyr` package here is advised. You may need to:
+
+-   Exclude a potential outlier or not ;) - try both!
+
+-   Apply a transformation on `Enterococci_cfu_per_100ml` e.g `sqrt()` or `log10(Enterococci_cfu_per_100ml + 1`) - try both!
+
+-   Try `geom_boxplot()` and `geom_violin()` with `geom_point()`
+
+## Why did we need to transform the data? {type=essay}
+
+**Why did we need to transform the data?**
+
+## What does the shape of the violin plot tell us about the data? {type=essay}
+
+**What does the shape of the violin plot tell us about the data?**
+
+## ...and finally, where would you recommend Sydney-siders to go swimming?
+
+**...and finally, where would you recommend Sydney-siders to go swimming?**
+
+From looking at our plots, `r cloze("Gordons Bay East", c(syd_beaches))` and `r cloze("South Maroubra Beach", c(syd_beaches))` `r cloze("tend to", c("tend to", "almost always"))` have `r cloze("lower", c("lower", "higher"))` levels of Enterococci levels, however we would need further analysis to be sure.
+
+
+
