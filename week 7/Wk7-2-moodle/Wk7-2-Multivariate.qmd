@@ -23,6 +23,7 @@ rprojroot::has_file("BEES2041-code.Rproj") |>
 # remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 library(vegan)
+library(lattice)
 ```
 
 ## Introduction

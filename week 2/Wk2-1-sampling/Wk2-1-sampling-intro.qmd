@@ -246,15 +246,15 @@ data |>
 
 The sampling distribution of the mean shows us that just by chance, your sample mean could be a lot higher or lower than the true population mean.
 
-OK, so what? Well, using some fancy mathematics, statisticians have shown that if for a variety of situations, the distribution of the sample means follows a normal distribution. This is the central limit theorem. Moreover, the standard deviation of the sample means is equal to the standard deviation of the population divided by the square root of the sample size. *This is really cool*, because it means that **we can estimate the range of possible values for the mean of the population, based on the mean and standard deviation of the population**.
+OK, so what? Well, using some fancy mathematics, statisticians have shown that, for a wide variety of situations, the distribution of the sample means follows a normal distribution. This arises via the central limit theorem. Moreover, the standard deviation of the sample means (known as the standard error) can be estimated using the standard deviation of the sample and the sample size. *This is really cool*, because it means that **we can estimate the range of plausible values for the true mean of the population, based on the mean and standard deviation of the sample**.
 
 This is how confidence intervals are built. We estimate the mean of the sample, then add a dose of uncertainty, based on some assumptions about the distribution of the sample means.
 
 $$\bar{\mu_y} \pm \rm{Uncertainty}$$
 
-## Enter The t-distribution
+## Enter the t-distribution
 
-To estimate the uncertainty, we use the t-distribution. When the sample size is small (n \< 50), the sample standard deviation is a poor estimate of the population standard deviation, and using the normal distribution here would underestimate variability. The t-distribution accounts for this additional uncertainty by having heavier tails, which leads to wider confidence intervals and more conservative hypothesis testing.
+To estimate the uncertainty, we use the t-distribution. When the sample size is small (n \< 50), the sample standard deviation is a poor estimate of the population standard deviation, and using the normal distribution here would underestimate variability. The t-distribution accounts for this additional uncertainty by having heavier tails, which leads to wider confidence intervals and more conservative hypothesis testing. At larger sample sizes, the t-distribution looks more and more like the normal distribution.
 
 So the equation above becomes
 
@@ -340,8 +340,8 @@ In practice, Davey can use the `lm()` function in R to estimate the confidence i
 fit <- lm(time_to_surface ~ 1, data = baby_turtles)
 
 # Extract the estimates of the mean and confidence interval for the mean
-coef(fit)
-confint(fit)
+coef(fit) # Estimate for the mean
+confint(fit) # Estimate for the confidence interval
 ```
 
 
@@ -351,7 +351,7 @@ Unpacking the code above,
 
 -   `lm()` function fits a linear model to the data.
 -   `time_to_surface ~ 1` tells R to fit a model with the mean of the time to surface as the response variable, and no predictors.
--   `coef()` function extracts the estimates of the mean and confidence interval for the mean from the model.
+-   `coef()` function extracts the estimate of the mean from the model.
 -   `confint()` function calculates the confidence interval for the mean.
 
 **The easystats package makes it even easier**
@@ -397,15 +397,15 @@ From the data above, you can see the estimate of the mean time it takes for baby
 
 Confidence intervals around the mean are a powerful tool in our analysis toolbox. For example, Davey could ask:
 
-**Question: What is the probability that the mean time it takes for baby turtles to reach the surface is less than or greater than some critical value, e.g. 20 hrs?**
+**Question: Is it likely that the mean time it takes for baby turtles to reach the surface is greater than some value of interest, e.g. 50 hrs?**
 
-To answer this, Davey can look at confidence intervals. The confidence interval tells us the range of possible values for the mean of the population. If the critical value is within the confidence interval, then the mean of the population is likely to be less than or greater than the critical value. If the critical value is outside the confidence interval, then the mean of the population is likely to be greater than or less than the critical value.
+To answer this, Davey can look at confidence intervals. The confidence interval tells us the range of plausible values for the mean of the population. If the value of interest is less than the lower limit of the confidence interval, then the mean of the population is most likely to be greater than 50 hours.
 
-As the CI on the mean is 57.5-82.76, we can conclude that the mean time it takes for baby turtles to reach the surface is likely to be greater than 20 mins.
+As the CI on the mean is 57.5-82.76, we can conclude that the mean time it takes for baby turtles to reach the surface is likely to be greater than 50 hours.
 
 **Question: What is the probability that the mean time it takes for baby turtles to reach the surface is different to zero?**
 
-You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and pvalue are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter to zero.
+You'll notice in the output above that the confidence interval for the mean time it takes for baby turtles to reach the surface does not include zero. This means that the mean time it takes for baby turtles to reach the surface is likely to be different to zero. You can also see that a t-statistic and p-value are reported in the parameters table. These are the results of a t-test, comparing the estimated parameter (the mean) to zero.
 
 **Question: How likely is it that two samples of baby turtles come from the same population?**
 
@@ -459,17 +459,17 @@ As explained in the course text book Warton 2024, technically one-sample & two-s
 
 ## Why sample size matters
 
-Recall the formula for the standard error of the mean:
+Recall the formula for the standard error (SE) of the mean:
 
 $$SE = \frac{\sigma}{\sqrt{n}}$$
 
 where $\sigma$ is the standard deviation of the population, and n is the sample size.
 
-The standard error of any statistic is the standard deviation of the statistic's value. So the SE is the standard deviation of the sample means.
+The standard error of any statistic is the standard deviation of the statistic's sampling distribution. So the SE of the mean is the standard deviation of the sample means.
 
 And the formula for the confidence interval is: $$x \pm t_{0.05, n-1} SE$$
 
-You can see from the above, the standard error of the mean decreases as the sample size increases. This is because the standard error is inversely proportional to the square root of the sample size. The larger the sample size, the smaller the SE and the more reliable the mean of the sample will be.
+You can see from the above, the standard error decreases as the sample size increases. This is because the standard error is inversely proportional to the square root of the sample size. The larger the sample size, the smaller the SE and the narrower the confidence limits around our estimate of the true mean.
 
 This is why sample size is so important in statistics. The more we sample, the better our mean represents the population, and
 
