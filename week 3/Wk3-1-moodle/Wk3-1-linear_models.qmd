@@ -15,9 +15,9 @@ library(moodlequiz)
 
 ## Introduction
 
-Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand how y varies with some predictor x.
+Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand how y varies with one or more predictors $(x_1, x_2, ...)$.
 
-In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. Moreover, that we can estimate a confidence interval around the mean, within which we believe the true mean to occur.
+In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. We also learned that we can estimate a confidence interval around the mean, within which we believe the true mean to occur.
 
 Linear models then allow us to test whether the true mean varies with another variable.
 
@@ -37,7 +37,7 @@ Our learning objectives today are:
 - **plot** the data and the **regression** line
   - add the **confidence interval** using output of `estimate_means()`
 
-Let’s dive in! 🚀 
+Let's dive in! 🚀 
 
 ![Image credit:  @allison_horst](you-can-do-it.png){width=80%} <br>
 <br>
@@ -62,7 +62,7 @@ We will be working with real-world datasets collected by researchers in the Scho
 
 We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
 
-**Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer
+**Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer.
 
 In case you don't have them installed, here is code for you to do so:
 ```{r, eval=FALSE}
@@ -99,7 +99,7 @@ data_towers
 
 To fit a linear model, we will be using the `lm()` function like so:
 
-**Note**: Remember to assign the output of `lm()` into an object so R can save it for you in your environment
+**Note**: Remember to assign the output of `lm()` into an object so R can save it for you in your environment.
 
 ```{r}
 towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
@@ -107,11 +107,11 @@ towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
 ## Slope or the change in y with x
 
-> Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
+> Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`).
 
 ![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png){width=80%} <br>
 
-Let's inspect the results of your model. Use `summary(towers_fit)` and see how this corresponds to the image above
+Let's inspect the results of your model. Use `summary(towers_fit)` and see how this corresponds to the image above.
 
 ```{r}
 summary(towers_fit)
@@ -121,9 +121,9 @@ summary(towers_fit)
 
 1. Which coefficient corresponds to the slope in the output of `summary(towers_fit)`? 
 
-The slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and the coefficient value is `r cloze("-0.543846", c("3.805973", "-0.543846", "<2e-16"))`
+The coefficient for the slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and the coefficient value is `r cloze("-0.543846", c("3.805973", "-0.543846", "<2e-16"))`.
 
-2. What direction is slope coefficient, what does this tell us?
+2. What direction is the slope coefficient, what does this tell us?
 
 The slope is `r cloze("negative", c("negative", "positive"))`. This indicates that as `log10_rainfall` increases `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
 
@@ -139,7 +139,7 @@ parameters(towers_fit)
 
 What does the 95% CI tell us here about the slope `log10_rainfall`?
 
-`[-0.56, -0.52]` provides a range of values within which we can be 95% confident that the `r cloze("true", c("sample", "true"))` population parameter coefficient lies. 
+`[-0.56, -0.52]` provides a range of values between which the `r cloze("true", c("sample", "true"))` population parameter coefficient most likely lies. 
 
 
 ## Variation explained by the model (R^2 and F-statistic)
@@ -152,21 +152,21 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 The **R^2 value** describes how much variation is explained by your model:
 
 - Measures the **proportion of variance** in the y variable (`log10_leaf_mass_per_area`) explained by the x variable(s) (`log10_rainfall`).
-- A higher R^2 value indicates strong relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable(s) (`log10_rainfall`), but *importantly* it **does not imply causation**.
+- A higher R^2 value indicates a strong relationship between the y variable (`log10_leaf_mass_per_area`) and the x variable(s) (`log10_rainfall`), but *importantly* it **does not imply causation**.
 
 The **F-statistic** compares the explained variance to the unexplained variance:
 
 - A **high F-statistic** suggests that at least one predictor (`log10_leaf_mass_per_area`) is significantly contributing to the model.
 
-- The **F-statistic's p-value** tells us whether our predictor variable explains a significant amount of variance in the response variable or not
+- The **F-statistic's p-value** indicates how likely we are to see a value of this magnitude in a population where there is no meaningful effect.
 
 <!-- TODO: @Daniel, here would be a nice spot to show off some simulated data for students to learn about the relationship between R^2 and F-statistic  -->
 
 **Question:**
 
-The `r cloze("R squared value", c("F-statistic", "R squared value", "P value"))` is a `r cloze("moderate", c("weak", "moderate", "strong"))` relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable (`log10_rainfall`). 
+The `r cloze("R-squared value", c("F-statistic", "R-squared value", "P value"))` indicates a `r cloze("moderate", c("weak", "moderate", "strong"))` amount of variance in the y variable (`log10_leaf_mass_per_area`) is explained by the x variable (`log10_rainfall`). 
 
-The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains `r cloze("significant", c("non-significant", "significant"))` amount of variance in `log10_leaf_mass_per_area`.
+The `r cloze("F-statistic", c("F-statistic", "R-squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains a `r cloze("significant", c("non-significant", "significant"))` amount of variance in `log10_leaf_mass_per_area`.
 
 ## *F*-statistic and *P*-values - how likely is it to get our results by chance?
 
