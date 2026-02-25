@@ -170,12 +170,12 @@ The `r cloze("F-statistic", c("F-statistic", "R-squared value", "P value"))` sug
 
 ## *F*-statistic and *P*-values - how likely is it to get our results by chance?
 
-> The *p*-value is derived from the F-distribution
+> In linear models, the *p*-value is derived from the F-distribution
 
 ![Relationship between R^2, *F* and *P*, Image credit: Data Dan](f-value-p-value.png){width=60%}
 <br>
 
-The *p*-value and the *F*-statistic are closely related. In the last prac, we learned to calculate **probability (p-value)** for a *t*-statistic from a standard normal distribution. We can do that same for our *F*-statistic from the *F*-distribution!
+The *p*-value and the *F*-statistic are closely related. In the last prac, we learned to calculate **probability (p-value)** for a *t*-statistic from a standard normal distribution. We can do the same for our *F*-statistic from the *F*-distribution!
 
 The *p*-value tells us how extreme our *F*-statistic is under the null hypothesis (which assumes the predictor has no effect). I like to think about this as:
 
@@ -183,13 +183,13 @@ The *p*-value tells us how extreme our *F*-statistic is under the null hypothesi
 
 - A smaller *p*-value means the observed *F*-statistic is **unlikely** to occur by chance, suggesting **strong evidence** against the null hypothesis. 
 
-> In other words, in our hypothetical world, finding an effect is REALLY rare - meaning in the real world there is something interesting happening in our model.
+> In other words, in our hypothetical world, finding an effect is REALLY rare - meaning in the real world there is likely something interesting happening.
 
 <!-- TODO: @Daniel, here would be a nice spot to show off some simulated data for students to learn about the relationship between R^2, F-statistic AND p-values -->
 
 **Question:**
 
-Generally, as the *F*-statistic increases the `r cloze("p-value", c("the intercept", "the slope", "p-value"))` decreases. A large *F*-statistic means that it's `r cloze("unlikely", c("not big deal", "unlikely"))` to be sampled by chance. 
+Generally, as the *F*-statistic increases, the `r cloze("p-value", c("the intercept", "the slope", "p-value"))` decreases. A large *F*-statistic means that it's `r cloze("unlikely", c("likely", "unlikely"))` to be sampled by chance. 
 
 > Try not to get overwhelmed by the details, all we want you to understand is the relationship between test statistics e.g. *F*-statistic and *p*-values. You got this!
 
@@ -204,7 +204,7 @@ means_towers
 
 These are called model predictions and we can visualise these using:
 
-**Notice** how we stored the output of our `ggplot` in `towers_model_predictions`, this gives us the option to add to plot incrementally
+**Notice** how we store the output of our `ggplot` in a variable called `towers_model_predictions`; this gives us the option to add to the plot incrementally later.
 
 ```{r}
 towers_model_predictions <-
@@ -225,11 +225,11 @@ towers_model_predictions
 Voilà!!! Let's talk through this code:
 
 - `ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area))` - here, we are visualising our y variable (`log10_leaf_mass_per_area`) and x variable (`log10_rainfall`)
-- `geom_point(size = 2, col = "red", alpha = 0.2, stroke = 5)` - plotting the raw data using points
+- `geom_point(size = 2, col = "red", alpha = 0.2, stroke = 0)` - plotting the raw data using points
     - `size` controls the size of the points
     - `col` sets the colour of the points
     - `alpha` sets the transparency of the points, a low value makes them more transparent. This is good for overlapping points
-    - `stroke` controls the thickness of the border of the points
+    - `stroke` controls the thickness of the border of the points (so here we want no border)
 - `geom_ribbon(data = means_towers, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey")` - create a ribbon to represent our confidence intervals
     - `data = means_towers` we are plotting our model predictions
     - `aes(ymin = CI_low, ymax = CI_high, y = Mean)`, setting the lower and upper bounds of our CI and our mean values for our y variable (`log10_leaf_mass_per_area`) 
@@ -265,7 +265,7 @@ Allometry in biology is the study of how biological traits (such as bill depth, 
       - F-statistic value
       - p-value
 - Generate some model predictions from your model using `estimate_means()`
-- Create a data visualisation showing off the `penguins` data, your predicted means from your linear
+- Create a data visualisation showing off the `penguins` data and your predicted means from your linear
 model
   - Plot the raw data with `geom_point()`
   - Add the confidence intervals with `geom_ribbon()`
@@ -292,7 +292,8 @@ penguins_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
 summary(penguins_fit)
 
 # Clean, nice summary
-parameters(penguins_fit) |> tibble() 
+parameters(penguins_fit)
+parameters(penguins_fit) |> tibble() # For unrounded values in the confidence intervals
 
 # Create model predictions
 penguins_means <- estimate_means(penguins_fit, by = "body_mass_g")
@@ -319,26 +320,26 @@ penguins_model_predictions
 
 1. What does the slope tell us? 
 
-There is a `r cloze("positive", c("positive","negative"))` relationship between bill length and body mass
+There is a `r cloze("positive", c("positive", "negative"))` relationship between bill length and body mass.
 
 2. Let's try interpret the slope. 
 
-- A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm)
+- A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm).
 
-3. Yikes, looks like rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
+3. Yikes, it looks like rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
 
-The confidence intervals for the slope tell us that the true population mean for the slope lies between
+The confidence intervals for the slope tell us that the true population mean for the slope likely lies between
 `r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
 
 4. Let's try understand the *R^2* and *F*-statistic values from your model. What are they telling us?
 
-- The *R^2* value suggests that there is a `r cloze("moderate", c("weak","moderate", "strong"))` relationship between bill length and body mass. 
+- The *R^2* value suggests that there is a `r cloze("moderate", c("weak", "moderate", "strong"))` relationship between bill length and body mass. 
 
-- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("bill_length_mm","bill_depth_mm", "flipper_length_mm"))`
+- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("bill_length_mm", "bill_depth_mm", "flipper_length_mm"))`
 
 5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
 
-The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("positive", c("positive","negative"))` relationship between bill length and body mass.
+The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small", "large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely", "unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence", "moderate evidence", "strong evidence"))` for a `r cloze("positive", c("positive", "negative"))` relationship between bill length and body mass.
 
 # LM continuous (Ozone)
 
@@ -365,7 +366,7 @@ data_airquality <- airquality
 Using the `airquality` dataset:
 
 - Run a linear model for the relevant variables for our question
-- Generate the summary output for your model using `summary()`, `parameters()` 
+- Generate the summary output for your model using `summary()` and `parameters()` 
   - Make some interpretations from this output using the: 
       - slope
       - confidence interval of the slope
@@ -373,8 +374,7 @@ Using the `airquality` dataset:
       - F-statistic value
       - p-value
 - Generate some model predictions from your model using `estimate_means()`
-- Create a data visualisation showing off the `airquality` data, your predicted means from your linear
-model
+- Create a data visualisation showing off the `airquality` data and your predicted means from your linear model
   - Plot the raw data with `geom_point()`
   - Add the confidence intervals with `geom_ribbon()`
   - Add the predicted linear relationship with `geom_line()`
