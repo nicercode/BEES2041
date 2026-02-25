@@ -22,7 +22,7 @@ library(moodlequiz)
 
 Learning to code in R is like learning to speak a new language. Here we will go through some conventions and common vocabulary used in R. With practice, these will become familiar and intuitive - let's get started!
 
-![R then and now, Artwork by @allison_horst](R-then-and-now.png){width=600}
+![R then and now, Artwork by @allison_horst](images\R-then-and-now.png){width=600}
 
 ## Code and Comments
 

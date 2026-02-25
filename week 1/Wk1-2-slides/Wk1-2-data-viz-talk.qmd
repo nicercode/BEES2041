@@ -82,7 +82,7 @@ penguins |>
 
 # The recipe for a `ggplot()`
 
-![](ggplot2-basic-recipe.png)
+![](images\ggplot2-basic-recipe.png)
 
 Example of geometries:
 ```
@@ -96,4 +96,4 @@ geom_violin() # violin plot
 
 # What is the right type of plot to answer my question?
 
-![](data-to-viz-choose.jpg)
+![](images\data-to-viz-choose.jpg)

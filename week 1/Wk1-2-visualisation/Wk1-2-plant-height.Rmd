@@ -31,7 +31,7 @@ plant_height <- read_csv("data/plant_height/plantHeightSingleSpp.csv") |> clean_
 
 <h2>Overview</h2>
 
-![Image credit: Hokitika New Zealand native forest title by Jihwi Jang, CC BY 2.0](trees.png){width=80%}
+![Image credit: Hokitika New Zealand native forest title by Jihwi Jang, CC BY 2.0](images\trees.png){width=80%}
 
 <br>
 

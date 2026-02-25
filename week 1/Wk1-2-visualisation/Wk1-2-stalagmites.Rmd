@@ -36,7 +36,7 @@ stalagmites_sites <- stalagmites_sites |>
 
 [Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width=100%}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images\stalagmite.png){width=100%}
 
 <br>
 
@@ -144,7 +144,7 @@ stalagmites_data <- stalagmites_data |>
 
 Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis. Note: Do not worry about adding the curve.
 
-![Figure 5](baker-fig5.png)
+![Figure 5](images\baker-fig5.png)
 
 ```{r, eval=FALSE}
 stalagmites_data |>
@@ -165,7 +165,7 @@ The annual lamina growth rate is  `r cloze("very slow", c("very fast", "very slo
 
 Have a go at creating this plot.
 
-![Figure 3](baker-fig3.png)
+![Figure 3](images\baker-fig3.png)
 
 <br>
 
@@ -209,7 +209,7 @@ The annual growth of all lamina samples are `r cloze("highly variable", c("very 
 
 Have a go at creating this plot.
 
-![Figure 10](baker-fig10.png)
+![Figure 10](images\baker-fig10.png)
 
 <br>
 
@@ -235,7 +235,7 @@ transformed_stalagmites_data |>
 
 Finally, can you plot a map of sample locations as in figure 2?
 
-![Figure 2](baker-fig2.png)
+![Figure 2](images\baker-fig2.png)
 
 <br>
 

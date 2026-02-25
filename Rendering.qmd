@@ -9,28 +9,25 @@ library(tidyverse)
 source("R/remove_solutions.R")
 source("R/generate_moodle_quiz.R")
 
-file <- "week 7/Wk7-2-moodle/Wk7-2-Multivariate.qmd"
 
-## Rendering as html
-quarto::quarto_render(file)
+# Step 1. Create a master .qmd file with explanations, cloze questions, solutions, and check it runs
+master_file <- "week 5/Wk5-1-moodle/Wk5-1-Multiple-Predictors.qmd"
+# Render as html - check it runs & refine it before uploading to moodle
+quarto::quarto_render(master_file)
 
-## Student copy
-file_student <- str_replace(file, ".qmd", "-student.qmd")
-lines <- readLines(file)
-
+# Step 2. Create a student version of the .qmd file without solutions, and check it runs
+file_student <- str_replace(master_file, ".qmd", "-student.qmd")
 # Remove solutions
-lines |>
+readLines(master_file) |>
   remove_solutions() |>
   remove_cloze() |>
   write_lines(file_student)
-
 # check it runs
 quarto::quarto_render(file_student)
-```
 
-## Render as moodle quiz
-```{r}
-file_moodle_quiz <- generate_moodle_quiz(file, webr = FALSE)
+# Step 3. Render for upload to moodle using moodlequiz package 
+# - first create an rmd verion with adjusted headers and adding webr if desired. 
+file_moodle_quiz <- generate_moodle_quiz_rmd(master_file, webr = FALSE)
 rmarkdown::render(file_moodle_quiz)
   
 ```

@@ -15,7 +15,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
-![](r-learners.png){width=70%}
+![](images\r-learners.png){width=70%}
 
 ## Installing or updating R and RStudio
 
@@ -32,11 +32,11 @@ Make sure you have R version 4.4. or newer installed. The version of R should be
 getRversion()
 ```
 
-![Check R version](check-Rversion.png){width=60%}
+![Check R version](images\check-Rversion.png){width=60%}
 
 Sometimes Windows machines don't connect the latest version, even though you've installed it. In that case, you need to go to `Tools` -> `Global options` and then change the R version used.
 
-![Check R version](change-Rversion.png){width=60%}
+![Check R version](images\change-Rversion.png){width=60%}
 
 ## Getting Started in RStudio
 
@@ -60,7 +60,7 @@ We will use this program throughout the course and over time you will really kno
 
 Now that you're in RStudio, let's talk through all the panes and features you can see
 
-![RStudio layout](rstudio.png){width=100%}
+![RStudio layout](images\rstudio.png){width=100%}
 <br>
 
 When you open `Wk1-intro.Rproj`, you will be greeted by three panels:
@@ -79,7 +79,7 @@ This is where you can see the files in the project. The **Plots** tab is where y
 
 **Tip:** It's a really good sanity check to look at the top right corner of RStudio. If you can see you are in the folder `Wk1-1 intro` we are off to a good start!
 
-![Are you in a RStudio project?](are-you-in-the-project.png){width=80%}
+![Are you in a RStudio project?](images\are-you-in-the-project.png){width=80%}
 
 > If you see `Project: (None)`, close RStudio and **Click on the `Wk1-intro.Rproj`**
 
@@ -104,7 +104,7 @@ The `getwd()` function, tells you the 'address' or **file path** that you are cu
 
 Clicking this file will open the editor pane in the top right corner. This is where we will start writing our own R code for the rest of this prac.
 
-![Opening `Wk_1_first_prac.qmd`](open-qmd.png){width=60%}
+![Opening `Wk_1_first_prac.qmd`](images\open-qmd.png){width=60%}
 
 <br>
 
@@ -124,7 +124,7 @@ The **code chunks** are the grey boxes with the header `{r}` at top left corner.
 
 When you ran the code in the first chunk, you might notice R was not happy. (It depends if you already have the packages installed.)
 
-![R complains in red](first-error.png) <br> Getting errors in R are a common experience and they're totally harmless. The error messages usually gives you some clues as to what R is complaining about.
+![R complains in red](images\first-error.png) <br> Getting errors in R are a common experience and they're totally harmless. The error messages usually gives you some clues as to what R is complaining about.
 
 > Here, R is telling us we don't have the R packages `readr` and `ggplot2` installed
 
@@ -134,7 +134,7 @@ Let's go ahead and install these on your computer.
 
 Usually RStudio is clever enough to figure this out and will prompt you at the top of your Quarto doc like this:
 
-![Helpful prompt from Quarto](install-me.png)
+![Helpful prompt from Quarto](images\install-me.png)
 
 <br>
 
@@ -165,7 +165,7 @@ tidyverse_update()
 
 When you load the library, you'll get some output showing you what packages have been loaded:
 
-![Loading tidyverse`](library_tidyverse.jpg){width=60%}
+![Loading tidyverse`](images\library_tidyverse.jpg){width=60%}
 
 We can now do the same for the `easystats` package:
 
@@ -202,7 +202,7 @@ Let's walk through the code:
 
 **Notice:** In the "Environment" tab, we can now see `stalagmite_data` that we just created!
 
-![Your first data object in R](data-in-env.png)
+![Your first data object in R](images\data-in-env.png)
 
 <br>
 

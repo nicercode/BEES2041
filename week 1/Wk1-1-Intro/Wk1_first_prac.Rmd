@@ -46,7 +46,7 @@ library(ggplot2)
 
 <h2>Stalagmite data</h2>
 
-![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](stalagmite.png){width=100%}
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images\stalagmite.png){width=100%}
 
 <br>
 
@@ -93,7 +93,7 @@ Using the functions you've learned so far in this prac, try answer the following
 
 <h2>Sydney Beaches</h2>
 
-![Image credit: Amazing Aerial](coogee-beach.jpeg){width=100%}
+![Image credit: Amazing Aerial](images\coogee-beach.jpeg){width=100%}
 
 <br>
 

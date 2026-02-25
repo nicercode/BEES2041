@@ -33,7 +33,7 @@ In today's practical we'll learn how to estimate the mean of a population, and t
 
 You may have covered some of this material in MATH1041. Let's revise it again here, as these are core fundamentals underpinning most statistical analyses you'll undertake during your schooling and future work. 
 
-<!-- ![Artwork by @allison_horst](nice-R.png){width=70%} --> <br>
+<!-- ![Artwork by @allison_horst](images\nice-R.png){width=70%} --> <br>
 
 <h3>Setting up</h3>
 
@@ -78,7 +78,7 @@ library(parameters)
 
 To get us started, let's consider a real question that a researcher might ask about a population mean.
 
-![Image: Davey Dor](pics/DaveyDor.jpeg){width=80%}
+![Image: Davey Dor](images\pics/DaveyDor.jpeg){width=80%}
 
 This is Davey Dor. Davey is a researcher in the School of Biological, Earth & Environmental Sciences. Davey's research examines the effectiveness of conservation management strategies on the Heron Island Green Turtle population. He is seeking to understand how these strategies affect the development, behaviour, and performance of sea turtle hatchlings.
 
@@ -92,7 +92,7 @@ The first challenge a baby turtle faces, after hatching is to reach the surface 
 
 Davey collected data on 10 baby turtles, using some collar accelerometers he attached to the turtles as they hatch. This involved hatching eggs, attaching the collars, and then burying the turtles again, as though they had just emerged from the nest.
 
-![Image: Davey Dor](pics/turtle.jpeg)
+![Image: Davey Dor](images\pics/turtle.jpeg)
 
 Now he wants to know the average time it takes for baby turtles to reach the surface.
 
@@ -345,7 +345,7 @@ $$\hat{\mu_y} \pm t_{0.05, n-1} \times SE$$
 
 where $t_{0.05, n-1}$ is the value of the t-distribution for a 95% confidence interval and n-1 degrees of freedom, and $SE$ is the standard error of the mean. The standard error of the mean is the standard deviation of the sample means, and is calculated as the standard deviation of the population divided by the square root of the sample size.
 
-![The t-distribution](https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Student_t_pdf.svg/650px-Student_t_pdf.svg.png){width=50%}
+![The t-distribution](images\https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Student_t_pdf.svg/650px-Student_t_pdf.svg.png){width=50%}
 
 Like the normal distribution, R has functions that can calculate critical values from the t-distribution
 
@@ -601,7 +601,7 @@ library(parameters)
 
 An environmental scientist was concerned about lead contamination of soils in a school garden where vegetables were being grown and consumed by the local community. Safety guidelines dictate that lead concentrations in soil should not exceed 400mg/kg. Ten samples were taken from the soil surface at random locations within the playground and analysed for lead concentration with an X-ray Fluorescence (pXRF) spectrometer.
 
-![Collecting soil samples](https://media.news.climate.columbia.edu/wp-content/uploads/2018/09/soil-sampling-1300x975.avif){width=50%}
+![Collecting soil samples](images\https://media.news.climate.columbia.edu/wp-content/uploads/2018/09/soil-sampling-1300x975.avif){width=50%}
 
 The data obtained are in the folder `data/` in the file `lead_contamination.csv`. Load the data using `read_csv` from the `tidyverse`.
 
@@ -650,7 +650,7 @@ penguins
 
 **Chinstraps**
 
-![Chinstrap penguin. Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg/440px-South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg){width=50%}
+![Chinstrap penguin. Image: wikipedia](images\https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg/440px-South_Shetland-2016-Deception_Island–Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg){width=50%}
 
 
 Calculate the mean and 95% confidence intervals for the bill_length_mm of the Chinstrap penguins.
@@ -683,7 +683,7 @@ What are the mean and confidence intervals for the bill length of the Chinstrap 
 
 **Adelie**
 
-![Adelie penguin. Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg/800px-Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg){width=50%}
+![Adelie penguin. Image: wikipedia](images\https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg/800px-Hope_Bay-2016-Trinity_Peninsula–Adélie_penguin_%28Pygoscelis_adeliae%29_04.jpg){width=50%}
 
 What is the mean and confidence intervals for the bill length of the Adelie penguins?
 
@@ -717,7 +717,7 @@ Based on the CIs, is there evidence that the bill length of the Adelie penguins 
 
 **Gentoos**
 
-![Gentoo penguin.  Image: wikipedia](https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg/1202px-Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg){width=50%}
+![Gentoo penguin.  Image: wikipedia](images\https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg/1202px-Brown_Bluff-2016-Tabarin_Peninsula–Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg){width=50%}
 
 What is the mean and confidence intervals for the bill length of the Gentoo penguins?
 

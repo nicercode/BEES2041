@@ -24,7 +24,7 @@ Recall from the previous page that an R package is a set of related functions an
 
 **Meet the penguins!**
 
-![The Palmer Archipelago penguins. Artwork by @allison_horst.](lter_penguins.png)
+![The Palmer Archipelago penguins. Artwork by @allison_horst.](images\lter_penguins.png)
 
 > We will be working with the`palmerpenguins` data, which contains size measurements for three penguin species observed on three islands in the Palmer Archipelago, Antarctica.
 
@@ -248,7 +248,7 @@ penguins |>
 
 When working with data, we often want to know certain summaries about groups in our data. For example, we may need to report on the average tree canopy cover for each study sites or median house prices of different states. These are classic examples of the **split-apply-combine** paradigm. We want to split our data by group, apply a type of calculation on each of these subgroups and then bring these separate parts together again. 
 
-![Schematic showing splitting of data by group, applying some sort of operation, then combining the results together](split-apply-combine.png){width=80%}
+![Schematic showing splitting of data by group, applying some sort of operation, then combining the results together](images\split-apply-combine.png){width=80%}
 <br>
 
 In `dplyr`, the `group_by()` and `summarise()` functions are powerful tools for us to obtain group-level insights. 

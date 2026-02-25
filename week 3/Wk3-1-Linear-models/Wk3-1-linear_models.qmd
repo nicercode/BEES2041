@@ -39,7 +39,7 @@ Our learning objectives today are:
 
 Let's dive in! 🚀 
 
-![Image credit:  @allison_horst](you-can-do-it.png){width=80%} <br>
+![Image credit:  @allison_horst](images\you-can-do-it.png){width=80%} <br>
 <br>
 
 ## Setting up
@@ -84,7 +84,7 @@ library(palmerpenguins)
 
 ## Worked example - Isaac with leaves across climates
 
-![Meet Dr. Isaac Towers! Image credit: Data Dan](isaac-plant-ecosystems.png){width=60%} <br>
+![Meet Dr. Isaac Towers! Image credit: Data Dan](images\isaac-plant-ecosystems.png){width=60%} <br>
 From lectures, Data Dan walked us through an example of a linear model from a study conducted by Dr. Isaac Towers, a postdoc in the School of Biological, Earth & Environmental Sciences. Isaac was interested in understanding the relationship between leaf-construction (`log10_leaf_mass_per_area`) and rainfall (`log10_rainfall`). His research is published in New Phytologist, you can have a read of his original study [here](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.19478). We will be working with the data Isaac compiled for us. 
 
 > Specifically, Isaac wants to know: How does a leaf's mass per area change with rainfall?
@@ -109,7 +109,7 @@ towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
 > Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`).
 
-![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png){width=80%} <br>
+![Linear model components and different slope values, Image credit: Data Dan](images\slope-explainer.png){width=80%} <br>
 
 Let's inspect the results of your model. Use `summary(towers_fit)` and see how this corresponds to the image above.
 
@@ -144,7 +144,7 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 
 ## Variation explained by the model (R^2 and F-statistic)
 
-![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](r2-and-f-value.png){width=60%}
+![Relationship with data, *R^2* and *F*-statistic, Image credit: Data Dan](images\r2-and-f-value.png){width=60%}
 
 <br>
 > There are two metrics we use to assess our model fit
@@ -172,7 +172,7 @@ The `r cloze("F-statistic", c("F-statistic", "R-squared value", "P value"))` sug
 
 > In linear models, the *p*-value is derived from the F-distribution
 
-![Relationship between R^2, *F* and *P*, Image credit: Data Dan](f-value-p-value.png){width=60%}
+![Relationship between R^2, *F* and *P*, Image credit: Data Dan](images\f-value-p-value.png){width=60%}
 <br>
 
 The *p*-value and the *F*-statistic are closely related. In the last prac, we learned to calculate **probability (p-value)** for a *t*-statistic from a standard normal distribution. We can do the same for our *F*-statistic from the *F*-distribution!
@@ -247,7 +247,7 @@ Feel free to tinker with all these options to create a plot that helps us answer
 
 ## Example 2 - Bringing back the Palmer penguins for allometry
 
-![We can learn so much from these cuties. Image credit: @allison_horst](palmer_penguins.png){width=60%}
+![We can learn so much from these cuties. Image credit: @allison_horst](images\palmer_penguins.png){width=60%}
 <br>
 
 Allometry in biology is the study of how biological traits (such as bill depth, or flipper length) scale with body size. Let's understand these relationships in our Palmer penguins using linear models!
@@ -345,7 +345,7 @@ The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small", "larg
 
 ## What contributes to ground level Ozone?
 
-![What is pollution doing to our ozone, Image credit: [EPA](https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){width=70%}
+![What is pollution doing to our ozone, Image credit: [EPA](images\https://www.climatecentral.org/climate-matters/ozone-pollution-the-good-the-bad-and-the-dirty)](ozone.png){width=70%}
 
 The `airquality` dataset in R contains daily measurements of air pollution and meteorological conditions in New York (May–September 1973).
 
@@ -426,10 +426,10 @@ Linear regressions are incredibly flexible. Not only can we use them to make inf
 
 > Recall the differences between  **discrete** or **categorical** variables. 
 
-![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){width=60%} <br>
+![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](images\continuous-discrete.png){width=60%} <br>
 From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperature treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
-![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%} <br>
+![Introducing marine biologist - Dr. Jasmine Martino!](images\jasmine-fish.png){width=60%} <br>
 
 > Specifically, Jasmine wants to know: How does fish standard metabolic rate change with temperature treatments?
 
@@ -448,7 +448,7 @@ data_martino <- read_csv("data/martino-fish-smr.csv")
 
 We are primarily interested in how `smr` - a continuous variable changes with `temp_treatment` - a categorical variable. We can use a linear model to test for **differences in means** in `temp_treatment`. The key difference in this example is that our x variable is a categorical variable.
 
-![Using a linear model with categorial and continuous variables](lm-anova.png){width=60%} <br>
+![Using a linear model with categorial and continuous variables](images\lm-anova.png){width=60%} <br>
 
 Let's fit a model for `smr` using `temp_treatment` as a predictor:
 
@@ -474,7 +474,7 @@ Let's talk through what's happening here:
 
 ## Detecting an overall effect - some maths
 
-![Under the hood, maths behind an ANOVA](signal-to-noise.png){width=60%} <br>
+![Under the hood, maths behind an ANOVA](images\signal-to-noise.png){width=60%} <br>
 
 For both the predictor (`temp_treatment`) and `Residuals` we can do some maths (but we use R instead) to calculate: 
 
@@ -522,7 +522,7 @@ parameters(fit_martino)
 
 Unlike previous examples, we have an extra row in the output! This is because our model is fitting each `temp_treatment` group as x predictors.
 
-![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png){width=80%} <br>
+![Categorical variables becomes multiple predictors in a linear model](images\lm-multiple-predictors.png){width=80%} <br>
 Importantly: 
 
 - `(Intercept)` represents the **mean** of `temp_treatment [20C]`. By default, the `lm()` function sorts the categorical variable alphabetically and then chooses the first value as `(Intercept)`, like this:
@@ -587,7 +587,7 @@ Voilà!!! Let's talk through this code:
 
 ## Do penguins differ in their flipper length across islands?
 
-![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png){width=75%}
+![Location, location, location. Image Credit: [Mario Gregorio Saavedra Rodríguez](images\https://rpubs.com/mgsaavedraro/665527)](palmer-islands.png){width=75%}
 
 Using the `penguins` data:
 

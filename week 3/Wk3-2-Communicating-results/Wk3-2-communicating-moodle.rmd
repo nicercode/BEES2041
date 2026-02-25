@@ -13,7 +13,7 @@ editor_options:
 
 It is worth reminding ourselves that we are learning statistics so that we can answer questions in the life and earth sciences. Unless you want to keep the answers to yourselves, we need to be able to communicate the results of statistical analyses to a broader audience. Given that statistics has a reputation for being able to trick and confuse people, simple and effective communication of results is a necessary skill for research scientists.
 
-![Image credit: Hadley Wickham [R 4 Data Science](https://r4ds.hadley.nz/)](images/the-whole-game-communicate.png){width = 60%} <br>
+![Image credit: Hadley Wickham [R 4 Data Science](images\https://r4ds.hadley.nz/)](images/the-whole-game-communicate.png){width = 60%} <br>
 
 Communication of the results of statistical analyses is usually done by a combination of written text with reference to visual display of the results and the inclusion of test statistics to support the written statements.
 
@@ -35,7 +35,7 @@ At the end of the exercise, you should be able to:
 
 Let’s dive in! 🚀 
 
-![Image credit:  @allison_horst](images/nice-R.png){width=80%}
+![Image credit:  @allison_horst](images\images/nice-R.png){width=80%}
 <br>
 
 ## Setting up
@@ -392,7 +392,7 @@ bill_length_by_sex
 
 Remember that you should always present measures of variation associated with the different levels of a categorical variable. You can do this with boxplots (median + quartiles) or with bar plots that display means +/- error bars (that show standard deviations or standard errors). Have a look at these two figures to understand why.
 
-![](images/example_se.png){width=60%} <br>
+![](images\images/example_se.png){width=60%} <br>
  
 
 Both have the exact same means, but differ in their variance. The one on the left has lower variation within groups relative to the variation between groups, would have a higher value of a test statistic used to contrast the two groups (t in a t-test or F in an ANOVA), and would be more likely to find a significant difference between the groups (lower P value). Consequently, the interpretation of these two is very different, but it is only possible to get this understanding from the figure if the variation is also shown.
@@ -464,7 +464,7 @@ species_bill_length
 
 
 
-![](images/patchwork.png){width=60%}
+![](images\images/patchwork.png){width=60%}
 
 You can combine plots in R using the `patchwork` package. This is a very powerful package that allows you to combine multiple plots into a single figure. You can combine plots that have been created using `ggplot2`, `lattice`, base R, or any other plotting package in R.
 
@@ -547,7 +547,7 @@ ggsave("output/Figure1.png", Figure1, width = 10, height = 10, units = "cm")
 
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
 
-![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](images/ggplot2-cheatsheet.png)
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](images\images/ggplot2-cheatsheet.png)
 
 ## Tables
 
@@ -651,4 +651,4 @@ If you want to see what R can do if you really learn it, have a look at this gal
 
 > Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
 
-![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](images/ggplot2-cheatsheet.png)
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](images\images/ggplot2-cheatsheet.png)
