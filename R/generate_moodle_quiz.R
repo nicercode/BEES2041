@@ -1,4 +1,4 @@
-generate_moodle_quiz <- function(file, webr = FALSE) {
+generate_moodle_quiz_rmd <- function(file, webr = FALSE) {
 
   file_moodle_quiz <- str_replace(file, ".qmd", "-moodle.rmd")
   yaml <- rmarkdown::yaml_front_matter(file)
