@@ -40,7 +40,7 @@ Our learning objectives today are:
 - **interpret** the output of a **linear regression** 
 - **run diagnostic checks** on your  model output using `check_model()` to assess whether it meets the assumptions of a linear model.
 
-Let’s dive in! 🚀 
+Let's dive in! 🚀 
 
 ![Image credit:  @allison_horst](images/r-learners.png){width=80%} <br>
 
@@ -48,7 +48,7 @@ Let’s dive in! 🚀
 
 **Materials:**
 
-Everything you need for this prac is on Moodle
+Everything you need for this prac is on Moodle.
 
 1. Download this week's materials zip file from Moodle, from the course page
 2. Unzip the file by: 
@@ -167,20 +167,20 @@ In [this week's lectures](https://youtu.be/zzFyjTnAa8Y?si=LpkRecpF0LSVu91N), Dat
 
 **How to report on your model checks**
 
-Generally speaking, model checks are pretty standard and not very exciting. Typically
+Generally speaking, model checks are pretty standard and not very exciting. 
 
-> Usually we don't include these in a publication or final report. You could include them in Supplementary information. We just need to say and explain what checks were done and how you amended your data if necessary to improve fit
+> Usually we don't include these in a publication or final report. You could include them in Supplementary information. We just need to say and explain what checks were done and how you amended your data if necessary to improve fit.
 
 ## Make some adjustments to improve model fit
 
-There are two ways we can improve the model fit for a linear model: 
+There are two ways we can improve the model fit (i.e. satisfy the assumptions) for a linear model: 
 
-- apply a transformation on the raw data
+- apply a transformation on the raw data (on the x and/or y variables)
   - log, typically, log 10 `log10(var)` 
   - square root `sqrt(var)`
 - if any, remove outliers 
 
-Here we will focus on applying a `log10` transformation to the two relevant variables `leaf_mass_per_area` and `rainfall`. We will be creating a new variable using `mutate()` and will be assigning these new changes to `data_towers` into a new data object called `data_towers_transformed`.
+Here we will apply a `log10` transformation to the two relevant variables `leaf_mass_per_area` and `rainfall`. (We apply `log10` because this often helps when the data has a right-skewed distribution.) We will be creating a new variable using `mutate()` and will be assigning these new changes to `data_towers` into a new data object called `data_towers_transformed`.
 
 ```{r}
 data_towers_transformed <- # Assign changes into a new dataset
