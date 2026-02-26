@@ -391,9 +391,9 @@ bill_length_by_sex
 Remember that you should always present measures of variation associated with the different levels of a categorical variable. You can do this with boxplots (median + quartiles) or with bar plots that display means +/- error bars (that show standard deviations or standard errors). Have a look at these two figures to understand why.
 
 ![](images/example_se.png){width=60%} <br>
- 
 
-Both have the exact same means, but differ in their variance. The one on the left has lower variation within groups relative to the variation between groups, would have a higher value of a test statistic used to contrast the two groups (t in a t-test or F in an ANOVA), and would be more likely to find a significant difference between the groups (lower P value). Consequently, the interpretation of these two is very different, but it is only possible to get this understanding from the figure if the variation is also shown.
+
+Both have the exact same means, but differ in their variance. The one on the left has lower variation within groups relative to the variation between groups, would have a higher value of a test statistic used to contrast the two groups (t in a t-test or F in an ANOVA), and would be more likely to find a significant difference between the groups (lower P-value). Consequently, the interpretation of these two is very different, but it is only possible to get this understanding from the figure if the variation is also shown.
 
 
 Bar plots with error bars are commonly used, but keep in mind that they have some limitations—in particular, they are unable to show the underlying distribution of the data very effectively. Error bars are presented as equal in size (+ or - from the mean) even when the underlying data are very skewed.
@@ -409,7 +409,7 @@ First, we need to get some species means. We can do this from our model we fitte
 penguin_species_fit <- lm(bill_length_mm ~ species, data = penguins)
 ```
 
-To compute means and their relative CI we will use `estimate_means()`, here we are piping into `tibble()` to get the full output where we can see the columns for the lower and upper bounds of the CI
+To compute means and their relative CI we will use `estimate_means()`, here we are piping into `tibble()` to get the full output where we can see the columns for the lower and upper bounds of the CI.
 
 ```{r}
 penguin_means <- estimate_means(penguin_species_fit, by = "species") |> tibble()
@@ -423,8 +423,8 @@ We will use `geom_jitter` for the raw data and plot the mean for each species us
 ```{r}
 ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
   geom_jitter() + 
-  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
   geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high)) +
+  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
   labs(x = "Species", y = "Bill length (mm)",
        title = "Bill length in Palmer Penguins") +
   theme_bw() 
@@ -436,10 +436,10 @@ Let's adjust the arms of the error bars and colour, and make this look nicer:
 ```{r}
 species_bill_length <- 
   ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
-  geom_jitter() + 
-  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
+  geom_jitter(width = 0.2, alpha = 0.5, stroke = 0, size = 2) + 
   geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high),
-                width = 0.5, colour = "blue") +
+                width = 0.2, colour = "blue", linewidth = 1) +
+  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
   labs(x = "Species", y = "Bill length (mm)",
        title = "Bill length in Palmer Penguins") +
   theme_bw() 
@@ -472,10 +472,10 @@ bill_length_by_sex
 
 species_bill_length <- 
   ggplot(penguins, aes(x = species, y = bill_length_mm)) + 
-  geom_jitter() + 
-  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
+  geom_jitter(width = 0.2, alpha = 0.5, stroke = 0, size = 2) + 
   geom_errorbar(data = penguin_means, aes(y = Mean, ymin = CI_low, ymax = CI_high),
-                width = 0.5, colour = "blue") +
+                width = 0.2, colour = "blue", linewidth = 1) +
+  geom_point(data = penguin_means, aes(y = Mean), size = 5, colour = "purple") + 
   labs(x = "Species", y = "Bill length (mm)",
        title = "Bill length in Palmer Penguins") +
   theme_bw() 
@@ -507,7 +507,7 @@ ggsave("output/Figure1.png", Figure1)
 **Different formats**
 
 
-You can also save the figure in multiple formats at once:
+You can also save the figure in other formats:
 
 ```{r, eval=FALSE}
 ggsave("output/Figure1.pdf", Figure1)
@@ -534,7 +534,7 @@ Tables are effective ways of summarising numerical results. They are commonly us
 Things to aim for:
 
 - A clear design that allows the reader to obtain the information quickly
-- A legend that describes the content of the table. For some weird reason, these are above the table while figure legends are presented below the figure.
+- A legend that describes the content of the table. For some weird reason, table legends are above the table while figure legends are presented below the figure.
 
 Things to avoid:
 
@@ -566,7 +566,7 @@ In most cases, if you are writing your report in MS Word, you will want to expor
 ```{r, eval=FALSE}
 penguin_fit |> 
   parameters() |> 
-  write_csv("output/Table1.csv", )
+  write_csv("output/Table1.csv")
 ```
 
 
@@ -599,8 +599,7 @@ In this course, we can touch on what is possible in R or other software, but you
 There is an enormous amount of online help for creating graphs in R. We have introductory pages on [Environmental Computing](http://environmentalcomputing.net/graphics/).
 
 
-Also useful to get started is: Chang, W (2012) R Graphics Cookbook. O’Reilly Media—a guide to ggplot with quite a bit of help online here.
-
+Also useful resource to get started with is: Chang, W (2012) R Graphics Cookbook. O’Reilly Media—a guide to ggplot.
 
 If you want to see what R can do if you really learn it, have a look at this gallery of data visualisations: <https://r-graph-gallery.com/>
 
