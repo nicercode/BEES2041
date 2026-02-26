@@ -1,0 +1,796 @@
+---
+title: "Week 1-1 Data manipulation and visualisation"
+output:
+  moodlequiz::moodlequiz:
+    replicates: 1
+moodlequiz:
+  category: "Week 1-2 plant height"
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+
+reditor_count <- 1
+
+class_id <- function() {
+  reditor_count <<- reditor_count + 1
+  sprintf("r-editor-%d", reditor_count)
+}
+
+
+# Set up for multichoice question
+possible_choices <- c("boxplot", "histogram", "line plot", "pie chart", "scatterplot", "violin")
+```
+
+## Data wrangling + visualisation
+
+<h3>Data wrangling + visualisation</h3>
+
+Wrangling your data into the right format is a critical step to data visualisation and analysis. It is a scientist's bread and butter. Great visualisations of data help us tell the story of our results.
+
+Today, we will be working primarily with the packages `dplyr` and `ggplot2` . You'll continue to build on skills from the first practical, to make some publication-ready plots  - let's get started!
+
+![Artwork by @allison_horst](images/nice-R.png){width=70%}
+<br>
+
+<h4>Setting up</h4>
+
+**Materials:**
+
+Everything you need for this practical is on Moodle
+
+1.  Download the `Wk1-2-materials.zip` zip file from Moodle, from the course page
+2.  Extract the zip file into your `BEES2041/` folder
+3.  Unzip the file by:
+
+-   MacOS: Double clicking the zip file
+-   Windows: Right click on the zip file and click "Extract All"
+
+4.  Go into the folder `Wk1-2-materials` created by extracting the zip.
+5.  **Click on the `Wk1-2-data-manip.Rproj`** to open the RStudio project and you're in!!!
+
+We will be working with real-world datasets collected by researchers in the School of Biological, Earth & Environmental Sciences. These are in the folder `data/`.
+
+Each dataset is associated with its own Quarto document (`Wk1-2-plant-height.qmd`, `Wk1-2-stalagmites.qmd`). Within each Quarto docs there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
+
+
+
+## Thinking about data visualisation
+
+<h3>Thinking about data visualisations (with penguins)</h3>
+
+Before we dive into that data, let's think about the kinds of plots we can make 
+and what data visualisation means.
+
+| "A picture is worth a thousand words."
+
+The choice of your visualisation can have a huge impact on the key message you want to give to the viewer. Consider: **What is it that I want to convey?** As the storyteller, you then need to select appropriate plots to convey your message. 
+<br>
+
+
+<h4>Packages</h4>
+
+> Let's load required packages for this section.
+
+
+<div id=`r class_id()`><pre>
+# install.packges(c("ggplot2", "palmerpenguins"))
+
+library(ggplot2)
+library(palmerpenguins)
+</pre></div>
+
+<h4>The data</h4>
+
+> Remember the `palmerpenguins`? They will also be joining us in this prac.
+
+
+<div id=`r class_id()`><pre>
+# install.packges(c("ggplot2", "palmerpenguins"))
+
+library(ggplot2)
+library(palmerpenguins)
+
+penguins
+</pre></div>
+
+<h4>Activity</h4>
+
+For each question below, work with your fellow classmates to determine a suitable data visualisation. Think about:
+
+- what are the key variables of interest 
+- what are type of variable(s) are you working with e.g numeric or grouping/categorical?
+- how to best represent that data using graphics 
+
+Get creative, feel free to put the white boards/pen and paper to good use!
+
+> You can also use this [data-to-viz website](https://www.data-to-viz.com/) to explore and get inspired
+
+**Question: What type of plot would be suitable to answer the following questions (Select all that apply):**
+
+1. What is the distribution of bill depth of each penguin species? `r cloze(c("boxplot", "histogram", "violin"), possible_choices)`
+2. How does bill length vary between islands?  `r cloze(c("boxplot", "histogram", "violin"), possible_choices)`
+3. Which penguin species have the shortest flippers? `r cloze(c("boxplot", "histogram", "violin"), possible_choices)`
+4. What is the relationship between bill length and depth in different species? `r cloze(c("scatterplot"), possible_choices)`
+5. Does the relationship between bill length and depth change over the years? `r cloze(c("scatterplot", "line plot"), possible_choices)`
+
+> Now, let's properly introduce `ggplot2` to you.
+
+<br> <br>
+
+## ggplot2
+
+`ggplot2` is package for creating graphics, based on [The Grammar of Graphics](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448/ref=as_li_ss_tl). You provide the data, speak to `ggplot2` about how to map variables to **aesthetics**, what **geometries** you want, and any styling, it takes care of the details.
+
+![Have you met `ggplot2`?](images/ggplot2-hex.png)
+
+<br><br>
+
+<h3>The recipe for a `ggplot()`</h3>
+
+There are four core components to a `ggplot` :
+
+1. The **data** you are working with e.g `penguins`
+2. The **aesthetics** which controls the variables you want to work with
+3. The **geometries** dictates the type of plot you want to create
+4. The **theme** where you can fine tune the "look" of your plot
+
+![Image credit: Fonti Kar](images/ggplot2-basic-recipe.png){10%}
+
+<br>
+
+**Notice** instead of pipes `|>`, ggplot uses `+` to add layers of components to a plot.
+
+Throughout the course, you'll learn to tweak these four components to create beautiful data vizzes.
+
+<br>
+
+> Let's try tackle these questions and plots together
+
+## What is the distribution of bill depth of each penguin species
+
+<h3>1. What is the distribution of bill depth of each penguin species?</h3>
+
+From the question, we know we need to work with `species` and `bill_depth_mm`, these will be our **aesthetics**.
+
+- `species` is the grouping variable we want to detect differences, making it an "independent" or **"predictor"** variable. 
+- `bill_depth_mm` is the entity we want to use compare, making it a "dependent" or **"response"** variable. 
+
+> Let's make some histograms to view the distributions of `bill_depth_mm` of each species (boxplots/violins are valid choices too!).
+
+We might need to reload the library here, only because we're doing this in the browser
+
+<div id=`r class_id()`><pre>
+library(ggplot2)
+library(palmerpenguins)
+</pre></div>
+
+Histograms depict the range of numeric values along the `x` axis and the height of the bars represent the `count` of each value. Here's the code to create a histogram for each species:
+
+<div id=`r class_id()`><pre>
+ggplot(data = penguins,      # pass `penguins` data to ggplot
+      aes(x = bill_depth_mm, # what I want to depict on the x axis 
+          group = species,   # group level comparisons using `species`
+          colour = species,  # colour my histograms by `species`
+          fill = species)) + #  fill the bars of my histogram by `species`
+geom_histogram() +          # create histogram
+theme_minimal()             # minimal styling
+</pre></div>
+
+Let's talk through this code:
+
+- `ggplot(data = penguins,`, specify what data frame you are working with 
+- `aes()` declaring what you want to show in plot
+- `x = bill_depth_mm`, specify what you want to show on the x axis
+- `group = species`, tell `ggplot()` you are interested in group comparisons at the `species` level
+- `colour = species`, set the colour to change by `species` e.g outline of bars
+- `fill = species`, set the fill to change by `species` e.g inside of bars
+- `geom_histogram()`, make a histogram
+- `theme_minimal()`, apply minimal styling.
+
+Note, we can also use the pipe to feed data into the `ggplot` function. The example below produces the same plot, but differs on the first two lines to the example above. We'll follow that approach below. 
+
+<div id=`r class_id()`><pre>
+penguins |>                   # pass `penguins` data to ggplot            
+  ggplot(     
+       aes(x = bill_depth_mm, # what I want to depict on the x axis 
+           group = species,   # group level comparisons using `species`
+           colour = species,  # colour my histograms by `species`
+           fill = species)) + #  fill the bars of my histogram by `species`
+  geom_histogram() +          # create histogram
+  theme_minimal()             # minimal styling
+</pre></div>
+
+
+## How does bill length vary between islands
+
+<h3>2. How does bill length vary between islands?</h3>
+
+This question is similar to Q1. We are working with `bill_length_mm` a numeric variable and `islands` a grouping/categorical variable
+
+> Let's make some boxplots to view the distributions of `bill_length_mm` of each island (histograms/violins are valid choices too!).
+
+Boxplots depict the range of numeric values along the `y` axis and the groups you want to compare on the `x` axis represent the `count` of each value.
+
+- the **thick bold line** represents the **median** (50th percentile) 
+- the **box** represents the **interquartile range** and shows where the middle 50% of the data lies.
+  - The bottom of the box is the  first quartile (first quartile, 25th percentile) 
+  - The top of the box is the third quartile (third quartile, 75th percentile). 
+- the **vertical lines** are the whiskers. 
+  - the bottom line extends to the minimum, no further than first quartile - 1.5 x IQR 
+  - the top line extends to the maximum, no further than third quartile + 1.5 x IQR 
+- outliers that exist beyond these bounds are marked as **dots**
+
+Here's the code to create a boxplot for each species:
+
+<div id=`r class_id()`><pre>
+penguins |>                    # pass `penguins` data to ggplot
+  ggplot(
+       aes(x = island,         # what I want to depict on the x axis
+           y = bill_length_mm, # what I want to depict on the y axis 
+           group = island,     # group level comparisons using `island`  
+           colour = island)) + # colour my boxplots by `island`
+  geom_boxplot() +             # create boxplot
+  labs(x= "Bill length (mm) ", # Add some nicer axes labels
+    y = "Cbservation counts", 
+    title = "Distribution of bill length (mm) by island") +  
+  theme_minimal()              # minimal styling
+</pre></div>
+
+
+**Notice** the overall recipe didn't change very much from Q1, but we made some minor changes:
+
+- swapped out the all the variables and the `geom_`. 
+- removed the `fill` setting so we can see the thick bold line of each boxplot.
+- used the `labs()` function to create some nicer looking axes labels for the plot
+
+## Which penguin species have the shortest flippers
+
+<h3>3. Which penguin species have the shortest flippers?</h3>
+    Like Q1, we are interested in `species` comparisons in `flipper_length_mm`.
+
+> Let's make some violin plots AND boxplots to view the distributions of `flipper_length_mm` of each species (histograms are a valid choice too!)
+
+Violin plots combine aspects of density/histograms to show:
+
+- shape of the distribution (like a smoothed histogram)
+- density of the data (widest part is where most of the data is)
+
+<div id=`r class_id()`><pre>
+penguins |>                     # pass `penguins` data to ggplot
+  ggplot(
+         aes(x = species,       # what I want to depict on the x axis
+             y = flipper_length_mm,# what I want to depict on the y axis 
+             group = species,   # group level comparisons using `species`  
+             colour = species)) +  # colour violin by `species`
+  geom_violin(aes(fill = species),# create violin, fill the violins by `species`
+              alpha = 0.2,      # set the transparency of fill
+              trim = FALSE) +   # don't crop violin
+geom_boxplot(width = 0.1) + 
+  coord_flip() +                # change axes orientation
+  theme_minimal()               # minimal styling
+</pre></div>
+
+Here, we are plotting **2 geometries** in one graphic. Think of `ggplots` like a cake, you can add components layer by layer e.g.  violins and then a boxplot. 
+
+Let's talk through the code a little:
+
+- **Notice** how we have also placed an `aes()` function within `geom_violin()`? This allows you to finely control the fill setting specifically to the violin plot. If you put `fill = species` in `ggplot(aes())`, the fill setting will roll out across layers of the graphic.
+
+- We adjusted the width of the boxplot so they fit nicely within the violins using the `width` argument
+
+- We used `coord_flip()` to swap the `x` and `y` axis to compare the shapes of the distributions more easily.
+
+## What is the relationship between bill length and depth in different species
+
+<h3>4. What is the relationship between bill length and depth in different species?</h3>
+
+So far, we have been working with one numeric variable and one grouping/categorical variable. What if we are interested in **relationships (correlation)** between **two numeric** variables? This is where `geom_point()` will come in handy.
+
+> Let's make a scatterplot + line plot to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species
+
+<div id=`r class_id()`><pre>
+penguins |>                       # pass `penguins` data to ggplot
+  ggplot(
+         aes(x = bill_depth_mm,   # what I want to depict on the x axis
+             y = bill_length_mm,  # what I want to depict on the y axis 
+             group = species,     # group level comparisons using `species`  
+             colour = species)) + # colour my points by `species`
+  geom_point() +                  # create scatterplot by `species`
+  geom_smooth(method = "lm",      # draw line of best fit of linear model
+              se = FALSE) +       # don't display confidence interval
+  theme_minimal()                 # minimal styling
+</pre></div>
+
+Code explainer:
+
+  - we specified our numeric variables of interest in  `aes(x = bill_depth_mm, y = bill_length_mm)`
+- we are still grouping and colouring by `species`
+- `geom_point()` adds points to the plot
+- `geom_smooth()` adds a "smoother" on top of the points
+- `method = lm` the smoother will take form of a linear model
+- `se = FALSE` turn off the confidence intervals
+
+## Does the relationship between bill length and depth for each species change over time
+
+<h3>Does the relationship between bill length and depth for each species change over time?</h3>
+
+This question expands on Q4. We want to recreate the scatter plot from above for every year we have data for. This is where `facet_wrap()` will be super handy. Remember the "split-apply-combine" paradigm? `facet_wrap()` is a great example of it. `facet_wrap()`  splits your data by what you want to "facet" on and reproduce your plot using the smaller data and then combine all the outputs into one plot. 
+
+> Let's make a scatterplot for each year to view the relationship between `bill_length_mm` and `bill_depth_mm` of each species change over time
+
+<div id=`r class_id()`><pre>
+penguins |>                    # pass `penguins` data to ggplot
+  ggplot(
+         aes(x = bill_depth_mm,   # what I want to depict on the x axis
+             y = bill_length_mm,  # what I want to depict on the y axis 
+             group = species,     # group level comparisons using `species`  
+             colour = species)) + # colour my points by `species`
+  geom_point() +                  # create scatterplot by `species`
+  geom_smooth(method = "lm",      # draw line of best fit of linear model
+              se = FALSE) +       # don't display confidence interval
+facet_wrap(~year) +               # produce plot by year
+  theme_minimal()                 # minimal styling
+</pre></div>
+
+
+## Now, your turn!
+
+<h3>Over to you!</h3>
+
+Now that you are all geared up with `ggplot2` skills, let's have a go with working  real-world datasets. 
+
+**Activity**
+
+- Complete the exercises in  `Wk1-2-plant-height.qmd` and `Wk1-2-plant-height.qmd`. Start with whichever one you like. 
+
+> Check out the [`ggplot2` cheatsheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf) to see the variety of **geometries** and options at your disposal!
+
+![Save the cheatsheet on your computer if you find it helpful, Image credit: Posit PBC](images/ggplot2-cheatsheet.png)
+
+
+## Stalagmites data visualisation
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("numbats/moodlequiz")
+library(moodlequiz)
+library(here)
+
+# Libraries for prac
+library(tidyverse)
+library(janitor)
+library(readxl)
+library(leaflet)
+
+# Read data from the maintainer's perspective
+stalagmites_data <- read_csv(here("week 1/Wk1-2-moodle/data/stalagmites/Laminated stalagmite Dataset.csv")) |> clean_names()
+stalagmites_sites <- read_xlsx(here("week 1/Wk1-2-moodle/data/stalagmites/Tables.xlsx")) |> clean_names()
+
+# Set up for moodle
+stalagmites_sites <- stalagmites_sites |>
+  mutate(lat = as.numeric(lat),
+         long = as.numeric(long))
+```
+
+<h1>stalagmites - Overview</h1>
+
+[Stalagmites](https://en.wikipedia.org/wiki/Stalagmite) are a type of rock formation that rises from the floor of a cave due to the accumulation of material deposited on the floor from ceiling drippings.
+
+![Image credit: Chris Howes/Wild Places Photography / Alamy Stock Photo](images\stalagmite.png){width=100%}
+
+<br>
+
+Prof Andy Baker in the UNSW School of Biological, Earth & Environmental Sciences uses stalagmite growth rates to study patterns of rainfall. As stalagmite growth rates depend on the rate of water flow into the soil, records of growth can be used to reconstruct rainfall variability over time.
+
+This section builds off two papers published by Andy and his team:
+
+- Baker et al (2021). The properties of annually laminated stalagmites-A global synthesis. Reviews of Geophysics, 59, e2020RG000722. <https://doi.org/10.1029/2020RG000722> (See file `doc/Baker et al 2021 Reviews of Geophysics.pdf`.)
+
+- Baker et al (2015). A composite annual-resolution stalagmite record of North Atlantic climate over the last three millennia (See file `doc/Baker et al 2015.pdf`.)
+
+**Activity:**
+
+Andy asked us to cross check his results, your goal is reproduce some key figures from the paper 2021 paper.
+
+**Do these visualisations in your `Wk1-2-stalagmites.qmd` document**
+
+> In some code chunks, we've given you some partialy completed R code, these are hints, complete the rest of the code before you run them
+
+## Setting up
+
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have.
+
+
+```{r}
+# install.packages(c("tidyverse", "janitor", "readxl"))
+
+library(tidyverse)
+library(janitor)
+library(readxl)
+```
+
+## Loading data
+
+<h3>Loading data</h3>
+
+The data is available at <https://figshare.com/articles/dataset/Laminated_stalagmite_Dataset_csv/13166639>
+
+We've downloaded this into the folder at `data/stalagmites/Laminated stalagmite Dataset.csv`
+
+Load this into R use the `read_csv()` function.
+
+The code below get's you started. You'll need to fill in the spaces indicated by XXX.
+
+
+```{r}
+stalagmites_data <- read_csv("data/XXX")
+```
+
+
+## Data structure
+
+<h3>Data structure</h3>
+
+This dataset contains laminated stalagmite measurements, with 40,279 records. It includes the following columns:
+
+- `entity_id`: Identifier for the stalagmite sample.
+- `seq_id`: Sequence identifier (likely referring to sample grouping).
+- `lamina thickness (mm)`: Thickness of individual laminae in millimeters.
+- `lam_age (BP, 0=1950AD)`: Age of the lamina in years before present (BP), with 0 corresponding to 1950 AD.
+
+Check the structure of the dataset, including the names of the columns.
+
+```{r}
+names(stalagmites_data)
+```
+
+
+> This dataset has some difficult variable names.`clean_names()` from the package `janitor` may be useful here.
+
+
+```{r}
+stalagmites_data <- read_csv("data/XXX") |>
+  clean_names()
+```
+
+
+## Check the data
+
+<h3>Check the data</h3>
+
+**Question: Did you notice any errors in the dataset? There is one really weird value in `lamina_thickness_mm`. Which is it? Try spot it using `geom_boxplot()`**
+
+The code below get's you started. You'll need to fill in the spaces indicated by XXX.
+
+```{r, eval=FALSE}
+ggplot(data = stalagmites_data, aes(y = lamina_thickness_mm)) +
+  geom_XXX()
+```
+
+You check with Andy and he confirms an error in the data entry for this point. Can you remove it?
+
+The `filter()` function and the `!` exclusion operator could be useful here.
+
+```{r, eval=FALSE}
+stalagmites_data <- stalagmites_data |>
+  filter(! XXX )
+```
+
+> Now let's go ahead and make some plots. We're going to try and recreate figures similar to Figure 3, 5, 10 in Baker et al 2021. Don't worry about getting them exact, just close.
+
+## Figure 5
+
+<h3>Figure 5</h3>
+
+Have a go at creating this plot in  your `Wk1-2-stalagmites.qmd` document. Add some colours/fill and nice axes labels. Use the `xlim()` function to see the max value for the x axis. Note: Do not worry about adding the curve.
+
+![Figure 5](images\baker-fig5.png)
+
+```{r, eval=FALSE}
+stalagmites_data |>
+  ggplot(aes(x = lamina_thickness_mm)) +
+  geom_histogram() +
+  theme_classic() +
+  labs() +
+  xlim()
+```
+
+**Question: Interpret this plot, what does this visualisation tell us?**
+
+The annual lamina growth rate is  `r cloze("very slow", c("very fast", "very slow"))` in the majority of samples.
+
+## Figure 3
+
+<h3>Figure 3</h3>
+
+Have a go at creating this plot.
+
+![Figure 3](images\baker-fig3.png)
+
+<br>
+
+> Try making a single panel before making a bunch of panels.
+
+1. Start with single sample. Use the `filter()` function to subset your data before plotting it. You may need to log10 + 1 transform your y variable to . Add some nice axes labels.
+
+```{r, eval=FALSE}
+# Transform data
+transformed_stalagmites_data <- stalagmites_data |>
+  mutate(log10_1_lamina_thickness_mm = log10(XXX + 1))
+
+# Create plot
+transformed_stalagmites_data |>
+  filter(XXX) |>
+  ggplot(aes(x = lam_age_bp_0_1950ad, y = XXX)) +
+  geom_line() +
+  labs() +
+  theme_classic()
+```
+
+2. Now try making a panel of plots. Note the section in the intro on faceting will be helpful for multipanel plots.
+
+```{r, eval=FALSE}
+transformed_stalagmites_data |>
+  ggplot(aes(x = XXX, y = XXX)) +
+  geom_line() +
+  scale_y_log10() +
+  theme_classic() +
+  labs("Years BP", y = "Growth rate (mm/yr)") +
+  facet_wrap( ~ entity_id, scales = "free")
+```
+
+**Question: Interpret this plot, what does this visualisation tell us?**
+
+The annual growth of all lamina samples are `r cloze("highly variable", c("very consistent", "highly variable"))`
+
+## Figure 10
+
+<h3>Figure 10</h3>
+
+Have a go at creating this plot.
+
+![Figure 10](images\baker-fig10.png)
+
+<br>
+
+You'll need to extract data for the samples numbers in black with `seq_id` before plotting. Using the **`%in%`** operator to filter for specific sequences.
+
+```{r, eval=FALSE}
+# Check vector of seq_id that you want
+ids <- c(85, 1004, 385, 217.1, 1008.1, 128, 465, 217.2, 1007.2, 128,  466, 1009.2, 1003.1, 1006)
+
+# Create plot
+transformed_stalagmites_data |>
+  filter(seq_id %in% ids) |>
+  ggplot(aes(x = XXX ,y = XXX)) +
+  geom_line() +
+  facet_wrap( ~ seq_id, scales = "free") +
+  labs("Years BP", y = "Growth rate (mm/yr)")
+```
+
+
+## Figure 2
+
+<h3>Figure 2</h3>
+
+Finally, can you plot a map of sample locations as in figure 2?
+
+![Figure 2](images\baker-fig2.png)
+
+<br>
+
+The data with locations is in `data/stalagmites/Tables.xlsx`. It's an excel file. We can read it in using the `read_xlsx()` from the package `readxl`. You may need to install this. You might also want to clean up the variable names
+
+```{r, eval=FALSE}
+stalagmites_sites <- read_xlsx("data/stalagmites/Tables.xlsx") |> clean_names()
+```
+
+**Question: Did you notice any errors in the dataset? There is one row isn't data, which is it?**
+
+`r cloze("first row", c("third row", "first row", "last row"))`
+
+```{r}
+stalagmites_sites
+```
+
+Exclude this row using the `filter`() function
+
+```{r, eval=FALSE}
+stalagmites_sites <- stalagmites_sites |> filter(! )
+```
+
+**Question: Are `lat` and `long` variables correct type? If not, correct this using the suitable function e.g. `as.numeric()`**
+
+```{r, eval = FALSE}
+stalagmites_sites <- stalagmites_sites |>
+  mutate(lat = XXX),
+         long = XXX)
+```
+
+First, let's make a map using the standard ggplot. I'll start you off with code for a world map. Your job is to add points and site names with `geom_text()`
+
+```{r, eval=FALSE}
+# create data for world coordinates using
+# map_data() function
+world_coordinates <- map_data("world")
+
+# create world map using ggplot() function
+stalagmites_sites |>
+  ggplot(
+    aes(long, lat)) +
+  geom_map(data = world_coordinates, map = world_coordinates,  # geom_map() function takes world coordinates  as input to plot world map
+           aes(long, lat, map_id = region)) +
+  coord_quickmap() +
+  theme_classic()
+```
+
+<h3>BONUS</h3>
+
+R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to show you the possibilities of R!
+
+
+```{r, warning=FALSE}
+# install.packages(c("leaflet"))
+
+library(leaflet)
+
+leaflet() |>
+  addTiles() |>
+  addMarkers(
+    lng = stalagmites_sites$long,
+    lat = stalagmites_sites$lat,
+    label =
+      paste(
+        stalagmites_sites$entity_id_1000_sisal_entity_id,
+        stalagmites_sites$site_name
+      )
+  ) |>
+  addScaleBar()
+```
+
+## Plant height data visualisation
+
+
+<h2>Overview</h2>
+
+![Image credit: Hokitika New Zealand native forest title by Jihwi Jang, CC BY 2.0](images\trees.png){width=80%}
+
+<br>
+
+Professor Angela Moles at UNSW used an open-source dataset of maximum height data for 7084 plant species and site combinations to provide the first global, cross-species quantification of the latitudinal gradient in plant height. (You can read more about the original study at [doi:10.1111/j.1365-2745.2009.01526.x](doi.org/10.1111/j.1365-2745.2009.01526.x) or in `docs/Journal of Ecology - 2009 - Moles - Global patterns in plant height.pdf`)
+
+We are going to use this data to do a bit of preliminary analyses and see if we can answer two questions:
+
+**1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?**
+
+**2. Are there taller plants at higher altitudes?**
+
+**Activities:**
+
+- Read in data and wrangle it suited for visualisation
+
+- Create data visualisation that can address the questions
+
+- Draw some initial conclusions from the plots you create
+
+<h3>Setting up</h3>
+
+Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have.
+
+```{r}
+# install.packages(c("tidyverse", "janitor"))
+library(tidyverse)
+library(janitor)
+```
+
+## Assembling the Data
+
+Read in the dataset `plantHeightSingleSpp.csv` from the folder `data/plant_height/`. There are some case and separator inconsistencies in the column names. Clean these up as you read in the data using the `|>` pipe.
+
+WOAH there are a LOT of variables in this data set. Sometimes it's nice to select only the columns you need for your analysis. This can make things easier in the long-run. Luckily, `dplyr` can help with that!
+
+**Question: Which columns are relevant to these 2 questions? Select all that apply**
+
+`r cloze(c("genus_species", "height", "lat", "alt"), c(colnames(plant_height)))`
+
+> Now, create a new data frame with only the relevant columns using `select()`
+
+## Check the distribution for the data
+
+<h3>Check the distribution for `height`</h3>
+
+> Check the distribution of your data to make sure there are no potential outliers in your key variables.
+
+<br><br>
+
+**Question: What plot would be good for this check?**
+
+`r cloze(c("boxplot", "histogram"), possible_choices)` are suitable to assess the distribution of `height`
+
+> Make a plot to assess the distribution of `height`
+
+<br><br>
+
+**Question: Is `height` left skewed or right skewed?**
+
+The data is `r cloze("right", c("left", "right"))` skewed. (Right skew is where "The right tail is longer; the mass of the distribution is concentrated on the left of the figure" [Wikipedia](https://en.wikipedia.org/wiki/Skewness))
+<br><br>
+
+**Question: Which species is the extreme value? Is the extreme value a true outlier? (Do some research and see verify this value)**
+
+The species with the extreme value for `height` is: `r cloze("Pseudotsuga menziesii", c("Dicksonia antarctica", "Eragrostis dielsii", "Pseudotsuga menziesii"))`. It `r cloze("is not", c("is indeed", "is not"))` a true outlier.
+
+## Data transformation
+
+<h3>Data transformation</h3>
+
+It is common to transform your data when it's heavily skewed as in `height`.
+
+> Can you `log10()` transform `height` and assign this update into a new data frame?
+
+## Visualisation
+
+<h3>The effects of latitude on plant height</h3>
+
+**Question: What should be the x variable and what should be the y variable?**
+
+- x variable: `r cloze("lat", colnames(plant_height))`
+- y variable: `r cloze("height", colnames(plant_height))`
+
+We'll first create a `ggplot` showing `lat` on the `x`-axis and `height` on the `y`-axis. Then, we'll create the same figure using the `log10` transformed data to see how it changes the patterns.
+
+> Create a plot to visualise the relationship between latitude and height.
+
+<br><br>
+
+**Question: What type of plot is suited to visualise these two variables?**
+
+A `r cloze("scatterplot", possible_choices)` is suited to visualise the relationship between these two variables.
+
+> Let's take a look at the line of best fit! To add this to our figure, use `geom_smooth(method="lm")`.
+
+<br>
+
+> Now create the same plot but using your `log10()` transformed variable instead of `height` and include the line of best fit.
+
+<br><br>
+
+**Question: 1. How does plant height vary across a latitudinal gradient (from tropics to the poles)?**
+
+Plant height `r cloze("decreases", c("increases", "decreases"))` from tropics to poles.
+
+> Now, we are going to try to answer our second question; Does plant height increase as **altitude** increases?
+
+## Altitude
+
+<h3>The effects of altitude on plant height</h3>
+
+We will continue to use the `log10` transformed `height`
+
+> Make a plot that can help us answer question 2. - add the line of best fit.
+
+<br><br>
+
+**Question: 2. Are there taller plants at higher altitudes?**
+
+There are `r cloze("shorter", c("taller", "shorter"))` trees at higher altitudes.
+
+## Prac reflection {type=essay}
+
+<h3>Prac reflection</h3>
+
+ **Question: Which parts of the coding and the tidyverse you've encountered so far did you find:**
+
+- most exciting?
+- most challenging?
+
+
+
