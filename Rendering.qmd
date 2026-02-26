@@ -1,17 +1,27 @@
+# todo 
+- cosnolidate docs and readme
+
+- remove install.pacakges() lines from .qmd files, no longer needed for webr
+- file week 1,2 - webr & solution tags
+- H3 - find and replace `##` with `<h3>` and `</h3>` for moodle compatibility ?
+- workflow to create student version of .qmd file without solutions, and check it runs
 
 # Rendering various practical files from main .qmd
 
 ```{r setup, include=FALSE}
+# remotes::install_github("numbats/moodlequiz")
+
 library(quarto)
 library(rmarkdown)
 library(tidyverse)
+library(moodlequiz)
 
 source("R/remove_solutions.R")
 source("R/generate_moodle_quiz.R")
 
-
+dir.
 # Step 1. Create a master .qmd file with explanations, cloze questions, solutions, and check it runs
-master_file <- "week 5/Wk5-1-moodle/Wk5-1-Multiple-Predictors.qmd"
+master_file <- "week 5/Wk5-1-Multiple-Predictors/Wk5-1-Multiple-Predictors.qmd"
 # Render as html - check it runs & refine it before uploading to moodle
 quarto::quarto_render(master_file)
 
@@ -25,9 +35,8 @@ readLines(master_file) |>
 # check it runs
 quarto::quarto_render(file_student)
 
-# Step 3. Render for upload to moodle using moodlequiz package 
-# - first create an rmd verion with adjusted headers and adding webr if desired. 
+# Step 3. Render for upload to moodle using moodlequiz package
+# - first create an rmd verion with adjusted headers and adding webr if desired.
 file_moodle_quiz <- generate_moodle_quiz_rmd(master_file, webr = FALSE)
 rmarkdown::render(file_moodle_quiz)
-  
 ```
