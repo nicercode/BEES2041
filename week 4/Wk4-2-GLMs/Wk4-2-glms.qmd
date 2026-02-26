@@ -17,7 +17,6 @@ format:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
 # Libraries for prac

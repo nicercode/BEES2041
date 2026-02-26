@@ -6,7 +6,6 @@ format: html
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
 # For the prac
@@ -15,7 +14,7 @@ library(easystats)
 library(palmerpenguins)
 
 # Data for prac
-data_towers <- read_csv("week 3/Wk3-2-moodle/data/towers-2024.csv")
+data_towers <- read_csv("week 3/Wk3-2-Communicating/data/towers-2024.csv")
 
 # webr counter
 reditor_count <- 1

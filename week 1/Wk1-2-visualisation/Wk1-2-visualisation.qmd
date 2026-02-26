@@ -12,7 +12,6 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
 reditor_count <- 1
@@ -360,7 +359,6 @@ Now that you are all geared up with `ggplot2` skills, let's have a go with worki
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 library(here)
 
@@ -371,8 +369,8 @@ library(readxl)
 library(leaflet)
 
 # Read data from the maintainer's perspective
-stalagmites_data <- read_csv(here("week 1/Wk1-2-moodle/data/stalagmites/Laminated stalagmite Dataset.csv")) |> clean_names()
-stalagmites_sites <- read_xlsx(here("week 1/Wk1-2-moodle/data/stalagmites/Tables.xlsx")) |> clean_names()
+stalagmites_data <- read_csv(here("week 1/Wk1-2-visualisation/data/stalagmites/Laminated stalagmite Dataset.csv")) |> clean_names()
+stalagmites_sites <- read_xlsx(here("week 1/Wk1-2-visualisation/data/stalagmites/Tables.xlsx")) |> clean_names()
 
 # Set up for moodle
 stalagmites_sites <- stalagmites_sites |>
@@ -632,6 +630,8 @@ stalagmites_sites |>
   theme_classic()
 ```
 
+## Bonus 
+
 <h3>BONUS</h3>
 
 R is a powerhouse for creating really cool outputs. For fun, here we've provided code for you to create an interactive map application. You will use the package `leaflet`. The code is a little different, don't worry about the details here - we just want to show you the possibilities of R!
@@ -658,8 +658,7 @@ leaflet() |>
 
 ## Plant height data visualisation
 
-
-<h2>Overview</h2>
+<h2>Plant height data visualisation</h2>
 
 ![Image credit: Hokitika New Zealand native forest title by Jihwi Jang, CC BY 2.0](images\trees.png){width=80%}
 
@@ -686,7 +685,6 @@ We are going to use this data to do a bit of preliminary analyses and see if we 
 Try running this first and see if you get alerts about missing packages. You may need to uncomment the first line and install any packages you don't have.
 
 ```{r}
-# install.packages(c("tidyverse", "janitor"))
 library(tidyverse)
 library(janitor)
 ```

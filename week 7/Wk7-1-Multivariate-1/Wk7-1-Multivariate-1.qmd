@@ -19,7 +19,6 @@ rprojroot::has_file("BEES2041-code.Rproj") |>
   file.path("week 7/Wk7-1-moodle") |>
   setwd()
 
-# remotes::install_github("numbats/moodlequiz")
 library(moodlequiz)
 
 # Packages for prac
