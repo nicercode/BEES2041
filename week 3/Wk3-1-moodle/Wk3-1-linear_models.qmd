@@ -748,7 +748,7 @@ A relatively big value of our `F-statistic` means that we have relatively more `
 
 2. Interpret the intercept of your model. What does it represent?
 
-The intercept in our model represents the mean/standard deviation/mean square of spray `r cloze("A", c("A", "B", "C", "F", "D", "E", "F"))`
+The intercept in our model represents the `r cloze ("mean", c("standard deviation", "mean", "mean square error"))` of spray `r cloze("A", c("A", "B", "C", "F", "D", "E", "F"))`.
 
 3. Which spray type(s) would you recommend in reducing insect counts?
 
