@@ -15,9 +15,9 @@ library(moodlequiz)
 
 ## Introduction
 
-Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand how y varies with some predictor x.
+Linear models are one of the most powerful and widely used tools in statistics and data science. At their core, they help us understand how y varies with one or more predictors $(x_1, x_2, ...)$.
 
-In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. Moreover, that we can estimate a confidence interval around the mean, within which we believe the true mean to occur.
+In the previous practical, we learned about population means and how natural variation in the process of sampling creates uncertainty. We also learned that we can estimate a confidence interval around the mean, within which we believe the true mean to occur.
 
 Linear models then allow us to test whether the true mean varies with another variable.
 
@@ -37,7 +37,7 @@ Our learning objectives today are:
 - **plot** the data and the **regression** line
   - add the **confidence interval** using output of `estimate_means()`
 
-Let’s dive in! 🚀 
+Let's dive in! 🚀 
 
 ![Image credit:  @allison_horst](you-can-do-it.png){width=80%} <br>
 <br>
@@ -62,7 +62,7 @@ We will be working with real-world datasets collected by researchers in the Scho
 
 We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
 
-**Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer
+**Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer.
 
 In case you don't have them installed, here is code for you to do so:
 ```{r, eval=FALSE}
@@ -99,7 +99,7 @@ data_towers
 
 To fit a linear model, we will be using the `lm()` function like so:
 
-**Note**: Remember to assign the output of `lm()` into an object so R can save it for you in your environment
+**Note**: Remember to assign the output of `lm()` into an object so R can save it for you in your environment.
 
 ```{r}
 towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
@@ -107,11 +107,11 @@ towers_fit <- lm(log10_leaf_mass_per_area ~ log10_rainfall, data = data_towers)
 
 ## Slope or the change in y with x
 
-> Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`)
+> Recall from lectures the slope (aka gradient) of a linear model describes how our y variable (`log10_leaf_mass_per_area`) changes with x (`log10_rainfall`).
 
 ![Linear model components and different slope values, Image credit: Data Dan](slope-explainer.png){width=80%} <br>
 
-Let's inspect the results of your model. Use `summary(towers_fit)` and see how this corresponds to the image above
+Let's inspect the results of your model. Use `summary(towers_fit)` and see how this corresponds to the image above.
 
 ```{r}
 summary(towers_fit)
@@ -121,9 +121,9 @@ summary(towers_fit)
 
 1. Which coefficient corresponds to the slope in the output of `summary(towers_fit)`? 
 
-The slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and the coefficient value is `r cloze("-0.543846", c("3.805973", "-0.543846", "<2e-16"))`
+The coefficient for the slope is `r cloze("log10_rainfall", c("(Intercept)", "log10_rainfall"))` and the coefficient value is `r cloze("-0.543846", c("3.805973", "-0.543846", "<2e-16"))`.
 
-2. What direction is slope coefficient, what does this tell us?
+2. What direction is the slope coefficient, what does this tell us?
 
 The slope is `r cloze("negative", c("negative", "positive"))`. This indicates that as `log10_rainfall` increases `log10_leaf_mass_per_area` `r cloze("decreases", c("decreases", "increases"))`. 
 
@@ -139,7 +139,7 @@ parameters(towers_fit)
 
 What does the 95% CI tell us here about the slope `log10_rainfall`?
 
-`[-0.56, -0.52]` provides a range of values within which we can be 95% confident that the `r cloze("true", c("sample", "true"))` population parameter coefficient lies. 
+`[-0.56, -0.52]` provides a range of values between which the `r cloze("true", c("sample", "true"))` population parameter coefficient most likely lies. 
 
 
 ## Variation explained by the model (R^2 and F-statistic)
@@ -152,30 +152,30 @@ What does the 95% CI tell us here about the slope `log10_rainfall`?
 The **R^2 value** describes how much variation is explained by your model:
 
 - Measures the **proportion of variance** in the y variable (`log10_leaf_mass_per_area`) explained by the x variable(s) (`log10_rainfall`).
-- A higher R^2 value indicates strong relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable(s) (`log10_rainfall`), but *importantly* it **does not imply causation**.
+- A higher R^2 value indicates a strong relationship between the y variable (`log10_leaf_mass_per_area`) and the x variable(s) (`log10_rainfall`), but *importantly* it **does not imply causation**.
 
 The **F-statistic** compares the explained variance to the unexplained variance:
 
 - A **high F-statistic** suggests that at least one predictor (`log10_leaf_mass_per_area`) is significantly contributing to the model.
 
-- The **F-statistic's p-value** tells us whether our predictor variable explains a significant amount of variance in the response variable or not
+- The **F-statistic's p-value** indicates how likely we are to see a value of this magnitude in a population where there is no meaningful effect.
 
 <!-- TODO: @Daniel, here would be a nice spot to show off some simulated data for students to learn about the relationship between R^2 and F-statistic  -->
 
 **Question:**
 
-The `r cloze("R squared value", c("F-statistic", "R squared value", "P value"))` is a `r cloze("moderate", c("weak", "moderate", "strong"))` relationship between the y variable (`log10_leaf_mass_per_area`) explained by the x variable (`log10_rainfall`). 
+The `r cloze("R-squared value", c("F-statistic", "R-squared value", "P value"))` indicates a `r cloze("moderate", c("weak", "moderate", "strong"))` amount of variance in the y variable (`log10_leaf_mass_per_area`) is explained by the x variable (`log10_rainfall`). 
 
-The `r cloze("F-statistic", c("F-statistic", "R squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains `r cloze("significant", c("non-significant", "significant"))` amount of variance in `log10_leaf_mass_per_area`.
+The `r cloze("F-statistic", c("F-statistic", "R-squared value", "P value"))` suggests that the predictor (`log10_leaf_mass_per_area`) explains a `r cloze("significant", c("non-significant", "significant"))` amount of variance in `log10_leaf_mass_per_area`.
 
 ## *F*-statistic and *P*-values - how likely is it to get our results by chance?
 
-> The *p*-value is derived from the F-distribution
+> In linear models, the *p*-value is derived from the F-distribution
 
 ![Relationship between R^2, *F* and *P*, Image credit: Data Dan](f-value-p-value.png){width=60%}
 <br>
 
-The *p*-value and the *F*-statistic are closely related. In the last prac, we learned to calculate **probability (p-value)** for a *t*-statistic from a standard normal distribution. We can do that same for our *F*-statistic from the *F*-distribution!
+The *p*-value and the *F*-statistic are closely related. In the last prac, we learned to calculate **probability (p-value)** for a *t*-statistic from a standard normal distribution. We can do the same for our *F*-statistic from the *F*-distribution!
 
 The *p*-value tells us how extreme our *F*-statistic is under the null hypothesis (which assumes the predictor has no effect). I like to think about this as:
 
@@ -183,13 +183,13 @@ The *p*-value tells us how extreme our *F*-statistic is under the null hypothesi
 
 - A smaller *p*-value means the observed *F*-statistic is **unlikely** to occur by chance, suggesting **strong evidence** against the null hypothesis. 
 
-> In other words, in our hypothetical world, finding an effect is REALLY rare - meaning in the real world there is something interesting happening in our model.
+> In other words, in our hypothetical world, finding an effect is REALLY rare - meaning in the real world there is likely something interesting happening.
 
 <!-- TODO: @Daniel, here would be a nice spot to show off some simulated data for students to learn about the relationship between R^2, F-statistic AND p-values -->
 
 **Question:**
 
-Generally, as the *F*-statistic increases the `r cloze("p-value", c("the intercept", "the slope", "p-value"))` decreases. A large *F*-statistic means that it's `r cloze("unlikely", c("not big deal", "unlikely"))` to be sampled by chance. 
+Generally, as the *F*-statistic increases, the `r cloze("p-value", c("the intercept", "the slope", "p-value"))` decreases. A large *F*-statistic means that it's `r cloze("unlikely", c("likely", "unlikely"))` to be sampled by chance. 
 
 > Try not to get overwhelmed by the details, all we want you to understand is the relationship between test statistics e.g. *F*-statistic and *p*-values. You got this!
 
@@ -204,7 +204,7 @@ means_towers
 
 These are called model predictions and we can visualise these using:
 
-**Notice** how we stored the output of our `ggplot` in `towers_model_predictions`, this gives us the option to add to plot incrementally
+**Notice** how we store the output of our `ggplot` in a variable called `towers_model_predictions`; this gives us the option to add to the plot incrementally later.
 
 ```{r}
 towers_model_predictions <-
@@ -225,11 +225,11 @@ towers_model_predictions
 Voilà!!! Let's talk through this code:
 
 - `ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area))` - here, we are visualising our y variable (`log10_leaf_mass_per_area`) and x variable (`log10_rainfall`)
-- `geom_point(size = 2, col = "red", alpha = 0.2, stroke = 5)` - plotting the raw data using points
+- `geom_point(size = 2, col = "red", alpha = 0.2, stroke = 0)` - plotting the raw data using points
     - `size` controls the size of the points
     - `col` sets the colour of the points
     - `alpha` sets the transparency of the points, a low value makes them more transparent. This is good for overlapping points
-    - `stroke` controls the thickness of the border of the points
+    - `stroke` controls the thickness of the border of the points (so here we want no border)
 - `geom_ribbon(data = means_towers, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey")` - create a ribbon to represent our confidence intervals
     - `data = means_towers` we are plotting our model predictions
     - `aes(ymin = CI_low, ymax = CI_high, y = Mean)`, setting the lower and upper bounds of our CI and our mean values for our y variable (`log10_leaf_mass_per_area`) 
@@ -265,7 +265,7 @@ Allometry in biology is the study of how biological traits (such as bill depth, 
       - F-statistic value
       - p-value
 - Generate some model predictions from your model using `estimate_means()`
-- Create a data visualisation showing off the `penguins` data, your predicted means from your linear
+- Create a data visualisation showing off the `penguins` data and your predicted means from your linear
 model
   - Plot the raw data with `geom_point()`
   - Add the confidence intervals with `geom_ribbon()`
@@ -292,7 +292,8 @@ penguins_fit <- lm(bill_length_mm ~ body_mass_g, data = penguins)
 summary(penguins_fit)
 
 # Clean, nice summary
-parameters(penguins_fit) |> tibble() 
+parameters(penguins_fit)
+parameters(penguins_fit) |> tibble() # For unrounded values in the confidence intervals
 
 # Create model predictions
 penguins_means <- estimate_means(penguins_fit, by = "body_mass_g")
@@ -319,26 +320,26 @@ penguins_model_predictions
 
 1. What does the slope tell us? 
 
-There is a `r cloze("positive", c("positive","negative"))` relationship between bill length and body mass
+There is a `r cloze("positive", c("positive", "negative"))` relationship between bill length and body mass.
 
 2. Let's try interpret the slope. 
 
-- A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm)
+- A unit increase (gram) in body mass corresponds to a `r cloze("4.051e-03", c("2.690e+01","4.051e-03", "<2e-16"))` in bill length (mm).
 
-3. Yikes, looks like rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
+3. Yikes, it looks like rounding the confidence intervals for the slope in the output of `parameters()` is not very helpful. Try `parameters(penguins_fit) |> tibble()` to look at the unrounded values of the confidence intervals. What do the confidence intervals for the slope tell us? 
 
-The confidence intervals for the slope tell us that the true population mean for the slope lies between
+The confidence intervals for the slope tell us that the true population mean for the slope likely lies between
 `r cloze("0.0035 and 0.0046", c("24.40 and 29.40","0.0035 and 0.0046"))`.
 
 4. Let's try understand the *R^2* and *F*-statistic values from your model. What are they telling us?
 
-- The *R^2* value suggests that there is a `r cloze("moderate", c("weak","moderate", "strong"))` relationship between bill length and body mass. 
+- The *R^2* value suggests that there is a `r cloze("moderate", c("weak", "moderate", "strong"))` relationship between bill length and body mass. 
 
-- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("bill_length_mm","bill_depth_mm", "flipper_length_mm"))`
+- The *F*-statistic is relatively `r cloze("large", c("small","large"))`, meaning that body mass is explaining `r cloze("a lot", c("a little","a lot"))` of variation in  `r cloze("bill_length_mm", c("bill_length_mm", "bill_depth_mm", "flipper_length_mm"))`
 
 5. Looking at the *p*-value, how likely is it to observe our result? Do we have evidence of a relationship between bill length and body mass?
 
-The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small","large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely","unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence","moderate evidence", "strong evidence"))` for a `r cloze("positive", c("positive","negative"))` relationship between bill length and body mass.
+The *p*-value for slope `body_mass_g` is very `r cloze("small", c("small", "large"))`, this means that the probability of observing our slope estimate is very `r cloze("unlikely", c("likely", "unlikely"))` if there was no relationship between bill length and body mass. This indicates that we have `r cloze("strong evidence", c("no evidence", "weak evidence", "moderate evidence", "strong evidence"))` for a `r cloze("positive", c("positive", "negative"))` relationship between bill length and body mass.
 
 # LM continuous (Ozone)
 
@@ -365,7 +366,7 @@ data_airquality <- airquality
 Using the `airquality` dataset:
 
 - Run a linear model for the relevant variables for our question
-- Generate the summary output for your model using `summary()`, `parameters()` 
+- Generate the summary output for your model using `summary()` and `parameters()` 
   - Make some interpretations from this output using the: 
       - slope
       - confidence interval of the slope
@@ -373,8 +374,7 @@ Using the `airquality` dataset:
       - F-statistic value
       - p-value
 - Generate some model predictions from your model using `estimate_means()`
-- Create a data visualisation showing off the `airquality` data, your predicted means from your linear
-model
+- Create a data visualisation showing off the `airquality` data and your predicted means from your linear model
   - Plot the raw data with `geom_point()`
   - Add the confidence intervals with `geom_ribbon()`
   - Add the predicted linear relationship with `geom_line()`
@@ -408,26 +408,26 @@ ozone_model_predictions
 
 1. What is the relationship between temperature and ground-level ozone? 
 
-Ground-level ozone increases/decreases with temperature. For every 1 degree Fº increase, ozone increases by `r cloze("2.43", c("2.43","147","0.23"))` parts per billion.
+Ground-level ozone increases/decreases with temperature. For every 1 degree Fº increase, ozone increases by `r cloze("2.43", c("2.43", "147", "0.23"))` parts per billion.
 
 2. Interpret the R^2 value. 
 
-The R^2 value of 0.48 indicates that 48% of the variation in ground-level ozone is explained by the `r cloze("model", c("p-value","residuals","model"))`.
+The R^2 value of 0.48 indicates that 48% of the variation in ground-level ozone is explained by the `r cloze("model", c("p-value","residuals", "model"))`.
 
 3. Where does the true mean estimate of the slope for `Temp` lie? 
 
-The true mean estimate of the slope exists somewhere between  `r cloze("1.97 and 2.89", c("-183.2 and -110.77", "1.97 and 2.89"))`.
+The true mean estimate of the slope likely exists somewhere between `r cloze("1.97 and 2.89", c("-183.2 and -110.77", "1.97 and 2.89"))`.
 
 # LM categorical (Fish)
 
 ## Worked example - Jasmine, fish and energetics in a warming world
 
-Linear regressions are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance
+Linear regressions are incredibly flexible. Not only can we use them to make inferences about the relationship of continuous variables, we can also use them to test for **differences in means** between **discrete** or **categorical** variables using an **AN**alysis **O**f **VA**riance.
 
 > Recall the differences between  **discrete** or **categorical** variables. 
 
 ![A colourful example of  **continuous** and **discrete/categorical** variables, Image credit: @allison_horst](continuous-discrete.png){width=60%} <br>
-From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine  Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperature treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
+From lectures, Data Dan walked us through an example of an ANOVA from a study conducted by Dr. Jasmine Martino, a postdoc in the School of Biological, Earth & Environmental Sciences. Jasmine was interested in understanding how temperature (`temp_treatment`) can influence fish energetics and metabolism (`smr`). She raised fish at three different temperature treatment groups. You can read about Jasmine's research in the [Journal of Experimental Biology](https://journals.biologists.com/jeb/article/223/6/jeb217091/223685/Experimental-support-towards-a-metabolic-proxy-in). We will be working with the data Jasmine has compiled for us. 
 
 ![Introducing marine biologist - Dr. Jasmine Martino!](jasmine-fish.png){width=60%} <br>
 
@@ -458,7 +458,7 @@ fit_martino <- lm(smr ~ temp_treatment, data = data_martino)
 
 ## Analysis of Variance (ANOVA)
 
-> How do we know whether there is a treatment group effect?
+> How do we know whether there is an effect of treatment group?
 
 To statistically test for an overall effect of `temp_treatment`, we will enlist the help of the `anova()` function. 
 
@@ -469,8 +469,8 @@ anova(fit_martino)
 Let's talk through what's happening here: 
 
 - The `anova()` function splits up the total variation in our data into two main components: 
-    1. variation explained by our model predictors `temp_treatment`. Think of this as a signal for a treatment effect
-    2. unexplained variation `Residuals`. Think of this as noise in our data
+    1. Variation explained by our model predictor(s) (`temp_treatment`). Think of this as a signal for a treatment effect.
+    2. Unexplained variation (`Residuals`). Think of this as noise in our data.
 
 ## Detecting an overall effect - some maths
 
@@ -478,14 +478,14 @@ Let's talk through what's happening here:
 
 For both the predictor (`temp_treatment`) and `Residuals` we can do some maths (but we use R instead) to calculate: 
 
-- sum of squares (`Sum sq`)
-- mean square (`Mean sq`) 
+- sum of squares (`Sum Sq`)
+- mean square (`Mean Sq`) 
 
-Once we have these values, we can calculate the `F-value` - a ratio between the `Mean sq` of the predictor (`temp_treatment`) and the `Mean sq` for the `Residuals`. 
+Once we have these values, we can calculate the `F-value` - a ratio between the `Mean Sq` of the predictor (`temp_treatment`) and the `Mean Sq` for the `Residuals`. 
 
 In other words, the `F-value` is the ratio of signal to noise: 
 
-- **larger** values indicate a **stronger** signal
+- **larger** values indicate a **stronger** signal,
 - **smaller** values mean that we have more **noise** in our data.
 
 From there, we use the *F*-statistic to retrieve the probability of observing our effect in a hypothetical (and boring) world where nothing is expected to happen - just like we did in earlier examples. 
@@ -500,7 +500,7 @@ What does this mean?
 
 - This indicates that variation explained by our model is `r cloze("greater than", c("greater than", "less than"))` unexplained variation. 
 
-- In other words, there is `r cloze("strong", c("strong", "weak"))` signal for a treatment effect and it is very `r cloze("likely", c("likely", "unlikely"))` to observe this effect.  
+- In other words, there is a `r cloze("strong", c("strong", "weak"))` signal for a treatment effect and it is very `r cloze("unlikely", c("likely", "unlikely"))` to observe this effect in our hypothetical boring world.
 
 ## Estimate means for each group
 
@@ -525,29 +525,29 @@ Unlike previous examples, we have an extra row in the output! This is because ou
 ![Categorical variables becomes multiple predictors in a linear model](lm-multiple-predictors.png){width=80%} <br>
 Importantly: 
 
-- `(Intercept)` represents the **mean** of `temp_treatment [20C]`. By default, the `lm()` function sorts the categorical variable alphabetically and by increasing numeric order and then chooses the first value as `(Intercept)` like this:
+- `(Intercept)` represents the **mean** of `temp_treatment [20C]`. By default, the `lm()` function sorts the categorical variable alphabetically and then chooses the first value as `(Intercept)`, like this:
 
 ```{r}
-data_martino$temp_treatment |>  unique()
+data_martino$temp_treatment |> unique() |> sort()
 ```
 
-- The slope for `temp_treatment [24C]` represents the slope or **difference** in means between `temp_treatment [24C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
+- The slope for `temp_treatment [24C]` represents the 'slope' or **difference** in means between `temp_treatment [24C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
 
-- The slope for `temp_treatment [28C]` represents the slope or **difference** in means between `temp_treatment [28C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
+- The slope for `temp_treatment [28C]` represents the 'slope' or **difference** in means between `temp_treatment [28C]` and the `(Intercept)` i.e. `temp_treatment [20C]`.
 
-## Estimate pairwise comparisons in mean differences (contrasts)
+## Estimate pairwise comparisons in means (contrasts)
 
 > What if we want to change the reference group from temp_treatment [20C] to temp_treatment [28C]? 
 
-We can use the `estimate_contrasts()` function to give us pairwise comparisons between all groups. Try it out
+We can use the `estimate_contrasts()` function to give us pairwise comparisons of the means between all groups. Try it out!
 
 ```{r}
 estimate_contrasts(fit_martino, contrast = "temp_treatment")
 ```
 
-Let's visualise the means of each temp_treatment with `ggplot`
+Let's visualise the means of each temp_treatment with `ggplot`.
 
-**Notice** how we stored the output of our `ggplot` in `martiono_model_predictions`, this gives us the option to add to plot incrementally
+**Notice** how we store the output of our `ggplot` in `martino_model_predictions`, this gives us the option to add to plot incrementally later.
 
 ```{r}
 martino_model_predictions <-
@@ -597,7 +597,7 @@ Using the `penguins` data:
 - Generate summary outputs for your model using `summary()`, `parameters()`
   - Make some interpretations from this output using the: 
       - intercept
-      - slopes for the group predictor variable (`island`)
+      - 'slopes' for the group predictor variable (`island`)
       - confidence interval of the group predictor variable (`island`)
       - R^2 value
       - F-statistic value
@@ -637,8 +637,8 @@ group_means_island <- estimate_means(fit_penguins, by = "island")
 # Plot with raw data points
   ggplot(group_means_island, aes(x = island, y = Mean)) +
   geom_jitter(data = penguins, aes(x = island, y = flipper_length_mm), color = "red", width = 0.1) + # Raw data
-  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", size = 3) + # Confidence intervals
-  geom_point(size = 3, color = "orange") + # Estimated means
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0, color = "grey", linewidth = 3) + # Confidence intervals
+  geom_point(size = 4, color = "orange") + # Estimated means
   labs(title = "Island comparisons in flipper length in Palmer Penguins",
        x = "Islands in Palmer Archipelago",
        y = "Flipper length (mm)") +
@@ -649,9 +649,9 @@ group_means_island <- estimate_means(fit_penguins, by = "island")
 
 **Questions:**
 
-1. What does the `F value` of the `anova()` output indicate?
+1. What does the `F-value` of the `anova()` output indicate?
 
-The `F value` is relatively `r cloze("large", c("small","large"))`. This means that our model is explaining a `r cloze("large", c("small","large"))` amount of variation in `r cloze("flipper_length_mm", c("bill_length_mm","bill_depth_mm", "flipper_length_mm"))`.
+The `F-value` is relatively `r cloze("large", c("small", "large"))`. This means that our model is explaining a `r cloze("large", c("small","large"))` amount of variation in `r cloze("flipper_length_mm", c("bill_length_mm", "bill_depth_mm", "flipper_length_mm"))`.
 
 2. What is the reference island for the `(Intercept)`?
 
@@ -659,11 +659,11 @@ The reference island is `r cloze("Biscoe", c("Biscoe", "Dream", "Torgersen"))`
 
 3. Which two islands showed the biggest mean difference in flipper length?
 
-The biggest mean difference was observed between `r cloze("Torgersen island and Biscoe island", c("Torgersen island and Biscoe island", "Dream island and Biscoe island", "Torgersen island and Dream island"))`
+The biggest mean difference was observed between `r cloze("Torgersen Island and Biscoe Island", c("Torgersen Island and Biscoe Island", "Dream Island and Biscoe Island", "Torgersen Island and Dream Island"))`
 
-4. What does the p-value for the mean difference between Torgersen island and Dream island tell us?
+4. What does the p-value for the mean difference between Torgersen Island and Dream Island tell us?
 
-The p-value of `r cloze("0.312", c("< .001", "0.312"))` tells us that there is a `r cloze("moderate", c("very low", "moderate", "very high"))` chance that we would observe the mean difference of -1.88 between Torgersen island and Dream island if there was `r cloze("no", c("no", "strong"))` differences in flipper length between islands.
+The p-value of `r cloze("0.312", c("< .001", "0.312"))` tells us that there is a `r cloze("moderate", c("very low", "moderate", "very high"))` chance that we would observe the mean difference of -1.88 between Torgersen Island and Dream Island if there were `r cloze("no", c("no", "strong"))` differences in flipper length between islands.
 
 # LM categorical (Crops)
 
@@ -726,22 +726,7 @@ group_means_spray <- estimate_means(fit_insect, by = "spray")
 group_means_spray |>  tibble()
 ```
 
-
-```{r}
-ggplot(data = data_insects, aes(x = spray, y = count)) + 
-  geom_point() + 
-  geom_errorbar(data = group_means_spray, aes(y = Mean, ymin = CI_low, ymax = CI_high), width = 0.3) + 
-  geom_point(data = group_means_spray, aes(y = Mean, x = spray), colour = "green", size = 5) +
-  theme_minimal()
-  
-```
-
-
-```{r}
-
-```
-
-
+```{r solution4}
 # Plot with raw data points
 ggplot(group_means_spray, aes(x = spray, y = Mean)) +
   geom_jitter(data = data_insects, aes(x = spray, y = count), color = "red", width = 0.1) + # Raw data
@@ -757,15 +742,15 @@ ggplot(group_means_spray, aes(x = spray, y = Mean)) +
 
 **Questions:**
 
-1. Our `F value` of the `anova()` output is not very big (34.70), what might this mean? 
+1. Our `F-statistic` of the `anova()` output is relatively big (34.70), what might this mean? 
 
-A relatively small value in our `F value` means that we have relatively more `r cloze("noise relative to signal", c("noise relative to signal", "signal relative to noise"))` in our data. 
+A relatively big value of our `F-statistic` means that we have relatively more `r cloze("signal to noise", c("noise to signal", "signal to noise"))` in our data. 
 
 2. Interpret the intercept of your model. What does it represent?
 
-The intercept in our model represents the mean/standard deviation/mean square of spray `r cloze("A", c("A", "B", "C", "F", "D", "E", "F"))`
+The intercept in our model represents the `r cloze ("mean", c("standard deviation", "mean", "mean square error"))` of spray `r cloze("A", c("A", "B", "C", "F", "D", "E", "F"))`.
 
 3. Which spray type(s) would you recommend in reducing insect counts?
 
-From our pairwise comparisons, I would recommend to use spray(s) `r cloze("C, D or E", c("B", "C", "F", "C, D or E", "A, B or F"))`
+From our pairwise comparisons, I would recommend to use spray(s) `r cloze("C, D or E", c("B, C or F", "C, D or E", "A, B or F"))`.
 
