@@ -60,7 +60,7 @@ We will be working with real-world datasets collected by researchers in the Scho
 
 **Setting up: Packages:**
 
-We will also be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
+We will be working with packages from the `tidyverse` and `easystats`, building on skills from previous pracs. You should have these already installed on your machines.
 
 **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answer.
 
@@ -72,7 +72,7 @@ In case you don't have them installed, here is code for you to do so:
 # install.packages("palmerpenguins")
 ```
 
-> Remember to load the packages into R to use em! 
+> Remember to load the packages into R to use them!
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)

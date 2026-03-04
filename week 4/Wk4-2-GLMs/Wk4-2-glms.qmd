@@ -76,21 +76,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-> **Note** that when running R in the browser we need to install the packages each time we start a new session or after you've checked your answers. We're only going to install the parts of `tidyverse` and `easystats` we need for this prac.
-
-```{r, eval=FALSE}
-install.packages("dplyr")
-install.packages("readr")
-install.packages("ggplot2")
-install.packages("performance")
-install.packages("modelbased")
-install.packages("see")
-install.packages("emmeans")
-install.packages("patchwork")
-
-```
-
-> Remember to load the packages into R to use em!
+> Remember to load the packages into R to use them!
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(dplyr)

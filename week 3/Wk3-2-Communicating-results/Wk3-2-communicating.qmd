@@ -96,7 +96,7 @@ You may need to install these, remember you only need to install these once!
 ```
 
 
-> Remember to load the packages into R to use em! 
+> Remember to load the packages into R to use them!
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)

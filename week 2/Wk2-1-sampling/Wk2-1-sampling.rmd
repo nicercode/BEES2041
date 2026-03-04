@@ -54,12 +54,12 @@ We will be working with real-world datasets collected by researchers in the Scho
 
 **Packages:**
 
-We will also be working with the packages `dplyr` and `ggplot2`, building on skills from the first practical. You should have these already installed from the first week. Additionally we'll use the `parameters` package from the `easystats` suite of packages. If you don't have this installed, you can install it by running the following code:
+We will also be working with the packages `dplyr` and `ggplot2`, building on skills from the first practical. You should have these already installed from the first week. Additionally we'll use the `parameters` package from the `easystats` suite of packages. If you don't have these installed, you can install it by running the following code after removing the comments:
 
 ```{r, eval=FALSE}
 # Run only the lines below for packages you have not previously installed.
 #install.packages("tidyverse")
-install.packages("parameters")
+#install.packages("parameters")
 ```
 
 And don't forget to load them
