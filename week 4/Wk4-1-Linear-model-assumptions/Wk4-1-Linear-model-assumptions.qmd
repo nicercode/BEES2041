@@ -586,7 +586,7 @@ Many crustaceans have indeterminate growth, which means they just keep on moulti
 
 To explore how fecundity varied with body size, the biologist collected 40 females that were brooding eggs, measured their body length `Length` (mm) and the number of eggs `Eggs` in their brood pouch.
 
-Load the data file `data/Amphipod.fecundity.csv` and choose a plot to visualise egg number per brood, you may want to label each point as the row number again.
+Load the data file `data/Amphipod_fecundity.csv` and choose a plot to visualise egg number per brood, you may want to label each point as the row number again.
 
 ```{r solution4}
 
