@@ -565,22 +565,6 @@ martino_model_predictions <-
 martino_model_predictions
 ```
 
-Voilà!!! Let's talk through this code:
-
-<!-- - `ggplot(data_towers, aes(x = log10_rainfall, y = log10_leaf_mass_per_area))` - here, we are visualising our y variable (`log10_leaf_mass_per_area`) and x variable (`log10_rainfall`) -->
-<!-- - `geom_point(size = 2, col = "red", alpha = 0.2, stroke = 5)` - plotting the raw data using points -->
-<!--     - `size` controls the size of the points -->
-<!--     - `col` sets the colour of the points -->
-<!--     - `alpha` sets the transparency of the points, a low value makes them more transparent. This is good for overlapping points -->
-<!--     - `stroke` controls the thickness of the border of the points -->
-<!-- - `geom_ribbon(data = means_towers, aes(ymin = CI_low, ymax = CI_high, y = Mean), fill = "grey")` - create a ribbon to represent our confidence intervals -->
-<!--     - `data = means_towers` we are plotting our model predictions -->
-<!--     - `aes(ymin = CI_low, ymax = CI_high, y = Mean)`, setting the lower and upper bounds of our CI and our mean values for our y variable (`log10_leaf_mass_per_area`)  -->
-<!--     - `fill = "grey"`, colour our ribbon in grey -->
-<!-- - `geom_line(data = means_towers, aes(y = Mean), col = "#EB8240", linewidth = 1)`, plot the line for our model predictions -->
-<!--   - `aes(y = Mean)`, create the line using the mean values of our y variable (`log10_leaf_mass_per_area`)  -->
-<!--   - `col = "#EB8240"`, set a custom colour using [hexadecimal (a computer dialect to represent colour)](https://g.co/kgs/NJcxHVJ) -->
-<!--   - `linewidth = 1` controls the thickness of the line -->
 
 # LM categorical (Penguins)
 
