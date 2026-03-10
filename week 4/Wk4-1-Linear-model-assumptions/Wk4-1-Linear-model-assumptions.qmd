@@ -602,6 +602,8 @@ ggplot(aes(x = Length, y = Eggs)) +
 
 # Fit the model with all data
 amphipods_fit <- lm(Eggs ~ Length, data = data_amphipods)
+parameters(amphipods_fit)
+summary(amphipods_fit)
 
 # Check model
 check_model(amphipods_fit)
@@ -640,15 +642,15 @@ The probability that there is no relationship between body size and body length 
 
 3. How many more eggs are produced per brood for every 1 mm increase in body length?
 
-For every 1 mm increase in body length in an amphipod, we see an average `r cloze("increase", c("increase", "decrease"))` of `r cloze("6.34", c("6.34", "31.02"))` eggs. 
+For every 1 mm increase in body length in an amphipod, we see an average `r cloze("increase", c("increase", "decrease"))` of `r cloze("5.64", c("5.64", "31.02"))` eggs. 
 
-4. How many eggs would you predict that a 10 mm female would have?
+1. How many eggs would you predict that a 10 mm female would have?
 
 The fitted equation of our model is:
 
-`r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` = `r cloze("-31.02", c("6.34", "-31.02"))` + `r cloze("6.34", c("6.34", "-31.02"))` * `r cloze("body length", c("number of eggs (fecundity)", "body length"))`
+`r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` = `r cloze("-25.13", c("6.34", "-25.13"))` + `r cloze("5.64", c("5.64", "-31.02"))` * `r cloze("body length", c("number of eggs (fecundity)", "body length"))`
 
-Substituting 10mm in place of `r cloze("body length", c("number of eggs (fecundity)", "body length"))` in the fitted equation will give us `r cloze("32.38", c("32.38", "-1966.668", "-94.42"))` eggs.
+Substituting 10mm in place of `r cloze("body length", c("number of eggs (fecundity)", "body length"))` in the fitted equation will give us `r cloze("31.27", c("31.27", "-1966.668", "-94.42"))` eggs.
 
 5. What percentage of the variance in egg number per brood is explained by your relationship?
 
