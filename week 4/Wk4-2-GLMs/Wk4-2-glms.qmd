@@ -325,7 +325,7 @@ fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
 
 Let's take a look at the output `parameters()`.
 
-We interpret this output in a similar manner as for linear model
+We interpret this output in a similar manner as for linear model.
 
 ```{r}
 parameters(fit_crab)
@@ -344,7 +344,7 @@ crab_means <- estimate_means(fit_crab, by = "Dist", length = 100)
 
 ggplot(crab_means, aes(x = Dist, y = Probability)) +
   geom_ribbon(aes(ymin = CI_low, ymax = CI_high), fill = "grey") +
-  geom_line(size = 1, col = "darkorange") +
+  geom_line(linewidth = 1, col = "darkorange") +
   geom_jitter(data = data_crabs, aes(y = CrabPres), height = 0, width = 0.2, alpha = 0.2, size = 4, colour = "red") +
   theme_minimal()
 ```
@@ -381,11 +381,11 @@ parameters(mite_subs_fit)
 
 1. **What type of variable is `pa`, why do we need a GLM to model this data?**
 
-`pa` is a `r cloze("binary", c("binary", "continuous", "random"))` variable, 1 indicates `r cloze("presence", c("absence", "presence"))` of mites. We need a GLM to model this data, because this data is not `r cloze("continuous", c("binary", "continuous", "random"))` and comes from a `r cloze("non-normal", c("normal", "non-normal"))` distribution and cannot be represented by a linear model. 
+`pa` is a `r cloze("binary", c("binary", "continuous", "random"))` variable, where 1 indicates presence of mites (conventionally, 1 indicates presence). We need a GLM to model this data, because this data is not `r cloze("continuous", c("binary", "continuous", "random"))` and comes from a `r cloze("non-normal", c("normal", "non-normal"))` distribution and cannot be represented by a linear model. 
 
-2. **What does the Intercept represent in this model?**
+1. **What does the Intercept represent in this model?**
 
-The Intercept in this context represents the probability of observing the Galumna mite when substrate density is `r cloze("0", c("1", "0", "100"))`
+The Intercept in this context represents the probability of observing the Galumna mite when substrate density is `r cloze("0", c("1", "0", "100"))`.
 
 3. **What sign is the slope? What does this mean for `pa`?**
 
@@ -393,20 +393,20 @@ The slope `SubsDen` is `r cloze("positive", c("positive", "negative"))`. This me
 
 4. **Interpret the P-value for the slope `SubDens`**
 
-The p-value of `r cloze("< 0.001",c("0.360", "< 0.001", "< 0.0001"))` for the slope `SubDens`. This indicates that there is `r cloze("low", c("moderate", "low", "high"))` probability there is `r cloze("no", c("a strong", "no"))` relationship between the presence of mites and substrate density. This means we are strong evidence for substrate density to include the presence of mites.
+The p-value is `r cloze("< 0.001", c("0.360", "< 0.001", "< 0.0001"))` for the slope `SubDens`. This indicates that there is a `r cloze("low", c("moderate", "low", "high"))` probability that there is `r cloze("no", c("a strong", "no"))` relationship between the presence of mites and substrate density. This means we have strong evidence that substrate density affects the presence of mites.
 
 ## Example 2: Bacterial treatment 
 
 ![](images/bacteria.jpeg){width=60%}
 
-Using the bacteria dataset (from the `MASS` R package), try and model the presence of _H. influenzae_ as a function of week of test. 
+Using the bacteria dataset (from the `MASS` R package), try and model the presence of _H. influenzae_ as a function of the week of testing. 
 
 Medical researchers collected data on the presence of the bacteria H. influenzae in children with _Otitis media_ in the Northern Territory of Australia. 50 children with a history of _Otitis media_ were tested to assess the effects of a drug on the disease. The children were randomised to the drug treatment or a placebo treatment. The presence of _H. influenzae_ was checked at weeks 0, 2, 4, 6 and 11. 
 
 **Exercises:**
 
-- load the bacteria dataset.
-- you'll need to convert the `y` variable to a binary format 
+- Load the bacteria dataset
+- You'll need to convert the `y` variable to a binary format 
 - Fit an appropriate model for this type of data
 - Use the output to answer the following questions
 
@@ -432,7 +432,7 @@ means <- estimate_means(bacteria_fit, by = "week", length = 100)
 
 # Plot the data
 ggplot(bacteria, aes(x = week, y = y)) +
-  geom_jitter(width=0.1, height = 0.1) +
+  geom_jitter(width = 0.1, height = 0.1) +
   geom_line(data = means, aes(x = week, y = Probability), col = "red") +
   theme_minimal()
 ```
@@ -441,7 +441,7 @@ ggplot(bacteria, aes(x = week, y = y)) +
 
 1. **What type of variable is `y`? What distribution can we use to represent it well?** _Hint: Make a scatterplot and see for yourself_
 
-`y` is the `r cloze("presence and absence/", c("presence and absence/", "count", "denisty"))` of the bacteria _H. influenzae_. A `r cloze("binomial",c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
+`y` is the `r cloze("presence and absence", c("presence and absence", "count", "density"))` of the bacteria _H. influenzae_. A `r cloze("binomial", c("binomial", "Poisson", "normal"))` distribution will represent this type of data well. 
 
 2. **Interpret the slope `week`**
 
