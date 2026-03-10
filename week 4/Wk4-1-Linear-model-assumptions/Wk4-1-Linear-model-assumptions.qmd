@@ -348,13 +348,13 @@ check_model(growth_bodywt_transformed_fit)
 ```{r, echo=FALSE}
 possible_assumption_issues <- c("high variance in larger values", 
                                 "there may be some outliers, but hard to tell because the data has a massive spread",
-                                "the variables are non-normal",
+                                "the residuals are non-normal",
                                 "x and y may not follow a linear relationship", 
                                 "All looks good to me")
 ```
 
 The potential issues with fitting a linear model to this data include: 
-`r cloze(c("high variance in larger values", "x and y may not follow a linear relationship", "there may be some outliers, but hard to tell because the data has a massive spread"), possible_assumption_issues)`
+`r cloze(c("high variance in larger values", "x and y may not follow a linear relationship", "there may be some outliers, but hard to tell because the data has a massive spread", "the residuals are non-normal"), possible_assumption_issues)`
 
 3. What transformation do you recommend for this dataset?
 
@@ -530,7 +530,7 @@ possible_violations <- c("there are potential outliers",
                          "values do not represent the population")
 ```
 
-`r cloze(c("there are potential outliers", "non-linear relationship present", "non-constant residual variance") , possible_violations)`
+`r cloze(c("there are potential outliers", "non-linear relationship present", "non-constant residual variance", "residuals are non-normal"), possible_violations)`
 
 2. You notice that point 7 looks a bit out of place. After some investigation, it turns out there were machinery issues when the data was recorded. You decide that's sufficient reason to exclude the point as an outlier. 
 
