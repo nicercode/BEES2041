@@ -256,7 +256,7 @@ We can fit a GLM to the data to estimate the relationship:
 
 ```{r}
 # Fit the model
-model <- glm(y ~ x, data = data_y, family = "binomial") 
+model <- glm(y ~ x, data = data_y, family = "binomial")
 
 # Estimate the means
 means <- estimate_means(model, by = "x", length = 100)
@@ -323,7 +323,7 @@ fit_crab <- glm(CrabPres ~ Dist, family = binomial, data = data_crabs)
 
 ## Look at model output
 
-Let's take a look at the output `paramaters()`.
+Let's take a look at the output `parameters()`.
 
 We interpret this output in a similar manner as for linear model
 
