@@ -749,9 +749,9 @@ For every year since a bushfire, the number of koalas `r cloze("increased", c("i
 
 4. What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?
 
-The probability that there is no relationship between the year of the most recent fire and the number of koalas is `r cloze("< .001", c("0.05", "0.023", "< .001"))`
+The probability that there is no relationship between the year of the most recent fire and the number of koalas is `r cloze("< .001", c("0.05", "0.023", "< .001"))`. 
 
 5. What percentage of the variance in koala numbers is explained by the year of the most recent fire?
 
-The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("34%", c("15%", "34%", "76%"))`
+The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("34%", c("15%", "34%", "76%"))`.
 
