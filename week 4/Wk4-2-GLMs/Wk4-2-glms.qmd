@@ -648,17 +648,17 @@ slug_means <- estimate_means(slug_fit, by = "Treatment")
 
 ggplot(slug_means, aes(x = Treatment, y = Mean)) + 
   geom_col(aes(colour = Treatment, fill = Treatment)) + 
-  geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
+  geom_errorbar(aes(ymin = CI_low, ymax = CI_high), width = 0.2) + 
   theme_minimal()
 ```
 
-There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001)
+There is strong evidence of a positive effect of bush regeneration on the abundance of slugs from the order Soleolifera (p < 0.001).
 
 ## Example 3: Faramea trees in Panama
 
 ![](images/faramea.jpeg){width=60%}
 
-The dataset contains the number of trees of the species _Faramea occidentalis_  measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of Faramea occidentalis found at each quadrant.
+The dataset contains the number of trees of the species _Faramea occidentalis_ measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of _Faramea occidentalis_ found in each quadrant.
 
 **Exercises:**
 
@@ -693,22 +693,21 @@ ggplot(means, aes(x = Elevation, y = Mean)) +
   geom_line() +
   geom_point(data = faramea, aes(x = Elevation, y = Faramea.occidentalis), col = "red") +
   theme_classic()
-
 ```
 
 **Questions:**
 
 1. **Make a histogram of `Faramea.occidentalis` in the data `faramea`. What type of data is this?**
 
-The histogram shows that the counts of `Faramea.occidentalis` are `r cloze("right-skewed", c("right-skewed", "left-skewed"))`. The variable consists of mostly `r cloze("0s", c("0s", "10s",  "20s"))`. The variable `Faramea.occidentalis` is considered as `r cloze("count",c("count","binary", "continuous"))` data and would be best represented by a `r cloze("Poisson",c("binomial", "normal", "Poisson"))` distribution. 
+The histogram shows that the counts of `Faramea.occidentalis` are `r cloze("right-skewed", c("right-skewed", "left-skewed"))`. The variable consists of mostly `r cloze("0s", c("0s", "10s",  "20s"))`. The variable `Faramea.occidentalis` is considered as `r cloze("count", c("count","binary", "continuous"))` data and would be best represented by a `r cloze("Poisson", c("binomial", "normal", "Poisson"))` distribution. 
 
 2. **Interpret the slope for the predictor `Elevation`**
 
-The slope is `r cloze("negative", c("positive", "negative"))`, indicating the counts for _Faramea occidentalis_ `r cloze("decreases", c("decreases", "increases"))` with increasing `r cloze("elevation",c("density", "elevation", "temperature"))`.
+The slope is `r cloze("negative", c("positive", "negative"))`, indicating the counts for _Faramea occidentalis_ `r cloze("decreases", c("decreases", "increases"))` with increasing `r cloze("elevation", c("density", "elevation", "temperature"))`.
 
 3. **Interpret the CI for `Elevation`.** _Hint: you may need to pipe `parameters(faramea_fit)` into  `tibble()`_
 
-The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (lower) and `r cloze("-0.00157", c("-0.00157", "1.98", "0.95"))` (upper). We are `r cloze("95%", c("5%", "95%", "97.5%"))` sure the true `r cloze("population", c("sample", "population"))` value of the `r cloze("slope", c("slope", "intercept", "counts"))` lies within this range.
+The CI for the slope is  `r cloze("-0.00410", c("1.55", "-0.00410", "0.110"))` (lower) and `r cloze("-0.00157", c("-0.00157", "1.98", "0.95"))` (upper). It is likely that the true `r cloze("population", c("sample", "population"))` value of the `r cloze("slope", c("slope", "intercept", "counts"))` lies within this range.
 
 ## Example 4: Mite counts with water content
 
