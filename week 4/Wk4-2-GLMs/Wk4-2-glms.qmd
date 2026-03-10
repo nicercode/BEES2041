@@ -279,6 +279,14 @@ parameters(model)
 
 Note the true values we used to simulate the data are $B_0 = 0$ and $B_1 = 2$. So the model has done a reasonable job of estimating the slope, and the true values are included in the 95% confidence interval.
 
+You might also notice that the column name for the parameter estimates is 'Log-Odds', instead of 'Coefficient' like with linear models. 
+
+The logit function is also called the log-odds function, because it is the logarithm of the odds $\frac{p}/{1-p}$. In a standard linear regression ($y = \beta x$), the units of $\beta$ are "units of $y$ per unit of $x$." In a binomial GLM, the "units" of the left-hand side are log-odds.
+
+$$\underbrace{\ln\left(\frac{p}{1-p}\right)}_{\text{Unit: Log-odds}} = \underbrace{\beta_0 + \beta_1x_1}_{\text{Unit: Log-odds}}$$
+
+Because the math on the right-hand side (RHS) is strictly linear, the coefficients ($\beta$) must represent the change in the log-odds for a one-unit change in $x$.
+
 ## Worked Example: Crabs along the beach
 
 Let's apply the theory we learned about with some data collected by some students in our department who had surveyed a beach. This group of students wanted to analyse **how the presence of a crab varied with time and distance from the water line**. 
