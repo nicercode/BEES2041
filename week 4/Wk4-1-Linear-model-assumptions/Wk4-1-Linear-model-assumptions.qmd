@@ -654,6 +654,8 @@ Substituting 10mm in place of `r cloze("body length", c("number of eggs (fecundi
 
 The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("76%", c("24%", "58%", "76%"))` of the variance.
 
+If you noticed an outlier and removed it, you would've gotten slightly different statistics to the answers. The outlier deserves closer inspection. You can exclude the point if you find that there is a valid reason to exclude it, for example, it is physically or biologically implausible. If not, you should keep it but ask the extent to which your conclusions are dependent on the inclusion or removal of the point. If your conclusions are very dependent on it, you might have to check the point (data or field notes), or even go back out and get more samples around that area. If you do re-measure and find that the measurement is real, you should obviously keep it.
+
 ## Example 5: River flow and density of larval fish
 
 ![](images/retropinna-semoni-cropped.jpg) <br>
