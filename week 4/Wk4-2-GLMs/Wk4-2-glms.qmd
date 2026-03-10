@@ -735,7 +735,7 @@ ggplot(mites, aes(x = WatrCont, y = Galumna)) +
   geom_point()
 
 # Fit model
-galumna_fit = glm(Galumna~WatrCont, data=mites, family = "poisson")
+galumna_fit <- glm(Galumna ~ WatrCont, data = mites, family = "poisson")
 
 # Look at model output
 parameters(galumna_fit)
@@ -753,7 +753,7 @@ ggplot(galumna_means, aes(x = WatrCont, y = Mean)) +
 
 1. **Make a histogram of `Galumna` counts, describe its distribution.**
 
-The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "left-skewed"))`, meaning there are lots of `r cloze("small", c("small", "large"))` values in the variable. This data is count data and resembles a `r cloze("Poisson", c("binomial", "Poisson", "normal"))`.
+The distribution for `Galumna` is `r cloze("right-skewed", c("right-skewed", "left-skewed"))`, meaning there are lots of `r cloze("small", c("small", "large"))` values in the variable. This data is count data and resembles a `r cloze("Poisson", c("binomial", "Poisson", "normal"))` distribution.
 
 2. **Make a scatterplot of `Galumna` and `WatrCont.` Why do you think the data is not suited for a linear model?**
 
@@ -763,9 +763,11 @@ The scatterplot shows that the data is not `r cloze("continuous", c("continuous"
 
 The slope for WaterCont is `r cloze("negative", c("positive", "negative"))`, suggesting that as water content `r cloze("increases", c("decreases", "increases"))`, the counts of Galumna decreases. The p-value tells us that there is very `r cloze("low", c("low", "high"))` probability that there is no relationship between water content and mite count.
 
-4. **Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we still mite counts start to taper off?**
+4. **Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we expect mite counts to go below 1?**
 
-The `r cloze("mean", c("minium", "mean", "maximum"))`  counts for Galumna, starts to taper off at `r cloze("600", c("200", "400", "600"))`.
+The `r cloze("mean", c("minium", "mean", "maximum"))` counts for Galumna, starts to taper off at `r cloze("600", c("200", "400", "600"))`.
+
+We can be confident that the `r cloze("mean", c("minium", "mean", "maximum"))` counts for Galumna likely go below 1 at a water content of approximately `r cloze("350", c("250", "350", "600"))`.
 
 # Extensions
 
@@ -883,7 +885,7 @@ data |>
 
 **Varying the intercept of the model**
 
-Changing the intercept of the model will shift the distribution up and down. Technically, it specifies  the value of log(y) when x = 0.
+Changing the intercept of the model will shift the distribution up and down. Technically, it specifies the value of log(y) when x = 0.
 
 ```{r, echo = FALSE}
 # Create a sequence of linear predictors
@@ -913,8 +915,4 @@ data |>
   theme_classic() +
   scale_color_discrete(name = "Intercept")
 ```
-
-
-
-
 
