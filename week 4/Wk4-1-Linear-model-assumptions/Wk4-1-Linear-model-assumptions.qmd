@@ -443,9 +443,9 @@ The data we will explore here are a subset of Hooker's data containing 31 observ
 - `Temperature` at boiling point of water (degrees Fahrenheit)
 - `Pressure`, the corrected barometric pressure (inches of mercury). 
 
-> We want to know whether changes in pressure (which decreases with altitude) affects the boiling point of water. 
+> We want to know whether changes in pressure (which decreases with altitude) affect the boiling point of water. 
 
-Start by reading the data  `data/Hooker.csv` into R.
+Start by reading the data `data/Hooker.csv` into R.
 
 **Exercise:**
 
@@ -562,7 +562,7 @@ Recall to use `mutate()` to create a new variable containing your transformed da
 What is the fitted equation for this mode? 
 
 The fitted equation for this model is:
-log10(Temp) = `r cloze("1.9681",c("1.9681", "0.242507", "<2e-16"))`+ `r cloze("0.242507",c("1.9681", "0.242507", "<2e-16"))` * log10(Pressure)
+log10(Temp) = `r cloze("1.9681", c("1.9681", "0.242507", "<2e-16"))`+ `r cloze("0.242507", c("1.9681", "0.242507", "<2e-16"))` * log10(Pressure)
 
 4.  Look at the the residual plots from `check_model()` and compare it between: 
 
@@ -630,11 +630,11 @@ possible_analyses <- c("linear regression",
                        "independent samples t-test", "goodness of fit test", "paired t-test")
 ```
 
-The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
+The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables.
 
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
-2.  What is the probability that there is no relationship between body size and body length?
+2. What is the probability that there is no relationship between body size and body length?
 
 The probability that there is no relationship between body size and body length is `r cloze("< .001", c("0.05", "0.01", "< .001"))`
 
@@ -646,19 +646,19 @@ For every 1 mm increase in body length in an amphipod, we see an average `r cloz
 
 The fitted equation of our model is:
 
-`r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` = `r cloze("-31.02", c("6.34", "-31.02"))` +  `r cloze("6.34", c("6.34", "-31.02"))` * `r cloze("body length", c("number of eggs (fecundity)", "body length"))`
+`r cloze("number of eggs (fecundity)", c("number of eggs (fecundity)", "body length"))` = `r cloze("-31.02", c("6.34", "-31.02"))` + `r cloze("6.34", c("6.34", "-31.02"))` * `r cloze("body length", c("number of eggs (fecundity)", "body length"))`
 
-Substituting 10mm in place of `r cloze("body length", c("number of eggs (fecundity)", "body length"))` in the fitted equation will give us `r cloze("32.38", c("32.38", "-1966.668", "-94.42"))` eggs
+Substituting 10mm in place of `r cloze("body length", c("number of eggs (fecundity)", "body length"))` in the fitted equation will give us `r cloze("32.38", c("32.38", "-1966.668", "-94.42"))` eggs.
 
 5. What percentage of the variance in egg number per brood is explained by your relationship?
 
-The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("76%", c("24%", "58%", "76%"))`
+The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("76%", c("24%", "58%", "76%"))` of the variance.
 
 ## Example 5: River flow and density of larval fish
 
 ![](images/retropinna-semoni-cropped.jpg) <br>
 
-River managers want to know if there is an difference in the numbers of fish recruiting under different environmental flow practices. They go out to a number of different locations along a river of interest and measure the density of larval fishes and water flow rate (velocity m/s) at each site.
+River managers want to know if there is a difference in the numbers of fish recruiting under different environmental flow practices. They go out to a number of different locations along a river of interest and measure the density of larval fishes and water flow rate (velocity m/s) at each site.
 
 Load the data file `data/riverflow.csv` and choose a plot to visualise the relationship between flow rate `Flow.rate` and density of fish larvae `Larvae.density`.
 
@@ -686,13 +686,13 @@ summary(riverflow_fit)
 
 1. What analysis would you use to describe the relationship between flow velocity and fish larvae density?
 
-The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
+The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables.
 
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
 2. What is the probability that there is no relationship between fish larvae density and water flow velocity?
 
-The probability that there is no relationship between fish larvae density and water flow velocity is `r cloze("0.023", c("0.05", "0.023", "< .001"))`
+The probability that there is no relationship between fish larvae density and water flow velocity is `r cloze("0.023", c("0.05", "0.023", "< .001"))`.
 
 3. How many more fish larvae are present for every unit increase in flow velocity?
 
@@ -700,7 +700,7 @@ Our model suggests that larvae density `r cloze("decreased", c("increased", "dec
 
 4. What percentage of the variance in larvae fish density is explained by your relationship?
 
-The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("15%", c("15%", "12%", "76%"))`
+The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("15%", c("15%", "12%", "76%"))`.
 
 ## Example 6: Koalas and fire regimes
 
@@ -708,7 +708,7 @@ The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` 
 
 A group of forest managers want to know if there is any difference in the numbers of koalas under control fire practices. To do this, they surveyed the number of koalas from mixed Eucalyptus forest with varying species composition due to fire history. They then found records of the most recent fire at each survey site to use as a measure of fire disturbance.
 
-Load the data file `data/koalas.csv` and choose a plot to visualise the number of koalas observed `Koalas` and years since fire `Year.last.fire`.
+Load the data file `data/koalas.csv` and choose a plot to visualise the number of koalas observed `Koalas` and year of the last fire `Year.last.fire`.
 
 ```{r solution6}
 
@@ -735,7 +735,7 @@ summary(koalas_fit)
 
 1. What analysis would you use to describe the relationship between the number of koalas observed and the year of the most recent fire?
 
-The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables 
+The suitable analysis would be `r cloze("linear regression" ,possible_analyses)` because we are trying to understand the relationship between two continuous variables.
 
 Run the suitable analysis. Check your model assumptions and make any data adjustments you see fit then answer the following:
 
@@ -745,12 +745,13 @@ The slope from our model is `r cloze("negative", c("negative", "positive"))` and
 
 3. How do you interpret the the sign and slope of our model?
 
-For every year since a bushfire, the number of koalas `r cloze("decreased", c("increased", "decreased"))` by 0.21. 
-5. What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?
+For every year since a bushfire, the number of koalas `r cloze("increased", c("increased", "decreased"))` by 0.21. 
+
+4. What is the probability that there is no relationship between the year of the most recent fire and the number of koalas?
 
 The probability that there is no relationship between the year of the most recent fire and the number of koalas is `r cloze("< .001", c("0.05", "0.023", "< .001"))`
 
-6. What percentage of the variance in koala numbers is explained by the year of the most recent fire?
+5. What percentage of the variance in koala numbers is explained by the year of the most recent fire?
 
 The `r cloze("R-squared", c("p-value", "t-value", "F-statistic", "R-squared"))` value tells us our model explains `r cloze("34%", c("15%", "34%", "76%"))`
 
