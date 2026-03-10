@@ -562,13 +562,13 @@ p3
 
 In the real world, we don't know the true relationship x and the response variable; we have to estimate this from the data.
 
-So let's imagine we have the data above, but don't know the true relationship between $x$  and the mean of the response variable. 
+So let's imagine we have the data above, but don't know the true relationship between $x$ and the mean of the response variable. 
 
 We can fit a GLM to the data to estimate the relationship:
 
 ```{r}
 # Fit the model
-model <- glm(y ~ x, data = data_y, family = "poisson") 
+model <- glm(y ~ x, data = data_y, family = "poisson")
 
 # Estimate the means
 means <- estimate_means(model, by = "x", length = 100)
@@ -622,7 +622,8 @@ data_revegetation
 ```{r}
 ggplot(data = data_revegetation, aes(x = Treatment, y = Soleolifera))  + 
   geom_violin(fill = NA) + 
-  geom_jitter(aes(colour = Treatment),alpha = 0.5, width = 0.2, size = 2 ) +   theme_minimal() + 
+  geom_jitter(aes(colour = Treatment), alpha = 0.5, width = 0.2, size = 2) +   
+  theme_minimal() + 
   coord_flip()
 ```
 
@@ -638,14 +639,14 @@ slug_fit <- glm(Soleolifera ~ Treatment, family = "poisson", data = data_reveget
 parameters(slug_fit)
 ```
 
-Our model indicates strong evidence of a treatment effect  (p < 0.001). 
+Our model indicates strong evidence of a treatment effect (p < 0.001). 
 
 ## Visualising our model estimates
 
 ```{r}
 slug_means <- estimate_means(slug_fit, by = "Treatment")
 
-ggplot(slug_means, aes(x = Treatment, y = rate)) + 
+ggplot(slug_means, aes(x = Treatment, y = Mean)) + 
   geom_col(aes(colour = Treatment, fill = Treatment)) + 
   geom_errorbar(aes(ymin = CI_low, ymax = CI_high),width = 0.2) + 
   theme_minimal()
