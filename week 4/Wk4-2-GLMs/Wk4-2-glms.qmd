@@ -22,12 +22,7 @@ library(moodlequiz)
 # Libraries for prac
 library(tidyverse)
 library(easystats)
-
-# Data files for prac from BEES2041 root
-# data_crabs <- read_csv("week 4/Wk4-2-moodle/data/Crabs.csv")
-# data_revegetation <- read_csv("week 4/Wk4-2-moodle/data/Revegetation.csv")
-# data_mites <- read_csv("week 4/Wk4-2-moodle/data/mites.csv")
-# data_faramea <- read_csv("week 4/Wk4-2-moodle/data/faramea.csv")
+library(patchwork)
 ```
 
 # Intro to Generalised Linear Models
@@ -98,6 +93,7 @@ library(ggplot2)
 library(performance)
 library(modelbased)
 library(patchwork)
+library(easystats)
 ```
 
 # GLM Theory
@@ -409,24 +405,45 @@ Using the bacteria dataset (from the `MASS` R package), try and model the presen
 
 Medical researchers collected data on the presence of the bacteria H. influenzae in children with _Otitis media_ in the Northern Territory of Australia. 50 children with a history of _Otitis media_ were tested to assess the effects of a drug on the disease. The children were randomised to the drug treatment or a placebo treatment. The presence of _H. influenzae_ was checked at weeks 0, 2, 4, 6 and 11. 
 
-We are interested in how presence/absence of _H. influenzae_ (the `y` variable) changes across weeks.
+We are interested in how presence/absence of _H. influenzae_ changes across weeks.
 
 **Exercises:**
 
 - Load the bacteria dataset
+- You will need to convert `ap` into a binary format
 - Fit an appropriate model for this type of data
 - Use the output to answer the following questions
 
-```{r solution2}
-# generate data
-# MASS::bacteria |> mutate(
-#   y = ifelse(y == "y", 1, 0)) |> write_csv("data/bacteria.csv")
-
-# Look at data
-bacteria <- read_csv("data/bacteria.csv") 
+```{r}
+# Read in data
+bacteria <- read_csv("data/bacteria.csv")
 
 # Look at data
 head(bacteria)
+
+# Convert `ap` to binary format
+bacteria <- bacteria |> 
+  mutate(y = if_else(ap == "p", 1, 0))
+
+# Fit a GLM
+
+```
+
+```{r solution2}
+# generate data
+# MASS::bacteria |> select(-ap) |> mutate(ap = if_else(y == "y", "p", "a")) |> 
+#   select(-y) |> 
+#   write_csv("data/bacteria.csv")
+
+# Read in data
+bacteria <- read_csv("data/bacteria.csv")
+
+# Look at data
+head(bacteria)
+
+# Convert `ap` to binary format
+bacteria <- bacteria |> 
+  mutate(y = if_else(ap == "p", 1, 0))
 
 # Fit a GLM
 bacteria_fit <- glm(y ~ week, data = bacteria, family = "binomial")
@@ -672,6 +689,8 @@ There is strong evidence of a positive effect of bush regeneration on the abunda
 ![](images/faramea.jpeg){width=60%}
 
 The dataset contains the number of trees of the species _Faramea occidentalis_ measured in 43 quadrants in Barro Colorado Island in Panama. For each quadrant, environmental characteristics were also recorded such as elevation or precipitation. Let us take a look at the number of _Faramea occidentalis_ found in each quadrant.
+
+We are interested in the effect of elevation on the number of trees of _Faramea occidentalis_.
 
 **Exercises:**
 
