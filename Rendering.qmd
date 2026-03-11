@@ -22,6 +22,7 @@ source("R/generate_moodle_quiz.R")
 # Step 1. Create a master .qmd file with explanations, cloze questions, solutions, and check it runs
 master_file <- "week 2/Wk5-1-Multiple-Predictors/Wk5-1-Multiple-Predictors.qmd"
 master_file <- "week 3/Wk3-1-Linear-models/Wk3-1-Linear-models.qmd"
+master_file <- "week 4/Wk4-2-GLMs/Wk4-2-glms.qmd"
 
 # Render as html - check it runs & refine it before uploading to moodle
 quarto::quarto_render(master_file)

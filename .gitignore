@@ -71,3 +71,4 @@ ignore/
 large-files/ 
 
 *.rmd
+*-student.qmd

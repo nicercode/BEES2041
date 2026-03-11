@@ -481,7 +481,7 @@ baby_turtles |>
 
 **Interpreting the confidence interval**
 
-From the data above, you can see the estimate of the mean time it takes for baby turtles to reach the surface (70.1 hr), and a confidence interval for the mean (from 57.5-82.76 hrs). As he used a 95% confidence interval, there is a 95% chance that the true mean time it takes for baby turtles to reach the surface is between 57.5 and 82.76 hours.
+From the data above, you can see the estimate of the mean time it takes for baby turtles to reach the surface (70.1 hr), and a confidence interval for the mean (from 57.5-82.76 hrs). The 95% confidence interval tells us it is likely that the true mean time it takes for baby turtles to reach the surface is between 57.5 and 82.76 hours.
 
 ## Asking questions using confidence intervals
 

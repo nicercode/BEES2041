@@ -196,7 +196,7 @@ The Mean Sq or F value for `sex` are `r cloze("smaller", c("smaller", "larger"))
 
 ## Model parameters
 
-Typically when we are working with **categorical** predictors, we look at the ANOVA output first to determine whether there is an effect of a predictor before looking at the model output using `paramaters(fit_penguin_adults)`. 
+Typically when we are working with **categorical** predictors, we look at the ANOVA output first to determine whether there is an effect of a predictor before looking at the model output using `parameters(fit_penguin_adults)`. 
 
 The output of `parameters` gives us a snapshot of the how big of the effect of sex and species for a reference group (female Adelie) but this is not as useful as `anova`. 
 
