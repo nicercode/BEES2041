@@ -797,8 +797,6 @@ The slope for WaterCont is `r cloze("negative", c("positive", "negative"))`, sug
 
 4. **Make a plot displaying the mean counts for Galumna at different `WatrCont`, at what level of WatrCont do we expect mite counts to go below 1?**
 
-The `r cloze("mean", c("minium", "mean", "maximum"))` counts for Galumna, starts to taper off at `r cloze("600", c("200", "400", "600"))`.
-
 We can be confident that the `r cloze("mean", c("minium", "mean", "maximum"))` counts for Galumna likely go below 1 at a water content of approximately `r cloze("350", c("250", "350", "600"))`.
 
 # Extensions
