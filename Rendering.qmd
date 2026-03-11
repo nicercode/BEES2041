@@ -19,9 +19,10 @@ library(moodlequiz)
 source("R/remove_solutions.R")
 source("R/generate_moodle_quiz.R")
 
-dir.
 # Step 1. Create a master .qmd file with explanations, cloze questions, solutions, and check it runs
-master_file <- "week 5/Wk5-1-Multiple-Predictors/Wk5-1-Multiple-Predictors.qmd"
+master_file <- "week 2/Wk5-1-Multiple-Predictors/Wk5-1-Multiple-Predictors.qmd"
+master_file <- "week 3/Wk3-1-Linear-models/Wk3-1-Linear-models.qmd"
+
 # Render as html - check it runs & refine it before uploading to moodle
 quarto::quarto_render(master_file)
 

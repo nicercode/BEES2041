@@ -71,14 +71,13 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-We'll also be using a new package, called `vegan`, which includes a range of tools for visualising and analysing community data in ecology, but useful for all sorts of multivariate data sets. Uncomment the last line of code and install it on your machine
+We'll be using a new package, called `vegan`, which includes a range of tools for visualising and analysing community data in ecology, but useful for all sorts of multivariate data sets. Uncomment the last line of code and install it on your machine
 
 ```{r, eval=FALSE}
-# install.packages("tidyverse")
 # install.packages("vegan")
 ```
 
-> Remember to load the packages into R to use em!
+> Remember to load the packages into R to use them!
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)
