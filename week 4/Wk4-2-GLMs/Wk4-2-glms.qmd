@@ -93,7 +93,6 @@ library(ggplot2)
 library(performance)
 library(modelbased)
 library(patchwork)
-library(easystats)
 ```
 
 # GLM Theory
@@ -387,7 +386,7 @@ parameters(mite_subs_fit)
 
 1. **What does the Intercept represent in this model?**
 
-The Intercept in this context represents the probability of observing the Galumna mite when substrate density is `r cloze("0", c("1", "0", "100"))`.
+The Intercept in this context represents the log-odds when substrate density is `r cloze("0", c("1", "0", "100"))`.
 
 3. **What sign is the slope? What does this mean for `pa`?**
 
