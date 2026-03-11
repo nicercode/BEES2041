@@ -409,10 +409,11 @@ Using the bacteria dataset (from the `MASS` R package), try and model the presen
 
 Medical researchers collected data on the presence of the bacteria H. influenzae in children with _Otitis media_ in the Northern Territory of Australia. 50 children with a history of _Otitis media_ were tested to assess the effects of a drug on the disease. The children were randomised to the drug treatment or a placebo treatment. The presence of _H. influenzae_ was checked at weeks 0, 2, 4, 6 and 11. 
 
+We are interested in how presence/absence of _H. influenzae_ (the `y` variable) changes across weeks.
+
 **Exercises:**
 
 - Load the bacteria dataset
-- You'll need to convert the `y` variable to a binary format 
 - Fit an appropriate model for this type of data
 - Use the output to answer the following questions
 
