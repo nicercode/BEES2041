@@ -25,7 +25,7 @@ First let's briefly recap on variable types, as this will determine the choice o
 
 - **continuous variable** is a numerical variable that can take any value within a range, including decimals. e.g `bill_length_mm`
 
-- **categorical variable** is a variable (AKA discrete variable) that represents distinct groups e.g. `islands` `species`
+- **categorical variable** is a variable (AKA discrete variable) that represents distinct groups e.g. `islands`, `species`
 
 ![](images/continuous-discrete.png){width=60%}
 
@@ -53,7 +53,7 @@ Our learning objectives today are:
 - **extract** the mean and confidence interval for the slope and intercept of the regression line
 - **plot** the data and the regression line with confidence intervals
 
-Let’s dive in! 🚀 
+Let's dive in! 🚀 
 
 ## Setting up: Materials
 
@@ -61,7 +61,7 @@ Everything you need for this prac is on Moodle
 
 1. Download this week's materials zip file from Moodle, from the course page
 2. Unzip the file by: 
-  - MacOS: Double clicking the zipfile 
+  - MacOS: Double clicking the zip file 
   - Windows: Right click on the zip file and click "Extract All" 
 3. Move the extracted folder into the folder where you store materials for `BEES2041/` 
 4. **Click on the Rstudio project file, eg. `Wk5-1-multi-regression.Rproj`** to open the RStudio project and you're in!!!
@@ -87,17 +87,17 @@ library(patchwork)
 
 ## Use case 1: Two **categorical** predictors (Two-way ANOVA)
 
-Some research designs are interested in the effects of **two categorical variables** on the continuous response variable. For example, supplement of vitamin C and exercise on the outcome of managing stress or age group and diet in maternal reproductive success. In these instances, we use **Two-way ANOVA** (Analysis of Variance) - a statistical method that help us to examine:
+Some research designs are interested in the effects of **two categorical variables** on the continuous response variable. For example, supplement of vitamin C and exercise on the outcome of managing stress, or age group and diet in maternal reproductive success. In these instances, we use **Two-way ANOVA** (Analysis of Variance) - a statistical method that helps us to examine:
 
 - **Main effects** – The **independent impact** of each categorical variable on the outcome.
 
-- **Interaction effect** – Whether the **effect of one variable depends on the level of the other**.
+- **Interaction effects** – Whether the **effect of one variable depends on the level of the other**.
 
 > Recall that ANOVA at their core, are linear models. 
 
-This means that we can fit a **two-way ANOVA** using the `lm()` function
+This means that we can fit a **two-way ANOVA** using the `lm()` function.
 
-Using `anova()` on the model fit object, we can **test whether the overall main effect and interaction effect the predictors are important** or not.
+Using `anova()` on the model fit object, we can **test whether the overall main effect and interaction effect of the predictors are important** or not.
 
 ## Worked Example: Penguin body mass by sex and species
 
@@ -110,7 +110,7 @@ We are all familiar with the Palmer Penguins by now, let's get to know them bett
 The **continuous response** variable (y) is: `body_mass_mm`
 The **two categorical predictor** variables (x1, x2) are: `sex` and `species`
 
-First, let's exclude the penguins where `sex` is NA. These are juvenille penguins that won't contribute to answering our question.
+First, let's exclude the penguins where `sex` is NA. These are juvenile penguins that won't contribute to answering our question.
 
 ```{r}
 data_penguins_adults <- penguins |>
@@ -132,13 +132,13 @@ fit_penguin_adults <- lm(body_mass_g ~ sex + species + sex:species, data = data_
 
 - `sex` as a standalone predictor, this means we are interested in the sole effect of sex on body mass
 - `species` as a standalone predictor, this means we are interested in the sole effect of species on body mass
-- `sex:species` means we are interested in the **interactive effects** of both sex and species. In other words, the effect on body mass may depend sex AND species.
+- `sex:species` means we are interested in the **interactive effects** of both sex and species. In other words, the effect on body mass may depend on sex AND species.
 
 Let's estimate the mean of body mass by sex and species using our model with `estimate_means()` and plot them with the raw data so you can visualise this model better.
 
 ```{r}
 # Estimate mean of response for sex and species
-means_penguin_adults <- estimate_means(fit_penguin_adults, by=c("sex", "species"))
+means_penguin_adults <- estimate_means(fit_penguin_adults, by = c("sex", "species"))
 
 means_penguin_adults
 ```
@@ -162,7 +162,7 @@ ggplot(data_penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex
 
 > Notice we are calling `means_penguin_adults` in `geom_errorbar()` and `geom_point()` as we want to plot the mean body mass and their associated CIs. 
 
-Let's proceed with our two-way ANOVA to test whether we have the main effects of sex and species and their interaction contributes to variation in body mass.
+Let's proceed with our two-way ANOVA to test whether sex and species and their interaction contributes to variation in body mass.
 
 ## ANOVA output
 
@@ -171,24 +171,20 @@ To run a two way ANOVA, we call `anova(fit_penguin_adults)`
 What can we see? 
 
 ```{r}
-anova(fit_penguin_adults) 
+anova(fit_penguin_adults)
 ```
 
-We can see our predictor variables listed as rows. **Each row tests whether an effect signficantly affects body mass**. 
+We can see our predictor variables listed as rows. **Each row tests whether each predictor significantly affects body mass**. 
 
-- The first row for  the main effect of `sex`
-- The second row for the main effect of ` species` after main effect of `sex`
+- The first row for the main effect of `sex`
+- The second row for the main effect of `species` after accounting for the main effect of `sex`
 - The third row for the interactive effect of `sex` and `species` after the two main effects.
 
-This output tells us that both the **main effects** of sex and species and their **interactive effects** have a strong effect on body mass variation in Palmer penguins. 
+This output tells us that both the **main effects** of sex and species and their **interactive effect** have a strong effect on body mass variation in Palmer penguins. 
 
 **Questions:**
 
-**1. Looking at the values for Mean Sq or F value, which main effect explains has a stronger effect on body mass?**
-
-The Mean Sq or F value for `sex` are `r cloze("smaller", c("smaller", "larger"))` than the Mean Sq or F value for `species`. This means that `r cloze("sex", c("sex", "species"))` has a weaker effect on body mass.
-
-**2. Which of the three effects are contributing significantly to variation on body mass? (Select all that applies)**
+**1. Which of the three effects are contributing significantly to variation on body mass? (Select all that applies.)**
 
 `r cloze(c("sex", "species", "sex:species"), c("sex", "species", "sex:species"))`
 
@@ -198,7 +194,7 @@ The Mean Sq or F value for `sex` are `r cloze("smaller", c("smaller", "larger"))
 
 Typically when we are working with **categorical** predictors, we look at the ANOVA output first to determine whether there is an effect of a predictor before looking at the model output using `parameters(fit_penguin_adults)`. 
 
-The output of `parameters` gives us a snapshot of the how big of the effect of sex and species for a reference group (female Adelie) but this is not as useful as `anova`. 
+The output of `parameters` gives us a snapshot of how big the effect of sex and species is for a reference group (female Adelie), but this is not as useful as `anova`. 
 
 > In our penguins study here, the **reference group are the female Adelie** penguins. This is the *Intercept* term in the model. The coefficient is 3368.84 is the mean body mass for female Adelie penguins.
 
@@ -214,11 +210,11 @@ For example:
 
 **Questions:**
 
-**3. What does `sex [male]` represent?**
+**2. What does `sex [male]` represent?**
 
-The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1310.91"))`. This represents the `r cloze("difference in", c("difference in", "p value for"))` mean body mass between `r cloze("Adelie", c("Adelie", "Chinstrap", "Gentoo"))` female  penguins and male `r cloze("Adelie", c("Adelie", "Chinstrap", "Gentoo"))` penguins.
+The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1310.91"))`. This represents the `r cloze("difference in", c("difference in", "p value for"))` mean body mass between female `r cloze("Adelie", c("Adelie", "Chinstrap", "Gentoo"))` penguins and male `r cloze("Adelie", c("Adelie", "Chinstrap", "Gentoo"))` penguins.
 
-**4. Interpret the p-value for `species [Gentoo]`**
+**3. Interpret the p-value for `species [Gentoo]`**
 
 The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "high"))`.
 
@@ -279,10 +275,6 @@ estimate_contrasts(fit_penguin_adults, contrast = "species", by = "sex")
 **5. In the contrasts between species for each sex, which differences are non-significant?**
 
 For both female and male penguins, the difference between `r cloze("Chinstrap", c("Chinstrap", "Gentoo"))` and Adelie were non-significant.
-
-**6. What does the 95% CI represent for `female | Gentoo` penguins?** 
-
-The 95% CI interval for `female | Gentoo` penguins represents the range of values where we would find the true population estimate of body mass for `r cloze("female", c("female", "male"))` `r cloze("Gentoo", c("Adelie", "Chinstrap", "Gentoo"))` 95% of the time.
 
 ## Reporting results
 
