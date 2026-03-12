@@ -104,7 +104,7 @@ library(glmmTMB)
 
 ![](images/estuaries.jpg){width=60%} <br>
 
-Random factors are hard to get your head around, and are best explained with examples. The data we will analyse here are **counts of invertebrates at 3-4 sites pristine and modified sites in each of 7 (randomly chosen) estuaries**.
+Random factors are hard to get your head around, and are best explained with examples. The data we will analyse here are **counts of invertebrates at 3-4 pristine and modified sites in each of 7 (randomly chosen) estuaries**.
 
 **Our research question is: How does total invertebrate counts differ between pristine and modified sites across all estuaries?**
 
@@ -131,7 +131,7 @@ data_estuaries |>
 
 > Notice that `Estuary` is not replicated across both levels of `Modification`. This is because, `Estuary` is not our primary variable of interest. We collected data we needed from randomly selected estuaries. 
 
-Importantly, we know that our **random sample of estuaries** is likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate at some estuaries may be more favourable to invertebrates than others. Ultimately, we know that different estuaries are likely to differ, on average in `Total` number of invertebrates. That will mean the points in our data will be more similar to each other if they come from the same estuary than if they come from different estuaries. This random effect of `Estuary` is therefore something we want to account for in our model. 
+Importantly, we know that our **random sample of estuaries** is likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate at some estuaries may be more favourable to invertebrates than others. Ultimately, we know that different estuaries are likely to differ, on average, in `Total` number of invertebrates. That will mean that the points in our data will be more similar to each other if they come from the same estuary than if they come from different estuaries. This random effect of `Estuary` is therefore something we want to account for in our model. 
 
 ## Fit our mixed model
 
@@ -143,9 +143,9 @@ fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estua
 
 - `Total` is our numeric, continuous response variable (y) 
 - `Modification` is our categorical predictor variable (x)
-- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting an intercept that is allowed to vary by Estuary (mean `Total` at each `Estuary`).
+- `(1 | Estuary)` is a **random intercept**. This tells the model that we are allowing the intercept to vary by Estuary (mean `Total` at each `Estuary`).
 
-> Technically `Total` count data, but its distribution doesn't really resemble a Poisson distribution. A Normal distribution fits it quite well so we can use a normal response here.
+> Technically `Total` is count data, but its distribution doesn't really resemble a Poisson distribution. A normal distribution fits it quite well so we can use a normal response here.
 
 We can proceed with checking our model fit before looking at the model's output. Things are looking okay!
 
@@ -161,7 +161,7 @@ Not perfect, but good enough! Let's move on to the next step.
 By now, you are familiar with `estimate_means()` and `estimate_contrasts()`. For mixed models, we need to use a different function `estimate_expectations()` to compute means for each level of our predictors and random effect. 
 
 ```{r}
-means_by_mod_estuaries <- estimate_expectation(fit_estuaries)  
+means_by_mod_estuaries <- estimate_expectation(fit_estuaries)
 
 head(means_by_mod_estuaries)
 ```
@@ -171,13 +171,15 @@ There are a lot of repeated rows here! This is because `estimate_expectations()`
 ```{r}
 means_by_mod_estuaries |> 
   count(Modification, Estuary)
+
+nrow(means_by_mod_estuaries)
 ```
 
 > Let's use these means and CI to visualise our data!
 
 ## Visualise our data
 
-Here we are plotting our raw data across different estuaries and facetting the plot by our variable of interest `Modification`.
+Here we are plotting our raw data across different estuaries and faceting the plot by our variable of interest `Modification`.
 
 ```{r}
 ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification, fill = Modification)) +
@@ -268,7 +270,6 @@ p1 <-
   ) + geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Treatment) +
   theme_minimal()
-
 ```
 
 </details>
@@ -287,7 +288,7 @@ The researchers collected data using `Quadrats`, this is the sampling unit. They
 > Your task is to refit the same model, adding `Quadrat` as a random intercept and reproduce the results again 🚀!
 
 - Fit a mixed model adding in `Quadrat` a random intercept
-- Generate means for `Total` for `Days`, `Treatment` and `Quadrat` 
+- Generate means for `Total` for `Day`, `Treatment` and `Quadrat` 
 - Create a plot, fitting lines for each `Quadrat` 
 
 Let's get you hitting the ground running: 
@@ -307,7 +308,7 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
   )
 ```
 
-Now fit the model with the random effect of `Quadrat`. 
+Now fit the model with the random effect of `Quadrat` on the intercept. 
 
 ```{r solution-1}
 # Fit model
@@ -323,7 +324,7 @@ means_urchins_all <- estimate_expectation(fit_urchins_random)
 # Fit a line for each quadrat
 p1 <-
   ggplot(means_urchins_all, aes(x = Day, y = Predicted, color = Treatment)) +
-  geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
+  geom_line(aes(group = Quadrat), alpha = 0.5, linewidth = 0.5) +
   labs(
     x = "Day",
     y = "log(BareRock)"
