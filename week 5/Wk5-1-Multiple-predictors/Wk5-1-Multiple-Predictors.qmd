@@ -288,21 +288,23 @@ There was a **significant main effect of sex** on body mass, F(1, 327) = 406.15,
 
 We found a  **significant interaction effect between sex and species**, F(2, 327) = 8.76, p < .001, indicating that the difference in body mass between males and females penguins depends on the species.
 
-Overall, our multiple linear regression model explained R^2 = `r cloze("85%", c("28%", "64%", "85%"))` of variation in body mass.  _Hint: look at output of `summary(fit)`_
+Overall, our multiple linear regression model explained R^2 = `r cloze("85%", c("28%", "64%", "85%"))` of variation in body mass.  _Hint: look at the output of `summary(fit)`_
 
 _Contrasts_
 
-Generally female/male pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
+Generally female pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
-There were `r cloze("no", c("no", "weak", "strong"))` statistical differences in body mass male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = -230.90 - 21.85, p-value =  0.105). There were `r cloze("marginal", c("weak", "marginal", "strong"))` differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = 31.99 - 284.7, p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
+There were `r cloze("strong", c("no", "weak", "strong"))` statistical differences in the body mass of male and female penguins for all species (here, you would reference the ANOVA table). 
 
 ## Report on the main effect of `species` {type=essay}
 **Report on the main effect of `species`**  _Hint: look at output of ANOVA_
 
 
 
-## Report on the contrasts of `species` {type=essay}
+## Report on the contrasts of `species`
 **Report on the contrasts of `species`**  _Hint: look at output of `estimate_contrasts()`_
+
+There were `r cloze("no", c("no", "weak", "strong"))` statistical differences in the body mass of male Chinstrap and male Adelie penguins (Chinstrap-Adelie = -104.52g, 95% CI = [-230.90, 21.85], p-value =  0.105). There were `r cloze("marginal", c("weak", "marginal", "strong"))` differences in body mass between female Chinstrap and female Adelie penguins (Chinstrap-Adelie = 158.37, 95% CI = [31.99, 284.7], p-value = 0.014). All other pairwise combinations were highly significant. See Figure 1 above. 
 
 
 # Over to you: Two way ANOVA
@@ -311,17 +313,17 @@ There were `r cloze("no", c("no", "weak", "strong"))` statistical differences in
 
 ![](images/sessile.jpg){width=50%}
 
-A researcher is testing the **main and interactive effects** of metal contamination on the number of species found in sessile marine invertebrates (sponges, bryozoans and sea squirts etc.) but they also know that the richness of invertebrates can depend on whether the substrate is vertical or horizontal.
+A researcher is testing the effect of metal contamination on the number of species of sessile marine invertebrates (sponges, bryozoans and sea squirts etc.) but they also know that the richness of invertebrates can depend on whether the substrate is vertical or horizontal.
 
-**The research question is: How much does copper and substrate effect species richness?**
+**The research question is: How much does copper and substrate affect species richness?**
 
-They ran an experiment where **species richness** was recorded in replicate samples in each of the six combinations of **copper contamination** (None, Low, High) and **substrate orientation** (Vertical, Horizontal)
+They ran an experiment where **species richness** was recorded in replicate samples in each of the six combinations of **copper contamination** (None, Low, High) and **substrate orientation** (Vertical, Horizontal).
 
 Your job is to: 
 
 - analyse this data with a **two-way ANOVA**, 
+- **estimate means** for both **categorical predictors**,
 - **estimate contrasts* *for both** main and interactive effects**, 
-- **estimate means** for both **categorical predictors**
 - produce a **plot** summarising your findings
 
 Using your results, answer questions in Moodle.
@@ -358,15 +360,15 @@ estimate_contrasts(fit_marine)
 estimate_contrasts(fit_marine, contrast = "Copper")
 estimate_contrasts(fit_marine, contrast = "Orientation")
 
-estimate_contrasts(fit_marine, contrasts = "Copper", by = "Orientation")
-estimate_contrasts(fit_marine, contrasts = "Orientation", by = "Copper")
+estimate_contrasts(fit_marine, contrast = "Copper", by = "Orientation")
+estimate_contrasts(fit_marine, contrast = "Orientation", by = "Copper")
 ```
 
 **Questions:**
 
-**1. Which effect contributed most to variation in species richness?**
+**1. Which effect/s contributed to variation in species richness?**
 
-`r cloze("Copper", c("Copper", "Orientation", "Copper:Orientation"))` contributed the most to variable in species richness. This is reflected in the Mean sq / F value / p value
+`r cloze(c("Copper", "Orientation", "Copper:Orientation"), c("Copper", "Orientation", "Copper:Orientation"))` contributed to variation in species richness. This is reflected in the values of Mean sq, F value, and p value.
 
 **2. At which level of copper metal contamination did we see the greatest difference between substrate orientation?**
 
@@ -390,9 +392,10 @@ Previously, we found that leaf mass per area decreased as rainfall increased.
 
 ![Effect of rain on leaves](images/Towers-rain.png){width=60%}
 
-Additonally, Isaac asked **whether temperature also had an effect on leaf mass per area**? He first wanted to test the **main (additive) effects** of rainfall and temperature on leaf mass per area.
+Additonally, Isaac asked **whether temperature also had an effect on leaf mass per area**. He first wanted to test the **main (additive) effects** of rainfall and temperature on leaf mass per area.
 
 Let's load the data and fit a linear model to test the main effects of both rainfall and temperature on log10 leaf mass per area.
+
 ```{r}
 data_leaves <- read_csv("data/towers-2024.csv")
 ```
@@ -458,7 +461,7 @@ So let's plot the relationship between `log10_rainfall` and `log10_leaf_mass_per
 
 ## Plotting the interactive effect
 
-As we've done previously, we can use `estimate_means()` to get the means of y with respect to x1 and x2. Specificailly, we can estimate the mean `log10_leaf_mass_per_area` for
+As we've done previously, we can use `estimate_means()` to get the means of y with respect to x1 and x2. Specifically, we can estimate the mean `log10_leaf_mass_per_area` for
 
 - different levels of `log10_rainfall` and `temperature`, and 
 - different levels of `log10_rainfall` only, averaging out the effect of `temperature`.
@@ -472,9 +475,9 @@ means_leaves_overall <- estimate_means(fit_leaves_interaction, by = c("log10_rai
 
 # plot
 ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
-  geom_point(alpha = 0.5, col = "darkgreen") + # the data`
+  geom_point(alpha = 0.5, col = "darkgreen") + # the data
   geom_line(data = means_leaves_temp, aes(y = Mean, group = temperature, color = temperature)) + # means by temperature
-  geom_line(data = means_leaves_overall, aes(y = Mean), col = "orange") + # overall mean
+  geom_line(data = means_leaves_overall, aes(y = Mean), col = "orange", linewidth = 1.5) + # overall mean
   labs(
     x = "Log 10 Rainfall",
     y = "Log 10 Leaf per mass area"
@@ -482,7 +485,7 @@ ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
   theme_classic()
 ```
 
-## Overall effect of rainfall in second model?
+## Overall effect of rainfall in the second model
 
 Say we'd run the model with the interaction term, but we wanted to know the overall effect of `log10_rainfall` on `log10_leaf_mass_per_area`, averaged over the different temperatures. We can use `estimate_slopes` to get this estimate by setting `trend = "log10_rainfall"`. 
 
@@ -492,7 +495,7 @@ This corresponds to the slope of the orange line in the plot above.
 estimate_slopes(fit_leaves_interaction, trend = "log10_rainfall")
 ```
 
-You can see the effect estimated here is very close to that we calculated above in the additive model. This makes sense.
+You can see the effect estimated here is very close to the number we calculated above in the additive model (-0.54). This makes sense.
 
 
 **Questions**
@@ -503,9 +506,9 @@ You can see the effect estimated here is very close to that we calculated above 
 
 **2. What is the estimated effect of `log10_rainfall` on `log10_leaf_mass_per_area` when averaged over temperature?** `r cloze("-0.52", c("-0.26", "-0.52", "2.94"))`
 
-**3. Based on these results, what can we say about the effect of `log10_rainfall` on `log10_leaf_mass_per_area`?**
+**3. Based on these results, what can we say about the effect of `temperature` on `log10_leaf_mass_per_area`?**
 
-`r cloze("It has limited direct effect, but changes the effect of rainfall on leaves", c("It is negative", "It is positive", "It is close to zero", "It has limited direct effect, but changes the effect of rainfall on leaves"))`
+`r cloze("It has limited direct effect, but changes the effect of rainfall on leaves", c("It is positive", "It has a strong effect", "It has limited direct effect, but changes the effect of rainfall on leaves"))`
 
 # ANCOVA
 
@@ -517,7 +520,7 @@ You can see the effect estimated here is very close to that we calculated above 
 
 Already, you have seen how linear models can analyse data with continuous predictor variables (regression) and categorical predictor variables (ANOVA), but they can also use a combination of categorical and continuous variables. These are known as **analyses of covariance** (**ANCOVA**). 
 
-These models can get as complex as you like, but we will look at the simplest version of these - let's look at thesimplest scenario: a model with **one categorical and one continuous predictor**.
+These models can get as complex as you like, but we will look at the simplest version of these - let's look at the simplest scenario: a model with **one categorical and one continuous predictor**.
 
 To explore this analysis, let's look at some data from marine researchers in BEES who were studying sea urchins at Bare Island near the opening of Botany Bay ([Wright et al. 2005](http://www.int-res.com/abstracts/meps/v298/p143-156/)). Urchins are voracious grazers and at high densities can remove entire kelp forests and leave bare areas known as urchin barrens. 
 
