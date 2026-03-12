@@ -281,7 +281,7 @@ p1
 
 > **But we forgot an important sampling design detail!**
 
-The researchers collected data using `Quadrats`, this is the sampling unit. They sampled 360 quadrats. While we're not particularly interested in the `Quadrats` themselves, we know that each time we use them, the % `BareRock` will differ by chance. We also know our 360 `Quadrats` are really a sample from a much wider population of `Quadrats` and we want be able to make inferences about any `Quadrat` in general. 
+The researchers collected data using quadrats, this is the sampling unit. They sampled 360 quadrats. While we're not particularly interested in the quadrats themselves, we know that each time we use them, the % `BareRock` will differ by chance. We also know our 360 quadrats are really a sample from a much wider population of quadrats and we want be able to make inferences about any quadrat in general. 
 
 **Exercise:**
 
