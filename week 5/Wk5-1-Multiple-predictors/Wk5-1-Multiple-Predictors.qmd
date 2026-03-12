@@ -222,31 +222,54 @@ The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1
 
 The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "high"))`.
 
+## Means
+
+After establishing that there are main and interactive effects on body mass in our ANOVA, we may want to use the model to get some **estimates of means** for different groups of sex, species, or both using `estimate_means()`.
+
+What's useful is that you can estimate means for a main effect while holding the other effects constant. 
+
+For example, here we are calculating the means of the two sexes and marginalising out the effect of species, i.e. taking an average with respect to sex, while controlling for species.
+
+```{r}
+estimate_means(fit_penguin_adults, by = c("sex"))
+```
+
+We can also calculate the means for all combinations of sex and species.
+
+```{r}
+estimate_means(fit_penguin_adults, by = c("sex", "species"))
+```
+
+**4. What does the 95% CI represent for `female | Gentoo` penguins?** 
+
+The 95% CI interval for `female | Gentoo` penguins represents the range of values where we would find the true population estimate of body mass for `r cloze("female", c("female", "male"))` `r cloze("Gentoo", c("Adelie", "Chinstrap", "Gentoo"))` 95% of the time.
+
 ## Contrasts
 
-After establishing that there are main and interactive effects on body mass in our ANOVA, we may want to use model to get some **estimates of differences in means** between sex and species using `estimate_contrasts()`
+We may also want to use the model to get some **estimates of differences in means** between sex and species using `estimate_contrasts()`.
 
-What's useful is that you can estimate constrasts for a main effect while holding the other effects constant. 
+What's useful is that you can estimate contrasts for a main effect while holding the other effects constant. 
 
-For example, here we are calculating the difference between the sexes and taking an average over each species, including the main effect and interactions
+For example, here we are calculating the difference in means between the sexes, taking an average over species.
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = c("sex"))
 ```
 
-Or we can calculate the difference between the species taking an average over sexes,including the main effect and interactions
+Or we can calculate the difference between the species, taking an average over sexes.
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = c("species"))
 ```
 
-Importantly, we can also estimate the difference between sexes for each species using `by = "species`
+Importantly, we can also estimate the difference between sexes for each species using `by = "species`.
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = "sex", by = "species")
 ```
 
-and the difference between species for each sex using `by = "sex`
+...and the difference between species for each sex using `by = "sex`
+
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = "species", by = "sex")
 ```
