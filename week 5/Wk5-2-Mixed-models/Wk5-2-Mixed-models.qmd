@@ -53,15 +53,15 @@ You will need to use mixed effect models if you have a random factor in your exp
 Our learning objectives today are:
 
 - **understand** differences between fixed and random effects
-- **understand** difference between random intercept and random slope
+- **understand** the difference between random intercept and random slope
 - **run** a linear mixed effects model in R using `glmmTMB()`
-- **interpret** the output of your multiple regression using `parameters()`, `estimate_expectations()`, `performance()`
-- **understand** differences between marginal and conditional R^2^ values.
+- **interpret** the output of your mixed effects model using `parameters()`, `estimate_expectations()`, `performance()`
+- **understand** differences between marginal and conditional R^2 values.
 - **make model predictions** using your mixed model using `estimate_expectations()`
 - **extract** the mean and confidence interval for the slope and intercept of the regression line
 - **plot** the data and the regression line with confidence intervals
 
-Let’s dive in! 🚀 
+Let's dive in! 🚀 
 
 ## Setting up: Materials
 

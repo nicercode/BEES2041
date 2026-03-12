@@ -728,7 +728,7 @@ If we did not account for bill length as a covariate, would our conclusions be t
 ```{r solution-2}
 # Simple analysis without covariate of bill length
 fit_simple <- lm(bill_depth_mm ~ species, data = data_penguins)
-summary(fit_simple)
+
 # One way ANOVA
 anova(fit_simple)
 
