@@ -567,7 +567,7 @@ What would be a good model to fit to this data?
 - `Day` is a continuous variable
 - The response variable is `logBareRock`
 
-We expect the % cover of bare rock to change over time, but we also expect  different treatments to have different effects on the % cover of bare rock. Hence, we are really intersted in whether the **slope of the relationship between `Day` and `logBareRock` changes with `Treatment`!**
+We expect the % cover of bare rock to change over time, but we also expect different treatments to have different effects on the % cover of bare rock. Hence, we are really intersted in whether the **slope of the relationship between `Day` and `logBareRock` changes with `Treatment`!**
 
 ## Fit the model
 
@@ -582,7 +582,7 @@ We can look at the parameters of the model to see the estimated effects of `Day`
 parameters(fit)
 ```
 
-Because we have a categorical effect, the `Intercept` is the mean `logBareRock` for the reference group. This is the first level of `Treatment`, which is `cage.control`, when Day = 0. Effects are then the difference for each predictor, relative to this group.
+Because we have a categorical effect, the `Intercept` is the mean `logBareRock` for the reference group. This is the first level of `Treatment`, which is `cage.control`, when Day = 0. Effects are then the difference for each predictor, relative to this reference group.
 
 I wonder if there is a better way to look at the results?
 
@@ -609,7 +609,8 @@ p1
 
 This plot shows the fitted lines only. We've left the ribbon code in there, but it's commented out. You can uncomment it to see the confidence intervals around the lines.
 
-We can also add the data points to the plot to see how well the model fits the data. It get's messy, so it's easier to see facetting by `Treatment`.
+We can also add the data points to the plot to see how well the model fits the data. It gets messy, so it's easier to see faceting by `Treatment`.
+
 ```{r}
 # Compare lines with data
 p1 +
@@ -627,17 +628,17 @@ anova(fit)
 
 You will have to test: 
 
-- whether the % cover of bare rock varied among treatments, with time (Day) (**main effects**) 
-- whether the slopes of the bare rock vs day relationships varied among treatments (**Treatment x Day interction**).
+- whether the % cover of bare rock varied among treatments and with time (Day) (**main effects**) 
+- whether the slopes of the bare rock vs day relationships varied among treatments (**Treatment x Day interaction**).
 
 **Questions**
 
 **1. An interaction between the two predictor variables would be evident if the slopes of these five lines were not parallel. Does the scatterplot suggest an interaction?** `r cloze("yes", c("yes", "no"))`
 
-**2. Do the results of the anova function support this? **
+**2. Do the results of the anova function support this?**
 `r cloze("yes, indicated by the effect of Day:Treatment", c("yes, indicated by the effect of Day:Treatment", "yes, indicated by the effect of Treatment", "yes, indicated by the effect of Day"))`
 
-**3. Which treatment has the largest effect on the % cover of bare rock,  `cage.control` or `low.urchin`?** `r cloze("low.urchin", c("cage.control", "low.urchin"))`
+**3. Which treatment has the largest effect on the % cover of bare rock, `cage.control` or `low.urchin`?** `r cloze("low.urchin", c("cage.control", "low.urchin"))`
 
 ## Contrasts
 
@@ -659,9 +660,9 @@ This provides strong evidence that the % cover of bare rock is not different bet
 
 ![](images/bill_dimensions.png){width=50%}
 
-For your final challenge today, we want you test for **differences in relative `bill depth` between `species`**, To do this, we will run an ANCOVA using bill length as a covariate.
+For your final challenge today, we want you to test for **differences in relative `bill depth` between `species`**. 
 
-We're adding a covariate because we know that as penguins get larger, their beaks get both longer and deeper. We want to know if there are differences in bill depth between species after we account for overall size.
+We know that as individual penguins grow larger, their beaks get both longer and deeper. We want to know if there are differences in bill depth between species after we account for bill length. That is, do the bill depths between species differ when you hold bill length constant? To do this, we will run an ANCOVA using bill length as a covariate.
 
 Your job is to: 
 
@@ -699,6 +700,15 @@ anova(fit_bill)
 
 # Esimate contrasts by species
 estimate_contrasts(fit_bill, contrast = "species")
+
+# Check depth to length ratio
+# data_penguins |> 
+#   mutate(
+#     depth_to_length = bill_depth_mm/bill_length_mm
+#   ) |> 
+#   ggplot(aes(y = depth_to_length, x = body_mass_g, color = species)) +
+#   geom_point() +
+#   theme_classic()
 ```
 
 **Questions:**
@@ -707,18 +717,18 @@ estimate_contrasts(fit_bill, contrast = "species")
 
 `r cloze("Yes", c("Yes", "No"))`, the significant main effect of `bill_length_mm` suggests it contributes to variation to bill depth.
 
-**2.  What conclusions can we draw from the output of `estimate_contrasts(fit_bill, contrast = "species")`?**
+**2. What conclusions can we draw from the output of `estimate_contrasts(fit_bill, contrast = "species")`?** 
 
-The species contrasts holding bill length at `r cloze("44", c("40", "44", "60"))` mm suggests that there `r cloze("are", c("are", "are not"))` differences in bill depth between species
+The species contrasts holding bill length at `r cloze("44", c("40", "44", "60"))` mm suggests that there `r cloze("are", c("are", "are not"))` differences in bill depth between species. 
 
 **3. Redo the analysis NOT accounting for the covariate of bill length. In other words, do one-way ANOVA between bill depth and species and see how your key result changes!**
 
-If we did not account for bill length as a covariate, would our conclusions be the same? `r cloze("same", c("same", "different"))`. 
+If we did not account for bill length as a covariate, would our conclusions be the same? `r cloze("different", c("same", "different"))`. 
 
 ```{r solution-2}
 # Simple analysis without covariate of bill length
 fit_simple <- lm(bill_depth_mm ~ species, data = data_penguins)
-
+summary(fit_simple)
 # One way ANOVA
 anova(fit_simple)
 
@@ -741,3 +751,10 @@ ggplot(data_penguins, aes(x = species, y = bill_depth_mm, color = species)) +
   theme_classic()
 ```
 
+How much does the explained variance (R^2) in bill depth across individuals increase with the addition of bill length as a covariate? `r cloze("8.99%", c("1.52%", "8.99%", "15.32%"))`
+
+```{r solution-3}
+summary(fit_bill) # 0.7697
+summary(fit_simple) # 0.6798
+0.7697 - 0.6798 # 0.0899
+```
