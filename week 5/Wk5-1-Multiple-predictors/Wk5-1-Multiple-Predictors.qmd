@@ -107,7 +107,7 @@ We are all familiar with the Palmer Penguins by now, let's get to know them bett
 
 **Our research question: How much does body mass vary by sex and penguin species?**
 
-The **continuous response** variable (y) is: `body_mass_mm`
+The **continuous response** variable (y) is: `body_mass_g`
 The **two categorical predictor** variables (x1, x2) are: `sex` and `species`
 
 First, let's exclude the penguins where `sex` is NA. These are juvenile penguins that won't contribute to answering our question.
@@ -258,13 +258,13 @@ Or we can calculate the difference between the species, taking an average over s
 estimate_contrasts(fit_penguin_adults, contrast = c("species"))
 ```
 
-Importantly, we can also estimate the difference between sexes for each species using `by = "species`.
+Importantly, we can also estimate the difference between sexes for each species using `by = "species"`.
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = "sex", by = "species")
 ```
 
-...and the difference between species for each sex using `by = "sex`
+...and the difference between species for each sex using `by = "sex"`
 
 ```{r}
 estimate_contrasts(fit_penguin_adults, contrast = "species", by = "sex")
@@ -292,7 +292,7 @@ Overall, our multiple linear regression model explained R^2 = `r cloze("85%", c(
 
 _Contrasts_
 
-Generally female pengiuns are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
+Generally female penguins are smaller than male penguins (mean difference = 630.51, 95% CI = 560.27 - 700.75, p-value = <0.001). 
 
 There were `r cloze("strong", c("no", "weak", "strong"))` statistical differences in the body mass of male and female penguins for all species (here, you would reference the ANOVA table). 
 
@@ -323,7 +323,7 @@ Your job is to:
 
 - analyse this data with a **two-way ANOVA**, 
 - **estimate means** for both **categorical predictors**,
-- **estimate contrasts* *for both** main and interactive effects**, 
+- **estimate contrasts** for both **main and interactive effects**,
 - produce a **plot** summarising your findings
 
 Using your results, answer questions in Moodle.
@@ -392,7 +392,7 @@ Previously, we found that leaf mass per area decreased as rainfall increased.
 
 ![Effect of rain on leaves](images/Towers-rain.png){width=60%}
 
-Additonally, Isaac asked **whether temperature also had an effect on leaf mass per area**. He first wanted to test the **main (additive) effects** of rainfall and temperature on leaf mass per area.
+Additionally, Isaac asked **whether temperature also had an effect on leaf mass per area**. He first wanted to test the **main (additive) effects** of rainfall and temperature on leaf mass per area.
 
 Let's load the data and fit a linear model to test the main effects of both rainfall and temperature on log10 leaf mass per area.
 
@@ -480,7 +480,7 @@ ggplot(data_leaves, aes(x = log10_rainfall, y = log10_leaf_mass_per_area)) +
   geom_line(data = means_leaves_overall, aes(y = Mean), col = "orange", linewidth = 1.5) + # overall mean
   labs(
     x = "Log 10 Rainfall",
-    y = "Log 10 Leaf per mass area"
+    y = "Log 10 Leaf mass per area"
   ) +
   theme_classic()
 ```
@@ -538,7 +538,7 @@ There were 8 replicates per treatment. The % cover of algae and bare rock were m
 
 The following file has the data for the % cover of bare rock, `data/Urchins.csv`
 
-Read this data in and save it as an object. We're also going to log transform the y vaiable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
+Read this data in and save it as an object. We're also going to log transform the y variable (`BareRock`) as it is a percentage and will be right skewed. (If you like, you can check this by fitting a simple model and checking the fit.)
 
 ```{r}
 data_urchins <- read_csv("data/Urchins.csv") |>
@@ -567,7 +567,7 @@ What would be a good model to fit to this data?
 - `Day` is a continuous variable
 - The response variable is `logBareRock`
 
-We expect the % cover of bare rock to change over time, but we also expect different treatments to have different effects on the % cover of bare rock. Hence, we are really intersted in whether the **slope of the relationship between `Day` and `logBareRock` changes with `Treatment`!**
+We expect the % cover of bare rock to change over time, but we also expect different treatments to have different effects on the % cover of bare rock. Hence, we are really interested in whether the **slope of the relationship between `Day` and `logBareRock` changes with `Treatment`!**
 
 ## Fit the model
 
@@ -588,7 +588,7 @@ I wonder if there is a better way to look at the results?
 
 ## Visualising the results
 
-By now you should be familiar with the worfklow for visualising the results of a linear model. We use `estimate_means()` to get the means of `logBareRock` for each level of `Treatment` at different levels of `Day`, then add layers to a ggplot.
+By now you should be familiar with the workflow for visualising the results of a linear model. We use `estimate_means()` to get the means of `logBareRock` for each level of `Treatment` at different levels of `Day`, then add layers to a ggplot.
 
 ```{r}
 means <- estimate_means(fit, by = c("Day", "Treatment"))
@@ -669,7 +669,7 @@ Your job is to:
 - analyse this data with multiple regression (ANCOVA) like in the previous example
 - **estimate means** for both **categorical predictors**
 - produce a **plot** summarising your findings
-- **estimate contrasts** for to compare at a common size
+- **estimate contrasts** to compare at a common size
 
 Using your results, answer questions in Moodle. 
  
@@ -698,7 +698,7 @@ ggplot(data_penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species
 # Test for main and interactive effects
 anova(fit_bill)
 
-# Esimate contrasts by species
+# Estimate contrasts by species
 estimate_contrasts(fit_bill, contrast = "species")
 
 # Check depth to length ratio
