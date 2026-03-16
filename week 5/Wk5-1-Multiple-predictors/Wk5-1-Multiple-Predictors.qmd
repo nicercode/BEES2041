@@ -74,7 +74,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 We can use the same familiar packages as previous practicals.
 
-> Remember to load the packages into R to use em!
+> Remember to load the packages into R to use them!
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)

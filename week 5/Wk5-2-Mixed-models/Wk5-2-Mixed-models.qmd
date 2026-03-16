@@ -83,15 +83,11 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 > We will be using two new packages for today called `glmmTMB` and `remotes`. Uncomment the last two lines in the next code block to install it in your own devices.
 
 ```{r, eval=FALSE}
-# install.packages("tidyverse")
-# install.packages("easystats")
-# install.packages("patchwork")
-
 # install.packages("remotes")
 # install.packages("glmmTMB")
 ```
 
-> Remember to load the packages into R to use em!
+> Remember to load the packages into R to use them!
 
 ```{r, results='hide', warning=FALSE, message=FALSE}
 library(tidyverse)

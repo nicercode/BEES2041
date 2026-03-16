@@ -70,3 +70,5 @@ ignore/
 # Week 8 large files
 large-files/ 
 
+*.rmd
+*-student.qmd
