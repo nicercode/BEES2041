@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
   rprojroot::find_root() |>
-  file.path("week 5/Wk5-2-moodle/") |>
+  file.path("week 5/Wk5-2-Mixed-models") |>
   setwd()
 
 library(moodlequiz)
@@ -32,7 +32,9 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
 
 ![Bringing all your R skills together!](images/witches.png){width=60%} <br>
 
-In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. **Mixed models** help us handle this complexity by explicitly modeling both **fixed effects** — the overall trends we're interested in — and **random effects** — additional variation due to these groupings.
+In many real-world datasets, our observations are not entirely independent — measurements might be grouped by subjects, locations, time points, or experimental units. Ignoring this structure can lead to biased estimates and misleading results. If samples are taken in a similar group/area/time, we need to reflect this structure in our model. Otherwise we are not accurately reflecting the proper sampling structure. 
+
+**Mixed models** help us handle this complexity by explicitly modeling both **fixed effects** — the overall trends we're interested in — and **random effects** — additional variation due to these structured sampling.
 
 # Fixed and Random effects
 
@@ -47,21 +49,20 @@ A **random effect** is:
 
 You will need to use mixed effect models if you have a random factor in your experimental design.
 
-
 ## Key learning objectives
 
 Our learning objectives today are:
 
 - **understand** differences between fixed and random effects
-- **understand** difference between random intercept and random slope
+- **understand** the difference between random intercept and random slope
 - **run** a linear mixed effects model in R using `glmmTMB()`
-- **interpret** the output of your multiple regression using `parameters()`, `estimate_expectations()`, `performance()`
-- **understand** differences between marginal and conditional R^2^ values.
-- **make model predictions** using your mixed model using `estimate_expectations()`
+- **interpret** the output of your mixed effects model using `parameters()`, `estimate_expectation()`, `performance()`
+- **understand** differences between marginal and conditional R^2 values.
+- **make model predictions** using your mixed model using `estimate_expectation()`
 - **extract** the mean and confidence interval for the slope and intercept of the regression line
 - **plot** the data and the regression line with confidence intervals
 
-Let’s dive in! 🚀 
+Let's dive in! 🚀 
 
 ## Setting up: Materials
 
@@ -100,11 +101,11 @@ library(glmmTMB)
 
 ![](images/estuaries.jpg){width=60%} <br>
 
-Random factors are hard to get your head around, and are best explained with examples. The data we will analyse here are **counts of invertebrates at 3-4 sites pristine and modified sites in each of 7 (randomly chosen) estuaries**.
+At their core, random factors are reflect structure in the way data is sampled. Let's look at an example. The data we will analyse here are **counts of invertebrates at 3-4 pristine and modified sites in each of 7 (randomly chosen) estuaries**.
 
 **Our research question is: How does total invertebrate counts differ between pristine and modified sites across all estuaries?**
 
-Here the estuaries are the **random effect**, as there are **a large number of possible estuaries**, and we only sampled a few from the wider population of them, but we would like to make inference about estuaries in general.
+Here the estuaries are the **random effect**, as there are **a large number of possible estuaries**, and we only sampled a few from the wider population of them, and we made multiple samples per estuary. We would like to make inference about estuaries in general, so add estuary as a random effect. This also tells the model that certain data points (from the same estuary) have something in common, so are not independent from one another, 
 
 **Load data**
 
@@ -127,7 +128,7 @@ data_estuaries |>
 
 > Notice that `Estuary` is not replicated across both levels of `Modification`. This is because, `Estuary` is not our primary variable of interest. We collected data we needed from randomly selected estuaries. 
 
-Importantly, we know that our **random sample of estuaries** is likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate at some estuaries may be more favourable to invertebrates than others. Ultimately, we know that different estuaries are likely to differ, on average in `Total` number of invertebrates. That will mean the points in our data will be more similar to each other if they come from the same estuary than if they come from different estuaries. This random effect of `Estuary` is therefore something we want to account for in our model. 
+Importantly, we know that our **random sample of estuaries** is likely to harbour different abundances of invertebrates. For example, some estuaries may be more productive, or climate at some estuaries may be more favourable to invertebrates than others. Ultimately, we know that different estuaries are likely to differ, on average, in `Total` number of invertebrates. That will mean that the points in our data will be more similar to each other if they come from the same estuary than if they come from different estuaries. This random effect of `Estuary` is therefore something we want to account for in our model. 
 
 ## Fit our mixed model
 
@@ -139,9 +140,9 @@ fit_estuaries <- glmmTMB(Total ~ Modification + (1 | Estuary), data = data_estua
 
 - `Total` is our numeric, continuous response variable (y) 
 - `Modification` is our categorical predictor variable (x)
-- `(1 | Estuary)` is a **random intercept**. This tells the model that we are fitting an intercept that is allowed to vary by Estuary (mean `Total` at each `Estuary`).
+- `(1 | Estuary)` is a **random intercept**. This tells the model that we are allowing the intercept to vary by Estuary (mean `Total` at each `Estuary`).
 
-> Technically `Total` count data, but its distribution doesn't really resemble a Poisson distribution. A Normal distribution fits it quite well so we can use a normal response here.
+> Technically `Total` is count data, but its distribution doesn't really resemble a Poisson distribution. A normal distribution fits it quite well so we can use a normal response here.
 
 We can proceed with checking our model fit before looking at the model's output. Things are looking okay!
 
@@ -154,26 +155,28 @@ Not perfect, but good enough! Let's move on to the next step.
 
 ## Compute estimated means
 
-By now, you are familiar with `estimate_means()` and `estimate_contrasts()`. For mixed models, we need to use a different function `estimate_expectations()` to compute means for each level of our predictors and random effect. 
+By now, you are familiar with `estimate_means()` and `estimate_contrasts()`. For mixed models, we need to use a different function `estimate_expectation()` to compute means for each level of our predictors and random effect.
 
 ```{r}
-means_by_mod_estuaries <- estimate_expectation(fit_estuaries)  
+means_by_mod_estuaries <- estimate_expectation(fit_estuaries)
 
 head(means_by_mod_estuaries)
 ```
 
-There are a lot of repeated rows here! This is because `estimate_expectations()` generates mean predictions for the same number of rows and replicates we had in the data. You can verify this by counting the number of rows for `Modification` and `Estuary` and the values should match with our earlier table of counts.
+There are a lot of repeated rows here! This is because `estimate_expectation()` generates mean predictions for the same number of rows and replicates we had in the data. You can verify this by counting the number of rows for `Modification` and `Estuary` and the values should match with our earlier table of counts.
 
 ```{r}
 means_by_mod_estuaries |> 
   count(Modification, Estuary)
+
+nrow(means_by_mod_estuaries)
 ```
 
 > Let's use these means and CI to visualise our data!
 
 ## Visualise our data
 
-Here we are plotting our raw data across different estuaries and facetting the plot by our variable of interest `Modification`.
+Here we are plotting our raw data across different estuaries and faceting the plot by our variable of interest `Modification`.
 
 ```{r}
 ggplot(data_estuaries, aes(x = Estuary, y = Total, colour = Modification, fill = Modification)) +
@@ -237,7 +240,7 @@ To study how urchins affect the communities on the rocky reef, researchers set u
 
 The **% cover of `BareRock`** were measured several times over **210 days**, using **quadrats** (Like you did in the Maroubra field trip!)
 
-We fitted a linear model containing **one categorical and one continuous predictor**, this is also know as an **ANCOVA**: 
+We fitted a linear model containing **one categorical and one continuous predictor**, this is also known as an **ANCOVA**: 
 
 - `Day` was treated as a covariate. We are not really interested in `Day` as an effect but we know that time is a factor and would likely affect the % of `BareRock`.
 - The main effect of `Treatment`. 
@@ -264,7 +267,6 @@ p1 <-
   ) + geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Treatment) +
   theme_minimal()
-
 ```
 
 </details>
@@ -276,14 +278,17 @@ p1
 
 > **But we forgot an important sampling design detail!**
 
-The researchers collected data using `Quadrats`, this is the sampling unit. They sampled 360 quadrats. While we're not particularly interested in the `Quadrats` themselves, we know that each time we use them, the % `BareRock` will differ by chance. We also know our 360 `Quadrats` are really a sample from a much wider population of `Quadrats` and we want be able to make inferences about any `Quadrat` in general. 
+The researchers collected data using quadrats, with repeat visits to each one. They have 360 samples, but these 360 samples are not independent of each other because they were collected from 40 quadrats, with 9 samples per quadrat. 
+
+Failing to tell the model that our data has this underlying structure is misrepresenting the data. By treating all 360 samples as independent, we are ignoring the fact that some of the variation in our data is due to inherent differences between quadrats. We also know our 40 quadrats are really a sample from a much wider population of quadrats and we want be able to make inferences about any quadrat in general.  Hence, we need to fit a mixed model that accounts for the random effect of `Quadrat`.
+
 
 **Exercise:**
 
 > Your task is to refit the same model, adding `Quadrat` as a random intercept and reproduce the results again 🚀!
 
 - Fit a mixed model adding in `Quadrat` a random intercept
-- Generate means for `Total` for `Days`, `Treatment` and `Quadrat` 
+- Generate means for `Total` for `Day`, `Treatment` and `Quadrat` 
 - Create a plot, fitting lines for each `Quadrat` 
 
 Let's get you hitting the ground running: 
@@ -303,7 +308,7 @@ data_urchins <- read_csv("data/Urchins.csv")  |>
   )
 ```
 
-Now fit the model with the random effect of `Quadrat`. 
+Now fit the model with the random effect of `Quadrat` on the intercept. 
 
 ```{r solution-1}
 # Fit model
@@ -319,7 +324,7 @@ means_urchins_all <- estimate_expectation(fit_urchins_random)
 # Fit a line for each quadrat
 p1 <-
   ggplot(means_urchins_all, aes(x = Day, y = Predicted, color = Treatment)) +
-  geom_line(aes(group = Quadrat), alpha = 0.5, size = 0.5) +
+  geom_line(aes(group = Quadrat), alpha = 0.5, linewidth = 0.5) +
   labs(
     x = "Day",
     y = "log(BareRock)"
@@ -330,7 +335,7 @@ p1 <-
 p1 +
   geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2)
 
-# Plot for each treatmeant
+# Plot for each treatment
 p1 +
   geom_line(data = means_by_day_treat, alpha = 1, linewidth = 2) +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
@@ -338,24 +343,28 @@ p1 +
 
 # Plot for each Quadrat
 p1 +
-  geom_line(alpha = 0.5, size = 0.5) +
+  geom_line(alpha = 0.5, linewidth = 0.5) +
   geom_point(data = data_urchins, aes(y = logBareRock)) +
   facet_wrap(~Quadrat)
 
 # Compare the models 
-parameters(fit_urchins) 
 parameters(fit_urchins_random)
 ```
 
 **Questions:**
 
-**1. Compare the output of `parameters(fit_urchins)` and the `parameters()` output of your mixed model. How did including the random effect of `Quadrat` change the model output?** 
+**1. What does it mean then if we were to ignore `Quadrat` and not include it as a random effect?**
 
-Broadly speaking, the CI of the mixed models are `r cloze("smaller", c("smaller", "larger"))`. Corresponding, the p values are `r cloze("smaller", c("smaller", "larger"))`.
 
-**2. What does it mean then if we were to ignore `Quadrat` and not include it as a random effect?**
+Ignoring `Quadrat` would likely lead us to `r cloze("overestimate", c("overestimate", "underestimate"))` our sampling effort and may lead to `r cloze("biased", c("biased", "unbiased"))` estimates of the treatment effect. 
 
-Ignoring `Quadrat` means that we are not accounting for `r cloze("noise due to Quadrat in the data", c("normality", "non constant variance", "noise due to Quadrat in the data"))` 
+Ignoring `Quadrat` would lead to two main issues. The first is that we are treating all 360 samples as independent, when in reality they are not. This can lead to an overestimation of the degrees of freedom and an underestimation of the standard errors, which can result in inflated type I error rates (i.e., finding a significant effect when there is none). The second issue is that we are not accounting for the fact that some of the variation in our data is due to inherent differences between quadrats. This can lead to biased estimates of the treatment effect and can also affect our ability to  generalise our results to other quadrats or similar systems. By including `Quadrat` as a random effect, we can account for these sources of variation and obtain more accurate and reliable estimates of the treatment effect.
+
+**2.Look at the updated output of your mixed model. After including the random effect of `Quadrat`, is the effect of `Treatment` still significant?**
+
+The effect of `Treatment` is still significant after including the random effect of `Quadrat`. The p-value for the `Treatment [Cage control]` coefficient is `r cloze("0.001", c("0.001", "0.05", "0.1"))`, which is less than the commonly used significance level of 0.05, indicating that there is a statistically significant difference in `logBareRock` between the `Cage control` treatment and the reference level (which is likely the `Control` treatment).
+
+
 
 # Random Slopes
 
@@ -375,7 +384,7 @@ For example, imagine you're studying how study hours affect test scores across d
 
 ![](images/trees.jpeg){width=60%}  <br>
 
-In this example, we will use the [**Biomass And Allometry Database (BAAD)**](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/14-1889.1), which contains data on plant structure compiled by Data Dan, using studies from all around the world. You can find more information about the BAAD dataset [here](https://github.com/dfalster/BAAD). This datasets enables us to ask questions about how plant structure varies across species and environments, and how the dimensions of different plant parts (tree height, stem diameter, leaf area, biomass etc) are related to each other.
+In this example, we will use the [**Biomass And Allometry Database (BAAD)**](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/14-1889.1), which contains data on plant structure compiled by Data Dan, using studies from all around the world. You can find more information about the BAAD dataset [here](https://github.com/dfalster/BAAD). This dataset enables us to ask questions about how plant structure varies across species and environments, and how the dimensions of different plant parts (tree height, stem diameter, leaf area, biomass, etc.) are related to each other.
 
 
 **Install relevant packages**
@@ -442,7 +451,7 @@ data_trees <- data_trees |>
 
 fit_simple <- glmmTMB(log10_area_leaf_m2 ~ log10_height_m, data = data_trees)
 
-check_model(fit_simple) # THis might take a few seconds
+check_model(fit_simple) # This might take a few seconds
 ```
 
 Not perfect, but much better and good enough!
@@ -493,10 +502,10 @@ In the code above, the model terms:
 
 ```{r}
 # Estimate the predictions for the model for height x species
+# This might take a while to compute
 means_sp <- estimate_expectation(fit_rs)
 
 # Estimate marginal means for the model by height, averaging out species
-# This might take a while to compute
 means_all <- estimate_expectation(fit_rs, by = c("log10_height_m"))
 
 # Make the plot
@@ -519,6 +528,8 @@ Wow! The model with random slopes for species provides a much better fit to the 
 Just as we thought, the relationship between height and leaf area is not the same for all species and there is a lot of spread between species! 
 The mixed model is able to capture the variation in the relationship between height and leaf area between species. 
 
+Another way to look it is that we've moved a bunch of variance from "unexplained" into variation between species in slope and intercept. 
+
 We can assess whether the variation in the data due to the random effect is significant by comparing the mixed model to the simple model. We can do this using an `anova()` test , which will tell us if the random slopes model is significantly better than the simple model. It is!
 
 ```{r}
@@ -531,8 +542,8 @@ anova(fit_simple, fit_rs)
 
 Now that we have a richer model, we can find out how much of the variation in the data is due to: 
 
-- the fixed effects
-- the random effects
+- the fixed effects,
+- the random effects,
 - residual noise.
 
 We can quantify these via the **R^2^ of models, with and without the random effects**. 
@@ -631,10 +642,11 @@ Here's the code to get you started with the data:
 data_trees <- baad$data |>
   as_tibble() |> # Treat dataframe as a tibble
   select(studyName, species, location, stem_diameter_m = d.ba, height = h.t, biomass_kg = m.so) |> # Select and rename some columns
-  filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |> # Exclude NA in  and biomass_kg
+  filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |> # Exclude NA in stem_diameter_m and biomass_kg
   mutate(
     log10_stem_diameter_m = log10(stem_diameter_m), # log10 transform 
-    log10_height = log10(height), log10_biomass_kg = log10(biomass_kg) # log10 transform 
+    log10_height = log10(height), # log10 transform
+    log10_biomass_kg = log10(biomass_kg) # log10 transform 
   )
 
 data_trees
@@ -660,8 +672,7 @@ ggplot(data_trees, aes(x = log10_stem_diameter_m, y = log10_biomass_kg, color = 
 
 # Look at model output
 parameters(fit_stem)
-
-fit_simple <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m, data = data_trees)
+performance(fit_stem)
 
 ## Estimate biomass of a tree with a stem diameter of 20cm
 data_pred_stem <- tibble(
