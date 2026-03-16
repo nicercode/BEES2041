@@ -69,4 +69,6 @@ ignore/
 
 # Week 8 large files
 large-files/ 
+*-moodle.*md
+*-student.*md
 
