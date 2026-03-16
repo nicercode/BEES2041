@@ -380,7 +380,7 @@ For example, imagine you're studying how study hours affect test scores across d
 
 ![](images/trees.jpeg){width=60%}  <br>
 
-In this example, we will use the [**Biomass And Allometry Database (BAAD)**](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/14-1889.1), which contains data on plant structure compiled by Data Dan, using studies from all around the world. You can find more information about the BAAD dataset [here](https://github.com/dfalster/BAAD). This datasets enables us to ask questions about how plant structure varies across species and environments, and how the dimensions of different plant parts (tree height, stem diameter, leaf area, biomass etc) are related to each other.
+In this example, we will use the [**Biomass And Allometry Database (BAAD)**](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/14-1889.1), which contains data on plant structure compiled by Data Dan, using studies from all around the world. You can find more information about the BAAD dataset [here](https://github.com/dfalster/BAAD). This dataset enables us to ask questions about how plant structure varies across species and environments, and how the dimensions of different plant parts (tree height, stem diameter, leaf area, biomass, etc.) are related to each other.
 
 
 **Install relevant packages**
@@ -498,10 +498,10 @@ In the code above, the model terms:
 
 ```{r}
 # Estimate the predictions for the model for height x species
+# This might take a while to compute
 means_sp <- estimate_expectation(fit_rs)
 
 # Estimate marginal means for the model by height, averaging out species
-# This might take a while to compute
 means_all <- estimate_expectation(fit_rs, by = c("log10_height_m"))
 
 # Make the plot
@@ -536,8 +536,8 @@ anova(fit_simple, fit_rs)
 
 Now that we have a richer model, we can find out how much of the variation in the data is due to: 
 
-- the fixed effects
-- the random effects
+- the fixed effects,
+- the random effects,
 - residual noise.
 
 We can quantify these via the **R^2^ of models, with and without the random effects**. 
@@ -636,10 +636,11 @@ Here's the code to get you started with the data:
 data_trees <- baad$data |>
   as_tibble() |> # Treat dataframe as a tibble
   select(studyName, species, location, stem_diameter_m = d.ba, height = h.t, biomass_kg = m.so) |> # Select and rename some columns
-  filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |> # Exclude NA in  and biomass_kg
+  filter(!is.na(stem_diameter_m), !is.na(biomass_kg)) |> # Exclude NA in stem_diameter_m and biomass_kg
   mutate(
     log10_stem_diameter_m = log10(stem_diameter_m), # log10 transform 
-    log10_height = log10(height), log10_biomass_kg = log10(biomass_kg) # log10 transform 
+    log10_height = log10(height), # log10 transform
+    log10_biomass_kg = log10(biomass_kg) # log10 transform 
   )
 
 data_trees
@@ -665,6 +666,7 @@ ggplot(data_trees, aes(x = log10_stem_diameter_m, y = log10_biomass_kg, color = 
 
 # Look at model output
 parameters(fit_stem)
+performance(fit_stem)
 
 fit_simple <- glmmTMB(log10_biomass_kg ~ log10_stem_diameter_m, data = data_trees)
 
