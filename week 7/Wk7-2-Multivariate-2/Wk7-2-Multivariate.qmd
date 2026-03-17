@@ -134,7 +134,16 @@ We can save the output from `adonis2` and use a density plot to see just how lik
 ```{r, results='hide'}
 Nutrients_test <- adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
 
-permustats(Nutrients_test) |> densityplot()
+permutations <- permustats(Nutrients_test)$permutations |> 
+  as_tibble() |>
+  rename(permutation_outcome = V1)
+
+ggplot(data = permutations, aes(x = permutation_outcome)) +
+  geom_density() +
+  geom_jitter(aes(y = 0), height = 0.05, width = 0, color = "darkblue", alpha = 0.2) +
+  geom_vline(xintercept = permustats(Nutrients_test)$statistic, color = "red", linetype = "dashed") +
+  theme_classic() +
+  labs(y = "Density")
 ```
 
 This produces a frequency histogram of `pseudo-F` obtained from the 999 permutations of the raw data. **This is best viewed as what would happen if the null hypothesis was true** (no similarities between our variables). The `pseudo-F` value you obtained is noted with the vertical black line.
