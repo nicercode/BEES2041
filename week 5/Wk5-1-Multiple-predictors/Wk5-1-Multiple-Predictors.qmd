@@ -1,8 +1,8 @@
 ---
-title: "Introduction to Linear Regression with Multiple Predictors"
-format:
-  html:    
-    self-contained: true
+title: "Week 5-1 Multiple predictors"
+output: html_output
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
