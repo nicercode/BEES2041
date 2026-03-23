@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
   rprojroot::find_root() |>
-  file.path("week 5/Wk5-2-moodle") |>
+  file.path("week 5/Wk5-2-Mixed-models") |>
   setwd()
 
 library(moodlequiz)
