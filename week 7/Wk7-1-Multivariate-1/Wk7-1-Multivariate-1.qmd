@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE,
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
   rprojroot::find_root() |>
-  file.path("week 7/Wk7-1-moodle") |>
+  file.path("week 7/Wk7-1-Multivariate-1") |>
   setwd()
 
 library(moodlequiz)
@@ -46,7 +46,7 @@ We will go over some considerations before making these plots such as **transfor
 At the end of today's practical, you should be able to:
 
 -   Calculate a variety of **similarity/dissimilarity coefficients** to represent the differences among samples (or variables) in multivariate data sets
--   Create and interpret an **multi-dimensional scaling (MDS)** plot
+-   Create and interpret a **multi-dimensional scaling (MDS)** plot
 -   Create and interpret **cluster diagrams** to summarise the relationships among samples or variables
 -   Understand that data may need to be **transformed or standardised** before making graphs
 
@@ -54,7 +54,7 @@ Let’s dive in! 🚀
 
 ## Setting up: Materials
 
-Everything you need for this prac is on Moodle
+Everything you need for this prac is on Moodle:
 
 1.  Download this week's materials zip file from Moodle, from the course page
 2.  Unzip the file by:
@@ -71,7 +71,7 @@ You will work in the relevant Quarto document for this prac. Within each Quarto 
 
 ## Setting up: Packages
 
-We'll be using a new package, called `vegan`, which includes a range of tools for visualising and analysing community data in ecology, but useful for all sorts of multivariate data sets. Uncomment the last line of code and install it on your machine
+We'll be using a new package, called `vegan`, which includes a range of tools for visualising and analysing community data in ecology, but useful for all sorts of multivariate data sets. Uncomment the last line of code and install it on your machine.
 
 ```{r, eval=FALSE}
 # install.packages("vegan")
@@ -85,7 +85,6 @@ library(vegan)
 ```
 
 # 1) Similarity coefficients
-## 1) Similarity coefficients
 
 Many techniques for visualising and analysing multivariate data start with **calculating the similarity between two samples**, based on the values for all variables measured from those samples.
 
@@ -109,7 +108,7 @@ Beaches |>
 
 **Questions:**
 
-- **What are the samples?** `r cloze("the beaches", c("the beaches", "sediment sizes","current speeds", "wave height", "slope"))`
+- **What are the samples?** `r cloze("the beaches", c("the beaches", "sediment sizes", "current speeds", "wave height", "slope"))`
 
 - **What are the variables?** `r cloze("the measures taken from each beach", c("the measures taken from each beach", "the beaches"))`
 
@@ -135,11 +134,11 @@ This is a **similarity matrix** that summarises the **relationships among beache
 
 **Questions:**
 
--   **What is the similarity between Beach 1 and 3 as defined by the Pearson correlation coefficient?** `r cloze("0.8935143", c("1.0000000","0.9940330","0.8935143","0.8474139"))`
+-   **What is the similarity between Beach 1 and 3 as defined by the Pearson correlation coefficient?** `r cloze("0.8935143", c("1.0000000","0.9940330", "0.8935143", "0.8474139"))`
 
--   **What is the similarity between Beach 2 and 3 as defined by the Pearson correlation coefficient?** `r cloze("0.8474139", c("1.0000000","0.9940330","0.8935143","0.8474139"))`
+-   **What is the similarity between Beach 2 and 3 as defined by the Pearson correlation coefficient?** `r cloze("0.8474139", c("1.0000000", "0.9940330", "0.8935143", "0.8474139"))`
 
--   **What is the value of the coefficient if two samples are identical?** `r cloze("1.0000000", c("1.0000000","0.9940330","0.8935143","0.8474139"))`
+-   **What is the value of the coefficient if two samples are identical?** `r cloze("1.0000000", c("1.0000000", "0.9940330", "0.8935143", "0.8474139"))`
 
 ## 1c) Summarise the relationships among samples using Euclidean distance
 
@@ -170,11 +169,9 @@ This is a **dissimilarity matrix**, using a different measure (**Euclidean dista
 `r cloze("5.321128", c("0.000000", "5.321128", "9.582881", "4.314673"))`
 
 - What is the value of the coefficient if two samples are identical? 
-`r cloze("0.000000", c("0.000000","5.321128","9.582881","4.314673"))`
+`r cloze("0.000000", c("0.000000", "5.321128", "9.582881", "4.314673"))`
 
 # 2) Heavy metals in sediments
-
-## 2) Heavy metals in sediments
 
 ![](images/harbour.jpg){width=70%} <br>
 
@@ -282,8 +279,6 @@ HeavyMetals.mds$stress
 
 # 3) Nutrient enrichment experiment
 
-## 3) Nutrient enrichment experiment
-
 ![](images/53711279_1967294661.png){width=70%} <br>
 
 The effect of nutrient enhancement on the composition of weed species on a farm was investigated. Ten replicate plots were established for each of three treatments: 
@@ -354,8 +349,6 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
 ## 3a) Does the ordination distinguish between experimental treatments? Describe the patterns in the plot {type=essay}
 
 # 4) Species composition in rock pools
-
-## 4) Species composition in rock pools
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
@@ -435,8 +428,6 @@ ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) +
 
 # 5) Cluster analysis: Heavy metals in sediments
 
-## 5) Cluster analysis: Heavy metals in sediments
-
 ![](images/harbour.jpg){width=70%}
 
 You first explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. 
@@ -497,8 +488,6 @@ as.dendrogram(HeavyMetals.cluster.trans) |> plot()
 ## 5c) Does the cluster analysis suggest any effects of the sewage dump {type=essay}
 
 # 6) To transform or to standardise?
-
-## 6) To transform or to standardise?
 
 Multivariate data sets are often **transformed** prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but **to vary the relative importance of variables** that may be measured on **different scales**.
 
