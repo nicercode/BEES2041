@@ -409,13 +409,16 @@ metals_pca <- princomp(std_HM, cor = FALSE)
 
 # Extract loadings from PCA
 loadings(metals_pca)
+
+plot(metals_pca$scores, pch = 16) # `pch` controls the symbol used for plotted points
+biplot(metals_pca)
 ```
 
 ## 11a) Which variable (i.e., metal) is most strongly correlated with the values of PC1?
 
 `r cloze("Cr", c("Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
 
-## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
+## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close to the sewage dump? {type=essay}
 
 
 ## 11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)
@@ -449,18 +452,22 @@ There were over 40,000 observations in the original data set, collected from nin
 **Load data**
 ```{r}
 Caves <- read_csv(file = "data/Caves.csv")
+
+Caves
 ```
 
-To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (the from columns HW-2b, HW_4b etc.). Let's format the date column as a date, not character so that R handles years and dates nicely. 
+To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (from columns `HW-2b`, `HW_4b`, etc.). Let's first format the date column as a date, not character so that R handles years and dates nicely. 
 
 **Wrangle data**
 ```{r}
 Caves <- mutate(Caves, Date = as.Date(Date, format = "%d/%m/%Y"))
+
+Caves
 ```
 
 **Visualise data**
 
-Let's visualise the plot the patterns in drip numbers through time for just one of the loggers (`HW_4b`)
+Now let's visualise the patterns in drip numbers through time for just one of the loggers (`HW_4b`).
 
 ```{r, results='hide'}
 ggplot(Caves, aes(Date, HW_4b)) + 
@@ -472,8 +479,8 @@ ggplot(Caves, aes(Date, HW_4b)) +
 
 **Exercise:**
 
-- Create a PCA plot that visualises the variation across years with data from all nine loggers. Remember that you'll need to subset the columns to only include the drip data (from columns HW-2b, HW_4b etc.) 
-- Bring back the year column into a data frame that has the x and y coordinate values from the ordination plot.
+- Create a PCA plot that visualises the variation across years with data from all nine loggers. Remember that you'll need to subset the columns to only include the drip data (from columns `HW-2b`, `HW_4b`, etc.) 
+- Bring back the year column into the data frame that has the x and y coordinate values from the ordination plot.
 
 ```{r solution1}
 # Select data variables only
@@ -483,7 +490,7 @@ Caves_vars <- Caves |>
 # Perform PCA
 caves_pca <- princomp(Caves_vars, cor = FALSE)
 
-# ook at output
+# Look at output
 summary(caves_pca)
 
 # Extract loadings
