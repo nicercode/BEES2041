@@ -123,7 +123,7 @@ There are some key differences from a univariate (one predictor variable) ANOVA 
 
 ## 7a) Is there evidence to reject the null hypothesis?
 
-`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1","no, the F value is greater than 9"))`
+`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1", "no, the F value is greater than 9"))`
 
 
 ## Visualise PERMANOVA
@@ -145,15 +145,15 @@ ggplot(data = permutations, aes(x = permutation_outcome)) +
   labs(y = "Density")
 ```
 
-This produces a frequency histogram of `pseudo-F` obtained from the 999 permutations of the raw data. **This is best viewed as what would happen if the null hypothesis was true** (no similarities between our variables). The `pseudo-F` value you obtained is noted with the vertical black line.
+This produces a frequency histogram of `pseudo-F` obtained from the 999 permutations of the raw data. **This is best viewed as what would happen if the null hypothesis was true** (no similarities between our variables). The `pseudo-F` value you obtained is noted with the vertical red line.
 
 You should have output that shows that this null hypothesis is rejected. This means that: 
 
- > there is some difference in weed species composition among all three treatments. 
+> there is some difference in weed species composition among all three treatments. 
  
 **Multivariate contrasts**
 
- Our next step is to try and understand **which treatment differed from which** e.g contrasts. There is not function to do this, a workaround is to run separate pairwise tests using subsets of data with only two levels of `Treatment`. 
+Our next step is to try and understand **which treatment differed from which**, i.e., contrasts. There is unfortunately no function to do this, but a workaround is to run separate pairwise tests using subsets of data with only two levels of `Treatment`. 
 
 We will use `filter()` to subset rows, and `select()` for subsetting columns for our pairwise comparisons.  The following code creates subsets of rows for each comparison (note that `!=` means “not equals to”) and runs the **permutational MANOVA** again with just the rows with the weed variables.
 
