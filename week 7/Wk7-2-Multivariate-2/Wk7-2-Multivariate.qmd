@@ -155,16 +155,16 @@ You should have output that shows that this null hypothesis is rejected. This me
 
 Our next step is to try and understand **which treatment differed from which**, i.e., contrasts. There is unfortunately no function to do this, but a workaround is to run separate pairwise tests using subsets of data with only two levels of `Treatment`. 
 
-We will use `filter()` to subset rows, and `select()` for subsetting columns for our pairwise comparisons.  The following code creates subsets of rows for each comparison (note that `!=` means “not equals to”) and runs the **permutational MANOVA** again with just the rows with the weed variables.
+We will use `filter()` to subset rows, and `select()` for subsetting columns for our pairwise comparisons.  The following code creates subsets of rows for each comparison (note that `!=` means “not equal to”) and runs the **permutational MANOVA** again with just the rows with the weed variables.
 
 **Subset analysis for Control and Low**
 
 ```{r, results='hide'}
 # Filter treatment is not "High"
-Nutrients_ControlvsLow <- filter(Nutrients, Treatment != "High")
+Nutrients_ControlvsLow <- Nutrients |> filter(Treatment != "High")
 
 # Select columns containing the word "weed"
-Nutrients_ControlvsLow_vars <- select(Nutrients_ControlvsLow, contains("Weed"))
+Nutrients_ControlvsLow_vars <- Nutrients_ControlvsLow |> select(contains("Weed"))
 
 # Perform a PERMANOVA using subset data
 adonis2(Nutrients_ControlvsLow_vars ~ Nutrients_ControlvsLow$Treatment, permutations = 999, method = "bray")
@@ -174,10 +174,10 @@ adonis2(Nutrients_ControlvsLow_vars ~ Nutrients_ControlvsLow$Treatment, permutat
 
 ```{r, results='hide'}
 # Filter treatment is not "Low"
-Nutrients_ControlvsHigh <- filter(Nutrients, Treatment != "Low")
+Nutrients_ControlvsHigh <- Nutrients |> filter(Treatment != "Low")
 
 # Select columns containing the word "weed"
-Nutrients_ControlvsHigh_vars <- select(Nutrients_ControlvsHigh, contains("Weed"))
+Nutrients_ControlvsHigh_vars <- Nutrients_ControlvsHigh |> select(contains("Weed"))
 
 # Perform a PERMANOVA using subset data
 adonis2(Nutrients_ControlvsHigh_vars ~ Nutrients_ControlvsHigh$Treatment, permutations = 999, method = "bray")
@@ -187,10 +187,10 @@ adonis2(Nutrients_ControlvsHigh_vars ~ Nutrients_ControlvsHigh$Treatment, permut
 
 ```{r, results='hide'}
 # Filter treatment is not "Control"
-Nutrients_LowvsHigh <- filter(Nutrients, Treatment != "Control")
+Nutrients_LowvsHigh <- Nutrients |> filter(Treatment != "Control")
 
 # Select columns containing the word "weed"
-Nutrients_LowvsHigh_vars <- select(Nutrients_LowvsHigh, contains("Weed"))
+Nutrients_LowvsHigh_vars <- Nutrients_LowvsHigh |> select(contains("Weed"))
 
 # Perform a PERMANOVA using subset data
 adonis2(Nutrients_LowvsHigh_vars ~ Nutrients_LowvsHigh$Treatment, permutations = 999, method = "bray")
@@ -200,14 +200,14 @@ The problem with this approach is increasing the risk of **false positives**. Fa
 
 ![](images/type_1_errors.png){width=60%} <br>
 
-The simplest correction for this is called the **Bonferroni correction**, where the significance level (α =0.05) is **adjusted by the number of hypotheses being tested**. 
+The simplest correction for this is called the **Bonferroni correction**, where the significance level (α = 0.05) is **adjusted by the number of hypotheses being tested**. 
 
 In this example, we will **divide the threshold significance value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
 
-## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}
+## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pairwise tests to establish which treatments differ from which. {type=essay}
 
 
-# 8) Species composition in rock pools (multivariate hypothesis testing)## 8) Species composition in rock pools (multivariate hypothesis testing)
+# 8) Species composition in rock pools (multivariate hypothesis testing)
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
