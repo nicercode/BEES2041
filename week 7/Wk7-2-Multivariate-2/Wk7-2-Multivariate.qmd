@@ -75,14 +75,14 @@ There is a whole world of multivariate statistical tests, but we will show you j
 
 In the nutrient enrichment experiment, we had: 
 
-- three treatments (control, low and high nutrients)
+- three treatments (control, low and high nutrients),
 - 12 response variables (the abundance of each weed species).
 
- If we had measured just one variable, we would use a linear model and ANOVA to contrast that variable among treatments. With many variables measured, we use **multivariate analyses of variance based on the similarity matrix**.
+If we had measured just one variable, we would use a linear model and ANOVA to contrast that variable among treatments. With many variables measured, we use **multivariate analyses of variance based on the similarity matrix**.
 
-Instead of partitioning the variation in the actual values of the variables (i.e., abundance of our each of the weed species) as in a ANOVA, this analysis **partitions the variation in the values of the similarity matrix** among and within treatment groups.
+Instead of partitioning the variation in the actual values of the variables (i.e., abundance of each of the weed species), as in a ANOVA, this analysis **partitions the variation in the values of the similarity matrix** among and within treatment groups.
 
-An another way to think of this is that **if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level** (i.e., within group similarities higher than among-group similarities).
+Another way to think of this is that **if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level** (i.e., within-group similarities higher than among-group similarities).
 
 **Load data**
 
@@ -93,10 +93,10 @@ Let's load the `NutrientEnrichment.csv`, wrangle and transform it for analysis:
 Nutrients <- read_csv(file = "data/NutrientEnrichment.csv")
 
 # Select weeds only
-Nutrients_vars <- select(Nutrients, contains("Weed"))
+Nutrients_vars <- Nutrients |> select(contains("Weed"))
 
 # Transform data
-Nutrients.sq <- sqrt(Nutrients_vars)
+Nutrients_sq <- sqrt(Nutrients_vars)
 ```
 
 **Run a PERMANOVA**
@@ -292,35 +292,35 @@ leaf_fig |>
 To conduct a principal components analysis on the leaf data, we can use the `princomp()` function in base stats.
 
 ```{r}
-leaf.pca <- princomp(Leaf_shape_vars, cor = FALSE)
+leaf_pca <- princomp(Leaf_shape_vars, cor = FALSE)
 ```
 
 Let's talk through the code: 
 
 - `cor. = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on the same scale. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
 
-Principal components analysis produces a lot of graphical and numerical output, which can explore by further examining the object (`leaf.pca`) we just created.
+Principal components analysis produces a lot of graphical and numerical output, which can explore by further examining the object (`leaf_pca`) we just created.
 
 ## Producing a score plot
 
 This is the ordination of all 20 leaf samples in the new **two-dimensional space defined by principal component 1 and 2**.
 
 ```{r, results='hide'}
-plot(leaf.pca$scores, pch = 16)
+plot(leaf_pca$scores, pch = 16)
 ```
 
 You can also produce a **biplot** with the **relationships between the original variables and the principal components overlaid on the score plot**.
 
 ```{r, results='hide'}
-biplot(leaf.pca)
+biplot(leaf_pca)
 ```
 
 ## Understanding how much variance is explained by each component
 
-PCA is aiming to **represent as much variance as possible in the first few principal components**. We can check whether it is doing a good job by exploring the `summary()` of the `leaf.pca` object.
+PCA is aiming to **represent as much variance as possible in the first few principal components**. We can check whether it is doing a good job by exploring the `summary()` of the `leaf_pca` object.
 
 ```{r, results='hide'}
-summary(leaf.pca)
+summary(leaf_pca)
 ```
 
 ## 10b) Enter the proportion explained by the first two principal components
@@ -333,7 +333,7 @@ summary(leaf.pca)
 These are also visualised by a **scree plot**. Note that the Y-axis presented is not the % of variation explained.
 
 ```{r, results='hide'}
-screeplot(leaf.pca, type = 'lines')
+screeplot(leaf_pca, type = 'lines')
 ```
 
 ## Understanding how the original variables relate to the principal components
@@ -343,7 +343,7 @@ We gain further insight into the **relationships among variables** and help with
 These relationships can be seen in the **biplot** above but also obtained numerically by extracting the **loadings** from the PCA. Note that this output does not print very small values, so the empty cells can be considered close to zero (i.e., no correlation).
 
 ```{r, results='hide'}
-loadings(leaf.pca)
+loadings(leaf_pca)
 ```
 
 ## 10c) Which of the original variables is most strongly correlated with principal component 1?
@@ -358,7 +358,7 @@ Extract the x and y coordinates from the pca object into a data frame.
 
 ```{r}
 # Extract scores from PCA
-Leaf_xy <- data.frame(leaf.pca$scores)
+Leaf_xy <- data.frame(leaf_pca$scores)
 ```
 
 Add the labels for the two species to this data
@@ -402,10 +402,10 @@ Conduct a PCA on the heavy metal data. Given that the variables were measured on
 
 ```{r solution}
 # Perform PCA
-std.HM <- decostand(HeavyMetals_vars, method = "max")
-std.HM 
+std_HM <- decostand(HeavyMetals_vars, method = "max")
+std_HM 
 
-metals.pca <- princomp(std.HM, cor = FALSE)
+metals.pca <- princomp(std_HM, cor = FALSE)
 
 # Extract loadings from PCA
 loadings(metals.pca)
@@ -464,7 +464,7 @@ Let's visualise the plot the patterns in drip numbers through time for just one 
 
 ```{r, results='hide'}
 ggplot(Caves, aes(Date, HW_4b)) + 
-  geom_point(alpha=0.05)
+  geom_point(alpha = 0.05)
 ```
 
 
@@ -481,16 +481,16 @@ Caves_vars <- Caves |>
   select(contains("HW"))
 
 # Perform PCA
-caves.pca <- princomp(Caves_vars, cor = FALSE)
+caves_pca <- princomp(Caves_vars, cor = FALSE)
 
 # ook at output
-summary(caves.pca)
+summary(caves_pca)
 
 # Extract loadings
-loadings(caves.pca)
+loadings(caves_pca)
 
 # Extract scores for ordination
-Caves_xy <- data.frame(caves.pca$scores)
+Caves_xy <- data.frame(caves_pca$scores)
 
 # Create a year column so we can label them
 Caves_xy$Year <- as.character(Caves$Year)
