@@ -266,7 +266,7 @@ HeavyMetals_mds$stress
 
 ## 2a) What does the stress value represent?
 
-`r cloze("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", c("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance", "a measure of how well the variables are correlated", "a measure of whether the data are normally distributed", "a measure of how close together all the samples are on the plot", "a statistical test contrasting samples in 2D space"))`
+`r cloze("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance (the lower, the better)", c("a measure of how well the distance between samples on the plot corresponds with the actual multivariate distance (the lower, the better)", "a measure of how well the variables are correlated", "a measure of whether the data are normally distributed", "a measure of how close together all the samples are on the plot", "a statistical test contrasting samples in 2D space"))`
 
 > Let's now interpret the plot with the very simple rule that those **points that are closest together are the most similar**.
 
@@ -284,7 +284,7 @@ HeavyMetals_mds$stress
 The effect of nutrient enhancement on the composition of weed species on a farm was investigated. Ten replicate plots were established for each of three treatments: 
 
 - control (no nutrients), 
-- low nutrient dose added
+- low nutrient dose added,
 - high nutrient dose added. 
 
 After 12 weeks, all weed seedlings were identified and counted. Twelve species of weeds were recorded.
@@ -293,7 +293,7 @@ After 12 weeks, all weed seedlings were identified and counted. Twelve species o
 
 **Load the data into R**
 
-First, read in the datafile `NutrientEnrichment.csv`
+First, read in the data file `NutrientEnrichment.csv`
 
 ```{r}
 Nutrients <- read_csv(file = "data/NutrientEnrichment.csv")
@@ -308,7 +308,9 @@ As for the metals data set, we first need to `select()` the columns that have **
 We can use `contains()` within the `select()` function to pull out all columns that include `Weed` in the column name.
 
 ```{r}
-Nutrients_vars <- select(Nutrients, contains("Weed"))
+Nutrients_vars <- Nutrients |> select(contains("Weed"))
+
+Nutrients_vars
 ```
 
 **Data transformation**
@@ -316,18 +318,18 @@ Nutrients_vars <- select(Nutrients, contains("Weed"))
 We can apply a **square root transformation** to the data to reduce the influence of very large values (more on the reasons for transformations later).
 
 ```{r}
-Nutrients.sq <- sqrt(Nutrients_vars)
+Nutrients_sq <- sqrt(Nutrients_vars)
 ```
 
-**Calculate similarity and perform MDS**
+**Calculate dissimilarity and perform MDS**
 
-Instead of creating a similarity matrix and doing the MDS in two steps as you did for the heavy metals data, the function `metaMDS()` is able to compute dissimilarities and perform MDS directly from the dataframe in one function. 
+Instead of creating a dissimilarity matrix and doing the MDS in two steps as you did for the heavy metals data, the function `metaMDS()` is able to compute dissimilarities and perform MDS directly from the dataframe in one function. 
 
 ```{r}
-Nutrients.mds <- metaMDS(Nutrients.sq, 
+Nutrients_mds <- metaMDS(Nutrients_sq, 
                          distance = "bray", 
                          autotransform = FALSE, 
-                         trace=FALSE) 
+                         trace = FALSE) 
 ```
 
 **Visualise MDS**
@@ -336,7 +338,7 @@ We can plot the ordination as you did previously for the heavy metals data set b
 
 ```{r, results='hide'}
 # Extract points
-Nutrients_xy <- data.frame(Nutrients.mds$points)
+Nutrients_xy <- data.frame(Nutrients_mds$points)
 
 # Extract treatment labels
 Nutrients_xy$Treatment <- Nutrients$Treatment
@@ -377,20 +379,20 @@ The first four columns are labels for `class` (am or pm), `group_id`, `plot_numb
 -   red, brown and green algae
 -   several species of gastropods (*Nerita, Cellana, Austrocochlea, Bembicium* and *Morula*)
 -   a seastar (*Patiriella*)
--   a sea squirt (*Pyrua*)
+-   a sea squirt (*Pyura*)
 -   an anemone (*Actinia*)
 -   barnacles (unidentified)
 
 **Exercise:**
 
-Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats (rockpool vs emergent).
+Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats (rock pool vs emergent).
 
 **Data wrangle**
 
 First, you will need to make a subset of the data with just the abundance data for the species recorded.
 
 ```{r}
-Rock_pools_vars <- select(Rock_pools, -class, -group_id, -plot_number, -habitat)
+Rock_pools_vars <- Rock_pools |> select(-class, -group_id, -plot_number, -habitat)
 ```
 
 **Data standardisation**
@@ -400,7 +402,7 @@ Some of the variables are % cover (the red, brown and green algae) and some are 
 We can use the function `decostand()` from `vegan` to **standardise** each variable by the maximum value of that variable. This function will give us variables having values between 0 and 1. No need to do any other transformations!
 
 ```{r}
-Rock_pools_vars_std <- decostand(Rock_pools_vars, method= "max")
+Rock_pools_vars_std <- decostand(Rock_pools_vars, method = "max")
 ```
 
 **Exercise:**
@@ -409,10 +411,10 @@ Using the same methods as for the previous questions, produce a MDS plot to visu
 
 ```{r solution}
 # Run a MDS 
-Rock_pools.mds <- metaMDS(Rock_pools_vars_std, distance = "bray", autotransform = FALSE, trace=FALSE)
+Rock_pools_mds <- metaMDS(Rock_pools_vars_std, distance = "bray", autotransform = FALSE, trace = FALSE)
 
 # Extract points
-Rock_pools_xy <- data.frame(Rock_pools.mds$points)
+Rock_pools_xy <- data.frame(Rock_pools_mds$points)
 
 # Extract habitat label
 Rock_pools_xy$habitat <- Rock_pools$habitat
@@ -420,6 +422,9 @@ Rock_pools_xy$habitat <- Rock_pools$habitat
 # Visualise points with labels
 ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) + 
   geom_point()
+
+# Check stress
+Rock_pools_mds$stress
 ```
 
 ## 4a) Does the ordination plot suggest any differences in species composition between rock pools and neighbouring emergent habitats? {type=essay}
@@ -430,26 +435,26 @@ ggplot(Rock_pools_xy, aes(MDS1, MDS2, color = habitat)) +
 
 ![](images/harbour.jpg){width=70%}
 
-You first explored the patterns in heavy metal pollution in this data set with a MDS ordination plot. 
+You first explored the patterns in heavy metal pollution in this data set with an MDS ordination plot. 
 
 **Cluster analysis**
 
 To visualise the similarity among sites with a **cluster diagram**, we can use the `hclust()` function:
 
 ```{r}
-HeavyMetals.cluster <- dist(HeavyMetals_sq, method = "euclidean") |> hclust(method = "single")
+HeavyMetals_cluster <- dist(HeavyMetals_sq, method = "euclidean") |> hclust(method = "single")
 ```
 
 Let's talk through this code: 
 
-- `HeavyMetal.sq` is the square root transformed data we created earlier. 
+- `HeavyMetal_sq` is the square root transformed data we created earlier. 
 - `method = "euclidean"` in the `dist()` function specifies the choice of similarity coefficient
 - `method = "single"` specifies the choice of linkage method in `hclust()`.
 
 Finally, make a plot of the object that was created by the `hclust` function.
 
 ```{r, results='hide'}
-plot(HeavyMetals.cluster)
+plot(HeavyMetals_cluster)
 ```
 
 **Dendrogram of cluster analysis**
@@ -457,14 +462,14 @@ plot(HeavyMetals.cluster)
 We can make this a bit neater by plotting it as a dendrogram with all the samples lined up along the bottom.
 
 ```{r, results='hide'}
-as.dendrogram(HeavyMetals.cluster) |> plot()
+as.dendrogram(HeavyMetals_cluster) |> plot()
 ```
 
 **Questions:**
 
 **5a) Which two samples (i.e., sampling sites) are most similar to one another?** 
 
-`r cloze("5 and 8", c("5 and 8", "10 and 11","1 and 6", "2 and 12"))`
+`r cloze("5 and 8", c("5 and 8", "10 and 11", "1 and 6", "2 and 12"))`
 
 **Dendrogram of variables**
 
@@ -473,23 +478,23 @@ We can also use a cluster diagram to display the relationships among variables.
 The workflow is the same as above except you need to make the heavy metals as rows and the stations as columns before running the cluster analysis (use the transpose function, `t()`).
 
 ```{r, results='hide'}
-HeavyMetals.cluster.trans <- 
+HeavyMetals_cluster_trans <- 
   t(HeavyMetals_vars) |> 
   dist(method = "euclidean") |> 
   hclust(method = "single")
 
-as.dendrogram(HeavyMetals.cluster.trans) |> plot()
+as.dendrogram(HeavyMetals_cluster_trans) |> plot()
 ```
 
-**5c) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
+**5b) The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
 
-`r cloze("Co and Cd", c("Co and Cd", "Mn and Zn","Cu and Pb", "Ni and Co"))`
+`r cloze("Co and Cd", c("Co and Cd", "Mn and Zn", "Cu and Pb", "Ni and Co"))`
 
 ## 5c) Does the cluster analysis suggest any effects of the sewage dump {type=essay}
 
 # 6) To transform or to standardise?
 
-Multivariate data sets are often **transformed** prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but **to vary the relative importance of variables** that may be measured on **different scales**.
+Multivariate data sets are often **transformed** prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but **to standardise the relative importance of variables** that may be measured on **different scales**.
 
 For contrasts of species composition in community data sets (i.e., the abundance of many species in many samples) it is common to **square root** or **log transform** the abundance data prior to multivariate analyses. A more extreme standardisation is to convert the abundance data to presence/absence (i.e, 0 or 1) only.
 
@@ -500,7 +505,7 @@ If you wanted to create a plot to **explore the composition of contaminants**, n
 Here, we will **standardise** each metal variable so each will have a mean of zero and variance of 1 using the `decostand()` function from `vegan`.
 
 ```{r}
-HeavyMetals.standardised <- decostand(HeavyMetals_vars, method = "standardize")
+HeavyMetals_standardised <- decostand(HeavyMetals_vars, method = "standardize")
 ```
 
 Any plots we create with this **standardised** data will have **all metals having a similar influence on the similarity** among samples and not be strongly influenced by just those variables with the highest concentrations.
@@ -508,7 +513,7 @@ Any plots we create with this **standardised** data will have **all metals havin
 Create a cluster diagram to display the relationships among sites based on standardised metal concentrations.
 
 ```{r, results='hide'}
-dist(HeavyMetals.standardised, method = "euclidean") |> 
+dist(HeavyMetals_standardised, method = "euclidean") |> 
   hclust(method = "single") |> 
   as.dendrogram() |> 
   plot()
