@@ -162,12 +162,12 @@ t(Beaches)
 dist(t(Beaches), method = "euclidean", diag = TRUE)
 ```
 
-This is also a **similarity matrix**, but now using a different measure (**Euclidean distance**) to quantify the similarities among beaches.
+This is a **dissimilarity matrix**, using a different measure (**Euclidean distance**) to quantify the differences (instead of similarity) among beaches.
 
 **Questions:**
 
-- What is the similarity between Beach 1 and 2 as defined by Euclidean difference? 
-`r cloze("5.321128", c("0.000000","5.321128","9.582881","4.314673"))`
+- What is the dissimilarity between Beach 1 and 2 as defined by Euclidean distance? 
+`r cloze("5.321128", c("0.000000", "5.321128", "9.582881", "4.314673"))`
 
 - What is the value of the coefficient if two samples are identical? 
 `r cloze("0.000000", c("0.000000","5.321128","9.582881","4.314673"))`
