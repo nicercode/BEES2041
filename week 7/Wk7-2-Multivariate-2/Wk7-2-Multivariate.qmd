@@ -211,7 +211,7 @@ In this example, we will **divide the threshold significance value by three (we 
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
-For your practical report, you want to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a **permutational multivariate analysis of variance** for this, modifying code that you just used for the nutrient enrichment experiment.
+For your practical report, you want you to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a **permutational multivariate analysis of variance** for this, modifying code that you just used for the nutrient enrichment experiment.
 
 
 # 9) Advanced statistics content!
@@ -222,7 +222,7 @@ There is considerable current debate in the statistical literature about the bes
 
 -  lacking an underlying model (i.e. you are not estimating any parameters from your data). This means that there aren't tests for interactions in a traditional sense, and normal diagnostics (e.g residual vs fitted plots) are not available. This is a problem because you can't check whether any transformations have actually improved your data.
 
-Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.edu.au/) is focussed on developing methods to better analyse these sorts of data, and they have released an R package 'mvabund' that uses model-based approaches to analyse multivariate data sets. David has even promoted his package with a [video](https://youtu.be/KnPkH6d89l4) drawing on the considerable talents of 80's pop star Rick Astley!
+Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.edu.au/) is focused on developing methods to better analyse these sorts of data, and they have released an R package 'mvabund' that uses model-based approaches to analyse multivariate data sets. David has even promoted his package with a [video](https://youtu.be/KnPkH6d89l4) drawing on the considerable talents of 80's pop star Rick Astley!
 
 ![](images/rick-astley.jpg){width="150"} 
 ![](images/mvabund_hex.png){width="150"} <br>
@@ -251,7 +251,7 @@ First, let's have a look at the relationships among all five variables. Use the 
 
 ```{r, results='hide'}
 # Select only the length data
-Leaf_shape_vars <- select(Leaf_shape, -Species)
+Leaf_shape_vars <- Leaf_shape |> select(-Species)
 
 # Create a scatterplot matrix
 pairs(Leaf_shape_vars) 
@@ -285,7 +285,7 @@ leaf_fig |>
 
 ## 10a) What makes this data set particularly suitable for PCA?
 
-`r cloze("there are multiple variables that are correlated with each other", c("there are multiple variables that are correlated with each other","there are lots of replicate samples","there are multiple variables measured","there two groups of samples that we want to contrast"))`
+`r cloze("there are multiple variables that are correlated with each other", c("there are lots of replicate samples", "there are multiple variables measured", "there are two groups of samples that we want to contrast", "there are multiple variables that are correlated with each other"))`
 
 ## Run a PCA
 
@@ -297,16 +297,16 @@ leaf_pca <- princomp(Leaf_shape_vars, cor = FALSE)
 
 Let's talk through the code: 
 
-- `cor. = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on the same scale. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
+- `cor = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on the same scale. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
 
-Principal components analysis produces a lot of graphical and numerical output, which can explore by further examining the object (`leaf_pca`) we just created.
+Principal components analysis produces a lot of graphical and numerical output, which we can explore by further examining the object (`leaf_pca`) we just created.
 
 ## Producing a score plot
 
 This is the ordination of all 20 leaf samples in the new **two-dimensional space defined by principal component 1 and 2**.
 
 ```{r, results='hide'}
-plot(leaf_pca$scores, pch = 16)
+plot(leaf_pca$scores, pch = 16) # `pch` controls the symbol used for plotted points
 ```
 
 You can also produce a **biplot** with the **relationships between the original variables and the principal components overlaid on the score plot**.
@@ -348,13 +348,13 @@ loadings(leaf_pca)
 
 ## 10c) Which of the original variables is most strongly correlated with principal component 1?
 
-`r cloze("Width 1", c("Width 1", "Width 2","Length 1","Length 2","Petiole length"))`
+`r cloze("Width 1", c("Width 1", "Width 2", "Length 1", "Length 2","Petiole length"))`
 
 ## Producing a more effective plot to visualise the data
 
 Let's produce a plot that addresses the question first posed by the researcher. Recall that she wants to quantify **differences in leaf shape between two species of tree**. We can do this by colour coding the samples on the score plot.
 
-Extract the x and y coordinates from the pca object into a data frame.
+Extract the x and y coordinates from the PCA object into a data frame.
 
 ```{r}
 # Extract scores from PCA
@@ -364,7 +364,7 @@ Leaf_xy <- data.frame(leaf_pca$scores)
 Add the labels for the two species to this data
 
 ```{r}
-# Extract species names from PCA and add to Leaf_xy
+# Extract species names from data and add to Leaf_xy
 Leaf_xy$Species <- Leaf_shape$Species
 ```
 
@@ -380,7 +380,7 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) +
 
 ## 10e) Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.
 
-`r cloze("Width 1 and Width 2", c("Width 1 and Width 2", "Width 1 and Total length", "Total length and Petiole length", "Only Width 1"))`
+`r cloze("Width 1 and Width 2", c("Only Width 1", "Width 1 and Width 2", "Width 1 and Total length", "Total length and Petiole length"))`
 
 # 11) Heavy metals in sediments (PCA)
 
@@ -393,27 +393,27 @@ Using the heavy metal data, we can compare the output from cluster analysis, pri
 HeavyMetals <- read_csv(file = "data/HeavyMetals.csv")  
 
 # Remove the Site variable
-HeavyMetals_vars <- select(HeavyMetals, -Site)
+HeavyMetals_vars <- HeavyMetals |> select(-Site)
 ```
 
 **Exercise:**
 
-Conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor= FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
+Conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor = FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
 
 ```{r solution}
 # Perform PCA
 std_HM <- decostand(HeavyMetals_vars, method = "max")
 std_HM 
 
-metals.pca <- princomp(std_HM, cor = FALSE)
+metals_pca <- princomp(std_HM, cor = FALSE)
 
 # Extract loadings from PCA
-loadings(metals.pca)
+loadings(metals_pca)
 ```
 
 ## 11a) Which variable (i.e., metal) is most strongly correlated with the values of PC1?
 
-`r cloze("Cr", c("Cr","Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
+`r cloze("Cr", c("Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
 
 ## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
 
