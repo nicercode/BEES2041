@@ -143,13 +143,13 @@ This is a **similarity matrix** that summarises the **relationships among beache
 
 ## 1c) Summarise the relationships among samples using Euclidean distance
 
-The Euclidean distance for each pair of samples is defined as:
+The Euclidean distance for each pair of samples, $y_1$ and $y_2$, is defined as:
 
 $$
 d(y_1,y_2) = \sum_{j=1}^{p}\sqrt{(y_{1j} - y_{2j})^2}
 $$
 
-where $y_1$ and $y_2$ are the values of variable $j$ in sample 1 and 2; $p$ is  the number of variables
+where $y_{1j}$ and $y_{2j}$ are the values of variable $j$ in sample 1 and 2; $p$ is the number of variables
 
 -   Use the `dist()` function with `method = "euclidean", diag = TRUE`
 -   You need to flip the dataset on its side so that the samples are rows for distance analysis. We can do so by **transposing** the matrix first, using the `t()` function, i.e. `(t(Beaches))`
