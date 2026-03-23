@@ -181,7 +181,7 @@ We will measure the similarity among sites, then use an **ordination plot** to d
 
 **Let's load the data into R**
 
-Read the data set, `HeavyMetals.csv`, into R and have a look at it’s structure (samples as rows, variables as columns).
+Read the data set, `HeavyMetals.csv`, into R and have a look at its structure (samples as rows, variables as columns).
 
 ```{r}
 # Load data
@@ -197,7 +197,7 @@ The first column is the name of each site. We don’t want to use the site numbe
 
 ```{r}
 # Remove the Site variable
-HeavyMetals_vars <- select(HeavyMetals, -Site)
+HeavyMetals_vars <- HeavyMetals |> select(-Site)
 ```
 
 **Data transformation**
@@ -206,26 +206,26 @@ Before we calculate the similarity among sites, we will perform a **square root 
 
 ```{r}
 # Square roott every value in the data
-HeavyMetals.sq <- sqrt(HeavyMetals_vars)
+HeavyMetals_sq <- sqrt(HeavyMetals_vars)
 ```
 
 **Compute similarity matrix**
 
-Now we can use the `dist()` function again to create the **similarity matrix**, using the **Euclidean distance** as our similarity coefficient.
+Now we can use the `dist()` function again to create the **dissimilarity matrix**, using the **Euclidean distance** as our similarity coefficient.
 
 ```{r}
-# Compute similarity matrix using Euclidean distance
-HeavyMetals.dis <- dist(HeavyMetals.sq, method = "euclidean")
+# Compute dissimilarity matrix using Euclidean distance
+HeavyMetals_dis <- dist(HeavyMetals_sq, method = "euclidean")
 ```
 
-The numbers in this **similarity matrix** are then used to create a **multi-dimensional scaling** (MDS) plot to visualise the differences among sites. These are introduced in the lectures and you can also read the short tutorial on [Environmental Computing](https://environmentalcomputing.net/graphics/multivariate-vis/mds/).
+The numbers in this **dissimilarity matrix** are then used to create a **multi-dimensional scaling** (MDS) plot to visualise the differences among sites. These are introduced in the lectures and you can also read the short tutorial on [Environmental Computing](https://environmentalcomputing.net/graphics/multivariate-vis/mds/).
 
 **Multi-dimensional scaling**
 
 We use the function `metaMDS()` from the package `vegan` to create a MDS plot
 
 ```{r}
-HeavyMetals.mds <- metaMDS(HeavyMetals.dis, autotransform = FALSE, trace=FALSE)
+HeavyMetals_mds <- metaMDS(HeavyMetals_dis, autotransform = FALSE, trace = FALSE)
 ```
 
 - the `autotransform` argument tells the function not to further transform the data
@@ -236,7 +236,7 @@ HeavyMetals.mds <- metaMDS(HeavyMetals.dis, autotransform = FALSE, trace=FALSE)
 To view the ordination plot, call `plot()` on the object we just created.
 
 ```{r, results='hide'}
-plot(HeavyMetals.mds)
+plot(HeavyMetals_mds)
 ```
 
 While this shows each site as a dot and their relationships, it isn't much use yet because we don't know which site is which. 
@@ -245,21 +245,21 @@ To get a nicer plot, we can extract the x and y coordinates from the MDS into a 
 
 ```{r, results='hide'}
 # Extract the points
-Metals_xy <- data.frame(HeavyMetals.mds$points)
+Metals_xy <- data.frame(HeavyMetals_mds$points)
 
 # Extract the Site labels
 Metals_xy$Site <- HeavyMetals$Site
 
 # Visualise with ggplot
 ggplot(Metals_xy, aes(MDS1, MDS2)) + 
-  geom_text(aes(label=Site)) + 
+  geom_text(aes(label = Site)) + 
   theme_classic()
 ```
 
 Before you interpret the MDS plot, check the **stress value**.
 
 ```{r, results='hide'}
-HeavyMetals.mds$stress
+HeavyMetals_mds$stress
 ```
 
 **Questions:**
@@ -272,7 +272,7 @@ HeavyMetals.mds$stress
 
 ## 2b) Which site is least similar to any other site?
 
-`r cloze("S1", c("S1", "S9","S6", "S2"))`
+`r cloze("S1", c("S1", "S9", "S6", "S2"))`
 
 ## 2c) Can you see any patterns in the similarity among sites that you can relate to the sampling design? Which sites are most similar to the dump site? {type=essay}
 
@@ -437,7 +437,7 @@ You first explored the patterns in heavy metal pollution in this data set with a
 To visualise the similarity among sites with a **cluster diagram**, we can use the `hclust()` function:
 
 ```{r}
-HeavyMetals.cluster <- dist(HeavyMetals.sq, method = "euclidean") |> hclust(method = "single")
+HeavyMetals.cluster <- dist(HeavyMetals_sq, method = "euclidean") |> hclust(method = "single")
 ```
 
 Let's talk through this code: 
