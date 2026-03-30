@@ -25,6 +25,8 @@ library(vegan)
 library(lattice)
 ```
 
+# Multivariate methods
+
 ## Introduction
 
 In this practical, we will continue our look at methods to analyse and visualise complex **multivariate data sets** - ones where **more than one response variable has been measured from each replicate sample**.
@@ -65,7 +67,9 @@ library(vegan)
 library(plotly)
 ```
 
-# 7) Nutrient enrichment experiment (multivariate hypothesis testing)
+# multivariate hypothesis testing
+
+## multivariate hypothesis testing: Nutrient enrichment experiment
 
 ![](images/53711279_1967294661.png){width=70%} <br>
 
@@ -121,7 +125,7 @@ There are some key differences from a univariate (one predictor variable) ANOVA 
 - the probability of the test statistic produced (`pseudo-F`) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by **permutation**. From `permutations = 999` of the original data vs the treatment labels, it calculates how often a value of `pseudo-F` as large as yours would occur.
 
 
-## 7a) Is there evidence to reject the null hypothesis?
+## Is there evidence to reject the null hypothesis?
 
 `r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1", "no, the F value is greater than 9"))`
 
@@ -204,18 +208,19 @@ The simplest correction for this is called the **Bonferroni correction**, where 
 
 In this example, we will **divide the threshold significance value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
 
-## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pairwise tests to establish which treatments differ from which. {type=essay}
+## What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pairwise tests to establish which treatments differ from which. {type=essay}
 
 
-# 8) Species composition in rock pools (multivariate hypothesis testing)
+## Species composition in rock pools (multivariate hypothesis testing)
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
 For your practical report, you want you to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a **permutational multivariate analysis of variance** for this, modifying code that you just used for the nutrient enrichment experiment.
 
 
-# 9) Advanced statistics content!
+# Advanced statistics content!
 
+## mvabund
 There is considerable current debate in the statistical literature about the best ways to analyse multivariate data sets like the one you just analysed. Analyses that partition variation in the similarity metrics have been criticised for:
 
 -  not accounting for the inevitable problems with homogeneity of variance that are present in environmental data sets. This means that highly abundant species have a very large influence.
@@ -227,7 +232,9 @@ Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.e
 ![](images/rick-astley.jpg){width="150"} 
 ![](images/mvabund_hex.png){width="150"} <br>
 
-# 10) Principal components analysis (PCA)
+# PCA
+
+## Principal components analysis (PCA)
 
 **PCA** is a commonly used method to **visualise data with many variables**. In this example, we will use it to analyse differences in the shape of leaves.
 
@@ -283,7 +290,7 @@ leaf_fig |>
                      zaxis = list(title = 'Width_1')))
 ```
 
-## 10a) What makes this data set particularly suitable for PCA?
+## What makes this data set particularly suitable for PCA?
 
 `r cloze("there are multiple variables that are correlated with each other", c("there are lots of replicate samples", "there are multiple variables measured", "there are two groups of samples that we want to contrast", "there are multiple variables that are correlated with each other"))`
 
@@ -323,7 +330,7 @@ PCA is aiming to **represent as much variance as possible in the first few princ
 summary(leaf_pca)
 ```
 
-## 10b) Enter the proportion explained by the first two principal components
+## Enter the proportion explained by the first two principal components
 
 - PC1: `r cloze_numerical(0.9, tolerance = 0.01)` 
 - PC2: `r cloze_numerical(0.06, tolerance = 0.01)`
@@ -346,7 +353,7 @@ These relationships can be seen in the **biplot** above but also obtained numeri
 loadings(leaf_pca)
 ```
 
-## 10c) Which of the original variables is most strongly correlated with principal component 1?
+## Which of the original variables is most strongly correlated with principal component 1?
 
 `r cloze("Width 1", c("Width 1", "Width 2", "Length 1", "Length 2","Petiole length"))`
 
@@ -376,13 +383,15 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) +
   theme_classic()
 ```
 
-## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
+## Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
 
-## 10e) Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.
+## Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.
 
 `r cloze("Width 1 and Width 2", c("Only Width 1", "Width 1 and Width 2", "Width 1 and Total length", "Total length and Petiole length"))`
 
-# 11) Heavy metals in sediments (PCA)
+# Heavy metals in sediments (PCA)
+
+## Heavy metals in sediments
 
 ![](images/harbour.jpg){width=70%} <br>
 
@@ -414,14 +423,14 @@ plot(metals_pca$scores, pch = 16) # `pch` controls the symbol used for plotted p
 biplot(metals_pca)
 ```
 
-## 11a) Which variable (i.e., metal) is most strongly correlated with the values of PC1?
+## Which variable (i.e., metal) is most strongly correlated with the values of PC1?
 
 `r cloze("Cr", c("Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
 
-## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close to the sewage dump? {type=essay}
+## Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close to the sewage dump? {type=essay}
 
 
-## 11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)
+## Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)
 
 ```{r, solution2}
 # Standardise variables
@@ -439,8 +448,9 @@ hm_fig <- plot_ly(hm_std, x = ~Ni, y = ~Cr, z = ~Pb,
   add_markers()
 ```
 
-# 12) Cave hydrology
+# Cave hydrology
 
+## Cave hydrology
 ![](images/caves.jpg){width=70%} <br>
 
 Professor Andy Baker (School of BEES, UNSW) works in caves to better understand the history of Australia's climate and how climate affects valuable groundwater resources. He looks at the geochemistry of stalagmites to reconstruct climate histories and impacts of fire, and flows of water underground to understand recharge of groundwater (i.e., how do rainfall events top up these important reserves of freshwater?).
@@ -475,7 +485,7 @@ ggplot(Caves, aes(Date, HW_4b)) +
 ```
 
 
-## 12a) Using PCA to visualise variation among years 
+## Using PCA to visualise variation among years 
 
 **Exercise:**
 
