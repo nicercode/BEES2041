@@ -143,7 +143,7 @@ means_penguin_adults <- estimate_means(fit_penguin_adults, by = c("sex", "specie
 means_penguin_adults
 ```
 
-Here we are creating violin plots and adding some jitter to the raw data. We added error bars and the mean for each sex and we facetted the plot by species
+Here we are creating violin plots and adding some jitter to the raw data. We added error bars and the mean for each sex and we facetted the plot by species.
 
 ```{r}
 ggplot(data_penguins_adults, aes(x = sex, y = body_mass_g, fill = sex, col = sex)) +
@@ -216,7 +216,7 @@ The coefficient for `sex [male]` is `r cloze("674.66", c("674.66", "-262.89", "1
 
 **3. Interpret the p-value for `species [Gentoo]`**
 
-The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie pengions is very `r cloze("low", c("low", "high"))`.
+The p-value for `species [Gentoo]` is `r cloze("< .001", c("< .001", "0.014", "0.089"))`. This indicates that the probability for finding the difference of `r cloze("1310.91", c("1310.91", "3368.84", "674.66"))` in mean body mass between Gentoo penguins and female Adelie penguins is very `r cloze("low", c("low", "high"))` under the expectation of finding no difference (the null hypothesis).
 
 ## Means
 
@@ -274,7 +274,7 @@ estimate_contrasts(fit_penguin_adults, contrast = "species", by = "sex")
 
 **5. In the contrasts between species for each sex, which differences are non-significant?**
 
-For both female and male penguins, the difference between `r cloze("Chinstrap", c("Chinstrap", "Gentoo"))` and Adelie were non-significant.
+For female penguins, the difference between Chinstrap and Adelie was `r cloze("significant", c("significant", "non-significant"))`, while for male penguins, the difference between Chinstrap and Adelie was `r cloze("non-significant", c("significant", "non-significant"))`. This shows the value of having the contrasts between species for each sex, as when not considering sex, the model indicates that the overall difference between Chinstrap and Adelie penguins was `r cloze("non-significant", c("significant", "non-significant"))`, losing the ability to detect that the significance of the contrast varies between sexes.
 
 ## Reporting results
 
@@ -315,7 +315,7 @@ There were `r cloze("no", c("no", "weak", "strong"))` statistical differences in
 
 A researcher is testing the effect of metal contamination on the number of species of sessile marine invertebrates (sponges, bryozoans and sea squirts etc.) but they also know that the richness of invertebrates can depend on whether the substrate is vertical or horizontal.
 
-**The research question is: How much does copper and substrate affect species richness?**
+**The research question is: How much does copper and substrate orientation affect species richness?**
 
 They ran an experiment where **species richness** was recorded in replicate samples in each of the six combinations of **copper contamination** (None, Low, High) and **substrate orientation** (Vertical, Horizontal).
 

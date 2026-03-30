@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 # Set the working directory
 rprojroot::has_file("BEES2041-code.Rproj") |>
   rprojroot::find_root() |>
-  file.path("week 7/Wk7-2-moodle") |>
+  file.path("week 7/Wk7-2-Multivariate-2") |>
   setwd()
 
 library(moodlequiz)
@@ -25,13 +25,15 @@ library(vegan)
 library(lattice)
 ```
 
+# Multivariate methods
+
 ## Introduction
 
-In this practical, we will continue our look at methods to analyses and visualise complex, **multivariate data sets** - ones where **more than one response variable has been measured from each replicate sample**.
+In this practical, we will continue our look at methods to analyse and visualise complex **multivariate data sets** - ones where **more than one response variable has been measured from each replicate sample**.
 
-First, we will learn how to run a **hypothesis test** on multivariate data (permutational multivariate analysis of variance or **PERMANOVA**). This will be used to test for differences in species composition in and out of rock pools from the class data set collected at Maroubra.
+First, we will learn how to run a **hypothesis test** on multivariate data (permutational multivariate analysis of variance, or **PERMANOVA**). This will be used to test for differences in species composition in and out of rock pools from the class data set collected at Maroubra.
 
-Second, we will get an introduction to p**rincipal components analysis (PCA)**, a widely used technique to visualise multivariate data.
+Second, we will get an introduction to **principal components analysis (PCA)**, a widely used technique to visualise multivariate data.
 
 ![](images/nature14140-sf2.jpg){width=70%} <br>
 
@@ -65,8 +67,9 @@ library(vegan)
 library(plotly)
 ```
 
-# 7) Nutrient enrichment experiment (multivariate hypothesis testing)
-## 7) Nutrient enrichment experiment (multivariate hypothesis testing)
+# multivariate hypothesis testing
+
+## multivariate hypothesis testing: Nutrient enrichment experiment
 
 ![](images/53711279_1967294661.png){width=70%} <br>
 
@@ -76,14 +79,14 @@ There is a whole world of multivariate statistical tests, but we will show you j
 
 In the nutrient enrichment experiment, we had: 
 
-- three treatments (control, low and high nutrients)
+- three treatments (control, low and high nutrients),
 - 12 response variables (the abundance of each weed species).
 
- If we had measured just one variable, we would use a linear model and ANOVA to contrast that variable among treatments. With many variables measured, we use **multivariate analyses of variance based on the similarity matrix**.
+If we had measured just one variable, we would use a linear model and ANOVA to contrast that variable among treatments. With many variables measured, we use **multivariate analyses of variance based on the similarity matrix**.
 
-Instead of partitioning the variation in the actual values of the variables (i.e., abundance of our each of the weed species) as in a ANOVA, this analysis **partitions the variation in the values of the similarity matrix** among and within treatment groups.
+Instead of partitioning the variation in the actual values of the variables (i.e., abundance of each of the weed species), as in a ANOVA, this analysis **partitions the variation in the values of the similarity matrix** among and within treatment groups.
 
-An another way to think of this is that **if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level** (i.e., within group similarities higher than among-group similarities).
+Another way to think of this is that **if there was a strong effect of treatment, then all the replicates within each level of treatment are more likely to be similar to each other than they would be to replicates from another level** (i.e., within-group similarities higher than among-group similarities).
 
 **Load data**
 
@@ -94,10 +97,10 @@ Let's load the `NutrientEnrichment.csv`, wrangle and transform it for analysis:
 Nutrients <- read_csv(file = "data/NutrientEnrichment.csv")
 
 # Select weeds only
-Nutrients_vars <- select(Nutrients, contains("Weed"))
+Nutrients_vars <- Nutrients |> select(contains("Weed"))
 
 # Transform data
-Nutrients.sq <- sqrt(Nutrients_vars)
+Nutrients_sq <- sqrt(Nutrients_vars)
 ```
 
 **Run a PERMANOVA**
@@ -122,9 +125,9 @@ There are some key differences from a univariate (one predictor variable) ANOVA 
 - the probability of the test statistic produced (`pseudo-F`) cannot be obtained from the traditional probability distribution of F. The probabilities here are obtained by **permutation**. From `permutations = 999` of the original data vs the treatment labels, it calculates how often a value of `pseudo-F` as large as yours would occur.
 
 
-## 7a) Is there evidence to reject the null hypothesis?
+## Is there evidence to reject the null hypothesis?
 
-`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1","no, the F value is greater than 9"))`
+`r cloze("yes, the P value is less than 0.05", c("yes, the P value is less than 0.05", "yes, the P-value is greater than 0.05", "no, the P-value is 0.001", "yes, the F value is greater than 1", "no, the F value is greater than 9"))`
 
 
 ## Visualise PERMANOVA
@@ -134,29 +137,38 @@ We can save the output from `adonis2` and use a density plot to see just how lik
 ```{r, results='hide'}
 Nutrients_test <- adonis2(Nutrients_vars ~ Nutrients$Treatment, permutations = 999, method = "bray")
 
-permustats(Nutrients_test) |> densityplot()
+permutations <- permustats(Nutrients_test)$permutations |> 
+  as_tibble() |>
+  rename(permutation_outcome = V1)
+
+ggplot(data = permutations, aes(x = permutation_outcome)) +
+  geom_density() +
+  geom_jitter(aes(y = 0), height = 0.05, width = 0, color = "darkblue", alpha = 0.2) +
+  geom_vline(xintercept = permustats(Nutrients_test)$statistic, color = "red", linetype = "dashed") +
+  theme_classic() +
+  labs(y = "Density")
 ```
 
-This produces a frequency histogram of `pseudo-F` obtained from the 999 permutations of the raw data. **This is best viewed as what would happen if the null hypothesis was true** (no similarities between our variables). The `pseudo-F` value you obtained is noted with the vertical black line.
+This produces a frequency histogram of `pseudo-F` obtained from the 999 permutations of the raw data. **This is best viewed as what would happen if the null hypothesis was true** (no similarities between our variables). The `pseudo-F` value you obtained is noted with the vertical red line.
 
 You should have output that shows that this null hypothesis is rejected. This means that: 
 
- > there is some difference in weed species composition among all three treatments. 
+> there is some difference in weed species composition among all three treatments. 
  
 **Multivariate contrasts**
 
- Our next step is to try and understand **which treatment differed from which** e.g contrasts. There is not function to do this, a workaround is to run separate pairwise tests using subsets of data with only two levels of `Treatment`. 
+Our next step is to try and understand **which treatment differed from which**, i.e., contrasts. There is unfortunately no function to do this, but a workaround is to run separate pairwise tests using subsets of data with only two levels of `Treatment`. 
 
-We will use `filter()` to subset rows, and `select()` for subsetting columns for our pairwise comparisons.  The following code creates subsets of rows for each comparison (note that `!=` means “not equals to”) and runs the **permutational MANOVA** again with just the rows with the weed variables.
+We will use `filter()` to subset rows, and `select()` for subsetting columns for our pairwise comparisons.  The following code creates subsets of rows for each comparison (note that `!=` means “not equal to”) and runs the **permutational MANOVA** again with just the rows with the weed variables.
 
 **Subset analysis for Control and Low**
 
 ```{r, results='hide'}
 # Filter treatment is not "High"
-Nutrients_ControlvsLow <- filter(Nutrients, Treatment != "High")
+Nutrients_ControlvsLow <- Nutrients |> filter(Treatment != "High")
 
 # Select columns containing the word "weed"
-Nutrients_ControlvsLow_vars <- select(Nutrients_ControlvsLow, contains("Weed"))
+Nutrients_ControlvsLow_vars <- Nutrients_ControlvsLow |> select(contains("Weed"))
 
 # Perform a PERMANOVA using subset data
 adonis2(Nutrients_ControlvsLow_vars ~ Nutrients_ControlvsLow$Treatment, permutations = 999, method = "bray")
@@ -166,10 +178,10 @@ adonis2(Nutrients_ControlvsLow_vars ~ Nutrients_ControlvsLow$Treatment, permutat
 
 ```{r, results='hide'}
 # Filter treatment is not "Low"
-Nutrients_ControlvsHigh <- filter(Nutrients, Treatment != "Low")
+Nutrients_ControlvsHigh <- Nutrients |> filter(Treatment != "Low")
 
 # Select columns containing the word "weed"
-Nutrients_ControlvsHigh_vars <- select(Nutrients_ControlvsHigh, contains("Weed"))
+Nutrients_ControlvsHigh_vars <- Nutrients_ControlvsHigh |> select(contains("Weed"))
 
 # Perform a PERMANOVA using subset data
 adonis2(Nutrients_ControlvsHigh_vars ~ Nutrients_ControlvsHigh$Treatment, permutations = 999, method = "bray")
@@ -179,10 +191,10 @@ adonis2(Nutrients_ControlvsHigh_vars ~ Nutrients_ControlvsHigh$Treatment, permut
 
 ```{r, results='hide'}
 # Filter treatment is not "Control"
-Nutrients_LowvsHigh <- filter(Nutrients, Treatment != "Control")
+Nutrients_LowvsHigh <- Nutrients |> filter(Treatment != "Control")
 
 # Select columns containing the word "weed"
-Nutrients_LowvsHigh_vars <- select(Nutrients_LowvsHigh, contains("Weed"))
+Nutrients_LowvsHigh_vars <- Nutrients_LowvsHigh |> select(contains("Weed"))
 
 # Perform a PERMANOVA using subset data
 adonis2(Nutrients_LowvsHigh_vars ~ Nutrients_LowvsHigh$Treatment, permutations = 999, method = "bray")
@@ -192,36 +204,37 @@ The problem with this approach is increasing the risk of **false positives**. Fa
 
 ![](images/type_1_errors.png){width=60%} <br>
 
-The simplest correction for this is called the **Bonferroni correction**, where the significance level (α =0.05) is **adjusted by the number of hypotheses being tested**. 
+The simplest correction for this is called the **Bonferroni correction**, where the significance level (α = 0.05) is **adjusted by the number of hypotheses being tested**. 
 
 In this example, we will **divide the threshold significance value by three (we have three different treatments)** before interpreting which comparisons are significant (in other words, α for each test becomes `0.05/3`).
 
-## 7b) What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pair-wise tests to establish which treatments differ from which. {type=essay}
+## What do the multivariate tests and their associated probabilities tell you about the differences in species composition among nutrient treatments? Use the pairwise tests to establish which treatments differ from which. {type=essay}
 
 
-# 8) Species composition in rock pools (multivariate hypothesis testing)## 8) Species composition in rock pools (multivariate hypothesis testing)
+## Species composition in rock pools (multivariate hypothesis testing)
 
 ![](images/rock_pool.PNG){width=70%} <br>
 
-For your practical report, you want to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a **permutational multivariate analysis of variance** for this, modifying code that you just used for the nutrient enrichment experiment.
+For your practical report, you want you to accompany the text and figures that contrast species composition in and out of rockpools, with a formal statistical test. You can use a **permutational multivariate analysis of variance** for this, modifying code that you just used for the nutrient enrichment experiment.
 
 
-# 9) Advanced statistics content!
-## 9) Advanced statistics content!
+# Advanced statistics content!
 
+## mvabund
 There is considerable current debate in the statistical literature about the best ways to analyse multivariate data sets like the one you just analysed. Analyses that partition variation in the similarity metrics have been criticised for:
 
 -  not accounting for the inevitable problems with homogeneity of variance that are present in environmental data sets. This means that highly abundant species have a very large influence.
 
 -  lacking an underlying model (i.e. you are not estimating any parameters from your data). This means that there aren't tests for interactions in a traditional sense, and normal diagnostics (e.g residual vs fitted plots) are not available. This is a problem because you can't check whether any transformations have actually improved your data.
 
-Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.edu.au/) is focussed on developing methods to better analyse these sorts of data, and they have released an R package 'mvabund' that uses model-based approaches to analyse multivariate data sets. David has even promoted his package with a [video](https://youtu.be/KnPkH6d89l4) drawing on the considerable talents of 80's pop star Rick Astley!
+Research at UNSW by [Professor David Warton's group](http://www.eco-stats.unsw.edu.au/) is focused on developing methods to better analyse these sorts of data, and they have released an R package 'mvabund' that uses model-based approaches to analyse multivariate data sets. David has even promoted his package with a [video](https://youtu.be/KnPkH6d89l4) drawing on the considerable talents of 80's pop star Rick Astley!
 
 ![](images/rick-astley.jpg){width="150"} 
 ![](images/mvabund_hex.png){width="150"} <br>
 
-# 10) Principal components analysis
-## 10) Principal components analysis (PCA)
+# PCA
+
+## Principal components analysis (PCA)
 
 **PCA** is a commonly used method to **visualise data with many variables**. In this example, we will use it to analyse differences in the shape of leaves.
 
@@ -245,7 +258,7 @@ First, let's have a look at the relationships among all five variables. Use the 
 
 ```{r, results='hide'}
 # Select only the length data
-Leaf_shape_vars <- select(Leaf_shape, -Species)
+Leaf_shape_vars <- Leaf_shape |> select(-Species)
 
 # Create a scatterplot matrix
 pairs(Leaf_shape_vars) 
@@ -277,47 +290,47 @@ leaf_fig |>
                      zaxis = list(title = 'Width_1')))
 ```
 
-## 10a) What makes this data set particularly suitable for PCA?
+## What makes this data set particularly suitable for PCA?
 
-`r cloze("there are multiple variables that are correlated with each other", c("there are multiple variables that are correlated with each other","there are lots of replicate samples","there are multiple variables measured","there two groups of samples that we want to contrast"))`
+`r cloze("there are multiple variables that are correlated with each other", c("there are lots of replicate samples", "there are multiple variables measured", "there are two groups of samples that we want to contrast", "there are multiple variables that are correlated with each other"))`
 
 ## Run a PCA
 
 To conduct a principal components analysis on the leaf data, we can use the `princomp()` function in base stats.
 
 ```{r}
-leaf.pca <- princomp(Leaf_shape_vars, cor = FALSE)
+leaf_pca <- princomp(Leaf_shape_vars, cor = FALSE)
 ```
 
 Let's talk through the code: 
 
-- `cor. = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on the same scale. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
+- `cor = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on the same scale. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
 
-Principal components analysis produces a lot of graphical and numerical output, which can explore by further examining the object (`leaf.pca`) we just created.
+Principal components analysis produces a lot of graphical and numerical output, which we can explore by further examining the object (`leaf_pca`) we just created.
 
 ## Producing a score plot
 
 This is the ordination of all 20 leaf samples in the new **two-dimensional space defined by principal component 1 and 2**.
 
 ```{r, results='hide'}
-plot(leaf.pca$scores, pch = 16)
+plot(leaf_pca$scores, pch = 16) # `pch` controls the symbol used for plotted points
 ```
 
 You can also produce a **biplot** with the **relationships between the original variables and the principal components overlaid on the score plot**.
 
 ```{r, results='hide'}
-biplot(leaf.pca)
+biplot(leaf_pca)
 ```
 
 ## Understanding how much variance is explained by each component
 
-PCA is aiming to **represent as much variance as possible in the first few principal components**. We can check whether it is doing a good job by exploring the `summary()` of the `leaf.pca` object.
+PCA is aiming to **represent as much variance as possible in the first few principal components**. We can check whether it is doing a good job by exploring the `summary()` of the `leaf_pca` object.
 
 ```{r, results='hide'}
-summary(leaf.pca)
+summary(leaf_pca)
 ```
 
-## 10b) Enter the proportion explained by the first two principal components
+## Enter the proportion explained by the first two principal components
 
 - PC1: `r cloze_numerical(0.9, tolerance = 0.01)` 
 - PC2: `r cloze_numerical(0.06, tolerance = 0.01)`
@@ -327,7 +340,7 @@ summary(leaf.pca)
 These are also visualised by a **scree plot**. Note that the Y-axis presented is not the % of variation explained.
 
 ```{r, results='hide'}
-screeplot(leaf.pca, type = 'lines')
+screeplot(leaf_pca, type = 'lines')
 ```
 
 ## Understanding how the original variables relate to the principal components
@@ -337,28 +350,28 @@ We gain further insight into the **relationships among variables** and help with
 These relationships can be seen in the **biplot** above but also obtained numerically by extracting the **loadings** from the PCA. Note that this output does not print very small values, so the empty cells can be considered close to zero (i.e., no correlation).
 
 ```{r, results='hide'}
-loadings(leaf.pca)
+loadings(leaf_pca)
 ```
 
-## 10c) Which of the original variables is most strongly correlated with principal component 1?
+## Which of the original variables is most strongly correlated with principal component 1?
 
-`r cloze("Width 1", c("Width 1", "Width 2","Length 1","Length 2","Petiole length"))`
+`r cloze("Width 1", c("Width 1", "Width 2", "Length 1", "Length 2","Petiole length"))`
 
 ## Producing a more effective plot to visualise the data
 
 Let's produce a plot that addresses the question first posed by the researcher. Recall that she wants to quantify **differences in leaf shape between two species of tree**. We can do this by colour coding the samples on the score plot.
 
-Extract the x and y coordinates from the pca object into a data frame.
+Extract the x and y coordinates from the PCA object into a data frame.
 
 ```{r}
 # Extract scores from PCA
-Leaf_xy <- data.frame(leaf.pca$scores)
+Leaf_xy <- data.frame(leaf_pca$scores)
 ```
 
 Add the labels for the two species to this data
 
 ```{r}
-# Extract species names from PCA and add to Leaf_xy
+# Extract species names from data and add to Leaf_xy
 Leaf_xy$Species <- Leaf_shape$Species
 ```
 
@@ -370,14 +383,15 @@ ggplot(Leaf_xy, aes(Comp.1, Comp.2, color = Species)) +
   theme_classic()
 ```
 
-## 10d) Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
+## Does the principal components analysis suggest any size or shape differences between the leaves of the two species? {type=essay}
 
-## 10e) Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.
+## Using the coefficients and the loadings, which variables are predominantly associated with the separation of species A and B.
 
-`r cloze("Width 1 and Width 2", c("Width 1 and Width 2", "Width 1 and Total length", "Total length and Petiole length", "Only Width 1"))`
+`r cloze("Width 1 and Width 2", c("Only Width 1", "Width 1 and Width 2", "Width 1 and Total length", "Total length and Petiole length"))`
 
-# 11) Heavy metals in sediments (PCA)
-## 11) Heavy metals in sediments (PCA)
+# Heavy metals in sediments (PCA)
+
+## Heavy metals in sediments
 
 ![](images/harbour.jpg){width=70%} <br>
 
@@ -388,32 +402,35 @@ Using the heavy metal data, we can compare the output from cluster analysis, pri
 HeavyMetals <- read_csv(file = "data/HeavyMetals.csv")  
 
 # Remove the Site variable
-HeavyMetals_vars <- select(HeavyMetals, -Site)
+HeavyMetals_vars <- HeavyMetals |> select(-Site)
 ```
 
 **Exercise:**
 
-Conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor= FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
+Conduct a PCA on the heavy metal data. Given that the variables were measured on very different scales, either use a standardised data set and `cor = FALSE` in the `princomp` function or use `cor = TRUE` to run the PCA with a correlation (not covariance) matrix.
 
 ```{r solution}
 # Perform PCA
-std.HM <- decostand(HeavyMetals_vars, method = "max")
-std.HM 
+std_HM <- decostand(HeavyMetals_vars, method = "max")
+std_HM 
 
-metals.pca <- princomp(std.HM, cor = FALSE)
+metals_pca <- princomp(std_HM, cor = FALSE)
 
 # Extract loadings from PCA
-loadings(metals.pca)
+loadings(metals_pca)
+
+plot(metals_pca$scores, pch = 16) # `pch` controls the symbol used for plotted points
+biplot(metals_pca)
 ```
 
-## 11a) Which variable (i.e., metal) is most strongly correlated with the values of PC1?
+## Which variable (i.e., metal) is most strongly correlated with the values of PC1?
 
-`r cloze("Cr", c("Cr","Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
+`r cloze("Cr", c("Cu","Mn","Co","Ni","Zn","Cd","Pb","Cr"))`
 
-## 11b) Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close the sewage dump? {type=essay}
+## Comparing all your classification or ordination plots, discuss which technique best visualises the patterns in metal contamination among sites. Do any clearly identify sites close to the sewage dump? {type=essay}
 
 
-## 11c) Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)
+## Make an interactive plot of the dataset. Try visualise Ni, Cr, Pb on the x, y, z axis. How does this interactive plot compare with your ordination from last prac? (Try standardising your variables first!)
 
 ```{r, solution2}
 # Standardise variables
@@ -431,9 +448,9 @@ hm_fig <- plot_ly(hm_std, x = ~Ni, y = ~Cr, z = ~Pb,
   add_markers()
 ```
 
-# 12) Cave hydrology
-## 12) Cave hydrology
+# Cave hydrology
 
+## Cave hydrology
 ![](images/caves.jpg){width=70%} <br>
 
 Professor Andy Baker (School of BEES, UNSW) works in caves to better understand the history of Australia's climate and how climate affects valuable groundwater resources. He looks at the geochemistry of stalagmites to reconstruct climate histories and impacts of fire, and flows of water underground to understand recharge of groundwater (i.e., how do rainfall events top up these important reserves of freshwater?).
@@ -445,31 +462,35 @@ There were over 40,000 observations in the original data set, collected from nin
 **Load data**
 ```{r}
 Caves <- read_csv(file = "data/Caves.csv")
+
+Caves
 ```
 
-To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (the from columns HW-2b, HW_4b etc.). Let's format the date column as a date, not character so that R handles years and dates nicely. 
+To understand the data set, plot the patterns in drip numbers through time for just one of the loggers (from columns `HW-2b`, `HW_4b`, etc.). Let's first format the date column as a date, not character so that R handles years and dates nicely. 
 
 **Wrangle data**
 ```{r}
 Caves <- mutate(Caves, Date = as.Date(Date, format = "%d/%m/%Y"))
+
+Caves
 ```
 
 **Visualise data**
 
-Let's visualise the plot the patterns in drip numbers through time for just one of the loggers (`HW_4b`)
+Now let's visualise the patterns in drip numbers through time for just one of the loggers (`HW_4b`).
 
 ```{r, results='hide'}
 ggplot(Caves, aes(Date, HW_4b)) + 
-  geom_point(alpha=0.05)
+  geom_point(alpha = 0.05)
 ```
 
 
-## 12a) Using PCA to visualise variation among years 
+## Using PCA to visualise variation among years 
 
 **Exercise:**
 
-- Create a PCA plot that visualises the variation across years with data from all nine loggers. Remember that you'll need to subset the columns to only include the drip data (from columns HW-2b, HW_4b etc.) 
-- Bring back the year column into a data frame that has the x and y coordinate values from the ordination plot.
+- Create a PCA plot that visualises the variation across years with data from all nine loggers. Remember that you'll need to subset the columns to only include the drip data (from columns `HW-2b`, `HW_4b`, etc.) 
+- Bring back the year column into the data frame that has the x and y coordinate values from the ordination plot.
 
 ```{r solution1}
 # Select data variables only
@@ -477,16 +498,16 @@ Caves_vars <- Caves |>
   select(contains("HW"))
 
 # Perform PCA
-caves.pca <- princomp(Caves_vars, cor = FALSE)
+caves_pca <- princomp(Caves_vars, cor = FALSE)
 
-# ook at output
-summary(caves.pca)
+# Look at output
+summary(caves_pca)
 
 # Extract loadings
-loadings(caves.pca)
+loadings(caves_pca)
 
 # Extract scores for ordination
-Caves_xy <- data.frame(caves.pca$scores)
+Caves_xy <- data.frame(caves_pca$scores)
 
 # Create a year column so we can label them
 Caves_xy$Year <- as.character(Caves$Year)
