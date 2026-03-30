@@ -99,6 +99,14 @@ Let's take a look at this **multivariate dataset** collected by a physical geogr
 
 Using the same methods at each site, the following data were collected from each beach:
 
+|                          | Beach 1 | Beach 2 | Beach 3 |
+| :----------------------- | :------ | :------ | :------ |
+| mean sediment size (mm)  | 4.00    | 2.00    | 0.80    |
+| beach slope (degrees)    | 10.10   | 5.20    | 1.20    |
+| mean wave height (m)     | 1.85    | 1.47    | 0.39    |
+| mean current speed (m/s) | 1.20    | 0.80    | 0.70    |
+
+
 ```{r, echo=FALSE}
 Beaches <- read_csv(file = "data/Beaches.csv")
 
