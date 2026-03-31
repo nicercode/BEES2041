@@ -199,15 +199,52 @@ In this video, the Medical Futurist talks about the importance of labelling for 
 
 So your next job is to create some labelled data by marking points in images as bird or not bird.
 
-Take turns to head over to a labelling station and practise creating some labelled data. There is a full dataset available on Moodle to work on in the meantime.
+Take turns to head over to a labelling station and practise creating some labelled data. Adding more labelled observations strengthens the predictive power of your model. If you are waiting your turn, you can skip this section for now and use the full dataset available (`data/trainingData.csv`) to work on the later sections of this practical. This is real data collected by Roxanne. 
 
-Load the labelled data from `data/trainingData.csv` and save it as an object. We'll use `dplyr` to change the Class to a label that is either "pelican" or "background".
+## Creating training and test datasets
+
+### Your labelled dataset (skip this if you haven't gone to the labelling station yet)
+
+Download your labelled data (Data Dan will upload it on Moodle). 
+
+Load your labelled data into R and save it as an object. We'll use `dplyr` to change the class to a label that is either "pelican"  or "background".
 
 ```{r}
-peli_labelled_raw <- read_csv("data/trainingData.csv")
-
+peli_labelled_raw <- read_csv(...)
 peli_labelled <- 
-  peli_labelled_raw |> 
+  peli_labelled_raw |>
+  mutate(is_pelican = ifelse(Class == 2, "pelican", "background") |> as.factor()) |> # Make a new column `is_pelican`
+  select(is_pelican, everything()) |> # Reorder dataframe so that `is_pelican` is the first column, and then everything else
+  select(-Class) # Remove class column
+```
+
+Inspect the dataset. There's a lot of columns! Each row is the record for a particular pixel (location) in the image. 
+
+The column `is_pelican` is the target or Y variable, which you scored. The other columns are potential predictors. The predictors are derived from four spectral bands of the sensor on the drone. 
+
+Okay, now that we have data, we'll have to create training and testing data from the dataset. 
+
+![](images/training-testing.png){width=50%} <br>
+
+So let's go ahead and split the data, using the `slice` function from `tidyverse`:
+
+```{r}
+npoints <- nrow(peli_labelled) # Get number of rows
+train_ids <- sample(npoints, 0.75 * npoints) # Take a random 3/4 of the points to use for training
+
+peli_labelled_train <- peli_labelled |> slice(train_ids)
+peli_labelled_test <-  peli_labelled |> slice(-train_ids)
+```
+
+### Full pelican dataset
+
+Load Roxane's labelled data from `data/trainingData.csv` and save it as an object. We'll use `dplyr` to change the Class to a label that is either "pelican" or "background".
+
+```{r}
+peli_labelled_full_raw <- read_csv("data/trainingData.csv") # Name it something else to distinguish it from your labelled dataset
+
+peli_labelled_full <- 
+  peli_labelled_full_raw |> 
   mutate(
     is_pelican = ifelse(Class == 2, "pelican", "background") |> as.factor()) |> # Make a new column `is_pelican`
   select(is_pelican, everything()) |> # Reorder dataframe so that `is_pelican` is the first column, and then everything else
@@ -225,16 +262,18 @@ Okay, now that we have data, we'll have to create training and testing data from
 So let's go ahead and split the data, using the `slice` function from `tidyverse`:
 
 ```{r}
-npoints <- nrow(peli_labelled) # Get number of rows
+npoints <- nrow(peli_labelled_full) # Get number of rows
 train_ids <- sample(npoints, 0.75 * npoints) # Take a random 3/4 of the points to use for training
 
-peli_labelled_train <- peli_labelled |> slice(train_ids)
-peli_labelled_test <-  peli_labelled |> slice(-train_ids)
+peli_labelled_full_train <- peli_labelled_full |> slice(train_ids)
+peli_labelled_full_test <-  peli_labelled_full |> slice(-train_ids)
 ```
 
-To start, let's try to see if a single covariate (`band1`) has enough predictive power to give us a good predictive model. Fit a random forest model with your training data where is_pelican is your response variable and b1 is your predictor variable. Then, use the custom function to evaluate your model. 
+## Fitting random forest models
 
-Single covariates
+### Your labelled dataset
+
+To start, let's try to see if a single covariate (`band1`) has enough predictive power to give us a good predictive model. Fit a random forest model with your training data where `is_pelican` is your response variable and `b1` is your predictor variable. Then, use the custom function `evaluate_model` to evaluate your model. 
 
 ```{r}
 fit_rf1 <- ranger(is_pelican ~ b1, data = peli_labelled_train)
@@ -242,24 +281,71 @@ fit_rf1 <- ranger(is_pelican ~ b1, data = peli_labelled_train)
 evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
 ```
 
-3 covariate - RGB
+Does the model look like it can be improved? `r cloze("Yes", c("Yes", "No"))`
+
+What happens if you include all three bands as covariates (RGB bands)?
+
+Fit a random forest model with the formula `is_pelican ~ b1 + b2 + b3` using your training data. Then evaluate the predictive power of your model.
 
 ```{r}
+fit_rf3 <- ranger(...add code here...)
+
+evaluate_model(...add code here...)
+```
+
+```{r solutions-1}
 fit_rf3 <- ranger(is_pelican ~ b1 + b2 + b3, data = peli_labelled_train)
 
 evaluate_model(fit_rf3, peli_labelled_train, peli_labelled_test)
 ```
 
-RF all covars
+Does this make the model more accurate? `r cloze("Yes", c("Yes", "No"))`
+
+Why do you think you are getting low error rates (comparatively speaking) when fitting to the training data, but high error rates when testing your model against the testing data set? {type=essay}
+
+### The maximum model!
+
+Let's try creating a maximum model, i.e. one with all our covariates used as predictors! 
+
+Fit a random forest model with `is_pelican` as the response variable and all other covariates as the predictor variables.
+
+*Hint: remember you can use "." to reference all covariates in a formula, like we did with the iris example.*
 
 ```{r}
-fit_rf1 <- ranger(is_pelican ~ ., data = peli_labelled_train)
+fit_rf <- ranger(is_pelican ~ ., data = ...)
 
-evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
-
+evaluate_model(...)
 ```
 
-Variable importance
+```{r solutions-2}
+fit_rf <- ranger(is_pelican ~ ., data = peli_labelled_train)
+
+evaluate_model(fit_rf, peli_labelled_train, peli_labelled_test)
+```
+
+Which model has the lowest error rate when predicting the testing data?
+
+`r cloze("All covariates", c("One covariate", "Three covariates", "All covariates"))`
+
+## Evaluating performance
+
+Now that you've run through this analysis on a small pelican data set that you collected in class, we want to see whether adding many more observations strengthens the predictive power of your model. 
+
+For this, we will use the real data collected from Roxanne. You should have already imported the data from `data/trainingData.csv` and divided it into training and test data sets.
+
+Fit a random forest model to Roxane's data with the formula `is_pelican ~ .` where `is_pelican` is our categorical response variable and all other covariates (.) are our predictor variables (the maximum model). 
+
+```{r}
+fit_rf_full <- ranger(...)
+```
+
+Does having a bigger training dataset lead to better predictive skill? `r cloze("Yes", c("Yes", "No"))`
+
+### Is a simplified model better?
+
+A maximum model is not always the best model. There might be many variables included that aren't properly capturing the variation in the dataset.
+
+It's often a good idea to investigate the maximum model further and try to understand which variables are most important. We'll use the `importance()` function to do this. To use it, you first need to add an extra argument to your model: `importance = "permutation"`:
 
 ```{r}
 fit_rf <- ranger(is_pelican ~ ., data = peli_labelled_train, importance = "permutation")
@@ -267,19 +353,56 @@ fit_rf <- ranger(is_pelican ~ ., data = peli_labelled_train, importance = "permu
 importance(fit_rf)
 ```
 
-Reduced model (top 5 covariates)
+What are the top 5 variables and what is the order of importance? 
+
+**NB: We won't give exact answers for you to check here. As there is randomness in the model (it's a random forest) everyone will get slightly different results.**
+
+It looks like many of the variables are not needed in this model. Try creating a reduced model with only the top 5 covariates. 
 
 ```{r}
+# Detect top variables
+top_vars <- importance(fit_rf) |> sort(decreasing = T) |> head(5) |> names()
 
-top_vars <- importance(fit_rf) |> sort(decreasing = T) |> head(5) |> names() 
+# Create a reduced dataset with only the top variables 
+peli_labelled_train_top_vars <- peli_labelled_train |> select(is_pelican, any_of(top_vars))
 
-fit_rf_top <- 
-  ranger(is_pelican ~ ., 
-         data = peli_labelled_train |> select(is_pelican, any_of(top_vars))
-         )
+# Fit model
+fit_rf_top <- ranger(is_pelican ~ ., data = peli_labelled_train_top_vars)
 
+evaluate_model(...)
+```
+
+```{r solutions-3}
+# Detect top variables
+top_vars <- importance(fit_rf) |> sort(decreasing = T) |> head(5) |> names()
+
+# Create a reduced dataset with only the top variables 
+peli_labelled_train_top_vars <- peli_labelled_train |> select(is_pelican, any_of(top_vars))
+
+# Fit model
+fit_rf_top <- ranger(is_pelican ~ ., data = peli_labelled_train_top_vars)
+
+# Evaluate model
 evaluate_model(fit_rf_top, peli_labelled_train, peli_labelled_test)
 ```
+
+Does this model suggest that all of the covariates are needed to accurately predict pelican presence?
+
+`r cloze("False", c("True", "False"))`
+
+## So it's time to count some pelicans
+
+What can you conclude from your analysis thus far? Did you get a model you're happy with, ie. that performs well in testing data? If so you're ready to use the model.
+
+Thinking about the broader goals of this work, developing the predictive model is only one of the steps in the overall workflow.
+
+1. Define goals (what do we want to predict: count pelicans in breeding colony)
+2. Collect data (drone imagery)
+3. Decide candidate models (random forest with predictors based on bands of drone sensor)
+4. Label data for use in model training and testing
+5. Develop model and quantify predictive skill
+6. Use the model to achieve whatever you wanted to do in step 1
+We're now up to step 6. 
 
 # Extension
 
