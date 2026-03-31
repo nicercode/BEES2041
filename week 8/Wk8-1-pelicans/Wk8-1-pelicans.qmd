@@ -5,7 +5,7 @@ editor: source
 ---
 
 ---
-title: "Week 8-1 Counting Pelicans with random Forest"
+title: "Week 8-1 Counting Pelicans with Random Forest"
 output: html_output
 editor_options:
   chunk_output_type: console
@@ -23,7 +23,108 @@ rprojroot::has_file("BEES2041-code.Rproj") |>
 library(moodlequiz)
 ```
 
-# Introduction to Mixed Models
+# 8-1 Categorical prediction (pelicans)
+
+## Counting birds in nesting colonies
+
+An important role for predictive algorithms is to accelerate routine data collection. Detailed and regular monitoring of nesting sites would be an efficient way to monitor bird populations, as all individuals in a species tend to aggregate in particular locations.  However, it is hard to count birds from the ground without disturbing them. Therefore, there is great interest in the potential to use drones to count birds. Moreover, if we could automate the counting part, i.e. reviewing the drone imagery to actually count the birds, monitoring of bird populations becomes more achievable.
+
+![](images/MurrumbidgeeRiverColony.jpg){width=50%}  <br>
+
+**Meet Roxanne!** Dr Roxanne Francis, Post-doctoral Researcher in the School of Biological, Earth & Environmental Sciences at UNSW. Roxanne was once a student in BEES2041! She's now an expert in using drones to monitor bird and plant populations.
+
+![](images/InsideAColony.jpg){width=50%} <br>
+
+Today’s practical builds off one of Roxanne's current projects, counting pelicans in breeding colonies at Lake Brewster, in North Western NSW. We're going to analyse some of the drone images Roxanne has collected to see how well we can automate the counting process.
+
+This video describes the broader context of Roxanne's work and the types of systems and tech she uses. Counting pelicans is just one of the species she is working with.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/euwv2_G7Jlo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> <br>
+
+## Plan for today
+
+So here's the content we're going to cover in today's lab:
+
+1. Learn about classification problems (predictive models with categorical Y)
+2. Learn about random forest models (a common machine learning method)
+3. Consider how to evaluate predictive models with categorical outcomes (via a confusion matrix and accuracy)
+4. Try a test problem using a small dataset
+5. Start working with data on pelicans
+6. Create a labelled dataset (to use in modelling)
+7. Test the predictive capacity of different models (using testing data with known truth)
+8. Use your new predictive model to count pelicans (apply the model to solve the ultimate aim of counting pelicans)
+
+## Classification problems
+
+Counting birds is an example of what's called a classification problem. The "data" we have are images taken by a drone. 
+
+![](images/RoxaneAndDrone.jpg){width=50%} <br>
+
+The drone flies in a series of transects across a nesting area, the images are then stitched together into a giant mosaic, which shows the entire nesting area from above. These areas are large and potentially contain tens of thousands of birds.
+
+![](images/colony.jpg){width=50%} <br>
+
+There's so many birds! Wouldn't it be nice to automate counting? Although our brain can "see" the birds, the image is just a bunch of pixels with colours. So to automate counting, we need to teach a model to "classify" pixels as belonging to a bird (e.g. blue marks in picture below) or not a bird (red marks). 
+
+![](images/Screenshot 2023-03-30 at 4.14.02 pm.png){width=50%} <br>
+
+Distinguishing points as belonging to a bird or not is an example of what's known as a classification problem. The target (output, or Y) is a categorical variable with different possible values. The possible values of Y are commonly called classes. 
+
+Y could be a binary variable with 2 classes like, TRUE and FALSE. Or it could have many possible classes (like pelican, duck, cormorant). 
+
+So in a classification problem, what type of variable is the output (Y)? 
+
+`r cloze("Categorical", c("Continuous", "Categorical"))`
+
+## What models?
+
+It's now time to think about the models we're going to fit. In our analysis we're going to use two methods:
+
+1. A Random Forest Classifier: a common machine learning method used for either regression (continuous Y) or classification (categorical Y).
+2. Logistic Regression: an extension of the linear regression model we ran earlier in the course, where outputs are turned into a binary TRUE or FALSE.
+
+This video gives a nice introduction to random forests. Watch the first 3:10 for a quick overview: 
+
+<iframe width="600" height="400" src="https://www.youtube.com/embed/yN7ypxC7838">
+</iframe> <br>
+
+Both logistic regression and random forests map inputs to outputs. But they work entirely differently. You've seen how linear regression works. By contrast, the random forest model is based on a decision tree structure. In fact, it builds many different decision trees (hence the "forest"), each using different bits of the data, and uses the ensemble of all trees to make its prediction. Whereas a single decision tree is prone to overfitting the data, a random forest is much more robust. 
+
+![](images/random_forest.png){width=50%} <br>
+
+For this practical, it is sufficient to know that it is a model that can predict Y from X, but if you're keen, you can read more about [Random Forest](https://en.wikipedia.org/wiki/Random_forest) models here on Wikipedia. 
+
+## Training and testing sets
+
+Recall (from the lectures) that to evaluate predictive models, we need to split our labelled data into training and testing sets. 
+
+![](images/training-testing.png){width=50%} <br>
+
+The figure above suggests a 25:75 split but the exact number is flexible. 
+
+- Training data: used to fit the model
+- Testing (or validation) data: used to assess how well the model predicts outputs in new data (i.e. data not used to fit the model)
+ 
+Both the training and testing datasets are labelled, meaning we know the 'true' values of Y. When we use the model later to predict stuff in the full mosaic, we won't know the true values of Y. We'll be relying on the model to tell us.
+
+## Evaluating model performance
+
+As well as separating the dataset into two, we want to write a function to evaluate 'within sample' and 'out of sample' predictions. 
+
+Our data has a categorical Y, so we will use a confusion matrix to compare between observed and predicted values for Y. Recall Data Dan discussing the use of Root Mean Square Error (for continuous Y) and Confusion Matrices (for categorical Y) in the lectures (start at 5:00).
+
+In the file, `R/confusion.R`, `evaluate_model()` is a function that will calculate a confusion matrix using the observed vs predicted values. It's not in a package. You make the function available by running the code: 
+
+```{r}
+source("R/confusion.R")
+```
+
+As well as a table of correct and incorrect values, the table will also print out the number of points and the accuracy. 
+
+Accuracy is given as the number of correct predictions / the number of points. Error = 1 - Accuracy and is the number of incorrect predictions. 
+
+Once loaded, you can call the function like any other function from a package. You can also take a look at the structure of the function by opening the file `R/confusion.R`. Notes have been added to the code so you can follow exactly what it is doing to evaluate your model.
+
 
 # Random forests with ranger
 
