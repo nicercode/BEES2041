@@ -62,11 +62,11 @@ Counting birds is an example of what's called a classification problem. The "dat
 
 The drone flies in a series of transects across a nesting area, the images are then stitched together into a giant mosaic, which shows the entire nesting area from above. These areas are large and potentially contain tens of thousands of birds.
 
-![](images/colony.jpg){width=50%} <br>
+![](images/colony.png){width=50%} <br>
 
 There's so many birds! Wouldn't it be nice to automate counting? Although our brain can "see" the birds, the image is just a bunch of pixels with colours. So to automate counting, we need to teach a model to "classify" pixels as belonging to a bird (e.g. blue marks in picture below) or not a bird (red marks). 
 
-![](images/Screenshot 2023-03-30 at 4.14.02 pm.png){width=50%} <br>
+![](images/Screenshot%202023-03-30%20at%204.14.02%20pm.png){width=50%} <br>
 
 Distinguishing points as belonging to a bird or not is an example of what's known as a classification problem. The target (output, or Y) is a categorical variable with different possible values. The possible values of Y are commonly called classes. 
 
@@ -125,62 +125,114 @@ Accuracy is given as the number of correct predictions / the number of points. E
 
 Once loaded, you can call the function like any other function from a package. You can also take a look at the structure of the function by opening the file `R/confusion.R`. Notes have been added to the code so you can follow exactly what it is doing to evaluate your model.
 
+## Introduction to modelling with random forest
 
-# Random forests with ranger
+Before we get started on the pelican dataset, we'll run through a quick practice example using random forest modelling and a categorical response variable. We are going to see whether we can answer the question: Can you accurately predict species based on phenotypic traits of plants? 
+
+For this short intro, we'll be using the built-in R dataset `iris`. It contains measurements of four features on the flowers of three plant species (setosa, virginica, versicolor). These quantify the morphological variation of the iris flower in its three species, all measurements given in centimetres.
+
+There are two reasons for this exercise:
+
+1. To practice predictive modelling with a categorical response variable 
+2. To understand how to interpret a confusion matrix 
+
+First load the packages `tidyverse` and `ranger`. You may need to install the ranger package.
 
 ```{r}
-#install.packages("ranger")
+# install.packages("ranger")
 
 library(tidyverse)
 library(ranger)
 
-source("R/confusion.R")
-
+source("R/confusion.R") # Load the function from the R script "R/confusion.R"
 ```
 
-## RFs with ranger
-
-Training testing example
+Now take a quick 1 min look at the iris data. 
 
 ```{r}
-ranger(Species ~ ., data = iris)
-
-train.idx <- sample(nrow(iris), 2/3 * nrow(iris))
-iris.train <- iris[train.idx, ]
-iris.test <- iris[-train.idx, ]
-
-fit_iris <- ranger(Species ~ ., data = iris.train)
-
-evaluate_model(fit_iris , iris.train, iris.test, y = "Species")
+View(iris)
 ```
 
-## With pelicans
+We're going to try and predict the species from their flower parts.
 
-Load data
+To build the model, you need to create training and testing data with the iris data set. 
 
 ```{r}
+train_idx <- sample(nrow(iris), 2/3 * nrow(iris)) # Generate a sample of row numbers that is 2/3 the size of the iris dataset
+iris_train <- iris[train_idx, ] # Subset the iris dataset with the row numbers 
+iris_test <- iris[-train_idx, ] # Assign the leftover rows as the test dataset
+```
 
+Next, fit a random forest model using the function `ranger()` with the formula `Species ~ .`. Species is a categorical response variable and all other variables are predictor variables (that's what the "." does in this particular formula).
+
+```{r}
+fit_rf <- ranger(Species ~ ., data = iris_train) # Fit model
+fit_rf # View model
+```
+
+Now, to check how well your model could predict species, we want to create a confusion matrix. There are a few packages that you can install on your computer to do this (like `caret` or `ModelMatrix`), but for this practical, Data Dan has built a custom function to create a confusion matrix. 
+
+Load in the custom function and use it to create a confusion matrix
+
+```{r}
+source("R/confusion.R") # Read in custom function
+evaluate_model(fit_rf, iris_train, iris_test, y = "Species") # Use custom function
+```
+
+Noting that each row is an individual record, for how many individuals was species incorrectly predicted? `r cloze(3)`
+
+## What data are we using?
+
+Let's go back to the bird nest counting example now. Roxanne has created the mosaic from the drone images and added a series of covariates, derived from the various light bands of the spectral sensor of the drone. It's a giant file (> 1GB in size, ~3.6 billion pixels)! Here's a screenshot.
+
+![](images/Screenshot%202023-03-30%20at%204.15.20%20pm.png){width=50%} <br>
+
+We'll work with a small section of the bigger image and use this to develop a workflow to apply to the whole dataset.
+
+## Creating labels
+
+The next step is to label some data! That means manually looking at individual points (pixels) and marking them as bird or not bird.  Labelling data is an essential part of any predictive workflow. The labelled data helps the model learn what it's looking for.
+
+In this video, the Medical Futurist talks about the importance of labelling for predictive workflows. While the examples are from medical fields, the principle is general and he describes it very well (watch up to 1:40). 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/hhzhamJUbmg?start=33" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> <br>
+
+So your next job is to create some labelled data by marking points in images as bird or not bird.
+
+Take turns to head over to a labelling station and practise creating some labelled data. There is a full dataset available on Moodle to work on in the meantime.
+
+Load the labelled data from `data/trainingData.csv` and save it as an object. We'll use `dplyr` to change the Class to a label that is either "pelican" or "background".
+
+```{r}
 peli_labelled_raw <- read_csv("data/trainingData.csv")
 
 peli_labelled <- 
   peli_labelled_raw |> 
   mutate(
-    is_pelican = ifelse(Class==2, "pelican", "background") |> as.factor()) |>
-  select(is_pelican, everything()) |> 
-  select(-Class)
-
+    is_pelican = ifelse(Class == 2, "pelican", "background") |> as.factor()) |> # Make a new column `is_pelican`
+  select(is_pelican, everything()) |> # Reorder dataframe so that `is_pelican` is the first column, and then everything else
+  select(-Class) # Remove class column
 ```
 
-Make training and testing
+Inspect the dataset. There's a lot of columns! Each row is the record for a particular pixel (location) in the image. 
+
+The column `is_pelican` is the target or Y variable, which you scored. The other columns are potential predictors. The predictors are derived from four spectral bands of the sensor on the drone.
+
+Okay, now that we have data, we'll have to create training and testing data from the dataset.
+
+![](images/training-testing.png){width=50%} <br>
+
+So let's go ahead and split the data, using the `slice` function from `tidyverse`:
 
 ```{r}
-
-npoints <- nrow(peli_labelled)
-train_ids <- sample(npoints, 0.75 * npoints)
+npoints <- nrow(peli_labelled) # Get number of rows
+train_ids <- sample(npoints, 0.75 * npoints) # Take a random 3/4 of the points to use for training
 
 peli_labelled_train <- peli_labelled |> slice(train_ids)
 peli_labelled_test <-  peli_labelled |> slice(-train_ids)
 ```
+
+To start, let's try to see if a single covariate (`band1`) has enough predictive power to give us a good predictive model. Fit a random forest model with your training data where is_pelican is your response variable and b1 is your predictor variable. Then, use the custom function to evaluate your model. 
 
 Single covariates
 
