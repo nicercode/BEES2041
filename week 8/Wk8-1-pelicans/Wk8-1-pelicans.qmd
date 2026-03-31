@@ -4,9 +4,26 @@ format: html
 editor: source
 ---
 
-## 
+---
+title: "Week 8-1 Counting Pelicans with random Forest"
+output: html_output
+editor_options:
+  chunk_output_type: console
+---
 
-https://towardsdatascience.com/data-science-tutorials-training-a-random-forest-in-r-a883cc1bacd1
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+# Set the working directory
+rprojroot::has_file("BEES2041-code.Rproj") |>
+  rprojroot::find_root() |>
+  file.path("week 8/Wk8-1-pelicans") |>
+  setwd()
+
+library(moodlequiz)
+```
+
+# Introduction to Mixed Models
 
 # Random forests with ranger
 
