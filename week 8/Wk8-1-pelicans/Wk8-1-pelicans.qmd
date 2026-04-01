@@ -115,7 +115,7 @@ Our data has a categorical Y, so we will use a confusion matrix to compare betwe
 
 In the file, `R/confusion.R`, `evaluate_model()` is a function that will calculate a confusion matrix using the observed vs predicted values. It's not in a package. You make the function available by running the code: 
 
-```{r}
+```{r, eval=FALSE}
 source("R/confusion.R")
 ```
 
@@ -138,7 +138,7 @@ There are two reasons for this exercise:
 
 First load the packages `tidyverse` and `ranger`. You may need to install the ranger package.
 
-```{r}
+```{r, results='hide', warning=FALSE, message=FALSE}
 # install.packages("ranger")
 
 library(tidyverse)
@@ -149,7 +149,7 @@ source("R/confusion.R") # Load the function from the R script "R/confusion.R"
 
 Now take a quick 1 min look at the iris data. 
 
-```{r}
+```{r, eval=FALSE}
 View(iris)
 ```
 
@@ -209,7 +209,7 @@ Download your labelled data (Data Dan will upload it on Moodle).
 
 Load your labelled data into R and save it as an object. We'll use `dplyr` to change the class to a label that is either "pelican"  or "background".
 
-```{r}
+```{r, eval=FALSE}
 peli_labelled_raw <- read_csv(...)
 peli_labelled <- 
   peli_labelled_raw |>
@@ -228,7 +228,7 @@ Okay, now that we have data, we'll have to create training and testing data from
 
 So let's go ahead and split the data, using the `slice` function from `tidyverse`:
 
-```{r}
+```{r, eval=FALSE}
 npoints <- nrow(peli_labelled) # Get number of rows
 train_ids <- sample(npoints, 0.75 * npoints) # Take a random 3/4 of the points to use for training
 
@@ -275,7 +275,7 @@ peli_labelled_full_test <-  peli_labelled_full |> slice(-train_ids)
 
 To start, let's try to see if a single covariate (`band1`) has enough predictive power to give us a good predictive model. Fit a random forest model with your training data where `is_pelican` is your response variable and `b1` is your predictor variable. Then, use the custom function `evaluate_model` to evaluate your model. 
 
-```{r}
+```{r, eval=FALSE}
 fit_rf1 <- ranger(is_pelican ~ b1, data = peli_labelled_train)
 
 evaluate_model(fit_rf1, peli_labelled_train, peli_labelled_test)
@@ -287,13 +287,13 @@ What happens if you include all three bands as covariates (RGB bands)?
 
 Fit a random forest model with the formula `is_pelican ~ b1 + b2 + b3` using your training data. Then evaluate the predictive power of your model.
 
-```{r}
+```{r, eval=FALSE}
 fit_rf3 <- ranger(...add code here...)
 
 evaluate_model(...add code here...)
 ```
 
-```{r solutions-1}
+```{r solutions-1, eval=FALSE}
 fit_rf3 <- ranger(is_pelican ~ b1 + b2 + b3, data = peli_labelled_train)
 
 evaluate_model(fit_rf3, peli_labelled_train, peli_labelled_test)
@@ -311,13 +311,13 @@ Fit a random forest model with `is_pelican` as the response variable and all oth
 
 *Hint: remember you can use "." to reference all covariates in a formula, like we did with the iris example.*
 
-```{r}
+```{r, eval=FALSE}
 fit_rf <- ranger(is_pelican ~ ., data = ...)
 
 evaluate_model(...)
 ```
 
-```{r solutions-2}
+```{r solutions-2, eval=FALSE}
 fit_rf <- ranger(is_pelican ~ ., data = peli_labelled_train)
 
 evaluate_model(fit_rf, peli_labelled_train, peli_labelled_test)
@@ -335,7 +335,7 @@ For this, we will use the real data collected from Roxanne. You should have alre
 
 Fit a random forest model to Roxane's data with the formula `is_pelican ~ .` where `is_pelican` is our categorical response variable and all other covariates (.) are our predictor variables (the maximum model). 
 
-```{r}
+```{r, eval=FALSE}
 fit_rf_full <- ranger(...)
 ```
 
@@ -365,7 +365,7 @@ What are the top 5 variables and what is the order of importance?
 
 It looks like many of the variables are not needed in this model. Try creating a reduced model with only the top 5 covariates. 
 
-```{r}
+```{r, eval=FALSE}
 # Detect top variables
 top_vars <- importance(fit_rf_full) |> sort(decreasing = T) |> head(5) |> names()
 
@@ -427,17 +427,17 @@ You can load the data from the extra (large) [files available on Moodle](https:/
 
 **Beware, big data!** However, this routine can consume your laptop, as even the test data has 1.4 million rows. So let's start with a smaller subset. The following code takes the first 3 million rows of data. If that works, you can try larger datasets by varying the number in the `slice` command, or removing it altogether. 
 
-```{r}
+```{r, eval=FALSE}
 data_mosaic <- readRDS(...filename...) |> slice(1:3000000)
 ```
 
-```{r solutions-5}
+```{r solutions-5, eval=FALSE}
 data_mosaic <- readRDS("data/RasterWithPredictorsPelicans-0000011776-0000011776.rds") |> slice(1:3000000)
 ```
 
 Now you could potentially apply your model to make predictions.
 
-```{r}
+```{r, eval=FALSE}
 # Fit final model, with 100 trees rather default of 500 (faster with fewer trees, and 100 seems like enough here)
 fit_rf1 <- ranger(is_pelican ~ ., data = peli_labelled_full_train_top_vars, num.trees = 100)
 
@@ -448,7 +448,7 @@ data_mosaic <- data_mosaic |>
 
 The code above adds a column to the mosiac with the model preidction, as each pixel being a "pelican" or "backround". To visualise the predictions we can make a image showing the prediction for pixels as being either class. Compare this to the actual image "RasterWithPredictorsPelicans-0000011776-00000117763.png" to see how well we did.
 
-```{r}
+```{r, eval=FALSE}
 # Plot direct to file "output.png", works better than plotting to screen for big datasets 
 png("output.png", height = 40, width = 40, units = "cm", res = 600)
 ggplot(data_mosaic, aes(x, y)) +
@@ -470,7 +470,7 @@ Often, with a categorical response variable, regressions are not useful. Regress
 
 Let's try creating a regression model using the `glm()` function.
 
-```{r}
+```{r, eval=FALSE}
 fit_glm <- glm(is_pelican ~ ., data = peli_labelled_train, family = binomial)
 
 evaluate_model(...)
@@ -490,7 +490,7 @@ We've been using a random forest model for today's and Monday's pracs. As we've 
 
 Try fitting a random forest model with a single tree using the argument `num.trees = 1` and then use the custom function to evaluate it.
 
-```{r}
+```{r, eval=FALSE}
 fit_rf_single <- ranger(is_pelican ~ ., data = peli_labelled_full_train, num.trees = 1)
 
 evaluate_model(...)
