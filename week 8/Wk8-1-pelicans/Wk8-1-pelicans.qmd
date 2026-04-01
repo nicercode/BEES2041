@@ -331,12 +331,18 @@ Which model has the lowest error rate when predicting the testing data?
 
 Now that you've run through this analysis on a small pelican data set that you collected in class, we want to see whether adding many more observations strengthens the predictive power of your model. 
 
-For this, we will use the real data collected from Roxanne. You should have already imported the data from `data/trainingData.csv` and divided it into training and test data sets.
+For this, we will use the real data collected from Roxanne. You should have already imported the data from `data/trainingData.csv` and divided it into training and test data sets (Hint: remember we named the objects with different names to distinguish from your own dataset).
 
 Fit a random forest model to Roxane's data with the formula `is_pelican ~ .` where `is_pelican` is our categorical response variable and all other covariates (.) are our predictor variables (the maximum model). 
 
 ```{r}
 fit_rf_full <- ranger(...)
+```
+
+```{r solutions-3}
+fit_rf_full <- ranger(is_pelican ~ ., data = peli_labelled_full_train)
+
+evaluate_model(fit_rf_full, peli_labelled_full_train, peli_labelled_full_test)
 ```
 
 Does having a bigger training dataset lead to better predictive skill? `r cloze("Yes", c("Yes", "No"))`
@@ -348,9 +354,9 @@ A maximum model is not always the best model. There might be many variables incl
 It's often a good idea to investigate the maximum model further and try to understand which variables are most important. We'll use the `importance()` function to do this. To use it, you first need to add an extra argument to your model: `importance = "permutation"`:
 
 ```{r}
-fit_rf <- ranger(is_pelican ~ ., data = peli_labelled_train, importance = "permutation")
+fit_rf_full <- ranger(is_pelican ~ ., data = peli_labelled_full_train, importance = "permutation")
 
-importance(fit_rf)
+importance(fit_rf_full)
 ```
 
 What are the top 5 variables and what is the order of importance? 
@@ -361,29 +367,29 @@ It looks like many of the variables are not needed in this model. Try creating a
 
 ```{r}
 # Detect top variables
-top_vars <- importance(fit_rf) |> sort(decreasing = T) |> head(5) |> names()
+top_vars <- importance(fit_rf_full) |> sort(decreasing = T) |> head(5) |> names()
 
 # Create a reduced dataset with only the top variables 
-peli_labelled_train_top_vars <- peli_labelled_train |> select(is_pelican, any_of(top_vars))
+peli_labelled_full_train_top_vars <- peli_labelled_full_train |> select(is_pelican, any_of(top_vars))
 
 # Fit model
-fit_rf_top <- ranger(is_pelican ~ ., data = peli_labelled_train_top_vars)
+fit_rf_top <- ranger(is_pelican ~ ., data = peli_labelled_full_train_top_vars)
 
 evaluate_model(...)
 ```
 
-```{r solutions-3}
+```{r solutions-4}
 # Detect top variables
-top_vars <- importance(fit_rf) |> sort(decreasing = T) |> head(5) |> names()
+top_vars <- importance(fit_rf_full) |> sort(decreasing = T) |> head(5) |> names()
 
 # Create a reduced dataset with only the top variables 
-peli_labelled_train_top_vars <- peli_labelled_train |> select(is_pelican, any_of(top_vars))
+peli_labelled_full_train_top_vars <- peli_labelled_full_train |> select(is_pelican, any_of(top_vars))
 
 # Fit model
-fit_rf_top <- ranger(is_pelican ~ ., data = peli_labelled_train_top_vars)
+fit_rf_top <- ranger(is_pelican ~ ., data = peli_labelled_full_train_top_vars)
 
 # Evaluate model
-evaluate_model(fit_rf_top, peli_labelled_train, peli_labelled_test)
+evaluate_model(fit_rf_top, peli_labelled_full_train, peli_labelled_full_test)
 ```
 
 Does this model suggest that all of the covariates are needed to accurately predict pelican presence?
@@ -402,48 +408,98 @@ Thinking about the broader goals of this work, developing the predictive model i
 4. Label data for use in model training and testing
 5. Develop model and quantify predictive skill
 6. Use the model to achieve whatever you wanted to do in step 1
+
 We're now up to step 6. 
 
-# Extension
+![](images/colony.png){width=50%} <br>
 
-Is many trees (the random forest) better than single decision tree?
+The entire mosaic is huge (>1GB in size, ~3.6 billion pixels). That file is too big for us to work with on our laptops. (For this reason Roxanne does all her analysis in [Google Earth Engine](https://earthengine.google.com/).)
+
+But we can apply the model to a small extract of the larger mosaic. See the dark square in the image below.
+
+![](images/small_extract.png){width=50%} <br>
+
+You can load the data from the extra (large) [files available on Moodle](https://moodle.telt.unsw.edu.au/mod/folder/view.php?id=8252490). This step is not worth attempting if your laptop is particularly old or slow. 
+
+- Save the extra files in your project
+- The file `RasterWithPredictorsPelicans-0000011776-00000117763.png` is an image of the extract we are working with
+- Read the file `RasterWithPredictorsPelicans-0000011776-0000011776.rds` (with the data) into R
+
+**Beware, big data!** However, this routine can consume your laptop, as even the test data has 1.4 million rows. So let's start with a smaller subset. The following code takes the first 3 million rows of data. If that works, you can try larger datasets by varying the number in the `slice` command, or removing it altogether. 
 
 ```{r}
-fit_rf_single <- ranger(is_pelican ~ ., data = peli_labelled_train,   num.trees =1)
-
-evaluate_model(fit_rf_single, peli_labelled_train, peli_labelled_test)
-
+data_mosaic <- readRDS(...filename...) |> slice(1:3000000)
 ```
 
-Is RF better than regression (regression only works with binary outcome)
+```{r solutions-5}
+data_mosaic <- readRDS("data/RasterWithPredictorsPelicans-0000011776-0000011776.rds") |> slice(1:3000000)
+```
+
+Now you could potentially apply your model to make predictions.
 
 ```{r}
+# Fit final model, with 100 trees rather default of 500 (faster with fewer trees, and 100 seems like enough here)
+fit_rf1 <- ranger(is_pelican ~ ., data = peli_labelled_full_train_top_vars, num.trees = 100)
 
+# Make predictions
+data_mosaic <- data_mosaic |>
+  mutate(y_hat = predict(fit_rf1, data = data_mosaic)$predictions)
+```
+
+The code above adds a column to the mosiac with the model preidction, as each pixel being a "pelican" or "backround". To visualise the predictions we can make a image showing the prediction for pixels as being either class. Compare this to the actual image "RasterWithPredictorsPelicans-0000011776-00000117763.png" to see how well we did.
+
+```{r}
+# Plot direct to file "output.png", works better than plotting to screen for big datasets 
+png("output.png", height = 40, width = 40, units = "cm", res = 600)
+ggplot(data_mosaic, aes(x, y)) +
+  geom_tile(aes(fill = y_hat))
+dev.off()
+```
+
+Does it look OK, when you compare to the photo? If so, congrats! You've trained a model to "classify" pixels in an image as belonging to a pelican or not.
+
+There's one final step that Roxanne does, which is to count the **clusters** of pixels to count the number of birds. At the moment we just have the number of pixels that are classified as birds. But hopefully you see how our predictive model fits into the overall workflow and enables you to make an estimate of pelican numbers.
+
+## Extension (optional)
+
+### How good is the random forest method?
+
+This entire practical, we've been using random forest models. Is this the best model to use with this data? What about regression models like we've been doing the last few weeks? 
+
+Often, with a categorical response variable, regressions are not useful. Regressions will only work on binary categorical variables. This means a categorical variable that only has two levels. An example of this kind of data would be presence/absence data, just like our response variable looking at presence/absence of pelicans!
+
+Let's try creating a regression model using the `glm()` function.
+
+```{r}
 fit_glm <- glm(is_pelican ~ ., data = peli_labelled_train, family = binomial)
 
-evaluate_model(fit_glm, peli_labelled_train, peli_labelled_test)
-
+evaluate_model(...)
 ```
 
-# Now you can use the model on a big dataset
+```{r solutions-6}
+fit_glm <- glm(is_pelican ~ ., data = peli_labelled_full_train, family = binomial)
+
+evaluate_model(fit_glm, peli_labelled_full_train, peli_labelled_full_test)
+```
+
+Is the linear model better at predicting the presence/absence of pelicans than a random forest? `r cloze("False", c("True", "False"))`
+
+## Is using many trees (the random forest) better than a single decision tree?
+
+We've been using a random forest model for today's and Monday's pracs. As we've explained earlier in the lesson, this forest is made up of many permutations (decision trees). However, do we know for certain that using an iterative model like this is actually the most accurate model to be using? Could a single decision tree give you similar (or better) predictions? 
+
+Try fitting a random forest model with a single tree using the argument `num.trees = 1` and then use the custom function to evaluate it.
 
 ```{r}
+fit_rf_single <- ranger(is_pelican ~ ., data = peli_labelled_full_train, num.trees = 1)
 
-# fit final model, with 100 trees rather default of 500 (faster with fewer trees, and 100 seems like enough here)
-fit_rf1 <- ranger(is_pelican ~ ., data = peli_labelled_train, num.trees = 100)
-
-# load mosaic to predict onto
-data_mosaic <- readRDS("data/large-files/RasterWithPredictorsPelicans-0000011776-0000011776.rds") 
-
-# make predictions
-data_pred <- 
-  data_mosaic |>
-  mutate(is_pelican = predict(fit_rf1, data = data_mosaic)$predictions)
-
-# Plot direct to file "output.png", works better than plotting to screen for big datastes 
-png("output.png", height= 40, width=40, units = "cm", res=600)
-ggplot(data_pred, aes(x,y)) +
-  geom_tile(aes(fill=is_pelican))
-dev.off()
-
+evaluate_model(...)
 ```
+
+```{r solutions-7}
+fit_rf_single <- ranger(is_pelican ~ ., data = peli_labelled_full_train, num.trees = 1)
+
+evaluate_model(fit_rf_single, peli_labelled_full_train, peli_labelled_full_test)
+```
+
+Does this model suggest a need for many iterations (decision trees) to accurately predict pelican presence? `r cloze("False", c("True", "False"), feedback = "While the accuracy is slightly better, it doesn't show a drastic difference between the two models. The model is still very accurate with just one tree! It looks like which variables are included in the model might be more important for accuracy.")`
