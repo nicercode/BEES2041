@@ -304,7 +304,7 @@ leaf_pca <- princomp(Leaf_shape_vars, cor = FALSE)
 
 Let's talk through the code: 
 
-- `cor = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on the same scale. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
+- `cor = FALSE` indicates you want to use the covariance matrix, which is appropriate when all variables are measured on a similar scale or have a similar range of values. Change to `cor = TRUE` to scale the variables and use a correlation matrix (recommended when all the variables are on different scales).
 
 Principal components analysis produces a lot of graphical and numerical output, which we can explore by further examining the object (`leaf_pca`) we just created.
 
@@ -415,6 +415,15 @@ std_HM <- decostand(HeavyMetals_vars, method = "max")
 std_HM 
 
 metals_pca <- princomp(std_HM, cor = FALSE)
+
+# Extract loadings from PCA
+loadings(metals_pca)
+
+plot(metals_pca$scores, pch = 16) # `pch` controls the symbol used for plotted points
+biplot(metals_pca)
+
+# Without standardising first
+metals_pca <- princomp(HeavyMetals_vars, cor = TRUE)
 
 # Extract loadings from PCA
 loadings(metals_pca)
