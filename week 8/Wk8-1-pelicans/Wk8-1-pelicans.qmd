@@ -1,15 +1,12 @@
 ---
-title: "Pelican classifcation"
-format: html
-editor: source
----
-
----
 title: "Week 8-1 Counting Pelicans with Random Forest"
-output: html_output
+format: 
+  html:    
+    self-contained: true
 editor_options:
   chunk_output_type: console
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -29,17 +26,25 @@ library(moodlequiz)
 
 An important role for predictive algorithms is to accelerate routine data collection. Detailed and regular monitoring of nesting sites would be an efficient way to monitor bird populations, as all individuals in a species tend to aggregate in particular locations.  However, it is hard to count birds from the ground without disturbing them. Therefore, there is great interest in the potential to use drones to count birds. Moreover, if we could automate the counting part, i.e. reviewing the drone imagery to actually count the birds, monitoring of bird populations becomes more achievable.
 
-![](images/MurrumbidgeeRiverColony.jpg){width=50%}  <br>
+<br> 
+
+![](images/MurrumbidgeeRiverColony.jpg){width=90%}
+
+<br>
 
 **Meet Roxanne!** Dr Roxanne Francis, Post-doctoral Researcher in the School of Biological, Earth & Environmental Sciences at UNSW. Roxanne was once a student in BEES2041! She's now an expert in using drones to monitor bird and plant populations.
 
-![](images/InsideAColony.jpg){width=50%} <br>
+<br>
+
+![](images/InsideAColony.jpg){width=90%}
+
+<br>
 
 Today’s practical builds off one of Roxanne's current projects, counting pelicans in breeding colonies at Lake Brewster, in North Western NSW. We're going to analyse some of the drone images Roxanne has collected to see how well we can automate the counting process.
 
 This video describes the broader context of Roxanne's work and the types of systems and tech she uses. Counting pelicans is just one of the species she is working with.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/euwv2_G7Jlo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> <br>
+<br><iframe width="560" height="315" src="https://www.youtube.com/embed/euwv2_G7Jlo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> <br>
 
 ## Plan for today
 
@@ -58,15 +63,27 @@ So here's the content we're going to cover in today's lab:
 
 Counting birds is an example of what's called a classification problem. The "data" we have are images taken by a drone. 
 
-![](images/RoxaneAndDrone.jpg){width=50%} <br>
+<br>
+
+![](images/RoxaneAndDrone.jpg){width=90%}
+
+<br>
 
 The drone flies in a series of transects across a nesting area, the images are then stitched together into a giant mosaic, which shows the entire nesting area from above. These areas are large and potentially contain tens of thousands of birds.
 
-![](images/colony.png){width=50%} <br>
+<br>
+
+![](images/colony.png){width=90%}
+
+<br>
 
 There's so many birds! Wouldn't it be nice to automate counting? Although our brain can "see" the birds, the image is just a bunch of pixels with colours. So to automate counting, we need to teach a model to "classify" pixels as belonging to a bird (e.g. blue marks in picture below) or not a bird (red marks). 
 
-![](images/Screenshot%202023-03-30%20at%204.14.02%20pm.png){width=50%} <br>
+<br>
+
+![](images/Screenshot%202023-03-30%20at%204.14.02%20pm.png){width=90%}
+
+<br>
 
 Distinguishing points as belonging to a bird or not is an example of what's known as a classification problem. The target (output, or Y) is a categorical variable with different possible values. The possible values of Y are commonly called classes. 
 
@@ -85,12 +102,15 @@ It's now time to think about the models we're going to fit. In our analysis we'r
 
 This video gives a nice introduction to random forests. Watch the first 3:10 for a quick overview: 
 
-<iframe width="600" height="400" src="https://www.youtube.com/embed/yN7ypxC7838">
+<br><iframe width="600" height="400" src="https://www.youtube.com/embed/yN7ypxC7838">
 </iframe> <br>
 
 Both logistic regression and random forests map inputs to outputs. But they work entirely differently. You've seen how linear regression works. By contrast, the random forest model is based on a decision tree structure. In fact, it builds many different decision trees (hence the "forest"), each using different bits of the data, and uses the ensemble of all trees to make its prediction. Whereas a single decision tree is prone to overfitting the data, a random forest is much more robust. 
 
-![](images/random_forest.png){width=50%} <br>
+![](images/random_forest.png){width=90%}
+
+<br>
+<br>
 
 For this practical, it is sufficient to know that it is a model that can predict Y from X, but if you're keen, you can read more about [Random Forest](https://en.wikipedia.org/wiki/Random_forest) models here on Wikipedia. 
 
@@ -98,7 +118,11 @@ For this practical, it is sufficient to know that it is a model that can predict
 
 Recall (from the lectures) that to evaluate predictive models, we need to split our labelled data into training and testing sets. 
 
-![](images/training-testing.png){width=50%} <br>
+<br>
+
+![](images/training-testing.png){width=90%}
+
+<br>
 
 The figure above suggests a 25:75 split but the exact number is flexible. 
 
@@ -107,11 +131,15 @@ The figure above suggests a 25:75 split but the exact number is flexible.
  
 Both the training and testing datasets are labelled, meaning we know the 'true' values of Y. When we use the model later to predict stuff in the full mosaic, we won't know the true values of Y. We'll be relying on the model to tell us.
 
+<br><iframe width="560" height="315" src="https://www.youtube.com/embed/ix_N7SEg-ts" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe><br>
+
 ## Evaluating model performance
 
 As well as separating the dataset into two, we want to write a function to evaluate 'within sample' and 'out of sample' predictions. 
 
 Our data has a categorical Y, so we will use a confusion matrix to compare between observed and predicted values for Y. Recall Data Dan discussing the use of Root Mean Square Error (for continuous Y) and Confusion Matrices (for categorical Y) in the lectures (start at 5:00).
+
+<br><iframe width="600" height="400" src="https://www.youtube.com/embed/aT0kOyVi1F4?start=300"> </iframe><br>
 
 In the file, `R/confusion.R`, `evaluate_model()` is a function that will calculate a confusion matrix using the observed vs predicted values. It's not in a package. You make the function available by running the code: 
 
@@ -185,7 +213,11 @@ Noting that each row is an individual record, for how many individuals was speci
 
 Let's go back to the bird nest counting example now. Roxanne has created the mosaic from the drone images and added a series of covariates, derived from the various light bands of the spectral sensor of the drone. It's a giant file (> 1GB in size, ~3.6 billion pixels)! Here's a screenshot.
 
-![](images/Screenshot%202023-03-30%20at%204.15.20%20pm.png){width=50%} <br>
+<br>
+
+![](images/Screenshot%202023-03-30%20at%204.15.20%20pm.png){width=90%}
+
+<br>
 
 We'll work with a small section of the bigger image and use this to develop a workflow to apply to the whole dataset.
 
@@ -195,15 +227,15 @@ The next step is to label some data! That means manually looking at individual p
 
 In this video, the Medical Futurist talks about the importance of labelling for predictive workflows. While the examples are from medical fields, the principle is general and he describes it very well (watch up to 1:40). 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/hhzhamJUbmg?start=33" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> <br>
+<br><iframe width="560" height="315" src="https://www.youtube.com/embed/hhzhamJUbmg?start=33" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> <br>
 
 So your next job is to create some labelled data by marking points in images as bird or not bird.
 
 Take turns to head over to a labelling station and practise creating some labelled data. Adding more labelled observations strengthens the predictive power of your model. If you are waiting your turn, you can skip this section for now and use the full dataset available (`data/trainingData.csv`) to work on the later sections of this practical. This is real data collected by Roxanne. 
 
-## Creating training and test datasets
+# Creating training and test datasets
 
-### Your labelled dataset (skip this if you haven't gone to the labelling station yet)
+## Your labelled dataset (skip this if you haven't gone to the labelling station yet)
 
 Download your labelled data (Data Dan will upload it on Moodle). 
 
@@ -224,7 +256,11 @@ The column `is_pelican` is the target or Y variable, which you scored. The other
 
 Okay, now that we have data, we'll have to create training and testing data from the dataset. 
 
-![](images/training-testing.png){width=50%} <br>
+<br>
+
+![](images/training-testing.png){width=90%}
+
+<br>
 
 So let's go ahead and split the data, using the `slice` function from `tidyverse`:
 
@@ -236,7 +272,7 @@ peli_labelled_train <- peli_labelled |> slice(train_ids)
 peli_labelled_test <-  peli_labelled |> slice(-train_ids)
 ```
 
-### Full pelican dataset
+## Full pelican dataset
 
 Load Roxane's labelled data from `data/trainingData.csv` and save it as an object. We'll use `dplyr` to change the Class to a label that is either "pelican" or "background".
 
@@ -257,7 +293,11 @@ The column `is_pelican` is the target or Y variable, which you scored. The other
 
 Okay, now that we have data, we'll have to create training and testing data from the dataset.
 
-![](images/training-testing.png){width=50%} <br>
+<br>
+
+![](images/training-testing.png){width=90%}
+
+<br>
 
 So let's go ahead and split the data, using the `slice` function from `tidyverse`:
 
@@ -269,9 +309,9 @@ peli_labelled_full_train <- peli_labelled_full |> slice(train_ids)
 peli_labelled_full_test <-  peli_labelled_full |> slice(-train_ids)
 ```
 
-## Fitting random forest models
+# Fitting random forest models
 
-### Your labelled dataset
+## Your labelled dataset
 
 To start, let's try to see if a single covariate (`band1`) has enough predictive power to give us a good predictive model. Fit a random forest model with your training data where `is_pelican` is your response variable and `b1` is your predictor variable. Then, use the custom function `evaluate_model` to evaluate your model. 
 
@@ -303,7 +343,7 @@ Does this make the model more accurate? `r cloze("Yes", c("Yes", "No"))`
 
 Why do you think you are getting low error rates (comparatively speaking) when fitting to the training data, but high error rates when testing your model against the testing data set? {type=essay}
 
-### The maximum model!
+## The maximum model!
 
 Let's try creating a maximum model, i.e. one with all our covariates used as predictors! 
 
@@ -347,7 +387,7 @@ evaluate_model(fit_rf_full, peli_labelled_full_train, peli_labelled_full_test)
 
 Does having a bigger training dataset lead to better predictive skill? `r cloze("Yes", c("Yes", "No"))`
 
-### Is a simplified model better?
+## Is a simplified model better?
 
 A maximum model is not always the best model. There might be many variables included that aren't properly capturing the variation in the dataset.
 
@@ -411,13 +451,21 @@ Thinking about the broader goals of this work, developing the predictive model i
 
 We're now up to step 6. 
 
-![](images/colony.png){width=50%} <br>
+<br>
+
+![](images/colony.png){width=90%}
+
+<br>
 
 The entire mosaic is huge (>1GB in size, ~3.6 billion pixels). That file is too big for us to work with on our laptops. (For this reason Roxanne does all her analysis in [Google Earth Engine](https://earthengine.google.com/).)
 
 But we can apply the model to a small extract of the larger mosaic. See the dark square in the image below.
 
-![](images/small_extract.png){width=50%} <br>
+<br>
+
+![](images/small_extract.png){width=90%}
+
+<br>
 
 You can load the data from the extra (large) [files available on Moodle](https://moodle.telt.unsw.edu.au/mod/folder/view.php?id=8252490). This step is not worth attempting if your laptop is particularly old or slow. 
 
@@ -460,9 +508,9 @@ Does it look OK, when you compare to the photo? If so, congrats! You've trained 
 
 There's one final step that Roxanne does, which is to count the **clusters** of pixels to count the number of birds. At the moment we just have the number of pixels that are classified as birds. But hopefully you see how our predictive model fits into the overall workflow and enables you to make an estimate of pelican numbers.
 
-## Extension (optional)
+# Extension (optional)
 
-### How good is the random forest method?
+## How good is the random forest method?
 
 This entire practical, we've been using random forest models. Is this the best model to use with this data? What about regression models like we've been doing the last few weeks? 
 
@@ -503,3 +551,7 @@ evaluate_model(fit_rf_single, peli_labelled_full_train, peli_labelled_full_test)
 ```
 
 Does this model suggest a need for many iterations (decision trees) to accurately predict pelican presence? `r cloze("False", c("True", "False"), feedback = "While the accuracy is slightly better, it doesn't show a drastic difference between the two models. The model is still very accurate with just one tree! It looks like which variables are included in the model might be more important for accuracy.")`
+
+## End
+
+We're done! Congrats on making it through a some challenging concepts.
