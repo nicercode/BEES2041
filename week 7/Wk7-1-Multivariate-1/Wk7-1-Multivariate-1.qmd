@@ -32,14 +32,14 @@ library(vegan)
 
 Multivariate analyses are techniques used to explore or analyse data that involve **multiple variables at once**, helping to understand **relationships among them**. In the environmental sciences, for example, multivariate methods are commonly used to visualise differences in **species composition** across sites, or understand relationships among many correlated abiotic variables to describe sites or samples.
 
-This week's practicals provide an introduction to some of the graphical and analytical techniques used for multivariate data sets (those with more than one dependent variable).
+This week's practical provides an introduction to some of the graphical and analytical techniques used for multivariate data sets (those with more than one dependent variable).
 
 Today we will focus on two graphical techniques: 
 
 - **multi-dimensional scaling (MDS)**
 - **cluster diagrams**
 
-We will go over some considerations before making these plots such as **transformations** and choices of **similarity measures**.
+We will go over some considerations before making these plots, such as **transformations** and choices of **similarity measures**.
 
 ![](images/mds.jpg){width=50%}  <br>
 
@@ -61,15 +61,15 @@ Everything you need for this prac is on Moodle:
 1.  Download this week's materials zip file from Moodle, from the course page
 2.  Unzip the file by:
 
--   MacOS: Double clicking the zipfile
--   Windows: Right click on the zip file and click "Extract All"
+-   macOS: Double-clicking the zip file
+-   Windows: Right-click on the zip file and click "Extract All"
 
 3.  Move the extracted folder into the folder where you store materials for `BEES2041/`
 4.  **Click on the Rstudio project file, eg. `Wk7-Multivariate.Rproj`** to open the RStudio project and you're in!!!
 
 We will be working with various datasets collected. These are in the folder `data/`.
 
-You will work in the relevant Quarto document for this prac. Within each Quarto doc there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
+You will work in the relevant Quarto document for this prac. Within each Quarto doc, there are several challenges for you to complete on your own devices in order to **answer the questions on Moodle**.
 
 ## Setting up: Packages
 
@@ -98,6 +98,14 @@ There are many ways to do this, but if you understand a few of them you can get 
 Let's take a look at this **multivariate dataset** collected by a physical geographer who was contrasting beach profiles at three beaches around a coral atoll.
 
 Using the same methods at each site, the following data were collected from each beach:
+
+|                          | Beach 1 | Beach 2 | Beach 3 |
+| :----------------------- | :------ | :------ | :------ |
+| mean sediment size (mm)  | 4.00    | 2.00    | 0.80    |
+| beach slope (degrees)    | 10.10   | 5.20    | 1.20    |
+| mean wave height (m)     | 1.85    | 1.47    | 0.39    |
+| mean current speed (m/s) | 1.20    | 0.80    | 0.70    |
+
 
 ```{r, echo=FALSE}
 Beaches <- read_csv(file = "data/Beaches.csv")
@@ -151,7 +159,7 @@ $$
 d(y_1,y_2) = \sum_{j=1}^{p}\sqrt{(y_{1j} - y_{2j})^2}
 $$
 
-where $y_{1j}$ and $y_{2j}$ are the values of variable $j$ in sample 1 and 2; $p$ is the number of variables
+where $y_{1j}$ and $y_{2j}$ are the values of variable $j$ in samples 1 and 2; $p$ is the number of variables.
 
 -   Use the `dist()` function with `method = "euclidean", diag = TRUE`
 -   You need to flip the dataset on its side so that the samples are rows for distance analysis. We can do so by **transposing** the matrix first, using the `t()` function, i.e. `(t(Beaches))`
@@ -180,7 +188,7 @@ This is a **dissimilarity matrix**, using a different measure (**Euclidean dista
 
 ![](images/harbour.jpg){width=70%} <br>
 
-Twelve sites in an estuary were sampled for the concentrations of eight heavy metals [(Clarke and Warwick, 1994)](https://www.researchgate.net/profile/Aimeric-Blaud/post/Can_anyone_help_me_in_understanding_and_clearly_interpreting_ANOSIM_Analysis_of_Similarityand_SIMPER_Similarity_percentage_analysisresults/attachment/59d63f3ec49f478072ea9897/AS%3A273777156395016%401442284968397/download/PRIMER-E.pdf). The sites were aligned along a linear transect with the middle of the transect closest to a sewage dumping area (i.e., 1 and 12 furthest from dump, 6 closest to the dump).
+Twelve sites in an estuary were sampled for the concentrations of eight heavy metals [(Clarke and Warwick, 1994)](https://www.researchgate.net/profile/Aimeric-Blaud/post/Can_anyone_help_me_in_understanding_and_clearly_interpreting_ANOSIM_Analysis_of_Similarityand_SIMPER_Similarity_percentage_analysisresults/attachment/59d63f3ec49f478072ea9897/AS%3A273777156395016%401442284968397/download/PRIMER-E.pdf). The sites were aligned along a linear transect with the middle of the transect closest to a sewage dumping area (i.e., 1 and 12 furthest from the dump, and 6 closest to the dump).
 
 We will measure the similarity among sites, then use an **ordination plot** to display the **relationships among samples**.
 
@@ -207,10 +215,10 @@ HeavyMetals_vars <- HeavyMetals |> select(-Site)
 
 **Data transformation**
 
-Before we calculate the similarity among sites, we will perform a **square root transformation** the data using `sqrt()`. This will **reduce the influence of very large values** (more on the reasons for transformations later in this practical).
+Before we calculate the similarity among sites, we will perform a **square root transformation** on the data using `sqrt()`. This will **reduce the influence of very large values** (more on the reasons for transformations later in this practical).
 
 ```{r}
-# Square roott every value in the data
+# Square root every value in the data
 HeavyMetals_sq <- sqrt(HeavyMetals_vars)
 ```
 
@@ -227,14 +235,14 @@ The numbers in this **dissimilarity matrix** are then used to create a **multi-d
 
 **Multi-dimensional scaling**
 
-We use the function `metaMDS()` from the package `vegan` to create a MDS plot
+We use the function `metaMDS()` from the package `vegan` to create an MDS plot.
 
 ```{r}
 HeavyMetals_mds <- metaMDS(HeavyMetals_dis, autotransform = FALSE, trace = FALSE)
 ```
 
 - the `autotransform` argument tells the function not to further transform the data
-- the `trace` argument stops it giving us all the details of the process trying to find the best solution.
+- the `trace` argument stops it from giving us all the details of the process trying to find the best solution.
 
 **Visualise your MDS**
 
@@ -362,7 +370,7 @@ ggplot(Nutrients_xy, aes(MDS1, MDS2, color = Treatment)) +
 ## Species composition in rock pools
 ![](images/rock_pool.PNG){width=70%} <br>
 
-On the Maroubra field trip, multivariate data were collected to investigate the species composition of the intertidal community living in rock pools to neighbouring rocky habitats that were emergent at low tide.
+On the Maroubra field trip, multivariate data were collected to investigate the species composition of the intertidal community living in rock pools and neighbouring rocky habitats that were emergent at low tide.
 
 > We can use a MDS plot to visualise differences in **species composition** between the samples taken.
 
@@ -395,7 +403,7 @@ The first four columns are labels for `class` (am or pm), `group_id`, `plot_numb
 
 Using the same methods as for the previous questions, produce a MDS plot to visualise differences in species composition between habitats (rock pool vs emergent).
 
-**Data wrangle**
+**Data wrangling**
 
 First, you will need to make a subset of the data with just the abundance data for the species recorded.
 
@@ -407,7 +415,7 @@ Rock_pools_vars <- Rock_pools |> select(-class, -group_id, -plot_number, -habita
 
 Some of the variables are % cover (the red, brown and green algae) and some are counts of individual animals. _100% cover is not equivalent to 100 snails_, so we can **standardise** these variables to ensure they are on the same scale.
 
-We can use the function `decostand()` from `vegan` to **standardise** each variable by the maximum value of that variable. This function will give us variables having values between 0 and 1. No need to do any other transformations!
+We can use the function `decostand()` from `vegan` to **standardise** each variable by the maximum value of that variable. This function will give us variables with values between 0 and 1. No need to do any other transformations!
 
 ```{r}
 Rock_pools_vars_std <- decostand(Rock_pools_vars, method = "max")
@@ -496,9 +504,9 @@ HeavyMetals_cluster_trans <-
 as.dendrogram(HeavyMetals_cluster_trans) |> plot()
 ```
 
-## Concentraions
+## Concentrations
 
-The concentrations of which two metals are most similar to each other in terms of euclidean distance?**
+The concentrations of which two metals are most similar to each other in terms of Euclidean distance?
 
 `r cloze("Co and Cd", c("Co and Cd", "Mn and Zn", "Cu and Pb", "Ni and Co"))`
 
@@ -510,11 +518,11 @@ The concentrations of which two metals are most similar to each other in terms o
 
 Multivariate data sets are often **transformed** prior to making plots. This is not to meet the assumptions of a statistical test (these plots are not hypothesis tests), but **to standardise the relative importance of variables** that may be measured on **different scales**.
 
-For contrasts of species composition in community data sets (i.e., the abundance of many species in many samples) it is common to **square root** or **log transform** the abundance data prior to multivariate analyses. A more extreme standardisation is to convert the abundance data to presence/absence (i.e, 0 or 1) only.
+For contrasts of species composition in community data sets (i.e., the abundance of many species in many samples), it is common to **square root** or **log transform** the abundance data prior to multivariate analyses. A more extreme standardisation is to convert the abundance data to presence/absence (i.e., 0 or 1) only.
 
-In the heavy metals data set, the concentration of the metals vary widely with manganese having values up to 2470, while cobalt has values no higher than 15. Consequently, the similarity between samples using Euclidean distance will be very strongly influenced by manganese values and those metals with low concentrations will have little influence.
+In the heavy metals data set, the concentrations of the metals vary widely, with manganese having values up to 2470, while cobalt has values no higher than 15. Consequently, the similarity between samples using Euclidean distance will be very strongly influenced by manganese values, and those metals with low concentrations will have little influence.
 
-If you wanted to create a plot to **explore the composition of contaminants**, not just their **absolute concentrations**, then it is a good idea to **standardise** the variables before creating any cluster diagrams. There are several ways to do this (e.g., divide by maximum value, divide by mean etc).
+If you wanted to create a plot to **explore the composition of contaminants**, not just their **absolute concentrations**, then it is a good idea to **standardise** the variables before creating any cluster diagrams. There are several ways to do this (e.g., divide by maximum value, divide by mean, etc.).
 
 Here, we will **standardise** each metal variable so each will have a mean of zero and variance of 1 using the `decostand()` function from `vegan`.
 
